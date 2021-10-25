@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -L",
+    "start": "nodemon -L"
   },
   "author": "",
   "license": "",
@@ -26,6 +26,6 @@
     "sequelize": "^6.3.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.6",
+    "nodemon": "^2.0.6"
   }
 }
