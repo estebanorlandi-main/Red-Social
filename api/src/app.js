@@ -2,6 +2,8 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const General = require('./routes/General.js');
+const Comments = require('./routes/Comment.js')
 
 require('./db.js');
 
@@ -20,6 +22,8 @@ server.use((req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   next();
 });
+
+server.use('/', General);
 
 
 // Error catching endware.
