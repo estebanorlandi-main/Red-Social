@@ -6,7 +6,11 @@ const {
   DB_USER, DB_PASSWORD, DB_HOST,
 } = process.env;
 
+<<<<<<< HEAD
+const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/redsocial`, {
+=======
 const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/red-social`, {
+>>>>>>> 7c2c72b047947349230a54e129aeba59311d860d
   logging: false, // set to console.log to see the raw SQL queries
   native: false, // lets Sequelize know we can use pg-native for ~30% more speed
 });
@@ -30,7 +34,10 @@ sequelize.models = Object.fromEntries(capsEntries);
 const { User, Post, Comment } = sequelize.models;
 
 // Aca vendrian las relaciones
-
+// Relacion 1 a M
+// User -> Post
+User.hasMany(Post)
+Post.belongsTo(User)
 
 
 module.exports = {

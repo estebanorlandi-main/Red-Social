@@ -7,19 +7,29 @@ module.exports = (sequelize) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      min: 2,
+      max: 30,
     },
     lastname: {
       type: DataTypes.STRING,
       allowNull: false,
+      min: 2,
+      max: 30
     },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+      max: 25,
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+      max: 16,
+      min: 8,
+      validate:{
+        isAlphanumeric: true
+      }
     },
     id: {
       allowNull: false,
@@ -32,9 +42,20 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+      validate:{
+         isEmail: true
+      }
     },
     gitaccount: {
       type: DataTypes.STRING,
+      validate:{
+        validateGit: function(account){
+          console.log(account)
+          if(!account.search(/github.com/)){
+            throw new Error("git account invalidate")
+          }
+        }
+      }
     },
     image: {
       type: DataTypes.STRING,
