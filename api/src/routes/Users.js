@@ -26,7 +26,6 @@ router.get("/:username", async (req,res,next)=>{
 	}
 })
 router.post("/create", async (req,res,next)=>{
-
 	try {
 		const {name,lastname,username, password,mail,gitaccount,image} = req.body
 		const user = await User.findOrCreate({
@@ -44,11 +43,8 @@ router.post("/create", async (req,res,next)=>{
 			}
 		})
 		res.send(200)
-
-
 	} catch(e) {
-		console.log("errores");
-		res.sendStatus(404)
+		res.sendStatus(400)
 	}
 })
 module.exports = router;

@@ -50,7 +50,6 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       validate:{
         validateGit: function(account){
-          console.log(account)
           if(!account.search(/github.com/)){
             throw new Error("git account invalidate")
           }
