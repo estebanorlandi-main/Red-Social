@@ -1,3 +1,4 @@
+
 const router = require('express').Router();
 const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.js');
 
@@ -22,6 +23,5 @@ router.put('/:id', (req, res)=>{
 router.delete('/:id', (req, res)=>{
 	res.send('hola te borre')
 })
-
 
 module.exports = router;
