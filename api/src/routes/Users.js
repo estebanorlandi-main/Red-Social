@@ -14,7 +14,6 @@ router.get("/", async (req,res,next)=>{
 	}
 })
 
-//user query
 router.get("/", async (req,res,next)=>{
 	const query = req.query.q
 	try {

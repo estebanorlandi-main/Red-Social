@@ -5,39 +5,43 @@ const { DataTypes, Sequelize } = require('sequelize');
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define('user', {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      min: 2,
-      max: 30,
-    },
-    lastname: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      min: 2,
-      max: 30
-    },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      max: 25,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      max: 16,
-      min: 8,
-      validate:{
-        isAlphanumeric: true
-      }
-    },
     id: {
       allowNull: false,
       unique: true,
       type: DataTypes.UUID,
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate:{
+        isAlpha: true,
+        len: [2,30]
+      }
+    },
+    lastname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate:{
+        isAlpha: true,
+        len: [2,30]
+      }
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate:{
+        len: [3,16]
+      }
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate:{
+      is: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+      }
     },
     mail: {
       type: DataTypes.STRING,
