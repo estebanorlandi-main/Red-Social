@@ -1,0 +1,56 @@
+.container * {
+  --blue: 85, 170, 221;
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2em;
+
+  padding: 2vw;
+  max-width: 300px;
+  margin: 1em auto 0 auto;
+  text-align: left;
+  background-color: #f0f0f0;
+}
+
+.userContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+.userContainer > span {
+  margin: 0 0 0 1em;
+}
+
+.text {
+  font-size: 1rem;
+  line-height: 1.45rem;
+}
+
+.tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.tags > li {
+  list-style: none;
+  padding: 0.25em 1em;
+  margin: 0 0.25em;
+  border: 1px solid rgb(var(--blue));
+  color: rgb(var(--blue));
+  background-color: rgba(var(--blue), 0.25);
+}
+
+.comments {
+  padding: 1em;
+  background-color: #ddd;
+}
+.comments > li {
+  box-sizing: border-box;
+  margin: 1em 0;
+  list-style: none;
+}
