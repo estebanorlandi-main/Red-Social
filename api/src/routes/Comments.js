@@ -1,5 +1,5 @@
-const { Router } = require('express');
-const Comments = require('../db.js')
+const router = require('express').Router();
+const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.js');
 
 async function DB_comments (){
 
@@ -18,16 +18,18 @@ async function DB_comments (){
 
 }
 
-const router = Router()
-
-
-
 router.get('/:username', (req, res)=>{
 	res.send('hola, get')
 })
 
 router.post('/', (req, res)=>{
-	res.send('hola, post')
+	try {
+		const{title,content} = req.body
+		Comment = await Comments.create({title,content})
+		res.send(Comment)
+	} catch(e) {
+		res.sendStatus(404)
+	}
 })
 
 router.put('/:id', (req, res)=>{

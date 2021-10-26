@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { Sequelize, Model } = require("sequelize");
-const {User,Post} = require('../db.js');
+const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.js');
 const Op = Sequelize.Op;
 
 async function DB_UserID (username){
