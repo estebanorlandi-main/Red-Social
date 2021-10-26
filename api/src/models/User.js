@@ -33,6 +33,7 @@ module.exports = (sequelize) => {
       allowNull: false,
       unique: true,
       validate:{
+        isAlphanumeric:true,
         len: [3,16]
       }
     },
@@ -40,7 +41,7 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate:{
-      is: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+        is: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
       }
     },
     mail: {
@@ -55,7 +56,7 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       validate:{
         validateGit: function(account){
-          if(!account.search(/github.com/)){
+          if(!account.match(/github.com/)){
             throw new Error("git account invalidate")
           }
         }
@@ -63,6 +64,13 @@ module.exports = (sequelize) => {
     },
     image: {
       type: DataTypes.STRING,
+      validate:{
+        validateImage: function(image){
+          if(!image.match(/\.(gif|jpg|jpeg|tiff|png)$/i)){
+            throw new Error("image invalide")
+          }
+        }
+      }
     },
   },{
     timestamps: false,
