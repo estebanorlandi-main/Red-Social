@@ -7,11 +7,15 @@ module.exports = (sequelize) => {
     userID: {
       type: DataTypes.STRING
     }
+  }, {
+    timestamps: false,
   });
   sequelize.define('Comment_Post',{
     postID: {
       type: DataTypes.STRING
     }
+  }, {
+    timestamps: false,
   });
   sequelize.define('User_Comment',{
     username:{
@@ -19,5 +23,5 @@ module.exports = (sequelize) => {
     }
   },{
     timestamps: false,
-  })
+  });
 };
