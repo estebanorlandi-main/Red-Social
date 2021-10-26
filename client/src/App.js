@@ -9,6 +9,7 @@ function App() {
       <div className="App">
         <Switch>
           <Route exact path="/" component={LandingPage} />
+          <Route path="/home" component={Home} />
           <Route
             path="/test"
             render={() => {
@@ -22,4 +23,3 @@ function App() {
 }
 
 export default App;
-

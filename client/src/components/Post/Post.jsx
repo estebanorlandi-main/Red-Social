@@ -1,23 +1,51 @@
-import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
 
 import styles from "./Post.module.css";
 
-function Post({ data, user, comments }) {
-  const tags = data.tags.filter((tag) => !!tag);
+function Post(props) {
+  const [firstLoad, setFirstLoad] = useState(true);
+
+  const [randomPost, setRandomPost] = useState(0);
+  const [randomComments, setRandomComments] = useState([]);
+
+  const [posts, users, comments] = useSelector((state) => [
+    state.posteos,
+    state.users,
+    state.comments,
+  ]);
+
+  useEffect(() => {
+    if (firstLoad) {
+      setRandomComments(comments.filter(() => Math.round(Math.random())));
+      setRandomPost(Math.floor(Math.random()) * 999);
+      setFirstLoad(false);
+    }
+  });
+
+  const randomUser = () => Math.floor(Math.random() * 999);
+
+  const postTags = posts[randomPost].tags.filter((tag) => !!tag);
+
+  console.log(postTags);
 
   return (
     <div className={styles.container}>
       <div className={styles.userContainer}>
-        <img src={user.avatar} />
-        <span>{user.username}</span>
+        <img src={users[randomUser()].avatar} />
+        <span>{users[randomUser()].username}</span>
       </div>
-      <h3>{data.title}</h3>
-      <p className={styles.text}>{data.text}</p>
+      <h3>{posts[randomPost].title}</h3>
+      <p className={styles.text}>{posts[randomPost].text}</p>
+      <img className={styles.postImage} src={posts[randomPost].image} />
+
       <ul className={styles.tags}>
-        {tags.map((tag, i) => (
+        {postTags.map((tag, i) => (
           <li key={i}>{tag}</li>
         ))}
       </ul>
+
+      <span>Likes: {posts[randomPost].likes}</span>
 
       <ul className={styles.comments}>
         {/* 
@@ -26,9 +54,17 @@ function Post({ data, user, comments }) {
           {user.sesion ? <NuevoComentario />: ''} 
 
         */}
-        {comments.map((comment) => (
-          <li>{comment.text}</li>
-        ))}
+        {randomComments
+          .filter((value, i) => i < 5)
+          .map((comment, i) => (
+            <li>
+              <div className={styles.userContainer}>
+                <img src={users[randomUser()].avatar} />
+                <span>{users[randomUser()].username}</span>
+              </div>
+              <p>{comment.text}</p>
+            </li>
+          ))}
       </ul>
     </div>
   );
