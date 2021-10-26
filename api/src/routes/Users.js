@@ -5,6 +5,7 @@ const Op = Sequelize.Op;
 const {DB_UserID,validateUpdateUser} = require("./utils.js")
 
 router.get("/", async (req,res,next)=>{
+	console.log("error")
 	if(req.query.q) return next()
 	try {
 		const users = await User.findAll({})
