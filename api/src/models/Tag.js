@@ -1,17 +1,19 @@
-// Modelo de comentarios
+// Modelo de Tags
 const { DataTypes, Sequelize } = require('sequelize');
 // Exportamos una funcion que define el modelo
 // Luego le injectamos la conexion a sequelize.
 module.exports = (sequelize) => {
   // defino el modelo
-  sequelize.define('comment',{
-    title: {
+  sequelize.define('tags',{
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    content: {
-      type: DataTypes.STRING,
+    id: {
+      type: DataTypes.UUID,
       allowNull: false,
+      primaryKey: true,
+      defaultValue : Sequelize.UUIDV4,
     }
   },{
     timestamps: false,

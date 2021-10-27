@@ -11,11 +11,14 @@ const DB_UserID = async (username)=>{
 	return UserID;
 }
 
-const DB_comments = async ()=>{
+const DB_Allcomments = async (username)=>{
 
 	const Comments_data = await Comments.findAll({
+		where : {
+			username
+		},
 		include: {
-			attributes: ['userID','title'],
+			attributes: ['userID','content'],
 			through: {
 				attributes: [],
 			}
@@ -26,6 +29,34 @@ const DB_comments = async ()=>{
 	})
 	return final;
 }
+
+const DB_Commentedit = async (id, content_data)=> {
+	const Comment = await Comments.update({
+		content : content_data,
+		where : {
+			id
+		}
+	})
+	return Comment.dataValues;
+
+}
+
+const DB_Commentdestroy = async (id)=> {
+	try{
+		const Comment = await Comments.destroy({
+			where : {
+				id
+			}
+		})
+		return 'Deleted Succesfully'
+	}catch(e){
+		throw new Error('We had a problem with your Delete')
+	} 
+
+}
+
+
+
 const validateUpdateUser = (update, userID)=>{
 	let obj = {}
 	for(prop in update){
@@ -86,7 +117,10 @@ const DB_userCreates = async(date)=>{
 
 module.exports = {
 	DB_UserID,
-	DB_comments,
+	DB_Allcomments,
+	DB_Commentedit,
+	DB_Commentdestroy,
+	validateUpdateUser,
 	validateUpdateUser,
 	DB_userCreates
 }
