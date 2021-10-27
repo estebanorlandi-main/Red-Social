@@ -6,6 +6,7 @@ const router = Router();
 // importar todas las routes
 const Users = require("./Users.js")
 const Comments = require("./Comments.js")
+const Post = require("./Post.js")
 
 // const ruta = require("archivo")
 // router.use("/", ruta)
@@ -27,5 +28,6 @@ router.get('/', (req,res)=>{
 
 router.use("/user", Users);
 router.use("/comment", Comments);
+router.use("/post", Post);
 
 module.exports = router;

@@ -1,7 +1,11 @@
 const { Router } = require("express");
 const { Sequelize, Model } = require("sequelize");
 const {User,Post} = require('../db.js');
-const { DB_UserID,validateUpdatePost } = require("./utils.js");
+const { DB_UserID,
+    validateUpdatePost,
+    DB_Postsearch, 
+    DB_Postdestroy,
+    DB_Postedit} = require("./utils.js");
 const Op = Sequelize.Op;
 const router = Router();
 
@@ -17,81 +21,70 @@ router.get("/", async (req, res) =>{
     if(categoria){
         let postCategoria = await allPost.filter(e => e.categoria.toLowerCase().includes(categoria.toLowerCase()));
         allPosts[0]? res.status(200).send(postCategoria) :
-        res.status(404).send("Sorry, no existe post con esa categoria");
+        res.status(404).send("There is no post with that tag");
     }else{
         res.status(200).send(allPosts);
     };
 });
 
 //Trae todos los posteos que hizo un usuario
-router.get("/:username", async (req, res) =>{
+router.get("/:username", async (req, res, next) =>{
     try{
         const {username} = req.params;
-
-        let userDB = await User.findOne({
-            where: {username: username}
-        });
-
-        const postName = await Post.findAll({
-            where:{
-                userId:userDB.dataValues.id
-            }
-        }) ;
-        console.log(postName);
-        postName? res.send(postName) : res.send("Post no encontrado");
+        if(!!Number(username)){
+            return next()
+        }
+        const postName = await DB_Postsearch({'username':username})
+        postName? res.send(postName) : res.send("This user has no Post");
     }catch(e){
-        console.log("Error en api /post/:name");
-        res.sendStatus(404);
+        res.status(404).send("Error with the username");
     };
 });
 
-router.post("/createPost", async (req, res, next) =>{
+//Filtra por id
+router.get("/:id", async (req, res, next) =>{
+    try{
+        const {id} = req.params;
+        if(Number(id).toString() === 'NaN'){
+            return next()
+        }
+        const postId = await DB_Postsearch({'id':id})
+        postId? res.status(200).send(postId.dataValues) : res.send("No post with that id");
+    }catch(e){
+        res.status(404).send("Error with the id");
+    };
+});
+
+
+router.post("/", async (req, res, next) =>{
     const{ 
-        idPost,
         title,
-        text,
+        content,
         image,
         tags,
         likes,
         username
-    }= req.body;
-    
-    let userDB = await User.findOne({
-        where: {username: username}
-    });
-
-    let createPost = await Post.create({
-        idPost,
-        image,
-        likes,
-        text,
-        tags,
-        title,
-        userId:userDB.dataValues.id
-    });
-    res.send("Post creado con exito");
+    } = req.body;
+    try {
+        let userDB = await DB_UserID(username);
+        let createPost = await Post.create({
+            image,
+            likes,
+            content,
+            tags,
+            title,
+            'userId' : userDB.id
+        });
+        await userDB.addPost(createPost)
+        res.send("Success in post creation");
+    }catch(e){
+        console.log(e)
+        res.sendStatus(404)
+    }
 })
 
-//Filtra por id
-router.get("/id/:id", async (req, res) =>{
-    try{
-        const {id} = req.params;
-        console.log(id);
-        const postId = await Post.findAll({
-            where:{
-                idPost:id
-            }
-        }) ;
-        console.log(postId)
-        postId? res.status(200).send(postId) : res.send("Post no encontrado");
-    }catch(e){
-        console.log("Error en api /post/:id");
-        res.sendStatus(404);
-    };
-});
 
-
-router.post("/register", async (req,res,next)=>{
+/*router.post("/register", async (req,res,next)=>{
 	const {name,lastname,username, password,mail,gitaccount,image} = req.body;
 	const user = await User.findOrCreate({
 		where:{
@@ -108,41 +101,30 @@ router.post("/register", async (req,res,next)=>{
 		}
 	})
 	res.status(200).send('Registro con exito');
-})
+})*/
 
 //Eliminacion de un Post
-router.delete("/delete/", async (req, res) =>{
+router.delete("/:id", async (req, res) =>{
     try{
-        const {id} = req.body;
-        const deletePost = await Post.destroy({
-            where:{
-                idPost:id
-        }});
+        const {id} = req.params;
+        const deletePost = await DB_Postdestroy(id)
         res.status(200).send('Post eliminado con exito');
     }catch(e){
-        console.log('Error en el delete', e);
-        res.status(404).send('Error en el delete');
+        res.status(404).send('Cant delete post');
     };   
 });
 
-//Modificacion
-router.put("/modificacionPost", async (req, res) =>{
-    const {idPost} = req.body;
-    var updatePost = await Post.findAll({
-		where:{
-			idPost:idPost
-		}
-	}); 
-    
-    const AllPostId = updatePost[0].dataValues;
-    const updateObj =  validateUpdatePost(req.body, AllPostId);
-
-    for(prop in updateObj){
-        updatePost[prop] = update[prop];
-    };
-    console.log(updatePost);
-    // await updatePost.save();
-    res.status(200).send(updatePost);
+//Edicion de post
+router.put("/:id", async (req, res) =>{
+    try{
+        const {id} = req.params;
+        const {title, content} = req.body
+        console.log(title, content) 
+        const updatePost = await DB_Postedit(id, title, content)
+        res.status(200).send(updatePost);
+    }catch(e){
+        res.status(404).send('Cant apply changes')
+    }
 })
 
 
