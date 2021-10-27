@@ -12,42 +12,25 @@ const DB_UserID = async (username)=>{
 }
 
 const DB_Allcomments = async (username)=>{
-
-	const Comments_data = await Comments.findAll({
-		where : {
-			username
-		},
-		include: {
-			attributes: ['userID','content'],
-			through: {
-				attributes: [],
-			}
-		}
-	})
-	const final = Comments_data.map((Comment)=>{
-		return Comment.dataValues;
+	user = await DB_UserID(username)
+	const final = user.comments.map((comment)=>{
+		return comment.dataValues;
 	})
 	return final;
 }
 
 const DB_Commentedit = async (id, content_data)=> {
-	const Comment = await Comments.update({
-		content : content_data,
-		where : {
-			id
-		}
-	})
-	return Comment.dataValues;
+	const updatedComment = await Comment.findOne({where: {'id':id}})
+	updatedComment.content = content_data
+	await updatedComment.save()
+	return updatedComment;
 
 }
 
 const DB_Commentdestroy = async (id)=> {
 	try{
-		const Comment = await Comments.destroy({
-			where : {
-				id
-			}
-		})
+		const eraseComment = await Comment.findOne({where: {'id':id}})
+		await eraseComment.destroy()
 		return 'Deleted Succesfully'
 	}catch(e){
 		throw new Error('We had a problem with your Delete')
