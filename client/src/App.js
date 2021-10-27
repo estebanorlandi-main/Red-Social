@@ -14,11 +14,7 @@ function App() {
           <Route
             path="/test"
             render={() => {
-              return (
-                <div>
-                  <Post />
-                </div>
-              );
+              return <div></div>;
             }}
           />
         </Switch>
