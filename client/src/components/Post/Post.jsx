@@ -3,49 +3,38 @@ import { useState, useEffect } from "react";
 
 import styles from "./Post.module.css";
 
-function Post(props) {
+function Post({ post }) {
   const [firstLoad, setFirstLoad] = useState(true);
 
-  const [randomPost, setRandomPost] = useState(0);
-  const [randomComments, setRandomComments] = useState([]);
   const [seeMore, setSeeMore] = useState(false);
   const [showComments, setShowComments] = useState(false);
 
-  const [posts, users, comments] = useSelector((state) => [
-    state.posteos,
-    state.users,
-    state.comments,
-  ]);
-
   useEffect(() => {
     if (firstLoad) {
-      setRandomComments(comments.filter(() => Math.round(Math.random())));
-      setRandomPost(Math.floor(Math.random()) * 999);
       setFirstLoad(false);
     }
   });
 
-  const randomUser = () => Math.floor(Math.random() * 999);
-
-  const postTags = posts[randomPost].tags.filter((tag) => !!tag);
+  post.tags = post.tags.filter((tag) => !!tag);
 
   return (
     <div className={styles.container}>
       <ul className={styles.tags}>
-        {postTags.map((tag, i) => (
+        {post.tags.map((tag, i) => (
           <li key={i}>{tag}</li>
         ))}
       </ul>
 
+      {/* Add creator to Post object
       <div className={styles.userContainer}>
-        <img src={users[randomUser()].avatar} />
-        <span>{users[randomUser()].username}</span>
+        <img src={post.creator.avatar} />
+        <span>{post.creator.username}</span>
       </div>
-
-      <h3>{posts[randomPost].title}</h3>
+      */}
+      <h3>{post.title}</h3>
 
       <div className={styles.mainContent + ` ${seeMore ? styles.expand : ""}`}>
-        <p className={styles.text}>{posts[randomPost].text}</p>
+        <p className={styles.text}>{post.text}</p>
         {seeMore ? (
           ""
         ) : (
@@ -58,11 +47,11 @@ function Post(props) {
         )}
       </div>
 
-      <img className={styles.postImage} src={posts[randomPost].image} />
+      <img className={styles.postImage} src={post.image} />
 
       <div className={styles.info}>
-        <span>Likes: {posts[randomPost].likes}</span>
-        <span>Comments: {randomComments.length}</span>
+        <span>Likes: {post.likes}</span>
+        <span>Comments: {/*randomComments.length*/}</span>
       </div>
 
       <hr />
@@ -81,13 +70,14 @@ function Post(props) {
           {user.sesion ? <NuevoComentario />: ''} 
 
         */}
-          {randomComments
+
+          {post.comments
             .filter((value, i) => i < 5)
             .map((comment, i) => (
-              <li className={styles.comment}>
+              <li key={i} className={styles.comment}>
                 <div className={styles.userContainer}>
-                  <img src={users[randomUser()].avatar} />
-                  <span>{users[randomUser()].username}</span>
+                  <img src={comment.user.avatar} />
+                  <span>{comment.user.username}</span>
                 </div>
                 <p>{comment.text}</p>
               </li>
