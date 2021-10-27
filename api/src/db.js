@@ -46,8 +46,8 @@ const { User,
 // Aca vendrian las relaciones
 //Usuario
 // Relacion 1 a M  - User -> Post
-User.belongsToMany(Post, {through: Post_User, onDelete: 'CASCADE'})
-Post.belongsTo(User, {through: Post_User, onDelete: 'CASCADE'})
+User.hasMany(Post, {onDelete: 'CASCADE'})
+Post.belongsTo(User, {onDelete: 'CASCADE'})
 
 //Relacion 1 a 1 - User -> Privileges
 User.hasOne(Privileges)
