@@ -8,6 +8,8 @@ function Post(props) {
 
   const [randomPost, setRandomPost] = useState(0);
   const [randomComments, setRandomComments] = useState([]);
+  const [seeMore, setSeeMore] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   const [posts, users, comments] = useSelector((state) => [
     state.posteos,
@@ -27,45 +29,73 @@ function Post(props) {
 
   const postTags = posts[randomPost].tags.filter((tag) => !!tag);
 
-  console.log(postTags);
-
   return (
     <div className={styles.container}>
-      <div className={styles.userContainer}>
-        <img src={users[randomUser()].avatar} />
-        <span>{users[randomUser()].username}</span>
-      </div>
-      <h3>{posts[randomPost].title}</h3>
-      <p className={styles.text}>{posts[randomPost].text}</p>
-      <img className={styles.postImage} src={posts[randomPost].image} />
-
       <ul className={styles.tags}>
         {postTags.map((tag, i) => (
           <li key={i}>{tag}</li>
         ))}
       </ul>
 
-      <span>Likes: {posts[randomPost].likes}</span>
+      <div className={styles.userContainer}>
+        <img src={users[randomUser()].avatar} />
+        <span>{users[randomUser()].username}</span>
+      </div>
 
-      <ul className={styles.comments}>
-        {/* 
+      <h3>{posts[randomPost].title}</h3>
+
+      <div className={styles.mainContent + ` ${seeMore ? styles.expand : ""}`}>
+        <p className={styles.text}>{posts[randomPost].text}</p>
+        {seeMore ? (
+          ""
+        ) : (
+          <button
+            className={styles.seeMore}
+            onClick={() => setSeeMore((old) => !old)}
+          >
+            <span>...</span>See more
+          </button>
+        )}
+      </div>
+
+      <img className={styles.postImage} src={posts[randomPost].image} />
+
+      <div className={styles.info}>
+        <span>Likes: {posts[randomPost].likes}</span>
+        <span>Comments: {randomComments.length}</span>
+      </div>
+
+      <hr />
+
+      <div className={styles.options}>
+        <button>Like</button>
+        <button onClick={() => setShowComments((old) => !old)}>Comments</button>
+        <button>Share</button>
+      </div>
+
+      {showComments ? (
+        <ul className={styles.comments}>
+          {/* 
 
           cuando el usuario este logeado mostrar input 
           {user.sesion ? <NuevoComentario />: ''} 
 
         */}
-        {randomComments
-          .filter((value, i) => i < 5)
-          .map((comment, i) => (
-            <li>
-              <div className={styles.userContainer}>
-                <img src={users[randomUser()].avatar} />
-                <span>{users[randomUser()].username}</span>
-              </div>
-              <p>{comment.text}</p>
-            </li>
-          ))}
-      </ul>
+          {randomComments
+            .filter((value, i) => i < 5)
+            .map((comment, i) => (
+              <li className={styles.comment}>
+                <div className={styles.userContainer}>
+                  <img src={users[randomUser()].avatar} />
+                  <span>{users[randomUser()].username}</span>
+                </div>
+                <p>{comment.text}</p>
+              </li>
+            ))}
+        </ul>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import Home from "./components/Home/Home";
+import Post from "./components/Post/Post";
 
 function App() {
   return (
@@ -13,7 +14,11 @@ function App() {
           <Route
             path="/test"
             render={() => {
-              return <div></div>;
+              return (
+                <div>
+                  <Post />
+                </div>
+              );
             }}
           />
         </Switch>
