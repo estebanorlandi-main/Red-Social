@@ -12,14 +12,6 @@ module.exports = (sequelize) => {
     content: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    userID: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    postID: {
-      type: DataTypes.STRING,
-      allowNull: false,
     }
   },{
     timestamps: false,

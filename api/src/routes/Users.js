@@ -13,22 +13,27 @@ router.get("/", async (req,res,next)=>{
 		res.sendStatus(404)
 	}
 })
-
 //user query
 router.get("/", async (req,res,next)=>{
 	const query = req.query.q
+	console.log(query)
 	try {
 		const users = await User.findAll({
 			where:{
-				[Op.or]:{
-					name: query				
-				},
-				[Op.or]:{
-					lastname: query	
-				},
-				[Op.or]:{
-					username: query
+				[Op.or]:[
+				// {
+				// 	name: {[Op.iLike]: query + "%"}				
+				// },
+				// {
+				// 	lastname: {[Op.iLike]:query + "%"}
+				// },
+				// {
+				// 	mail: {[Op.iLike]:query + "@"}
+				// },
+				{
+					username: {[Op.iLike]:query + "%"}
 				}
+				]
 			}
 		})
 		res.send(users)
@@ -66,25 +71,17 @@ router.get("/:username/comments", async(req,res,next)=>{
 	}
 })
 router.post("/register", async (req,res,next)=>{
-	const {name,lastname,username, password,mail,gitaccount,image} = req.body
+	const {mail} = req.body
 	try {
 		const user = await User.findOrCreate({
 			where:{
 				mail:mail
 			},
-			defaults:{
-				name,
-				lastname,
-				username,
-				password,
-				mail,
-				gitaccount,
-				image
-			}
+			defaults: req.body
 		})
 		res.sendStatus(200)
 	} catch(e) {
-		res.sendStatus(400)
+		res.send(400)
 	}
 })
 router.put("/:username", async (req,res,next)=>{

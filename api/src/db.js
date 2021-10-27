@@ -36,27 +36,34 @@ sequelize.models = Object.fromEntries(capsEntries);
 const { User, 
   Post, 
   Comment, 
-  Privileges, 
+  Privileges,
+  Tags, 
   Post_User,
   Comment_Post,
   User_Comment } = sequelize.models;
+
+
 // Aca vendrian las relaciones
 //Usuario
 // Relacion 1 a M  - User -> Post
-User.belongsToMany(Post, {through: Post_User})
-Post.belongsTo(User, {through: Post_User})
+User.belongsToMany(Post, {through: Post_User, onDelete: 'CASCADE'})
+Post.belongsTo(User, {through: Post_User, onDelete: 'CASCADE'})
 
 //Relacion 1 a 1 - User -> Privileges
 User.hasOne(Privileges)
 
 //Relacion 1 a M - User -> Comment
-User.belongsToMany(Comment, {through: User_Comment})
-Comment.belongsTo(User, {through: User_Comment})
+User.belongsToMany(Comment, {through: 'User_Comment', onDelete: 'CASCADE'})
+Comment.belongsTo(User, {through: 'User_Comment', onDelete: 'CASCADE'})
 
 //Post
 //Relacion M a 1 - Post -> Comment
-Post.belongsToMany(Comment, {through: Comment_Post})
-Comment.belongsTo(Post, {through: Comment_Post})
+Post.belongsToMany(Comment, {through: Comment_Post, onDelete: 'CASCADE'})
+Comment.belongsTo(Post, {through: Comment_Post, onDelete: 'CASCADE'})
+
+//Relacion M a M - Post -> Tags
+Post.belongsToMany(Tags, {through:'Post_Tags', onDelete: 'CASCADE'})
+Tags.belongsToMany(Post, {through:'Post_Tags', onDelete: 'CASCADE'})
 
 module.exports = {
   ...sequelize.models,

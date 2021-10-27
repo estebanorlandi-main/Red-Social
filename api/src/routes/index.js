@@ -9,9 +9,8 @@ const Comments = require("./Comments.js")
 
 // const ruta = require("archivo")
 // router.use("/", ruta)
-router.use('/', (req,res)=>{
-
-	res.status(202).json({
+router.get('/', (req,res)=>{
+	res.status(202).send({
 		"Post":` GET -> /post - /post?q=tags - /post/:id
 		POST -> /post
 		PUT -> /post/:id
@@ -23,7 +22,6 @@ router.use('/', (req,res)=>{
 		POST -> /user/register`,
 		"Sesion": "/login - /register - /logout"
 	})
-
 })
 
 
