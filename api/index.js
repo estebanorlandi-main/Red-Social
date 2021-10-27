@@ -8,7 +8,7 @@ const DataUsers = require("../Mockups/DB_USERS.json")
 const {DB_userCreates} = require("./src/routes/utils.js")
 
 // Syncing all the models at once.
-conn.sync({ force: true }).then(() => {
+conn.sync({ force: false }).then(() => {
   server.listen(3001, () => {
     //CARGA DE DATOS
     DB_userCreates(DataUsers)

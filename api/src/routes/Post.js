@@ -141,7 +141,7 @@ router.put("/modificacionPost", async (req, res) =>{
         updatePost[prop] = update[prop];
     };
     console.log(updatePost);
-    await updatePost.save();
+    // await updatePost.save();
     res.status(200).send(updatePost);
 })
 
