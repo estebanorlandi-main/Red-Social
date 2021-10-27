@@ -38,6 +38,56 @@ const DB_Commentdestroy = async (id)=> {
 
 }
 
+const DB_Postsearch = async ({username, id}) =>{
+	try{
+		let post_search;
+		if(username === undefined){
+			post_search = await Post.findOne({
+            	where:{
+                 	'id':id
+            	}
+        	});
+        	return post_search;
+		} else if (id === undefined){
+			let userDB = await DB_UserID(username);
+			post_search =await Post.findAll({
+            	where:{
+                	userId:userDB.id
+            	}
+        	});
+        	return post_search
+		}else {
+			return 'Post not found'
+		}
+	}catch(e){
+		throw new Error('We had a problem with the search')
+	}
+}
+
+const DB_Postdestroy = async (id)=> {
+
+	try{
+		const erasePost = await Post.findOne({where: {'id':id}})
+		console.log(erasePost)
+		await erasePost.destroy()
+		return 'Deleted Succesfully'
+	}catch(e){
+		throw new Error('We had a problem with your Delete')
+	} 
+
+}
+
+const DB_Postedit= async(id, title_data, content_data, tags) =>{
+	console.log(content_data, title_data, id, 'Entre a utils')
+	const updatedPost = await Post.findOne({where: {'id':id}})
+
+	content_data ? updatedPost.content = content_data : null
+	title_data ? updatedPost.title = title_data : null
+	await updatedPost.save()
+	return updatedPost;
+
+}
+
 
 
 const validateUpdateUser = (update, userID)=>{
@@ -103,6 +153,9 @@ module.exports = {
 	DB_Allcomments,
 	DB_Commentedit,
 	DB_Commentdestroy,
+	DB_Postsearch,
+	DB_Postdestroy,
+	DB_Postedit,
 	validateUpdateUser,
 	validateUpdateUser,
 	DB_userCreates

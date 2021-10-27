@@ -46,15 +46,15 @@ const { User,
 // Aca vendrian las relaciones
 //Usuario
 // Relacion 1 a M  - User -> Post
-User.hasMany(Post, {onDelete: 'CASCADE'})
-Post.belongsTo(User, {onDelete: 'CASCADE'})
+User.belongsToMany(Post, {through: Post_User, onDelete: 'CASCADE'})
+Post.belongsTo(User, {through: Post_User, onDelete: 'CASCADE'})
 
 //Relacion 1 a 1 - User -> Privileges
 User.hasOne(Privileges)
 
 //Relacion 1 a M - User -> Comment
-User.belongsToMany(Comment, {through: 'User_Comment', onDelete: 'CASCADE'})
-Comment.belongsTo(User, {through: 'User_Comment', onDelete: 'CASCADE'})
+User.belongsToMany(Comment, {through: User_Comment, onDelete: 'CASCADE'})
+Comment.belongsTo(User, {through: User_Comment, onDelete: 'CASCADE'})
 
 //Post
 //Relacion M a 1 - Post -> Comment
