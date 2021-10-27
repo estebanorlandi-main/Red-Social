@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import Home from "./components/Home/Home";
+import Profile from "./Pages/Profile/Profile";
 
 function App() {
   return (
@@ -12,7 +13,11 @@ function App() {
           <Route
             path="/test"
             render={() => {
-              return <div></div>;
+              return (
+                <div>
+                  <Profile />
+                </div>
+              );
             }}
           />
         </Switch>
@@ -22,4 +27,3 @@ function App() {
 }
 
 export default App;
-
