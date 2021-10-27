@@ -53,8 +53,8 @@ Post.belongsTo(User, {through: Post_User, onDelete: 'CASCADE'})
 User.hasOne(Privileges)
 
 //Relacion 1 a M - User -> Comment
-User.belongsToMany(Comment, {through: User_Comment, onDelete: 'CASCADE'})
-Comment.belongsTo(User, {through: User_Comment, onDelete: 'CASCADE'})
+User.belongsToMany(Comment, {through: 'User_Comment', onDelete: 'CASCADE'})
+Comment.belongsTo(User, {through: 'User_Comment', onDelete: 'CASCADE'})
 
 //Post
 //Relacion M a 1 - Post -> Comment
