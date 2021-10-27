@@ -2,19 +2,10 @@ const router = require('express').Router();
 const { Sequelize, Model } = require("sequelize");
 const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.js');
 const Op = Sequelize.Op;
-
-async function DB_UserID (username){
-	const UserID = await User.findOne({
-			where:{
-				username
-			},
-			include: [Post]
-		})
-	return UserID;
-}
-
+const {DB_UserID,validateUpdateUser} = require("./utils.js")
 
 router.get("/", async (req,res,next)=>{
+	if(req.query.q) return next()
 	try {
 		const users = await User.findAll({})
 		res.send(users)
@@ -22,44 +13,90 @@ router.get("/", async (req,res,next)=>{
 		res.sendStatus(404)
 	}
 })
-router.get("/:username", async (req,res,next)=>{
+//user query
+router.get("/", async (req,res,next)=>{
+	const query = req.query.q
+	console.log(query)
 	try {
-		const {username} = req.params
-		const userID = await DB_UserID(username)
-		userID?res.send(userID):res.send(404)
+		const users = await User.findAll({
+			where:{
+				[Op.or]:[
+				// {
+				// 	name: {[Op.iLike]: query + "%"}				
+				// },
+				// {
+				// 	lastname: {[Op.iLike]:query + "%"}
+				// },
+				// {
+				// 	mail: {[Op.iLike]:query + "@"}
+				// },
+				{
+					username: {[Op.iLike]:query + "%"}
+				}
+				]
+			}
+		})
+		res.send(users)
 	} catch(e) {
 		res.sendStatus(404)
 	}
 })
-router.get("/:username/posts", async (req,res,next)=>{
+//user params
+router.get("/:username", async (req,res,next)=>{
+	const {username} = req.params
 	try {
-		const {username} = req.params
 		const userID = await DB_UserID(username)
-		userID?res.send(userID.posts):res.send(404)
+		userID?res.send(userID):res.sendStatus(404)
+	} catch(e) {
+		res.sendStatus(404)
+	}
+})
+//user params post
+router.get("/:username/posts", async (req,res,next)=>{
+	const {username} = req.params
+	try {
+		const userID = await DB_UserID(username)
+		userID?res.send(userID.posts):res.sendStatus(404)
+	} catch(e) {
+		res.sendStatus(404)
+	}
+})
+router.get("/:username/comments", async(req,res,next)=>{
+	const {username} = req.params
+	try {
+		const userID = await DB_UserID(username)
+		userID?res.send(userID.comments):res.sendStatus(404)
 	} catch(e) {
 		res.sendStatus(404)
 	}
 })
 router.post("/register", async (req,res,next)=>{
+	const {mail} = req.body
 	try {
-		const {name,lastname,username, password,mail,gitaccount,image} = req.body
 		const user = await User.findOrCreate({
 			where:{
 				mail:mail
 			},
-			defaults:{
-				name,
-				lastname,
-				username,
-				password,
-				mail,
-				gitaccount,
-				image
-			}
+			defaults: req.body
 		})
-		res.send(200)
+		res.sendStatus(200)
+	} catch(e) {
+		res.send(400)
+	}
+})
+router.put("/:username", async (req,res,next)=>{
+	const {username} = req.params
+	try {
+		let userID = await DB_UserID(username)
+		const updateDates = validateUpdateUser(req.body,userID)
+		for(prop in updateDates){
+			userID[prop] = updateDates[prop]
+		}
+		await userID.save()
+		res.send(userID)
 	} catch(e) {
 		res.sendStatus(400)
 	}
 })
+
 module.exports = router;
