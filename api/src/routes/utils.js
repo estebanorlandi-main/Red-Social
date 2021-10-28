@@ -127,12 +127,16 @@ const DB_Postdestroy = async (id)=> {
 
 }
 
-const DB_Postedit= async(id, title_data, content_data, tags) =>{
-	console.log(content_data, title_data, id, 'Entre a utils')
-	const updatedPost = await Post.findOne({where: {'id':id}})
+const DB_Postedit= async(id, {title, content, tag, image, likes}) =>{
+	// console.log(id, title, content, tag, image, likes, 'Entre a utils')
+	const updatedPost = await Post.findOne({where: {'idPost':id}})
+	
+	content ? updatedPost.content = content: null;
+	title ? updatedPost.title = title : null;
+	tag ? updatedPost.tag = tag : null;
+	image ? updatedPost.image = image : null;
+	likes ? updatedPost.likes = likes : null;
 
-	content_data ? updatedPost.content = content_data : null
-	title_data ? updatedPost.title = title_data : null
 	await updatedPost.save()
 	return updatedPost;
 
@@ -198,6 +202,29 @@ const DB_userCreates = async(date)=>{
 	return
 }
 
+const DB_postCreates = async(data) =>{
+	if(typeof data == "object"){
+		data.forEach(async e =>{
+			var obj ={};
+			const user = await User.findAll({attributes:['username']})
+			var index = Math.floor((Math.random() * 100))
+			// console.log(user[index].username)
+			obj = {
+				title: e.title,
+				content: e.text,
+				image: e.image,
+				tag:e.tags,
+				likes: 0,
+				username: user[index].username
+			  }
+
+			console.log(obj);
+			await axios.post("http://localhost:3001/post",obj).catch(e=>e)			
+
+		})
+	}
+}
+
 module.exports = {
 	DB_UserID,
 	DB_Allcomments,
@@ -211,5 +238,6 @@ module.exports = {
 	DB_userCreates,
 	DB_findUserAll,
 	DB_findUserQuery,
-	DB_findUserParams
+	DB_findUserParams,
+	DB_postCreates
 }
