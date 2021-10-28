@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import Home from "./components/Home/Home";
+import NewPost from "./components/NewPost/NewPost";
 <<<<<<< HEAD
 import Signup from "./components/Signup/Signup";
 =======
@@ -22,6 +23,7 @@ function App() {
             }}
           />
           <Route path="/signup" component={Signup}/>
+          <Route path="/signup" component={NewPost}/>
         </Switch>
       </div>
     </BrowserRouter>
