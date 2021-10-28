@@ -1,11 +1,61 @@
 const axios = require('axios');
 const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.js');
+const { Sequelize } = require("sequelize");
+const Op = Sequelize.Op;
 
+const DB_findUserAll = async (query)=>{
+		const findUserAll = await User.findAll({
+			attributes:["id","name","username","lastname","image","gitaccount"],
+			include: [Post,Comment]
+		})
+		return findUserAll
+}
+const DB_findUserQuery = async (query)=>{
+		const findUserQuery = await User.findAll({
+			where:{
+				[Op.or]:[
+				{
+					name: {[Op.iLike]: query + "%"}				
+				},
+				{
+					lastname: {[Op.iLike]:query + "%"}
+				},
+				{
+					username: {[Op.iLike]:query + "%"}
+				}
+				]
+			},
+			attributes:["id","name","username","lastname","image","gitaccount"],
+			include:[Post,Comment]
+		})
+		return findUserQuery
+}
+const DB_findUserParams = async (params)=>{
+		const findUserQuery = await User.findAll({
+			where:{
+				[Op.or]:[
+				{
+					name: {[Op.iLike]: params + "%"}				
+				},
+				{
+					lastname: {[Op.iLike]:params + "%"}
+				},
+				{
+					username: {[Op.iLike]:params + "%"}
+				}
+				]
+			},
+			attributes:["id","name","username","lastname","image","gitaccount"],
+			include:[Post,Comment]
+		})
+		return findUserQuery
+}
 const DB_UserID = async (username)=>{
 	const UserID = await User.findOne({
 			where:{
 				username
 			},
+			attributes:["id","name","username","lastname","image","gitaccount"],
 			include: [Post,Comment]
 		})
 	return UserID;
@@ -45,7 +95,7 @@ const DB_Postsearch = async ({username, id}) =>{
 			post_search = await Post.findOne({
             	where:{
                  	'id':id
-            	}
+            	},
         	});
         	return post_search;
 		} else if (id === undefined){
@@ -53,7 +103,7 @@ const DB_Postsearch = async ({username, id}) =>{
 			post_search =await Post.findAll({
             	where:{
                 	userId:userDB.id
-            	}
+            	},
         	});
         	return post_search
 		}else {
@@ -158,5 +208,8 @@ module.exports = {
 	DB_Postedit,
 	validateUpdateUser,
 	validateUpdateUser,
-	DB_userCreates
+	DB_userCreates,
+	DB_findUserAll,
+	DB_findUserQuery,
+	DB_findUserParams
 }
