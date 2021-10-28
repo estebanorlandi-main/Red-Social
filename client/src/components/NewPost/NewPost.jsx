@@ -1,7 +1,11 @@
 import style from "./NewPost.module.css";
 import { useState } from "react";
+import {createPost} from "../../Redux/actions/Post.js"
+import { useDispatch } from 'react-redux' ;
+
 
 export default function NewPost() {
+  const dispatch = useDispatch();
   const [data, setData] = useState({
     title:"",
     content:"",
@@ -23,6 +27,7 @@ export default function NewPost() {
         tag:arr
     }))
   }
+
   function existe(str, str2, str3){
     var textos = [str, str2, str3]
     let arr = textos.map((texto)=>{
@@ -41,11 +46,10 @@ export default function NewPost() {
         }
     })
     return arr
-
   }
+
   function verificar(){
       var arr = existe("title","content","image")
-      console.log(arr)
       if (arr[0]===true && (arr[1]===true || arr[2]===true)) {
         setErrores(
           {
@@ -71,6 +75,7 @@ export default function NewPost() {
   function handleSubmit(e){
     e.preventDefault();
     if (verificar()) {
+      dispatch(createPost(data))
       setData({
         title:"",
         content:"",
