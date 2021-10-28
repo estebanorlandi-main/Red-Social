@@ -2,6 +2,8 @@ import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import Home from "./components/Home/Home";
+import Profile from "./Pages/Profile/Profile.jsx";
+import Post from "./components/Post/Post";
 import Signup from "./components/Signup/Signup";
 import Filters from "./components/Filters/Filters";
 
@@ -15,11 +17,7 @@ function App() {
           <Route
             path="/test"
             render={() => {
-              return (
-                <div>
-                  <Filters />
-                </div>
-              );
+              return <div></div>;
             }}
           />
           <Route path="/signup" component={Signup} />
