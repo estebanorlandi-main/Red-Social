@@ -2,100 +2,81 @@ import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
 import styles from "./Post.module.css";
+import Comment from "../Comment/Comment";
 
-function Post(props) {
+function Post({ post }) {
   const [firstLoad, setFirstLoad] = useState(true);
 
-  const [randomPost, setRandomPost] = useState(0);
-  const [randomComments, setRandomComments] = useState([]);
   const [seeMore, setSeeMore] = useState(false);
   const [showComments, setShowComments] = useState(false);
 
-  const [posts, users, comments] = useSelector((state) => [
-    state.posteos,
-    state.users,
-    state.comments,
-  ]);
-
   useEffect(() => {
     if (firstLoad) {
-      setRandomComments(comments.filter(() => Math.round(Math.random())));
-      setRandomPost(Math.floor(Math.random()) * 999);
       setFirstLoad(false);
     }
   });
 
-  const randomUser = () => Math.floor(Math.random() * 999);
-
-  const postTags = posts[randomPost].tags.filter((tag) => !!tag);
+  post.tags = post.tags.filter((tag) => !!tag);
 
   return (
     <div className={styles.container}>
       <ul className={styles.tags}>
-        {postTags.map((tag, i) => (
+        {post.tags.map((tag, i) => (
           <li key={i}>{tag}</li>
         ))}
       </ul>
 
       <div className={styles.userContainer}>
-        <img src={users[randomUser()].avatar} />
-        <span>{users[randomUser()].username}</span>
+        <img className={styles.avatar} src={post.creator.avatar} />
+        <div>
+          <span className={styles.username}>{post.creator.username}</span>
+          <span className={styles.github}>{post.creator.username}</span>
+        </div>
       </div>
 
-      <h3>{posts[randomPost].title}</h3>
+      <div className={styles.postBody}>
+        <h3>{post.title}</h3>
 
-      <div className={styles.mainContent + ` ${seeMore ? styles.expand : ""}`}>
-        <p className={styles.text}>{posts[randomPost].text}</p>
-        {seeMore ? (
-          ""
-        ) : (
+        <div
+          className={styles.mainContent + ` ${seeMore ? styles.expand : ""}`}
+          style={seeMore ? { overflowY: "visible" } : { overflowY: "hidden" }}
+        >
+          <p
+            className={styles.text}
+            style={seeMore ? { marginBottom: "1em" } : { marginBottom: "0" }}
+          >
+            {post.text}
+          </p>
           <button
             className={styles.seeMore}
+            style={seeMore ? { bottom: "-.5em" } : { bottom: "0" }}
             onClick={() => setSeeMore((old) => !old)}
           >
-            <span>...</span>See more
+            {seeMore ? "...See less" : "...See more"}
           </button>
-        )}
+        </div>
       </div>
 
-      <img className={styles.postImage} src={posts[randomPost].image} />
-
-      <div className={styles.info}>
-        <span>Likes: {posts[randomPost].likes}</span>
-        <span>Comments: {randomComments.length}</span>
-      </div>
-
-      <hr />
+      {post.image ? <img className={styles.postImage} src={post.image} /> : ""}
 
       <div className={styles.options}>
-        <button>Like</button>
-        <button onClick={() => setShowComments((old) => !old)}>Comments</button>
+        <button>L {post.likes}</button>
+        <button onClick={() => setShowComments((old) => !old)}>
+          C {post.comments.length}
+        </button>
         <button>Share</button>
       </div>
 
-      {showComments ? (
-        <ul className={styles.comments}>
-          {/* 
+      <ul className={styles.comments}>
+        {/* 
 
           cuando el usuario este logeado mostrar input 
           {user.sesion ? <NuevoComentario />: ''} 
 
         */}
-          {randomComments
-            .filter((value, i) => i < 5)
-            .map((comment, i) => (
-              <li className={styles.comment}>
-                <div className={styles.userContainer}>
-                  <img src={users[randomUser()].avatar} />
-                  <span>{users[randomUser()].username}</span>
-                </div>
-                <p>{comment.text}</p>
-              </li>
-            ))}
-        </ul>
-      ) : (
-        ""
-      )}
+
+        <Comment comment={post.comments[0]} />
+      </ul>
     </div>
   );
 }

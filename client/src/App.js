@@ -4,6 +4,8 @@ import LandingPage from "./Pages/LandingPage/LandingPage";
 import Home from "./components/Home/Home";
 import Profile from "./Pages/Profile/Profile.jsx";
 import Post from "./components/Post/Post";
+import Signup from "./components/Signup/Signup";
+import Filters from "./components/Filters/Filters";
 
 function App() {
   return (
@@ -15,13 +17,10 @@ function App() {
           <Route
             path="/test"
             render={() => {
-              return (
-                <div>
-                  <Profile />
-                </div>
-              );
+              return <div></div>;
             }}
           />
+          <Route path="/signup" component={Signup} />
         </Switch>
       </div>
     </BrowserRouter>
