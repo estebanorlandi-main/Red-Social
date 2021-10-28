@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import Home from "./components/Home/Home";
 import Signup from "./components/Signup/Signup";
+import Filters from "./components/Filters/Filters";
 
 function App() {
   return (
@@ -14,7 +15,11 @@ function App() {
           <Route
             path="/test"
             render={() => {
-              return <div></div>;
+              return (
+                <div>
+                  <Filters />
+                </div>
+              );
             }}
           />
           <Route path="/signup" component={Signup} />
