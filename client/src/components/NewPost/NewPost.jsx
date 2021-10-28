@@ -80,7 +80,9 @@ export default function NewPost() {
         title:"",
         content:"",
         image:"",
-        tag:[],
+        tag:"",
+        likes:[],
+        username:"aca iria el nombre del usuario"
       })
     }
   }
@@ -107,12 +109,9 @@ export default function NewPost() {
         tag
       </label>
         <input className={style.input} value={data.tag} name="tag" type="text" />
-      {/*
-        <label>
-        likes
+      <label>
+          Likes: {data.likes.length}
       </label>
-        <input className={style.input} value={data.likes} name="likes" type="text" />
-      */}
       <label>
         {data.username}
       </label>
