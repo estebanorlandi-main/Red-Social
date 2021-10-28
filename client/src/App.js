@@ -6,6 +6,7 @@ import Profile from "./Pages/Profile/Profile.jsx";
 import Post from "./components/Post/Post";
 import Signup from "./components/Signup/Signup";
 import Filters from "./components/Filters/Filters";
+import SearchBar from "./components/SearchBar/SearchBar";
 
 function App() {
   return (
@@ -17,7 +18,11 @@ function App() {
           <Route
             path="/test"
             render={() => {
-              return <div></div>;
+              return (
+                <div>
+                  <SearchBar />
+                </div>
+              );
             }}
           />
           <Route path="/signup" component={Signup} />
