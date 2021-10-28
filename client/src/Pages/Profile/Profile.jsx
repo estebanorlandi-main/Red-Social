@@ -132,9 +132,7 @@ export default function Profile(props) {
                   </div>
                   <div class="col-md-9 text-secondary">
                     <select>
-                      <option selected disabled>
-                        Tags..
-                      </option>
+                      <option selected>Tags..</option>
                       {users[1].tags.map((tag) => (
                         <option>{tag}</option>
                       ))}
