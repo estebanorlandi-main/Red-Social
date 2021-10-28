@@ -1,7 +1,8 @@
 .container * {
-  --blue: 85, 170, 221;
+  box-sizing: border-box;
   padding: 0;
   margin: 0;
+  text-align: left;
 }
 
 hr {
@@ -10,33 +11,56 @@ hr {
 }
 
 .container {
+  --c-tags: #4a90ae;
+  --c-bg: #f0f0f0;
+  --c-avatar-bg: #9fdfdb;
+  --c-font: #1e1e1e;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   max-width: 25em;
   margin: 1em auto 1em auto;
-  padding: 1rem;
-  text-align: left;
-  background-color: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: var(--c-bg);
 }
 
+.avatar {
+  background-color: var(--c-avatar-bg);
+  box-shadow: 0 4px 7px rgba(22, 22, 22, 0.25);
+  border-radius: 100%;
+}
 .userContainer {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  margin-bottom: 1em;
+  margin: 1em 0 1em 1em;
 }
 
 .userContainer > div {
   display: flex;
   flex-direction: column;
+  margin: 0 0 0 1em;
+}
+.userContainer .username {
+  font-weight: bold;
+}
+.userContainer .github {
+  margin-top: 0.25em;
+  font-size: 0.9rem;
+}
+
+.postBody {
+  margin: 0 1em 0 1em;
 }
 
 .mainContent {
   position: relative;
-  max-height: 5rem;
+  max-height: 4.5em;
   overflow-y: hidden;
   transition: all 0.25s;
+  margin: 0 auto;
 }
 
 .expand {
@@ -46,13 +70,13 @@ hr {
 .text {
   font-size: 1rem;
   line-height: 1.45rem;
-  margin-top: 1em;
+  margin: 0.5em 0 0 0;
 }
 
 .seeMore {
   z-index: 3;
   background-color: #f0f0f0;
-  padding: 0 0 0 1em;
+  padding: 0 0 0 0.5em;
   position: absolute;
   bottom: 0;
   right: 0;
@@ -71,23 +95,22 @@ hr {
 
 .postImage {
   width: 100%;
-  margin: 1em auto;
+  margin: 2em 0 1em 0;
 }
 
 .tags {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin: 0 0 1em 0;
+  margin: 1em;
 }
 
 .tags > li {
   list-style: none;
   padding: 0.25em 1em;
   font-size: 0.85rem;
-  border: 1px solid rgb(var(--blue));
-  color: rgb(var(--blue));
-  background-color: rgba(var(--blue), 0.25);
+  color: #fff;
+  background-color: var(--c-tags);
 }
 
 .tags > li:not(:first-child) {
@@ -102,14 +125,10 @@ hr {
   font-size: 0.8rem;
 }
 
-.comments {
-  margin: 1em 0 0 0;
-}
-
 .options {
   display: flex;
   justify-content: space-between;
-  margin: 1em 0 0 0;
+  padding: 2em 1em 1em 1em;
   width: 100%;
 }
 
@@ -117,4 +136,6 @@ hr {
   background-color: transparent;
   border: none;
   font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
 }
