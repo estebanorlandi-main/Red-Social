@@ -2,13 +2,14 @@ const router = require('express').Router();
 const { Sequelize, Model } = require("sequelize");
 const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.js');
 const Op = Sequelize.Op;
-const {DB_UserID,validateUpdateUser} = require("./utils.js")
+const {DB_UserID,validateUpdateUser,DB_AllUser,DB_findUserQuery,DB_findUserParams,DB_findUserAll} = require("./utils.js")
 
+
+// ok
 router.get("/", async (req,res,next)=>{
 	if(req.query.q) return next()
 	try {
-		const users = await User.findAll({})
-		res.send(users)
+		res.send(await DB_findUserAll())
 	} catch(e) {
 		res.sendStatus(404)
 	}
@@ -16,42 +17,25 @@ router.get("/", async (req,res,next)=>{
 //user query
 router.get("/", async (req,res,next)=>{
 	const query = req.query.q
-	console.log(query)
 	try {
-		const users = await User.findAll({
-			where:{
-				[Op.or]:[
-				// {
-				// 	name: {[Op.iLike]: query + "%"}				
-				// },
-				// {
-				// 	lastname: {[Op.iLike]:query + "%"}
-				// },
-				// {
-				// 	mail: {[Op.iLike]:query + "@"}
-				// },
-				{
-					username: {[Op.iLike]:query + "%"}
-				}
-				]
-			}
-		})
-		res.send(users)
+		res.send(await DB_findUserQuery(query))
 	} catch(e) {
 		res.sendStatus(404)
 	}
 })
 //user params
+// ok 
 router.get("/:username", async (req,res,next)=>{
 	const {username} = req.params
 	try {
-		const userID = await DB_UserID(username)
+		const userID = await DB_findUserParams(username)
 		userID?res.send(userID):res.sendStatus(404)
 	} catch(e) {
 		res.sendStatus(404)
 	}
 })
 //user params post
+//	ok
 router.get("/:username/posts", async (req,res,next)=>{
 	const {username} = req.params
 	try {
@@ -61,6 +45,8 @@ router.get("/:username/posts", async (req,res,next)=>{
 		res.sendStatus(404)
 	}
 })
+//user params comments
+// ok
 router.get("/:username/comments", async(req,res,next)=>{
 	const {username} = req.params
 	try {
@@ -88,6 +74,7 @@ router.put("/:username", async (req,res,next)=>{
 	const {username} = req.params
 	try {
 		let userID = await DB_UserID(username)
+
 		const updateDates = validateUpdateUser(req.body,userID)
 		for(prop in updateDates){
 			userID[prop] = updateDates[prop]
