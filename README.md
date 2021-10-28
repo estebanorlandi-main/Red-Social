@@ -15,3 +15,4 @@ DB_HOST=localhost
 
 DB_NAME=<nombre DB>
 `
+funciona
