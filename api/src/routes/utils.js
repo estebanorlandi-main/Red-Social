@@ -1,57 +1,140 @@
 const axios = require('axios');
 const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.js');
+const { Sequelize } = require("sequelize");
+const Op = Sequelize.Op;
 
+const DB_findUserAll = async (query)=>{
+		const findUserAll = await User.findAll({
+			attributes:["id","name","username","lastname","image","gitaccount"],
+			include: [Post,Comment]
+		})
+		return findUserAll
+}
+const DB_findUserQuery = async (query)=>{
+		const findUserQuery = await User.findAll({
+			where:{
+				[Op.or]:[
+				{
+					name: {[Op.iLike]: query + "%"}				
+				},
+				{
+					lastname: {[Op.iLike]:query + "%"}
+				},
+				{
+					username: {[Op.iLike]:query + "%"}
+				}
+				]
+			},
+			attributes:["id","name","username","lastname","image","gitaccount"],
+			include:[Post,Comment]
+		})
+		return findUserQuery
+}
+const DB_findUserParams = async (params)=>{
+		const findUserQuery = await User.findAll({
+			where:{
+				[Op.or]:[
+				{
+					name: {[Op.iLike]: params + "%"}				
+				},
+				{
+					lastname: {[Op.iLike]:params + "%"}
+				},
+				{
+					username: {[Op.iLike]:params + "%"}
+				}
+				]
+			},
+			attributes:["id","name","username","lastname","image","gitaccount"],
+			include:[Post,Comment]
+		})
+		return findUserQuery
+}
 const DB_UserID = async (username)=>{
 	const UserID = await User.findOne({
 			where:{
 				username
 			},
+			attributes:["id","name","username","lastname","image","gitaccount"],
 			include: [Post,Comment]
 		})
 	return UserID;
 }
 
 const DB_Allcomments = async (username)=>{
-
-	const Comments_data = await Comments.findAll({
-		where : {
-			username
-		},
-		include: {
-			attributes: ['userID','content'],
-			through: {
-				attributes: [],
-			}
-		}
-	})
-	const final = Comments_data.map((Comment)=>{
-		return Comment.dataValues;
+	user = await DB_UserID(username)
+	const final = user.comments.map((comment)=>{
+		return comment.dataValues;
 	})
 	return final;
 }
 
 const DB_Commentedit = async (id, content_data)=> {
-	const Comment = await Comments.update({
-		content : content_data,
-		where : {
-			id
-		}
-	})
-	return Comment.dataValues;
+	const updatedComment = await Comment.findOne({where: {'id':id}})
+	updatedComment.content = content_data
+	await updatedComment.save()
+	return updatedComment;
 
 }
 
 const DB_Commentdestroy = async (id)=> {
 	try{
-		const Comment = await Comments.destroy({
-			where : {
-				id
-			}
-		})
+		const eraseComment = await Comment.findOne({where: {'id':id}})
+		await eraseComment.destroy()
 		return 'Deleted Succesfully'
 	}catch(e){
 		throw new Error('We had a problem with your Delete')
 	} 
+
+}
+
+const DB_Postsearch = async ({username, id}) =>{
+	try{
+		let post_search;
+		if(username === undefined){
+			post_search = await Post.findOne({
+            	where:{
+                 	'id':id
+            	},
+        	});
+        	return post_search;
+		} else if (id === undefined){
+			let userDB = await DB_UserID(username);
+			post_search =await Post.findAll({
+            	where:{
+                	userId:userDB.id
+            	},
+        	});
+        	return post_search
+		}else {
+			return 'Post not found'
+		}
+	}catch(e){
+		throw new Error('We had a problem with the search')
+	}
+}
+
+const DB_Postdestroy = async (id)=> {
+
+	try{
+		const erasePost = await Post.findOne({where: {'id':id}})
+		console.log(erasePost)
+		await erasePost.destroy()
+		return 'Deleted Succesfully'
+	}catch(e){
+		throw new Error('We had a problem with your Delete')
+	} 
+
+}
+
+const DB_Postedit= async(id, title_data, content_data, tags) =>{
+	console.log(content_data, title_data, id, 'Entre a utils')
+	const updatedPost = await Post.findOne({where: {'id':id}})
+
+	content_data ? updatedPost.content = content_data : null
+	title_data ? updatedPost.title = title_data : null
+	await updatedPost.save()
+	return updatedPost;
 
 }
 
@@ -120,7 +203,13 @@ module.exports = {
 	DB_Allcomments,
 	DB_Commentedit,
 	DB_Commentdestroy,
+	DB_Postsearch,
+	DB_Postdestroy,
+	DB_Postedit,
 	validateUpdateUser,
 	validateUpdateUser,
-	DB_userCreates
+	DB_userCreates,
+	DB_findUserAll,
+	DB_findUserQuery,
+	DB_findUserParams
 }

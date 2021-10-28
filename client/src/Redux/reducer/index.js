@@ -1,13 +1,11 @@
 //const initialState = {}
 
-import posteos from "../../Mockups/post.json";
+import posts from "../../Mockups/posts.json";
 import users from "../../Mockups/users.json";
-import comments from "../../Mockups/comments.json";
 
 const initialState = {
-  posteos,
+  posts,
   users,
-  comments,
 };
 
 function rootReducer(state = initialState, action) {
@@ -18,4 +16,3 @@ function rootReducer(state = initialState, action) {
 }
 
 export default rootReducer;
-

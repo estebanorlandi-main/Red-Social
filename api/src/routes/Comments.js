@@ -23,12 +23,18 @@ router.get('/:username', async (req, res)=>{
 
 router.post('/', async (req, res)=>{
 	try {
-		const {title, content, username} = req.body
-		const Comment = await Comments.create({title,content})
+		const {title, content, username, postid} = req.body
 		const UserAssociation = await database_Utils.DB_UserID(username)
-		Comment.addUser(UserAssociation, {through: {username}})
-		return res.status(202).send(Comment)
+		const PostAssociation = await database_Utils.DB_Postsearch({'id' : postid})
+		console.log(PostAssociation, 'POSTEO')
+		const comment = await Comment.create({title,content, 
+			'userId':UserAssociation.id, 'postId': postid}
+			)
+		UserAssociation.addComment(comment)
+		PostAssociation.addComment(comment)
+		return res.status(202).send(comment)
 	} catch(e) {
+		console.log(e)
 		return res.status(404).send('Invalid username for request')
 	}
 })
@@ -52,9 +58,9 @@ router.delete('/:id', async (req, res)=>{
 	try {
 		const {id} = req.params
 		const Comment = await database_Utils.DB_Commentdestroy(id)
-		return res.status(200).send(Comment)
+		return res.status(200).send('Erased Succesfully')
 	}catch(e){
-		return res.status(404).send(e)
+		return res.status(404).send('Invalid Comment ID')
 	}
 })
 
