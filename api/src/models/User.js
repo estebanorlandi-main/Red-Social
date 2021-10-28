@@ -72,6 +72,20 @@ module.exports = (sequelize) => {
         }
       }
     },
+    about:{
+      type: DataTypes.STRING,
+      validate:{
+        len: [5,1000]
+      }
+    },
+    // tags:{
+    //   type: DataTypes.ARRAY(DataTypes.STRING),
+    //   validate:{
+    //     validateArr: function(arr){
+    //       if(!Array.isArray(arr)) throw new Error("tags invalide") 
+    //     }
+    //   }
+    // }
   },{
     timestamps: false,
   });
