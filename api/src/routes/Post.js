@@ -61,17 +61,19 @@ router.post("/", async (req, res, next) =>{
         title,
         content,
         image,
-        tags,
+        tag,
         likes,
         username
     } = req.body;
+    // console.log(req.body)
     try {
         let userDB = await DB_UserID(username);
+        // console.log(userDB)
         let createPost = await Post.create({
             image,
             likes,
             content,
-            tags,
+            tag,
             title,
             'userId' : userDB.id
         });
@@ -118,9 +120,8 @@ router.delete("/:id", async (req, res) =>{
 router.put("/:id", async (req, res) =>{
     try{
         const {id} = req.params;
-        const {title, content} = req.body
-        console.log(title, content) 
-        const updatePost = await DB_Postedit(id, title, content)
+        console.log(id)
+        const updatePost = await DB_Postedit(id, req.body)
         res.status(200).send(updatePost);
     }catch(e){
         res.status(404).send('Cant apply changes')
