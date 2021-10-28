@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import Home from "./components/Home/Home";
 import NewPost from "./components/NewPost/NewPost";
+import Profile from "./Pages/Profile/Profile.jsx";
 import Signup from "./components/Signup/Signup";
 import Post from "./components/Post/Post";
 function App() {
