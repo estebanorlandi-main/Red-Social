@@ -32,3 +32,7 @@
 
 # image #
 	todavia no tiene
+
+# about #
+	
+	LONGITUD [3,1000]

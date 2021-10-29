@@ -1,3 +1,8 @@
 .avatar {
+  width: 5rem;
+}
+
+.inputFullName {
+  font-size: 23px;
   width: 20rem;
 }

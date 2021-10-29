@@ -1,11 +1,61 @@
 const axios = require('axios');
 const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.js');
+const { Sequelize } = require("sequelize");
+const Op = Sequelize.Op;
 
+const DB_findUserAll = async (query)=>{
+		const findUserAll = await User.findAll({
+			attributes:["id","name","username","lastname","image","gitaccount"],
+			include: [Post,Comment]
+		})
+		return findUserAll
+}
+const DB_findUserQuery = async (query)=>{
+		const findUserQuery = await User.findAll({
+			where:{
+				[Op.or]:[
+				{
+					name: {[Op.iLike]: query + "%"}				
+				},
+				{
+					lastname: {[Op.iLike]:query + "%"}
+				},
+				{
+					username: {[Op.iLike]:query + "%"}
+				}
+				]
+			},
+			attributes:["id","name","username","lastname","image","gitaccount"],
+			include:[Post,Comment]
+		})
+		return findUserQuery
+}
+const DB_findUserParams = async (params)=>{
+		const findUserQuery = await User.findAll({
+			where:{
+				[Op.or]:[
+				{
+					name: {[Op.iLike]: params + "%"}				
+				},
+				{
+					lastname: {[Op.iLike]:params + "%"}
+				},
+				{
+					username: {[Op.iLike]:params + "%"}
+				}
+				]
+			},
+			attributes:["id","name","username","lastname","image","gitaccount"],
+			include:[Post,Comment]
+		})
+		return findUserQuery
+}
 const DB_UserID = async (username)=>{
 	const UserID = await User.findOne({
 			where:{
 				username
 			},
+			attributes:["id","name","username","lastname","image","gitaccount"],
 			include: [Post,Comment]
 		})
 	return UserID;
@@ -45,7 +95,7 @@ const DB_Postsearch = async ({username, id}) =>{
 			post_search = await Post.findOne({
             	where:{
                  	'id':id
-            	}
+            	},
         	});
         	return post_search;
 		} else if (id === undefined){
@@ -53,7 +103,7 @@ const DB_Postsearch = async ({username, id}) =>{
 			post_search =await Post.findAll({
             	where:{
                 	userId:userDB.id
-            	}
+            	},
         	});
         	return post_search
 		}else {
@@ -77,12 +127,16 @@ const DB_Postdestroy = async (id)=> {
 
 }
 
-const DB_Postedit= async(id, title_data, content_data, tags) =>{
-	console.log(content_data, title_data, id, 'Entre a utils')
-	const updatedPost = await Post.findOne({where: {'id':id}})
+const DB_Postedit= async(id, {title, content, tag, image, likes}) =>{
+	// console.log(id, title, content, tag, image, likes, 'Entre a utils')
+	const updatedPost = await Post.findOne({where: {'idPost':id}})
+	
+	content ? updatedPost.content = content: null;
+	title ? updatedPost.title = title : null;
+	tag ? updatedPost.tag = tag : null;
+	image ? updatedPost.image = image : null;
+	likes ? updatedPost.likes = likes : null;
 
-	content_data ? updatedPost.content = content_data : null
-	title_data ? updatedPost.title = title_data : null
 	await updatedPost.save()
 	return updatedPost;
 
@@ -148,6 +202,29 @@ const DB_userCreates = async(date)=>{
 	return
 }
 
+const DB_postCreates = async(data) =>{
+	if(typeof data == "object"){
+		data.forEach(async e =>{
+			var obj ={};
+			const user = await User.findAll({attributes:['username']})
+			var index = Math.floor((Math.random() * 100))
+			// console.log(user[index].username)
+			obj = {
+				title: e.title,
+				content: e.text,
+				image: e.image,
+				tag:e.tags,
+				likes: 0,
+				username: user[index].username
+			  }
+
+			console.log(obj);
+			await axios.post("http://localhost:3001/post",obj).catch(e=>e)			
+
+		})
+	}
+}
+
 module.exports = {
 	DB_UserID,
 	DB_Allcomments,
@@ -158,5 +235,9 @@ module.exports = {
 	DB_Postedit,
 	validateUpdateUser,
 	validateUpdateUser,
-	DB_userCreates
+	DB_userCreates,
+	DB_findUserAll,
+	DB_findUserQuery,
+	DB_findUserParams,
+	DB_postCreates
 }
