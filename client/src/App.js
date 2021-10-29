@@ -6,6 +6,7 @@ import NewPost from "./components/NewPost/NewPost";
 import Profile from "./Pages/Profile/Profile.jsx";
 import Post from "./components/Post/Post";
 import Signup from "./components/Signup/Signup";
+import UserList from "./components/UserList/UserList";
 function App() {
   return (
     <BrowserRouter>
@@ -21,6 +22,7 @@ function App() {
           />
           <Route path="/signup" component={Signup}/>
           <Route path="/newpost" component={NewPost}/>
+          <Route path="/userlist" component={UserList}/>
         </Switch>
       </div>
     </BrowserRouter>
