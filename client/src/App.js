@@ -4,9 +4,13 @@ import LandingPage from "./Pages/LandingPage/LandingPage";
 import Home from "./components/Home/Home";
 import NewPost from "./components/NewPost/NewPost";
 import Profile from "./Pages/Profile/Profile.jsx";
-import Post from "./components/Post/Post";
-import Signup from "./components/Signup/Signup";
 import UserList from "./components/UserList/UserList";
+import Signup from "./components/Signup/Signup";
+import Filters from "./components/Filters/Filters";
+import SearchBar from "./components/SearchBar/SearchBar";
+import Post from "./components/Post/Post";
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -17,7 +21,11 @@ function App() {
           <Route
             path="/test"
             render={() => {
-              return <div></div>;
+              return (
+                <div>
+                  <SearchBar />
+                </div>
+              );
             }}
           />
           <Route path="/signup" component={Signup}/>
