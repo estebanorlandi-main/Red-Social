@@ -28,9 +28,9 @@ router.get("/", async (req, res) =>{
 });
 
 //Trae todos los posteos que hizo un usuario
-router.get("/:username", async (req, res, next) =>{
+router.get("/", async (req, res, next) =>{
     try{
-        const {username} = req.params;
+        const {username} = req.body;
         if(!!Number(username)){
             return next()
         }
@@ -41,13 +41,13 @@ router.get("/:username", async (req, res, next) =>{
     };
 });
 
-//Filtra por id
-router.get("/:id", async (req, res, next) =>{
+//Filtra por id post
+router.get(":id", async (req, res, next) =>{
     try{
         const {id} = req.params;
-        if(Number(id).toString() === 'NaN'){
-            return next()
-        }
+        // if(Number(id).toString() === 'NaN'){
+        //     return next()
+        // }
         const postId = await DB_Postsearch({'id':id})
         postId? res.status(200).send(postId.dataValues) : res.send("No post with that id");
     }catch(e){
@@ -85,26 +85,6 @@ router.post("/", async (req, res, next) =>{
     }
 })
 
-
-/*router.post("/register", async (req,res,next)=>{
-	const {name,lastname,username, password,mail,gitaccount,image} = req.body;
-	const user = await User.findOrCreate({
-		where:{
-			mail:mail
-		},
-		defaults:{
-			name,
-			lastname,
-			username,
-			password,
-			mail,
-			gitaccount,
-			image
-		}
-	})
-	res.status(200).send('Registro con exito');
-})*/
-
 //Eliminacion de un Post
 router.delete("/:id", async (req, res) =>{
     try{
@@ -120,7 +100,6 @@ router.delete("/:id", async (req, res) =>{
 router.put("/:id", async (req, res) =>{
     try{
         const {id} = req.params;
-        console.log(id)
         const updatePost = await DB_Postedit(id, req.body)
         res.status(200).send(updatePost);
     }catch(e){

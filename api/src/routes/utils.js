@@ -94,7 +94,7 @@ const DB_Postsearch = async ({username, id}) =>{
 		if(username === undefined){
 			post_search = await Post.findOne({
             	where:{
-                 	'id':id
+                 	'idPost':id
             	},
         	});
         	return post_search;
@@ -117,8 +117,7 @@ const DB_Postsearch = async ({username, id}) =>{
 const DB_Postdestroy = async (id)=> {
 
 	try{
-		const erasePost = await Post.findOne({where: {'id':id}})
-		console.log(erasePost)
+		const erasePost = await Post.findOne({where: {'idPost':id}})
 		await erasePost.destroy()
 		return 'Deleted Succesfully'
 	}catch(e){
@@ -218,10 +217,48 @@ const DB_postCreates = async(data) =>{
 				username: user[index].username
 			  }
 
-			console.log(obj);
+			// console.log(obj);
 			await axios.post("http://localhost:3001/post",obj).catch(e=>e)			
 
 		})
+	}
+}
+
+const DB_userSearch= async (username, mail, password)=>{
+	try{
+		var user;
+		if(username && username != null){
+			user = await User.findOne({
+					where:{
+						username:username
+					}
+				})
+			if(user=== null){
+				return {error:"username"}
+			}
+			if(mail && user.mail !== mail){
+                return {error:"email"}}
+            
+            if(user.password !== password){
+                return {error:"password"}
+			}
+			return {user}
+		}else{
+			console.log('Entra en mail')
+			user = await User.findOne({
+				where:{
+					mail:mail
+				}
+			})
+			if(user=== null){
+				return {error:"email"}
+			}
+            if(user.password !== password){
+                return {error:"password"}
+                }
+			return {user}
+	}}catch(e){
+		return console.log('Error login',e)
 	}
 }
 
@@ -239,5 +276,6 @@ module.exports = {
 	DB_findUserAll,
 	DB_findUserQuery,
 	DB_findUserParams,
-	DB_postCreates
+	DB_postCreates,
+	DB_userSearch
 }
