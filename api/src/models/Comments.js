@@ -5,10 +5,6 @@ const { DataTypes, Sequelize } = require('sequelize');
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define('comment',{
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     content: {
       type: DataTypes.STRING,
       allowNull: false,
