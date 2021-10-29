@@ -4,7 +4,10 @@ import LandingPage from "./Pages/LandingPage/LandingPage";
 import Home from "./components/Home/Home";
 import NewPost from "./components/NewPost/NewPost";
 import Profile from "./Pages/Profile/Profile.jsx";
+<<<<<<< HEAD
 import Post from "./components/Post/Post";
+=======
+>>>>>>> 387e454f688cd9a096db7542a802b3836c4c539f
 import Signup from "./components/Signup/Signup";
 function App() {
   return (
