@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import UserList from "../UserList/UserList";
 
 export default function SearchBar(props) {
   const users = useSelector((state) => state.users);
@@ -17,6 +18,7 @@ export default function SearchBar(props) {
   return (
     <div>
       <input onChange={handleChange} placeholder="Search..."></input>
+      <UserList users={filteredUsers} />
       <p>Users founded: {filteredUsers.length}</p>
       <div>
         {filteredUsers.length > 0 ? (
