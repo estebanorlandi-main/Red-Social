@@ -19,6 +19,10 @@ export default function NewPost() {
     content:{indice:0,err:["", "Por lo menos un content o imagen"]},
     image:{indice:0,err:["", "Por lo menos un content o imagen"] }
   })
+  const [img, setImg] = useState({
+    url:"",
+    mostrar:false
+  })
 
   function separarTags(str){
     var arr = str.split(",")
@@ -66,6 +70,13 @@ export default function NewPost() {
     if (e.target.name === "tag") {
       separarTags(e.target.value)
     }
+    if (e.target.name === "image") {
+      setImg((old)=>({
+        ...old,
+        url: e.target.value,
+        mostrar: false
+      }))
+    }
     setData((old) => ({
       ...old,
       [e.target.name]: e.target.value,
@@ -73,6 +84,10 @@ export default function NewPost() {
   }
 
   function handleSubmit(e){
+    setImg((old)=>({
+      ...old,
+      mostrar: true
+    }))
     e.preventDefault();
     if (verificar()) {
       dispatch(createPost(data))
@@ -102,6 +117,8 @@ export default function NewPost() {
         <div>{errores.content.err[errores.content.indice]}</div>
       <label>
         image
+        <br/>
+        {img.mostrar ? <img className={style.img} src={img.url} alt="Esa Imagen no es valida"/> : ""}
       </label>
         <input className={style.input} value={data.image} name="image" type="text" />
         <div>{errores.image.err[errores.image.indice]}</div>
@@ -115,7 +132,7 @@ export default function NewPost() {
       <label>
         {data.username}
       </label>
-        <button type="submit">Crear</button>
+        <button type="submit" name="submit">Crear</button>
     </form>
     </div>
   );
