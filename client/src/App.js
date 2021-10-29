@@ -7,9 +7,9 @@ import Profile from "./Pages/Profile/Profile.jsx";
 import UserList from "./components/UserList/UserList";
 import Signup from "./components/Signup/Signup";
 import Filters from "./components/Filters/Filters";
+import NavBar from "./components/NavBar/NavBar.js";
 import SearchBar from "./components/SearchBar/SearchBar";
 import Post from "./components/Post/Post";
-
 
 function App() {
   return (
@@ -23,6 +23,7 @@ function App() {
             render={() => {
               return (
                 <div>
+                  <NavBar />
                   <SearchBar />
                 </div>
               );
