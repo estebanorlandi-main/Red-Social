@@ -23,11 +23,11 @@ router.get('/:username', async (req, res)=>{
 
 router.post('/', async (req, res)=>{
 	try {
-		const {title, content, username, postid} = req.body
+		const {content, username, postid} = req.body
 		const UserAssociation = await database_Utils.DB_UserID(username)
 		const PostAssociation = await database_Utils.DB_Postsearch({'id' : postid})
 		console.log(PostAssociation, 'POSTEO')
-		const comment = await Comment.create({title,content, 
+		const comment = await Comment.create({content, 
 			'userId':UserAssociation.id, 'postId': postid}
 			)
 		UserAssociation.addComment(comment)
