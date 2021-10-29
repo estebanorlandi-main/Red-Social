@@ -63,6 +63,13 @@ export default function NewPost() {
           }
         )
         return true
+      }else if(arr[1]===true || arr[2]===true) {
+        setErrores(
+          {
+            title:{indice:1, err:["", "Campo Obligatorio"]},
+            content:{indice:0,err:["", "Por lo menos un content o imagen"]},
+            image:{indice:0,err:["", "Por lo menos un content o imagen"] }
+          })
       }
   }
 
@@ -103,7 +110,7 @@ export default function NewPost() {
   }
   return (
     <div>
-    <form className={style.container} onSubmit={(e)=>handleSubmit(e)} onChange={(e)=>handleChange(e)}>
+    {/*<form className={style.container} onSubmit={(e)=>handleSubmit(e)} onChange={(e)=>handleChange(e)}>
       Formulario de creacion de post
       <label>
         title
@@ -132,6 +139,41 @@ export default function NewPost() {
       <label>
         {data.username}
       </label>
+        <button type="submit" name="submit">Crear</button>
+    </form>*/}
+
+
+    <form className={style.container2} onSubmit={(e)=>handleSubmit(e)} onChange={(e)=>handleChange(e)}>
+      <div className={style.divs}>
+      <div>
+        <input value={data.title} name="title" type="text" placeholder="Title"/>
+        <div className={style.errores}>{errores.title.err[errores.title.indice]}</div>
+      </div>
+      <label>
+          {data.username}
+      </label>
+      </div>
+      <div className={style.divs}>
+      <div>
+        <textarea className={style.textarea} value={data.content} name="content" type="text" />
+        <div className={style.errores}>{errores.content.err[errores.content.indice]}</div>
+      </div>
+      </div>
+      <div className={style.divs}>
+      {/*<label>
+        image
+         <br/>
+        {img.mostrar ? <img className={style.img} src={img.url} alt="Esa Imagen no es valida"/> : ""}
+      </label>*/}
+      <div>
+      <input value={data.image} name="image" type="text" placeholder="Image"/>
+      <div className={style.errores}>{errores.image.err[errores.image.indice]}</div>
+      </div>
+      <div>
+        <input value={data.tag} name="tag" type="text" placeholder="Tags"/>
+        <div></div>
+      </div>
+      </div>
         <button type="submit" name="submit">Crear</button>
     </form>
     </div>
