@@ -2,15 +2,13 @@ import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import Home from "./components/Home/Home";
-import NewPost from "./components/NewPost/NewPost";
 import Profile from "./Pages/Profile/Profile.jsx";
-import UserList from "./components/UserList/UserList";
 import Signup from "./components/Signup/Signup";
-import Filters from "./components/Filters/Filters";
+
+import UserList from "./components/UserList/UserList";
+import NewPost from "./components/NewPost/NewPost";
 import NavBar from "./components/NavBar/NavBar.js";
 import SearchBar from "./components/SearchBar/SearchBar";
-import Post from "./components/Post/Post";
-
 
 function App() {
   return (
@@ -21,21 +19,15 @@ function App() {
           <Route path="/home" component={Home} />
           <Route path="/signup" component={Signup} />
           <Route path="/profile" component={Profile} />
+          <Route path="/newpost" component={NewPost} />
+          <Route path="/userlist" component={UserList} />
 
           <Route
             path="/test"
             render={() => {
-              return (
-                <div>
-                  <NavBar />
-                  <SearchBar />
-                </div>
-              );
+              return <div></div>;
             }}
           />
-          <Route path="/signup" component={Signup}/>
-          <Route path="/newpost" component={NewPost}/>
-          <Route path="/userlist" component={UserList}/>
         </Switch>
       </div>
     </BrowserRouter>
