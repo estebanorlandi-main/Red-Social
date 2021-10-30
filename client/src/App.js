@@ -11,6 +11,7 @@ import NavBar from "./components/NavBar/NavBar.js";
 import SearchBar from "./components/SearchBar/SearchBar";
 import Post from "./components/Post/Post";
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -18,6 +19,9 @@ function App() {
         <Switch>
           <Route exact path="/" component={LandingPage} />
           <Route path="/home" component={Home} />
+          <Route path="/signup" component={Signup} />
+          <Route path="/profile" component={Profile} />
+
           <Route
             path="/test"
             render={() => {
