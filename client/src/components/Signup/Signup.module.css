@@ -9,3 +9,9 @@
 .input{
   margin-left: 20px;
 }
+.errores{
+  color:red;
+  font-size: 0.8em;
+  width: auto;
+  height: auto;
+}
