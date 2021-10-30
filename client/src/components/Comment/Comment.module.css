@@ -1,10 +1,18 @@
+.comment a {
+  color: #1e1e1e;
+  text-decoration: none;
+}
+
 .comment {
   background-color: #fafafa;
   display: block;
   list-style: none;
-  padding: 1em !important;
+  padding: 0 var(--pX) 1em var(--pX) !important;
 }
 
 .comment > p {
   margin: 0.5em 0 0 0;
+  color: #555;
+  font-weight: 300;
+  font-size: 0.9rem;
 }

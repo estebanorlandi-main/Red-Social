@@ -1,9 +1,12 @@
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import Comment from "../Comment/Comment";
 
 import styles from "./Post.module.css";
+
+//Icons
 import {
   MdFavoriteBorder,
   MdFavorite,
@@ -12,8 +15,6 @@ import {
   MdSearch,
   MdSend,
 } from "react-icons/md";
-import { IconContext } from "react-icons/lib";
-import { Link } from "react-router-dom";
 
 function Post({ post }) {
   const [firstLoad, setFirstLoad] = useState(true);
@@ -40,97 +41,78 @@ function Post({ post }) {
 
   return (
     <div className={styles.container}>
-      <IconContext.Provider
-        value={{
-          color: "#1e1e1e",
-          size: "1em",
-          className: styles.icons,
-          style: {
-            verticalAlign: "middle",
-          },
-        }}
+      <ul className={styles.tags}>
+        {post.tags.map((tag, i) => (
+          <li key={i}>{tag}</li>
+        ))}
+      </ul>
+
+      <Link
+        className={styles.userContainer}
+        to={`/profile/${post.creator.username}`}
       >
-        <ul className={styles.tags}>
-          {post.tags.map((tag, i) => (
-            <li key={i}>{tag}</li>
-          ))}
-        </ul>
+        <img className={styles.avatar} src={post.creator.avatar} alt="avatar" />
+        <div>
+          <span className={styles.username}>{post.creator.username}</span>
+          <span className={styles.github}>{post.creator.username}</span>
+        </div>
+      </Link>
 
-        <Link
-          className={styles.userContainer}
-          to={`/profile/${post.creator.username}`}
+      <div className={styles.postBody}>
+        <h3>{post.title}</h3>
+
+        <div
+          className={styles.mainContent + ` ${seeMore ? styles.expand : ""}`}
+          style={seeMore ? { overflowY: "visible" } : { overflowY: "hidden" }}
         >
-          <img
-            className={styles.avatar}
-            src={post.creator.avatar}
-            alt="avatar"
-          />
-          <div>
-            <span className={styles.username}>{post.creator.username}</span>
-            <span className={styles.github}>{post.creator.username}</span>
-          </div>
-        </Link>
-
-        <div className={styles.postBody}>
-          <h3>{post.title}</h3>
-
-          <div
-            className={styles.mainContent + ` ${seeMore ? styles.expand : ""}`}
-            style={seeMore ? { overflowY: "visible" } : { overflowY: "hidden" }}
+          <p
+            className={styles.text}
+            style={seeMore ? { marginBottom: "1em" } : { marginBottom: "0" }}
           >
-            <p
-              className={styles.text}
-              style={seeMore ? { marginBottom: "1em" } : { marginBottom: "0" }}
-            >
-              {post.text}
-            </p>
-            <button
-              className={styles.seeMore}
-              style={seeMore ? { bottom: "-2em" } : { bottom: "0" }}
-              onClick={() => setSeeMore((old) => !old)}
-            >
-              {seeMore ? "...See less" : "...See more"}
-            </button>
-          </div>
-        </div>
-        {post.image ? (
-          <img className={styles.postImage} src={post.image} />
-        ) : (
-          ""
-        )}
-        <div className={styles.options}>
-          <button>
-            <MdFavoriteBorder /> {post.likes}
-          </button>
-          <button>
-            <MdOutlineModeComment /> {post.comments.length}
-          </button>
-          <button>
-            <MdShare /> Share
+            {post.text}
+          </p>
+          <button
+            className={styles.seeMore}
+            style={seeMore ? { bottom: "-2em" } : { bottom: "0" }}
+            onClick={() => setSeeMore((old) => !old)}
+          >
+            {seeMore ? "...See less" : "...See more"}
           </button>
         </div>
-        {/* 
+      </div>
+      {post.image ? <img className={styles.postImage} src={post.image} /> : ""}
+      <div className={styles.options}>
+        <button>
+          <MdFavoriteBorder /> {post.likes}
+        </button>
+        <button>
+          <MdOutlineModeComment /> {post.comments.length}
+        </button>
+        <button>
+          <MdShare /> Share
+        </button>
+      </div>
+      {/* 
         cuando el usuario este logeado mostrar input 
         {user.sesion ? <NuevoComentario />: ''} 
       */}
 
-        <div className={styles.newCommentContainer}>
-          <span className={styles.maxLength}>{newComment.length} / 1000</span>
-          <form className={styles.newComment} onSubmit={handleSubmit}>
-            <textarea
-              className={styles.textarea}
-              onChange={handleComment}
-              name="text"
-              value={newComment}
-              placeholder="New comment..."
-            />
-            <button type="submit">
-              <MdSend />
-            </button>
-          </form>
-        </div>
-        <Comment comment={post.comments[0]} />
-      </IconContext.Provider>
+      <div className={styles.newCommentContainer}>
+        <span className={styles.maxLength}>{newComment.length} / 1000</span>
+        <form className={styles.newComment} onSubmit={handleSubmit}>
+          <textarea
+            className={styles.textarea}
+            onChange={handleComment}
+            name="text"
+            value={newComment}
+            placeholder="New comment..."
+          />
+          <button type="submit">
+            <MdSend />
+          </button>
+        </form>
+      </div>
+      <Comment comment={post.comments[0]} />
     </div>
   );
 }
