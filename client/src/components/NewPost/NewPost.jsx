@@ -16,7 +16,7 @@ export default function NewPost() {
   })
   const [errores, setErrores] = useState({
     title:{indice:0, err:["", "Campo Obligatorio"]},
-    content:{indice:0,err:["", "Por lo menos un content o imagen"]},
+    content:{indice:0,err:["", "Por lo menos un content o imagen","Maximo 1000 Caracteres"]},
     image:{indice:0,err:["", "Por lo menos un content o imagen"] }
   })
   const [img, setImg] = useState({
@@ -58,7 +58,7 @@ export default function NewPost() {
         setErrores(
           {
             title:{indice:0, err:["", "Campo Obligatorio"]},
-            content:{indice:0,err:["", "Por lo menos un content o imagen"]},
+            content:{indice:0,err:["", "Por lo menos un content o imagen", "Maximo 1000 Caracteres"]},
             image:{indice:0,err:["", "Por lo menos un content o imagen"] }
           }
         )
@@ -74,14 +74,36 @@ export default function NewPost() {
   }
 
   function handleChange(e){
+    console.log(e.target.value.length)
     if (e.target.name === "tag") {
       separarTags(e.target.value)
+      return
     }
     if (e.target.name === "image") {
       setImg((old)=>({
         ...old,
         url: e.target.value,
         mostrar: false
+      }))
+      return
+    }
+    if (e.target.name === "content" && data.content.length === 1000 ) {
+      if (e.target.value.length > 1000) {
+        setErrores((old) => ({
+          ...old,
+          content:{
+            ...old.content,
+            indice:2
+          }
+        }))
+        return
+      }
+      setErrores((old) => ({
+        ...old,
+        content:{
+          ...old.content,
+          indice:0
+        }
       }))
     }
     setData((old) => ({
@@ -155,6 +177,7 @@ export default function NewPost() {
       </div>
       <div className={style.divs}>
       <div>
+        <div>{data.content.length}/1000</div>
         <textarea className={style.textarea} value={data.content} name="content" type="text" />
         <div className={style.errores}>{errores.content.err[errores.content.indice]}</div>
       </div>
