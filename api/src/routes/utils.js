@@ -3,6 +3,16 @@ const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.j
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
 
+const DB_findUsersEmail = async (email)=>{
+	if(email == null || email == undefined) {return null}
+	const findUserEmail = await User.findOne({where:{email}})
+	return findUserEmail
+}
+const DB_findUsersUsername = async (username)=>{
+	if(username == null || username == undefined) {return null;}
+	const findUsername = await User.findOne({where:{username}})
+	return findUsername
+}
 const DB_findUserAll = async (query)=>{
 		const findUserAll = await User.findAll({
 			attributes:["id","name","username","lastname","image","gitaccount"],
@@ -10,45 +20,42 @@ const DB_findUserAll = async (query)=>{
 		})
 		return findUserAll
 }
+const DB_findUserCreated = async (date)=>{
+	const {username,email} = date
+	let errors = {}
+	byEmail = await User.findOne({where:{email}})
+	byUsername = await User.findOne({where:{username}})
+	if(byEmail) errors={...errors,email:"Is already in use"}
+	if(byUsername) errors={...errors,username:"Is already in use"}
+	return errors
+}
 const DB_findUserQuery = async (query)=>{
-		const findUserQuery = await User.findAll({
+	console.log(query)
+		const findUser = await User.findOne({
 			where:{
 				[Op.or]:[
 				{
-					name: {[Op.iLike]: query + "%"}				
+					username: {[Op.iLike]:query.username}
 				},
 				{
-					lastname: {[Op.iLike]:query + "%"}
-				},
-				{
-					username: {[Op.iLike]:query + "%"}
+					email: {[Op.iLike]:query.email}
 				}
 				]
 			},
 			attributes:["id","name","username","lastname","image","gitaccount"],
 			include:[Post,Comment]
 		})
-		return findUserQuery
+		return findUser
 }
 const DB_findUserParams = async (params)=>{
-		const findUserQuery = await User.findAll({
+		const findUser = await User.findOne({
 			where:{
-				[Op.or]:[
-				{
-					name: {[Op.iLike]: params + "%"}				
-				},
-				{
-					lastname: {[Op.iLike]:params + "%"}
-				},
-				{
-					username: {[Op.iLike]:params + "%"}
-				}
-				]
+				username:params
 			},
 			attributes:["id","name","username","lastname","image","gitaccount"],
 			include:[Post,Comment]
 		})
-		return findUserQuery
+		return findUser
 }
 const DB_UserID = async (username)=>{
 	const UserID = await User.findOne({
@@ -184,6 +191,28 @@ const validateUpdateUser = (update, userID)=>{
 	return obj
 }
 
+const DB_createUser = async(date)=>{
+	let errors = {}
+	let validateDate = await User.create(date).catch(e=>{
+		e.errors.forEach(e=> {
+			errors = {...errors,[e.path]:e.message}
+		})
+	})
+	if(Array.isArray(validateDate))return validateDate
+	else return errors
+}
+
+const DB_updateUser = async(date,id)=>{
+	let errors = {} 
+	let validateDate = await User.update(date,{where:{id:id}}).catch(e=>{
+		console.log(e)
+		e.errors.forEach(e=> {
+			errors = {...errors,[e.path]:e.message}
+		})
+	})
+	if(Array.isArray(validateDate))return []
+	else return errors
+}
 const DB_userCreates = async(date)=>{
 
 //DESCOMENTAR LAS SIGUIENTES LINEAS SIII SE QUIERE VER LOS STATUS EN LA TERMINAL Y COMENTAR LA DE ABAJO
@@ -261,6 +290,13 @@ const DB_userSearch= async (username, mail, password)=>{
 		return console.log('Error login',e)
 	}
 }
+const DB_validatePassword = (password)=>{
+	const validate = password.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
+	if(validate == null){
+		return ({password: "The password must have a minimum of eight characters, at least one letter and one number."})
+	}
+	else return ({})
+}
 
 module.exports = {
 	DB_UserID,
@@ -277,5 +313,11 @@ module.exports = {
 	DB_findUserQuery,
 	DB_findUserParams,
 	DB_postCreates,
-	DB_userSearch
+	DB_userSearch,
+	DB_findUsersEmail,
+	DB_findUsersUsername,
+	DB_validatePassword,
+	DB_findUserCreated,
+	DB_createUser,
+	DB_updateUser
 }
