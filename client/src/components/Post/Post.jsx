@@ -83,7 +83,8 @@ function Post({ post }) {
       {post.image ? <img className={styles.postImage} src={post.image} /> : ""}
       <div className={styles.options}>
         <button>
-          <MdFavoriteBorder /> {post.likes}
+          {post.likes ? <MdFavorite color="red" /> : <MdFavorite />}{" "}
+          {post.likes}
         </button>
         <button>
           <MdOutlineModeComment /> {post.comments.length}
@@ -108,7 +109,7 @@ function Post({ post }) {
             placeholder="New comment..."
           />
           <button type="submit">
-            <MdSend />
+            <MdSend className={styles.icons} />
           </button>
         </form>
       </div>

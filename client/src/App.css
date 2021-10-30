@@ -1,9 +1,15 @@
 .App {
-  --c-blue: #4a90ae;
-  --c-light-blue: #5ab0be;
   --c-light: #f0f0f0;
   --c-dark: #1e1e1e;
+
+  --hue-blue: 198;
+
+  --c-light-blue: hsl(198, 45%, 65%);
+  --c-blue: hsl(198, 40%, 49%);
+  --c-mix: #7f69a3;
+  --c-enfasis: #a04972;
 }
+
 .container {
   width: 95vw;
   margin: 0 auto;

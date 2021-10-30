@@ -32,12 +32,16 @@ hr {
   background-color: var(--c-avatar-bg);
   border-radius: 100%;
 }
+
 .userContainer {
   color: var(--c-font);
   display: flex;
   flex-direction: row;
   align-items: center;
   margin: 0.5em 0 var(--pX) var(--pX);
+}
+.userContainer:hover .avatar {
+  background-color: var(--c-enfasis);
 }
 
 .userContainer > div {
@@ -80,17 +84,18 @@ hr {
   bottom: 0;
   right: 0;
   z-index: 3;
-  padding: 0 0 0 0.5em;
+  padding: 0.5em 0.5em 0 0.5em;
   border: none;
   background-color: var(--c-light);
   color: var(--c-light-blue);
+  font-size: 0.9rem;
   cursor: pointer;
 }
 .seeMore > span {
   margin-right: 0.25rem;
 }
 .seeMore:hover {
-  color: var(--c-blue);
+  color: var(--c-enfasis);
 }
 
 .postImage {
@@ -183,10 +188,10 @@ hr {
   color: #fff;
 }
 
-.newComment > button .icons {
-  transform: translate(4px);
-  width: 1.5em;
-  height: 1.5em;
+.icons {
+  transform: translateX(4px);
+  width: 1.25em;
+  height: 1.25em;
 }
 
 .maxLength {

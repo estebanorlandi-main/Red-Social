@@ -5,6 +5,7 @@ header * {
 header {
   background: #fff;
   position: sticky;
+  z-index: 10;
   top: 0;
 }
 
