@@ -8,13 +8,22 @@ function Post({ post }) {
   const [firstLoad, setFirstLoad] = useState(true);
 
   const [seeMore, setSeeMore] = useState(false);
-  const [showComments, setShowComments] = useState(false);
+  const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
     if (firstLoad) {
       setFirstLoad(false);
     }
   });
+
+  const handleComment = (e) => {
+    setNewComment(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(newComment);
+  };
 
   post.tags = post.tags.filter((tag) => !!tag);
 
@@ -25,7 +34,6 @@ function Post({ post }) {
           <li key={i}>{tag}</li>
         ))}
       </ul>
-
       <div className={styles.userContainer}>
         <img className={styles.avatar} src={post.creator.avatar} />
         <div>
@@ -33,7 +41,6 @@ function Post({ post }) {
           <span className={styles.github}>{post.creator.username}</span>
         </div>
       </div>
-
       <div className={styles.postBody}>
         <h3>{post.title}</h3>
 
@@ -49,34 +56,35 @@ function Post({ post }) {
           </p>
           <button
             className={styles.seeMore}
-            style={seeMore ? { bottom: "-.5em" } : { bottom: "0" }}
+            style={seeMore ? { bottom: "-2em" } : { bottom: "0" }}
             onClick={() => setSeeMore((old) => !old)}
           >
             {seeMore ? "...See less" : "...See more"}
           </button>
         </div>
       </div>
-
       {post.image ? <img className={styles.postImage} src={post.image} /> : ""}
-
       <div className={styles.options}>
         <button>L {post.likes}</button>
-        <button onClick={() => setShowComments((old) => !old)}>
-          C {post.comments.length}
-        </button>
+        <button>C {post.comments.length}</button>
         <button>Share</button>
       </div>
+      {/* 
+        cuando el usuario este logeado mostrar input 
+        {user.sesion ? <NuevoComentario />: ''} 
+      */}
 
-      <ul className={styles.comments}>
-        {/* 
-
-          cuando el usuario este logeado mostrar input 
-          {user.sesion ? <NuevoComentario />: ''} 
-
-        */}
-
-        <Comment comment={post.comments[0]} />
-      </ul>
+      <span className={styles.maxLength}>{newComment.length} / 1000</span>
+      <form className={styles.newComment} onSubmit={handleSubmit}>
+        <textarea
+          className={styles.textarea}
+          onChange={handleComment}
+          name="text"
+          value={newComment}
+        />
+        <button type="submit"> Submit </button>
+      </form>
+      <Comment comment={post.comments[0]} />
     </div>
   );
 }
