@@ -1,0 +1,10 @@
+.cargando {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: var(--c-light);
+  text-align: center;
+  font-size: 1.25rem;
+  min-height: 7em;
+}
