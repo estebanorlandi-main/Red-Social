@@ -9,6 +9,7 @@ import styles from "./Home.module.css";
 function Home(props) {
   const posts = useSelector((state) => state.posts);
   const [page, setPage] = useState(0);
+  const [createPost, setCreatePost] = useState(false);
 
   const handlePage = () => setPage(page + 1);
 
@@ -28,9 +29,27 @@ function Home(props) {
   }, [handleScroll]);
 
   console.log("total posts: ", (page + 1) * 10);
+
   return (
-    <div>
-      <NewPost />
+    <div className={`${styles.home} ` + createPost ? styles.noScroll : ""}>
+      <div>
+        <button onClick={() => setCreatePost((old) => !old)}>
+          Create Post
+        </button>
+      </div>
+
+      {createPost ? (
+        <div
+          className={styles.newPost}
+          id="close"
+          onClick={(e) => (e.target.id === "close" ? setCreatePost(false) : "")}
+        >
+          <NewPost />
+        </div>
+      ) : (
+        ""
+      )}
+
       <ul>
         {posts.map((post, i) =>
           i < (page + 1) * 10 ? (
