@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styles from "./Profile.module.css";
+import Select from "react-select";
 
 export default function Profile(props) {
   const [loading, setLoading] = useState(false);
@@ -19,6 +20,7 @@ export default function Profile(props) {
   });
 
   const [error, setError] = useState({ name: "", lastname: "" });
+  const [tagsSelected, setTagsSelected] = useState();
 
   const handleChange = (event) => {
     setInput({ ...input, [event.target.name]: event.target.value });
@@ -56,9 +58,15 @@ export default function Profile(props) {
       email: input.mail,
       github: input.github,
       about: input.about,
+      tags: tagsSelected.map((tag) => tag.label),
     };
 
     console.log(users[0]);
+  };
+
+  const onDropdownChange = (value) => {
+    setTagsSelected(value);
+    console.log(value);
   };
 
   return (
@@ -67,25 +75,33 @@ export default function Profile(props) {
 
       <h3>{users[0].username}</h3>
       {loggedIn ? (
-        <input
-          name="firstname"
-          onChange={handleChange}
-          value={input.firstname}
-          type="text"
-          placeholder="First name.."
-        />
+        <div class="wrapper">
+          <div class="input-data">
+            <input
+              name="firstname"
+              onChange={handleChange}
+              value={input.firstname}
+              type="text"
+            />
+            <label>First Name</label>
+          </div>
+        </div>
       ) : (
         users[0].firstName
       )}
 
       {loggedIn ? (
-        <input
-          name="lastname"
-          value={input.lastname}
-          type="text"
-          placeholder="Last name.."
-          onChange={handleChange}
-        />
+        <div class="wrapper">
+          <div class="input-data">
+            <input
+              name="lastname"
+              value={input.lastname}
+              type="text"
+              onChange={handleChange}
+            />
+            <label>Last Name</label>
+          </div>
+        </div>
       ) : (
         users[0].lastName
       )}
@@ -111,23 +127,36 @@ export default function Profile(props) {
 
       <h5>Tags</h5>
       {loggedIn ? (
-        <select>
-          <option selected>Tags..</option>
-          {users[1].tags.map((tag) => (
-            <option>{tag}</option>
-          ))}
-        </select>
+        <Select
+          value={tagsSelected}
+          options={[
+            { value: "javascript", label: "JavaScript" },
+            { value: "python", label: "Python" },
+            { value: "c#", label: "C#" },
+            { value: "c", label: "C" },
+            { value: "c++", label: "C++" },
+            { value: "java", label: "Java" },
+          ]}
+          onChange={onDropdownChange}
+          isMulti
+        />
       ) : (
-        ""
+        <h5>
+          {users[0].tags.map((tag) => {
+            if (tag !== null) {
+              return tag + " ";
+            }
+          })}
+        </h5>
       )}
 
       {loggedIn ? (
-        <button onClick={() => setLoggedIn(true)}>Log In</button>
-      ) : (
         <Fragment>
           <button onClick={() => handleSubmit()}>Save</button>
           <button onClick={() => setLoggedIn(false)}>Log Out</button>
         </Fragment>
+      ) : (
+        <button onClick={() => setLoggedIn(true)}>Log In</button>
       )}
     </div>
   );
