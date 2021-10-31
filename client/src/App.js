@@ -1,6 +1,6 @@
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, useLocation } from "react-router-dom";
 import LandingPage from "./Pages/LandingPage/LandingPage";
-import Home from "./components/Home/Home";
+import Home from "./Pages/Home/Home";
 import Profile from "./Pages/Profile/Profile.jsx";
 import Signup from "./components/Signup/Signup";
 
@@ -12,13 +12,35 @@ import Post from "./components/Post/Post";
 
 // Variables CSS
 import "./App.css";
+import { useState, useEffect, useCallback } from "react";
 
 function App() {
   const posts = useSelector((state) => state.posts);
+  const [page, setPage] = useState(0);
+
+  const handlePage = () => setPage(page + 1);
+
+  const handleScroll = useCallback(function handleScroll() {
+    const bottom =
+      Math.ceil(window.innerHeight + window.scrollY) >=
+      document.documentElement.scrollHeight;
+    if (bottom) handlePage();
+  });
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [handleScroll]);
+
+  const location = useLocation();
+  const isLanding = location.pathname === "/";
 
   return (
     <div className="App">
-      <NavBar />
+      <NavBar isLanding={isLanding} />
 
       <Switch>
         <Route exact path="/" component={LandingPage} />
@@ -40,16 +62,9 @@ function App() {
           render={() => {
             return (
               <div>
-                <Post post={posts[0]} />
-                <Post post={posts[1]} />
-                <Post post={posts[2]} />
-                <Post post={posts[3]} />
-                <Post post={posts[4]} />
-                <Post post={posts[5]} />
-                <Post post={posts[6]} />
-                <Post post={posts[7]} />
-                <Post post={posts[8]} />
-                <Post post={posts[9]} />
+                {posts.map((post, i) =>
+                  i < (page + 1) * 10 ? <Post post={post} /> : ""
+                )}
               </div>
             );
           }}
