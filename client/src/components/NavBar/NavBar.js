@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
+import logo from "../../images/logo.svg";
+
 import "./NavBar.css";
 
 export default function NavBar(props) {
@@ -9,7 +12,10 @@ export default function NavBar(props) {
     <header>
       {loggedUser ? (
         <nav className="container">
-          <label class="logo">Logo</label>
+          <Link to="/" className="brand">
+            <img width="50" src={logo} alt="logo" />
+            <h4>CodeNet</h4>
+          </Link>
           <ul>
             <li>
               <Link class="link active" to="/test">

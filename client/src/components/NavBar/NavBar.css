@@ -1,5 +1,6 @@
 header * {
   text-decoration: none;
+  color: var(--c-dark);
 }
 
 header {
@@ -37,4 +38,33 @@ nav ul li .link {
   background: var(--c-blue);
   color: #fff;
   transition: 0.25s;
+}
+
+nav > .brand {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav > .brand h4 {
+  margin: 0 0 0 1em;
+}
+
+nav > .brand img {
+  transform: rotate(0deg);
+  transition: all 1s;
+  animation: spin 5s infinite linear;
+}
+nav > .brand:hover img {
+  transform: rotate(360deg);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
