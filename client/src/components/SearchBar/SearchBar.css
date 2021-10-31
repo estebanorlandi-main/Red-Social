@@ -39,26 +39,3 @@
   pointer-events: none;
   transition: all 0.3 ease;
 }
-
-.wrapper .input-data .underline {
-  position: absolute;
-  bottom: 0px;
-  height: 2px;
-  width: 100%;
-  background: red;
-}
-
-.input-data .underline:before {
-  position: absolute;
-  content: "";
-  height: 100%;
-  width: 100%;
-  background: #4158d0;
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.input-data input:focus ~ .underline:before,
-.input-data input:valid ~ .underline:before {
-  transform: scaleX(1);
-}
