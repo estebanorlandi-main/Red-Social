@@ -1,15 +1,33 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+
 import { Provider } from "react-redux";
+import { IconContext } from "react-icons/lib";
+import { BrowserRouter } from "react-router-dom";
+
 import { store } from "./Redux/store";
+
+import "./index.css";
 
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-      <App />
+      <BrowserRouter>
+        <IconContext.Provider
+          value={{
+            color: "#1e1e1e",
+            size: "1em",
+            style: {
+              verticalAlign: "middle",
+              marginRight: ".5em",
+            },
+          }}
+        >
+          <App />
+        </IconContext.Provider>
+      </BrowserRouter>
     </React.StrictMode>
   </Provider>,
   document.getElementById("root")
@@ -19,4 +37,3 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-

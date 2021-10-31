@@ -6,9 +6,9 @@ export default function NavBar(props) {
   const [loggedUser, setLoggedUser] = useState(true);
 
   return (
-    <body>
+    <header>
       {loggedUser ? (
-        <nav>
+        <nav className="container">
           <label class="logo">Logo</label>
           <ul>
             <li>
@@ -50,6 +50,6 @@ export default function NavBar(props) {
           </ul>
         </nav>
       )}
-    </body>
+    </header>
   );
 }
