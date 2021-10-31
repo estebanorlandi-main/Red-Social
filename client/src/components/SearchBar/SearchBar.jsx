@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import UserList from "../UserList/UserList";
+import "./SearchBar.css";
 
 export default function SearchBar(props) {
   const users = useSelector((state) => state.users);
@@ -22,7 +23,12 @@ export default function SearchBar(props) {
 
   return (
     <div>
-      <input onChange={handleChange} placeholder="Search..."></input>
+      <div class="wrapper">
+        <div class="input-data">
+          <input onChange={handleChange} required />
+          <label>Search</label>
+        </div>
+      </div>
       <UserList users={filteredUsers} input={input} />
     </div>
   );
