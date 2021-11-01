@@ -2,7 +2,7 @@ const axios = require('axios');
 const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.js');
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
-
+//fn
 const DB_findUsersEmail = async (email)=>{
 	if(email == null || email == undefined) {return null}
 	const findUserEmail = await User.findOne({where:{email}})
