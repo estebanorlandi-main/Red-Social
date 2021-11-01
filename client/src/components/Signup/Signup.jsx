@@ -1,17 +1,24 @@
 import { useState } from "react";
 import style from "./Signup.module.css";
-
+import {SingUp} from "../../Redux/actions/Profile.js"
+import {AddUser} from "../../Redux/actions/Users.js"
+import {useSelector, useDispatch} from 'react-redux'
 function Signup(props) {
+
+  const dispatch = useDispatch();
+  const usuarios = useSelector(store=> store.usersReducer.users)
+  console.log(usuarios)
   const [inputs, setInputs] = useState({
-    username: "",
-    password: "",
-    name: "",
-    lastName: "",
-    email: "",
-    github: "",
+    username: "cspirritt0",
+    password: "dasdsadsadasd2",
+    name: "dsadsa",
+    lastName: "asdsad",
+    email: "mateo@casc.com",
+    github: "csacsac",
     about: "",
     tags: "",
   });
+
 
   const [err, setErr] = useState({
     username: {
@@ -74,9 +81,9 @@ function Signup(props) {
     if (tieneSimb(str)) {
       return { num: 2, bol: false };
     }
-    //  if () {
-    //    return 7
-    //  }
+     if (existe()) {
+       return { num: 7, bol: false }
+     }
     return { num: 0, bol: true };
   }
 
@@ -189,6 +196,14 @@ function Signup(props) {
     return false;
   }
 
+  function existe(){
+    var arr = usuarios.filter((usuario)=>usuario.username === inputs.username)
+    if (arr.length === 0) {
+      return false
+    }else {
+      return true
+    }
+  }
   const handleChange = (e) => {
     setInputs((old) => ({
       ...old,
@@ -200,11 +215,13 @@ function Signup(props) {
     }));
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
     let validacion = validar();
     if (!validacion.includes(false)) {
-      console.log("aca se haria la llamada a la action");
+      dispatch(SingUp(inputs))
+      dispatch(AddUser(inputs))
       setInputs({
         username: "",
         password: "",
