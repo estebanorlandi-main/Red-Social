@@ -12,7 +12,6 @@ import {
   MdFavorite,
   MdOutlineModeComment,
   MdShare,
-  MdSearch,
   MdSend,
 } from "react-icons/md";
 
