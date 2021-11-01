@@ -11,17 +11,8 @@ import {SingUp} from "./Redux/actions/Profile.js"
 // Variables CSS
 import "./App.css";
 import {useSelector, useDispatch} from 'react-redux'
-//--------------------
-//  Guarda la session
-// localStorage.setItem("CodeNet", JSON.stringify(action.payload));
-//
-//  Obtiene los datos de sesion
-// localStorage.getItem("CodeNet")
-//
-//  Elimina la sesion
-// localStorage.removeItem("CodeNet");
-//
-//--------------------
+import SearchBar from "./components/SearchBar/SearchBar";
+
 function App() {
   const usuario = useSelector(store=> store.sessionReducer)
   const dispatch = useDispatch();
@@ -38,13 +29,6 @@ function App() {
     verificar()
   },[usuario])
 
-  // useEffect(()=>{
-  //   if (first) {
-  //     let localStorage = localStorage.getItem("CodeNet")
-  //     dispatch(SingUp(localStorage))
-  //     setFirst(false)
-  //   }
-  // })
   return (
     <div className="App">
       <NavBar />
@@ -68,7 +52,7 @@ function App() {
         <Route
           path="/test"
           render={() => {
-            return <div>hola</div>;
+            return <SearchBar />;
           }}
         />
       </Switch>

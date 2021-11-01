@@ -1,7 +1,6 @@
-export const ADD_USER = "ADD_USER";
+export const SEARCH_USER = "SEARCH_USER";
 
-
-
-export function AddUser(obj) {
-  return { type: ADD_USER, payload: obj };
-}
+export function searchUser(users, input) {
+  return function (dispatch) {
+    dispatch({ type: SEARCH_USER, payload: users, input });
+  };
