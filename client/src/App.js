@@ -9,6 +9,7 @@ import NavBar from "./components/NavBar/NavBar.js";
 
 // Variables CSS
 import "./App.css";
+import SearchBar from "./components/SearchBar/SearchBar";
 
 function App() {
   return (
@@ -33,7 +34,7 @@ function App() {
         <Route
           path="/test"
           render={() => {
-            return <div>hola</div>;
+            return <SearchBar />;
           }}
         />
       </Switch>
