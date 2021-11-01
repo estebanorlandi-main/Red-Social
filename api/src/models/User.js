@@ -16,16 +16,28 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate:{
-        isAlpha: true,
-        len: [2,30]
+        isAlpha: {
+          args:true,
+          msg: "The name must contain only letters."
+        },
+        len: {
+          args:[2,30],
+          msg: "The name must have a minimum of two characters and a maximum of thirty."
+        }
       }
     },
     lastname: {
       type: DataTypes.STRING,
       allowNull: false,
       validate:{
-        isAlpha: true,
-        len: [2,30]
+        isAlpha: {
+          args:true,
+          msg: "The lastname must contain only letters."
+        },
+        len: {
+          args:[2,30],
+          msg: "The lastname must have a minimum of two characters and a maximum of thirty."
+        }
       }
     },
     username: {
@@ -33,23 +45,35 @@ module.exports = (sequelize) => {
       allowNull: false,
       unique: true,
       validate:{
-        isAlphanumeric:true,
-        len: [3,16]
+        isAlphanumeric:{
+          args:true,
+          msg: "The username must contain only letters and numbers."
+        },
+        len: {
+          args:[3,16],
+          msg: "The username must be a minimum of three characters and a maximum of sixteen."
+        }
       }
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
       validate:{
-        is: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+        len: {
+          args:[3,Infinity],
+          msg: "The username must be a minimum of three characters and a maximum of sixteen."
+        }
       }
     },
-    mail: {
+    email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
       validate:{
-         isEmail: true
+         isEmail: {
+          args:true,
+          msg: "must be an email."
+         }
       }
     },
     gitaccount: {
