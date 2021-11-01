@@ -26,4 +26,6 @@ posts = posts.map((post) => {
 // filter undef
 posts = posts.filter((posts) => posts);
 
-fs.writeFileSync("newPosts.json", JSON.stringify(posts));
+//fs.writeFileSync("newPosts.json", JSON.stringify(posts));
+
+console.log(posts[0].comments[0]);

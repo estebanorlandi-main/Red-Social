@@ -1,10 +1,18 @@
 import { Fragment } from "react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./Profile.module.css";
 import Select from "react-select";
 
 export default function Profile(props) {
+  const dispatch = useDispatch();
+  const [firstLoad, setFistLoad] = useState(true);
+  useEffect(() => {
+    if (firstLoad) {
+      setFistLoad(false);
+    }
+  });
+
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 

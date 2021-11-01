@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { likePost } from "../../Redux/actions/Post";
+import { likePost, commentPost } from "../../Redux/actions/Post";
 
 import Comment from "../Comment/Comment";
 
@@ -38,6 +38,14 @@ function Post({ post }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    dispatch(
+      commentPost(post.idPost, newComment, {
+        username: session.username,
+        avatar:
+          "https://robohash.org/reiciendisquisnemo.png?size=50x50&set=set1",
+      })
+    );
   };
 
   const handleLike = (e) => {
@@ -88,11 +96,7 @@ function Post({ post }) {
         </div>
       </div>
       {post.image ? (
-        <img
-          className={styles.postImage}
-          src={post.image}
-          alt={`${post.title}`}
-        />
+        <img className={styles.postImage} src={post.image} alt="Not found" />
       ) : (
         ""
       )}
@@ -119,10 +123,6 @@ function Post({ post }) {
           <MdShare /> Share
         </button>
       </div>
-      {/* 
-        cuando el usuario este logeado mostrar input 
-        {user.sesion ? <NuevoComentario />: ''} 
-      */}
 
       {session.username ? (
         <div className={styles.newCommentContainer}>
@@ -144,7 +144,7 @@ function Post({ post }) {
         ""
       )}
 
-      <Comment comment={post.comments[0]} />
+      <Comment comment={post.comments[post.comments.length - 1]} />
     </div>
   );
 }
