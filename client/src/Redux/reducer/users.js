@@ -1,5 +1,5 @@
 import users from "../../Mockups/users.json";
-import { FILTER_INPUT } from "../actions/SearchBar";
+import { SEARCH_USER } from "../actions/Users";
 
 const initialState = {
   users,
@@ -8,7 +8,7 @@ const initialState = {
 
 export default function root(state = initialState, action) {
   switch (action.type) {
-    case FILTER_INPUT:
+    case SEARCH_USER:
       if (action.input === "") {
         return {
           ...state,

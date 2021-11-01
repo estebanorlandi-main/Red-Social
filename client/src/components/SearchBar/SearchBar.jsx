@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import UserList from "../UserList/UserList";
 import "./SearchBar.css";
-import { filterInput } from "../../Redux/actions/SearchBar";
+import { searchUser } from "../../Redux/actions/Users";
 
 export default function SearchBar(props) {
   const users = useSelector((state) => state.usersReducer.users);
@@ -16,10 +16,10 @@ export default function SearchBar(props) {
 
   const handleChange = (event) => {
     if (event.target.value === "") {
-      dispatch(filterInput(users, event.target.value));
+      dispatch(searchUser(users, event.target.value));
       setInput("");
     } else {
-      dispatch(filterInput(users, event.target.value));
+      dispatch(searchUser(users, event.target.value));
       // setFilteredUsers(
       //   users.filter((user) => user.username.includes(event.target.value))
       // );
