@@ -9,7 +9,7 @@ import { Redirect } from "react-router";
 function Signup(props) {
   const dispatch = useDispatch();
   const usuarios = useSelector((store) => store.usersReducer.users);
-  console.log(usuarios);
+
   const [inputs, setInputs] = useState({
     username: "cspirritt0",
     password: "dasdsadsadasd2",
@@ -21,7 +21,6 @@ function Signup(props) {
     tags: "",
   });
 
-  console.log(props);
   const [err, setErr] = useState({
     username: {
       indice: 0,
