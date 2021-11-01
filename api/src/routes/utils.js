@@ -263,34 +263,33 @@ const DB_userSearch= async (username, email, password)=>{
 	// console.log(hashPassword)
 	
 	try{
-		var user;
 		if(username && username != null){
-			user = await User.findOne({
+			var user = await User.findOne({
 				where:{
 					username:username
 				}
 			})
-			var validate = await bcrypt.compare(password,user.password)
+			
 			if(user=== null){
 				return {error:"username"}
 			}
 			if(email && user.email !== email){
-                return {error:"email"}}
-            
+				return {error:"email"}}
+			var validate = await bcrypt.compare(password,user.password)
             if(!validate){
                 return {error:"password"}
 			}
-			return {user}
+			return user
 		}else{
-			user = await User.findOne({
+			var user = await User.findOne({
 				where:{
 					email:email
 				}
 			})
-			var validate = await bcrypt.compare(password,user.password)
 			if(user=== null){
 				return {error:"email"}
 			}
+			var validate = await bcrypt.compare(password,user.password)
             if(!validate){
                 return {error:"password"}
                 }
