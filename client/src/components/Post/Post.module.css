@@ -196,3 +196,8 @@
   margin: 0 auto;
   text-align: right;
 }
+
+.disabled {
+  color: #aaa;
+  cursor: default;
+}
