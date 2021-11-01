@@ -8,7 +8,8 @@ export default function Profile(props) {
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
-  const users = useSelector((state) => state.users);
+  const users = useSelector((state) => state.usersReducer.users);
+
   const [input, setInput] = useState({
     username: users[0].username,
     firstname: users[0].firstName,
