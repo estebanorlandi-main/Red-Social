@@ -4,11 +4,12 @@
 }
 
 .navbar {
-  background: transparent;
+  background: #fff;
   position: sticky;
   width: 100%;
   z-index: 10;
   top: 0;
+  box-shadow: 0 0.25em 0.5em #0001;
 }
 
 .navbar > nav {
@@ -57,24 +58,11 @@
   transform: rotate(360deg);
 }
 
-.link::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 10px;
-  height: 2px;
-  transform: translateX(-50%);
-  background-color: var(--c-dark);
-  transition: all 0.25s;
-}
-.link:hover::after {
-  width: 100%;
-}
-
 .landing {
   color: #fff;
   position: fixed;
+  background-color: transparent;
+  box-shadow: none;
 }
 
 .landing,
