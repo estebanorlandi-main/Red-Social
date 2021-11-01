@@ -3,6 +3,9 @@ import style from "./Signup.module.css";
 import {SingUp} from "../../Redux/actions/Profile.js"
 import {AddUser} from "../../Redux/actions/Users.js"
 import {useSelector, useDispatch} from 'react-redux'
+import { Link, useLocation } from "react-router-dom";
+import {Redirect} from "react-router"
+
 function Signup(props) {
 
   const dispatch = useDispatch();
@@ -19,7 +22,7 @@ function Signup(props) {
     tags: "",
   });
 
-
+  console.log(props)
   const [err, setErr] = useState({
     username: {
       indice: 0,
@@ -63,6 +66,7 @@ function Signup(props) {
         "Este usuario de github no existe",
       ],
     },
+    listo:false
   });
 
   function validarUsername(str) {
@@ -232,10 +236,16 @@ function Signup(props) {
         about: "",
         tags: "",
       });
+      setErr((old)=>({
+        ...old,
+        listo:true
+      }))
     }
   };
 
   return (
+    <div>
+    {err.listo ? <Redirect to="/home"/> :
     <form
       className={style.container}
       onSubmit={(e) => handleSubmit(e)}
@@ -319,8 +329,10 @@ function Signup(props) {
         name="tags"
         type="text"
       />
-      <button type="submit">Crear</button>
-    </form>
+      <button type="submit">Submit</button>
+    </form>}
+    </div>
+
   );
 }
 
