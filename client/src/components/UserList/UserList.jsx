@@ -6,6 +6,8 @@ function UserList(props) {
   let input = props.input
   return (
   <div>
+  {filteredUsers.length ? 
+  <div className={styles.list}>
     {filteredUsers.length > 0 ? (
         filteredUsers.map((user) =>
           <div>
@@ -13,10 +15,15 @@ function UserList(props) {
             <p key={user.idUser}>{user.username}</p>
           </div>
       )
+      
     ) : (input === "" ? <p>Search Users</p>:
         <p>No users found..</p>
       )}
   </div>
+  :
+  <div></div>
+  }
+  </div>  
   );
 }
 

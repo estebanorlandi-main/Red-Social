@@ -1,0 +1,21 @@
+
+.list{
+    position: absolute;
+    top: 120%;
+    overflow-y: scroll;
+    border-radius: 8px;
+    height: 60vh;
+    width: 32vw;
+    padding: 2%;
+    background-color: #F3F2EF;
+}
+
+::-webkit-scrollbar{
+    width: 5px;
+    background-color: rgb(201, 201, 201);
+  }
+  
+::-webkit-scrollbar-thumb{
+background-color: rgb(56, 56, 56);
+border-radius: 3px;
+}

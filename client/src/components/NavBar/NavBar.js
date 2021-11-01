@@ -1,7 +1,8 @@
 import { Fragment } from "react";
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {useSelector, useDispatch} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux';
+import SearchBar from '../SearchBar/SearchBar'
 import logo from "../../images/logo.svg";
 import logoDark from "../../images/logo-dark.svg";
 import {LogOut} from "../../Redux/actions/Profile.js"
@@ -24,6 +25,68 @@ export default function NavBar(props) {
   }, [usuario])
   return (
     <header className={styles.navbar + ` ${isLanding ? styles.landing : ""}`}>
+      {
+       !isLanding ?
+
+      <nav className={"container"}>
+        <Link to="/" className={styles.brand}>
+          <img width="50" src={isLanding ? logoDark : logo} alt="logo" />
+          <h4>
+            Code<span>Net</span>
+          </h4>
+        </Link>
+        <SearchBar />
+        <ul className={styles.nav}>
+          <li>
+            <Link class={styles.link} to="/home">
+              <div>
+              <span>Home</span>
+              </div>
+            </Link>
+          </li>
+          {loggedUser ? (
+            <Fragment>
+              <li>
+                <Link className={styles.link} to="/profile">
+                <div>
+                  <span>Profile</span>
+                </div>
+                </Link>
+              </li>
+              <li>
+                <span className={styles.link} onClick={()=>dispatch(LogOut())}>
+                  <span>Log out</span>
+                </span>
+              </li>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <li>
+                <Link className={styles.link} to="/login">
+                <div>
+                  <span>Login</span>
+                </div>
+                </Link>
+              </li>
+              <li>
+                <Link className={styles.link} to="/signup">
+                <div>
+                  <span>Sign Up</span>
+                </div>
+                </Link>
+              </li>
+            </Fragment>
+          )}
+          <li>
+            <Link class={styles.link} to="/test">
+              <div>
+                <span>Test</span>
+              </div>
+            </Link>
+          </li>
+        </ul>
+      </nav>
+      :
       <nav className={"container"}>
         <Link to="/" className={styles.brand}>
           <img width="50" src={isLanding ? logoDark : logo} alt="logo" />
@@ -71,6 +134,7 @@ export default function NavBar(props) {
           </li>
         </ul>
       </nav>
+      }
     </header>
   );
 }
