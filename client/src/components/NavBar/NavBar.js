@@ -8,6 +8,15 @@ import logoDark from "../../images/logo-dark.svg";
 import {LogOut} from "../../Redux/actions/Profile.js"
 import styles from "./NavBar.module.css";
 
+import { ImHome3 } from 'react-icons/im'
+import { BiLogIn, BiLogOut } from 'react-icons/bi'
+import { FaLaptopCode } from 'react-icons/fa'
+import { CgProfile } from 'react-icons/cg'
+import { GoSignIn } from 'react-icons/go'
+
+
+
+
 export default function NavBar(props) {
   const [loggedUser, setLoggedUser] = useState(false);
   const usuario = useSelector(store=> store.sessionReducer)
@@ -39,7 +48,8 @@ export default function NavBar(props) {
         <ul className={styles.nav}>
           <li>
             <Link class={styles.link} to="/home">
-              <div>
+              <div className={styles.links}>
+              <ImHome3 />  
               <span>Home</span>
               </div>
             </Link>
@@ -48,13 +58,15 @@ export default function NavBar(props) {
             <Fragment>
               <li>
                 <Link className={styles.link} to="/profile">
-                <div>
+                <div className={styles.links}>
+                  <CgProfile />
                   <span>Profile</span>
                 </div>
                 </Link>
               </li>
               <li>
-                <span className={styles.link} onClick={()=>dispatch(LogOut())}>
+                <span className={styles.link} onClick={()=>dispatch(LogOut())} className={styles.links}>
+                  <BiLogOut />
                   <span>Log out</span>
                 </span>
               </li>
@@ -63,14 +75,16 @@ export default function NavBar(props) {
             <Fragment>
               <li>
                 <Link className={styles.link} to="/login">
-                <div>
+                <div className={styles.links}>
+                  <BiLogIn />
                   <span>Login</span>
                 </div>
                 </Link>
               </li>
               <li>
                 <Link className={styles.link} to="/signup">
-                <div>
+                <div className={styles.links}>
+                  <GoSignIn />
                   <span>Sign Up</span>
                 </div>
                 </Link>
@@ -79,7 +93,8 @@ export default function NavBar(props) {
           )}
           <li>
             <Link class={styles.link} to="/test">
-              <div>
+              <div className={styles.links}>
+                <FaLaptopCode />
                 <span>Test</span>
               </div>
             </Link>

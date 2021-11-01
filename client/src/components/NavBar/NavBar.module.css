@@ -35,6 +35,12 @@
   font-weight: 500;
 }
 
+.links{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .brand {
   height: 100%;
   display: flex;
