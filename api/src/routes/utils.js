@@ -253,7 +253,7 @@ const DB_postCreates = async(data) =>{
 	}
 }
 
-const DB_userSearch= async (username, mail, password)=>{
+const DB_userSearch= async (username, email, password)=>{
 	try{
 		var user;
 		if(username && username != null){
@@ -265,7 +265,7 @@ const DB_userSearch= async (username, mail, password)=>{
 			if(user=== null){
 				return {error:"username"}
 			}
-			if(mail && user.mail !== mail){
+			if(email && user.email !== email){
                 return {error:"email"}}
             
             if(user.password !== password){
@@ -273,10 +273,9 @@ const DB_userSearch= async (username, mail, password)=>{
 			}
 			return {user}
 		}else{
-			console.log('Entra en mail')
 			user = await User.findOne({
 				where:{
-					mail:mail
+					email:email
 				}
 			})
 			if(user=== null){

@@ -4,18 +4,18 @@ const router = Router();
 
 
 router.get("/", async (req, res) => {
-    const {username, password, mail} = req.body;
+    const {username, password, email} = req.body;
     try{
         var userLogin;
-        if(!username && !mail || username=== null && mail === null){
+        if(!username && !email || username=== null && email === null){
             res.status(400).send(`Error, you must provide an email or username`)
         }
-        userLogin = await DB_userSearch (username, mail, password);
+        userLogin = await DB_userSearch (username, email, password);
 
         if(userLogin.error){
             res.status(400).send(`Error, it is not your  ${userLogin.error}`)
         }
-        res.status(200).send({username, mail, password});
+        res.status(200).send({username, email});
             
     }catch(e){
         res.status(404, e)
