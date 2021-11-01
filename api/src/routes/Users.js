@@ -36,7 +36,7 @@ router.get("/:username", async (req,res,next)=>{
 		res.sendStatus(500)
 	}
 })
-//POSTS USER
+//POSTS USERs
 router.get("/:username/posts", async (req,res,next)=>{
 	try {
 		const findUser = await fn.DB_findUserParams(req.params.username)
