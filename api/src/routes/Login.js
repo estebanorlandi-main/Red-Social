@@ -15,7 +15,8 @@ router.get("/", async (req, res) => {
         if(userLogin.error){
             res.status(400).send(`Error, it is not your  ${userLogin.error}`)
         }
-        res.status(200).send({username, email});
+  
+        res.status(200).send({'Username':userLogin.username, 'Email':userLogin.email});
             
     }catch(e){
         res.status(404, e)
