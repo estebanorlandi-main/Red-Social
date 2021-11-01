@@ -26,7 +26,6 @@ export default function root(state = initialState, action) {
           }),
         };
       }
-
     default:
       return state;
   }

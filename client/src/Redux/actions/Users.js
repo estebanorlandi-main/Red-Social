@@ -4,4 +4,3 @@ export function searchUser(users, input) {
   return function (dispatch) {
     dispatch({ type: SEARCH_USER, payload: users, input });
   };
-}
