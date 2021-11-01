@@ -1,27 +1,29 @@
+const fs = require("fs");
 let posts = require("./posts.json");
 let users = require("./users.json");
 
 let newComments = require("./newData/CommentsRandom.json");
 let newPosts = require("./newData/postData.json");
 
-// content
-console.log(newComments.map((comment) => comment.content));
+// change likes
 
-// Content, Title
-console.log(newPosts.map((post) => post.Content));
-
+//*
 posts = posts.map((post) => {
   if (!post) return;
 
-  const cantComm = Math.floor(Math.random() * newComments.length);
-  post.comments = [];
+  const cantLikes = Math.floor(Math.random() * users.length);
+  post.likes = [];
 
-  for (let i = 0; i < cantComm; i++) {
-    const randomComment =
-      newComments[Math.floor(Math.random() * newComments.length)];
-
+  for (let i = 0; i < cantLikes; i++) {
     const randomUser = users[Math.floor(Math.random() * users.length)];
 
-    post.comments.push({ text: randomComment, user: randomUser });
+    post.likes.push(randomUser.username);
   }
+  return post;
 });
+//*/
+
+// filter undef
+posts = posts.filter((posts) => posts);
+
+fs.writeFileSync("newPosts.json", JSON.stringify(posts));

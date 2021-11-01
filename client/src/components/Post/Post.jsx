@@ -1,6 +1,8 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
+import { likePost } from "../../Redux/actions/Post";
 
 import Comment from "../Comment/Comment";
 
@@ -16,6 +18,9 @@ import {
 } from "react-icons/md";
 
 function Post({ post }) {
+  const dispatch = useDispatch();
+  const session = useSelector((state) => state.sessionReducer.username || {});
+
   const [firstLoad, setFirstLoad] = useState(true);
 
   const [seeMore, setSeeMore] = useState(false);
@@ -33,7 +38,10 @@ function Post({ post }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(newComment);
+  };
+
+  const handleLike = (e) => {
+    if (session.username) dispatch(likePost(post.idPost, session.username));
   };
 
   post.tags = post.tags.filter((tag) => !!tag);
@@ -79,11 +87,30 @@ function Post({ post }) {
           </button>
         </div>
       </div>
-      {post.image ? <img className={styles.postImage} src={post.image} /> : ""}
+      {post.image ? (
+        <img
+          className={styles.postImage}
+          src={post.image}
+          alt={`${post.title}`}
+        />
+      ) : (
+        ""
+      )}
       <div className={styles.options}>
-        <button>
-          {post.likes ? <MdFavorite color="red" /> : <MdFavorite />}{" "}
-          {post.likes}
+        <button
+          className={!session.username ? styles.disabled : ""}
+          onClick={handleLike}
+        >
+          {post.likes.filter((user) => user === session.username).length ? (
+            <MdFavorite color="red" />
+          ) : (
+            <MdFavoriteBorder />
+          )}
+          {post.likes.length} |
+          <span>
+            {post.likes[post.likes.length - 1]},{" "}
+            {post.likes[post.likes.length - 2]}
+          </span>
         </button>
         <button>
           <MdOutlineModeComment /> {post.comments.length}
@@ -97,21 +124,26 @@ function Post({ post }) {
         {user.sesion ? <NuevoComentario />: ''} 
       */}
 
-      <div className={styles.newCommentContainer}>
-        <span className={styles.maxLength}>{newComment.length} / 1000</span>
-        <form className={styles.newComment} onSubmit={handleSubmit}>
-          <textarea
-            className={styles.textarea}
-            onChange={handleComment}
-            name="text"
-            value={newComment}
-            placeholder="New comment..."
-          />
-          <button type="submit">
-            <MdSend className={styles.icons} />
-          </button>
-        </form>
-      </div>
+      {session.username ? (
+        <div className={styles.newCommentContainer}>
+          <span className={styles.maxLength}>{newComment.length} / 1000</span>
+          <form className={styles.newComment} onSubmit={handleSubmit}>
+            <textarea
+              className={styles.textarea}
+              onChange={handleComment}
+              name="text"
+              value={newComment}
+              placeholder="New comment..."
+            />
+            <button type="submit">
+              <MdSend className={styles.icons} />
+            </button>
+          </form>
+        </div>
+      ) : (
+        ""
+      )}
+
       <Comment comment={post.comments[0]} />
     </div>
   );
