@@ -16,10 +16,13 @@ export default function NewPost() {
   });
 
   const [errores, setErrores] = useState({
-    title:{indice:0, err:["", "Campo Obligatorio"]},
-    content:{indice:0,err:["", "Por lo menos un content o imagen","Maximo 1000 Caracteres"]},
-    image:{indice:0,err:["", "Por lo menos un content o imagen"] }
-  })
+    title: { indice: 0, err: ["", "Campo Obligatorio"] },
+    content: {
+      indice: 0,
+      err: ["", "Por lo menos un content o imagen", "Maximo 1000 Caracteres"],
+    },
+    image: { indice: 0, err: ["", "Por lo menos un content o imagen"] },
+  });
 
   const [img, setImg] = useState({
     url: "",
@@ -54,60 +57,63 @@ export default function NewPost() {
     return arr;
   }
 
-
-  function verificar(){
-      var arr = existe("title","content","image")
-      if (arr[0]===true && (arr[1]===true || arr[2]===true)) {
-        setErrores(
-          {
-            title:{indice:0, err:["", "Campo Obligatorio"]},
-            content:{indice:0,err:["", "Por lo menos un content o imagen", "Maximo 1000 Caracteres"]},
-            image:{indice:0,err:["", "Por lo menos un content o imagen"] }
-          }
-        )
-        return true
-      }else if(arr[1]===true || arr[2]===true) {
-        setErrores(
-          {
-            title:{indice:1, err:["", "Campo Obligatorio"]},
-            content:{indice:0,err:["", "Por lo menos un content o imagen"]},
-            image:{indice:0,err:["", "Por lo menos un content o imagen"] }
-          })
-      }
+  function verificar() {
+    var arr = existe("title", "content", "image");
+    if (arr[0] === true && (arr[1] === true || arr[2] === true)) {
+      setErrores({
+        title: { indice: 0, err: ["", "Campo Obligatorio"] },
+        content: {
+          indice: 0,
+          err: [
+            "",
+            "Por lo menos un content o imagen",
+            "Maximo 1000 Caracteres",
+          ],
+        },
+        image: { indice: 0, err: ["", "Por lo menos un content o imagen"] },
+      });
+      return true;
+    } else if (arr[1] === true || arr[2] === true) {
+      setErrores({
+        title: { indice: 1, err: ["", "Campo Obligatorio"] },
+        content: { indice: 0, err: ["", "Por lo menos un content o imagen"] },
+        image: { indice: 0, err: ["", "Por lo menos un content o imagen"] },
+      });
+    }
   }
 
-  function handleChange(e){
-    console.log(e.target.value.length)
+  function handleChange(e) {
+    console.log(e.target.value.length);
     if (e.target.name === "tag") {
-      separarTags(e.target.value)
-      return
+      separarTags(e.target.value);
+      return;
     }
     if (e.target.name === "image") {
       setImg((old) => ({
         ...old,
         url: e.target.value,
-        mostrar: false
-      }))
-      return
+        mostrar: false,
+      }));
+      return;
     }
-    if (e.target.name === "content" && data.content.length === 1000 ) {
+    if (e.target.name === "content" && data.content.length === 1000) {
       if (e.target.value.length > 1000) {
         setErrores((old) => ({
           ...old,
-          content:{
+          content: {
             ...old.content,
-            indice:2
-          }
-        }))
-        return
+            indice: 2,
+          },
+        }));
+        return;
       }
       setErrores((old) => ({
         ...old,
-        content:{
+        content: {
           ...old.content,
-          indice:0
-        }
-      }))
+          indice: 0,
+        },
+      }));
     }
     setData((old) => ({
       ...old,
@@ -161,15 +167,20 @@ export default function NewPost() {
           {errores.content.err[errores.content.indice]}
         </span>
       </label>
-      </div>
-      <div className={style.divs}>
-      <div>
+
+      <label className={style.wrapper}>
         <div>{data.content.length}/1000</div>
-        <textarea className={style.textarea} value={data.content} name="content" type="text" />
-        <div className={style.errores}>{errores.content.err[errores.content.indice]}</div>
-      </div>
-      </div>
-      <div className={style.divs}>
+        <textarea
+          className={style.textarea}
+          value={data.content}
+          name="content"
+          type="text"
+        />
+        <div className={style.errores}>
+          {errores.content.err[errores.content.indice]}
+        </div>
+      </label>
+
       {/*<label>
         image
          <br/>

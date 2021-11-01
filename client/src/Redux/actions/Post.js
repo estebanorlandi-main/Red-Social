@@ -1,48 +1,36 @@
-export const CREATE_POST = "CREATE_POST";
-export const LIKE_POST = "LIKE_POST";
-export const SHARE_POST = "SHARE_POST";
-export const COMMENT_POST = "COMMENT_POST";
-export const DELETE_POST = "DELETE_POST";
-export const UPDATE_POST = "UPDATE_POST";
+export const POST_CREATE = "POST_CREATE";
+export const POST_LIKE = "POST_LIKE";
+export const POST_SHARE = "POST_SHARE";
+export const POST_COMMENT = "POST_COMMENT";
+export const POST_DELETE = "POST_DELETE";
+export const POST_UPDATE = "POST_UPDATE";
 
 export function createPost(data) {
   console.log(data);
-
-  // fetch
-  return { type: CREATE_POST, payload: null };
+  return { type: POST_CREATE, payload: data };
 }
 
-export function likePost(postId) {
-  console.log(postId);
-
-  // fetch
-  return { type: LIKE_POST, payload: postId };
+export function likePost(idPost, username) {
+  console.log(idPost, username);
+  return { type: POST_LIKE, payload: { idPost, username } };
 }
 
 export function sharePost(postId) {
   console.log(postId);
-
-  // fetch
-  return { type: SHARE_POST, payload: postId };
+  return { type: POST_SHARE, payload: postId };
 }
 
 export function commentPost(postId, data) {
   console.log(postId, data);
-
-  // fetch
-  return { type: COMMENT_POST, payload: postId };
+  return { type: POST_COMMENT, payload: postId };
 }
 
 export function deletePost(postId) {
   console.log(postId);
-
-  // fetch
-  return { type: DELETE_POST, payload: postId };
+  return { type: POST_DELETE, payload: postId };
 }
 
 export function updatePost(postId, data) {
   console.log(postId, data);
-
-  // fetch
-  return { type: UPDATE_POST, payload: { postId } };
+  return { type: POST_UPDATE, payload: { postId } };
 }
