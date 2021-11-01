@@ -6,225 +6,47 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { Redirect } from "react-router";
 
+import validate from "../../utils/validate";
+
 function Signup(props) {
   const dispatch = useDispatch();
-  const usuarios = useSelector((store) => store.usersReducer.users);
 
   const [inputs, setInputs] = useState({
-    username: "cspirritt0",
-    password: "dasdsadsadasd2",
-    name: "dsadsa",
-    lastName: "asdsad",
-    email: "mateo@casc.com",
-    github: "csacsac",
+    username: "estebanorlandi4",
+    password: "password1",
+    name: "esteban",
+    lastName: "orlandi",
+    email: "estebanorlandi4@gmail.com",
+    github: "estebanorlandi4",
     about: "",
     tags: "",
   });
 
   const [err, setErr] = useState({
-    username: {
-      indice: 0,
-      errores: [
-        "",
-        "Este campo es Obligatorio",
-        "Solo numeros y letras",
-        "Minimo 1 letra",
-        "Minimo 1 numero",
-        "Minimo 3 caracteres",
-        "Maximo 16 caracteres",
-        "Este nombre de usuario ya existe",
-      ],
-    },
-    password: {
-      indice: 0,
-      errores: [
-        "",
-        "Este campo es Obligatorio",
-        "Solo numeros y letras",
-        "Minimo 1 letra",
-        "Minimo 1 numero",
-        "Minimo 8 caracteres",
-        "Maximo 16 caracteres",
-      ],
-    },
-    name: {
-      indice: 0,
-      errores: ["", "Este campo es Obligatorio", "Solo letras"],
-    },
-    lastName: {
-      indice: 0,
-      errores: ["", "Este campo es Obligatorio", "Solo letras"],
-    },
-    email: { indice: 0, errores: ["", "Este campo es Obligatorio"] },
-    github: {
-      indice: 0,
-      errores: [
-        "",
-        "Este campo es Obligatorio",
-        "Este usuario de github no existe",
-      ],
-    },
-    listo: false,
+    username: "",
+    password: "",
+    name: "",
+    lastName: "",
+    email: "",
+    github: "",
   });
 
-  function validarUsername(str) {
-    if (inputs.username.length < 3) {
-      return { num: 5, bol: false };
-    }
-    if (inputs.username.length > 16) {
-      return { num: 6, bol: false };
-    }
-    if (!tieneLet(str)) {
-      return { num: 3, bol: false };
-    }
-    if (!tieneNum(str)) {
-      return { num: 4, bol: false };
-    }
-    if (tieneSimb(str)) {
-      return { num: 2, bol: false };
-    }
-    if (existe()) {
-      return { num: 7, bol: false };
-    }
-    return { num: 0, bol: true };
-  }
+  const [registered, setRegistered] = useState(false);
 
-  function validarPassword(str) {
-    if (inputs.password.length < 8) {
-      return { num: 5, bol: false };
-    }
-    if (inputs.password.length > 16) {
-      return { num: 6, bol: false };
-    }
-    if (!tieneLet(str)) {
-      return { num: 3, bol: false };
-    }
-    if (!tieneNum(str)) {
-      return { num: 4, bol: false };
-    }
-    if (tieneSimb(str)) {
-      return { num: 2, bol: false };
-    }
-    return { num: 0, bol: true };
-  }
-
-  function validarNombreyApellido(str) {
-    if (tieneNum(str) || tieneSimb(str)) {
-      return { num: 2, bol: false };
-    } else return { num: 0, bol: true };
-  }
-
-  function validar() {
-    var arr = [];
-    let validar = [];
-    for (var propiedad in inputs) {
-      if (!inputs[propiedad].length) {
-        arr.push(propiedad);
-      }
-    }
-
-    if (arr.length) {
-      arr.forEach((i) => {
-        if (i === "about" || i === "tags") {
-          return;
-        }
-        validar.push(false);
-        setErr((obj) => {
-          return { ...obj, [i]: { ...obj[i], indice: 1 } };
-        });
-      });
-    }
-
-    if (!arr.includes("username")) {
-      let indice = validarUsername("username");
-      validar.push(indice.bol);
-      setErr((old) => ({
-        ...old,
-        username: { ...old.username, indice: indice.num },
-      }));
-    }
-
-    if (!arr.includes("password")) {
-      let indice = validarPassword("password");
-      validar.push(indice.bol);
-      setErr((old) => ({
-        ...old,
-        password: { ...old.password, indice: indice.num },
-      }));
-    }
-
-    if (!arr.includes("name")) {
-      let indice = validarNombreyApellido("name");
-      validar.push(indice.bol);
-      setErr((old) => ({
-        ...old,
-        name: { ...old.name, indice: indice.num },
-      }));
-    }
-    if (!arr.includes("lastName")) {
-      let indice = validarNombreyApellido("lastName");
-      validar.push(indice.bol);
-      setErr((old) => ({
-        ...old,
-        lastName: { ...old.lastName, indice: indice.num },
-      }));
-    }
-    return validar;
-  }
-
-  function tieneNum(str) {
-    let regexnumeros = /([0-9]+)/;
-    if (regexnumeros.test(inputs[str])) {
-      return true;
-    }
-    return false;
-  }
-
-  function tieneLet(str) {
-    let regexletrasmin = /([a-z]+)/;
-    let regexletrasmay = /([A-Z]+)/;
-    if (regexletrasmay.test(inputs[str]) || regexletrasmin.test(inputs[str])) {
-      return true;
-    }
-    return false;
-  }
-
-  function tieneSimb(str) {
-    let regexFinal1 = /([\W])/;
-    let regexFinal2 = /[_]/;
-    if (regexFinal1.test(inputs[str]) || regexFinal2.test(inputs[str])) {
-      return true;
-    }
-    return false;
-  }
-
-  function existe() {
-    var arr = usuarios.filter(
-      (usuario) => usuario.username === inputs.username
-    );
-    if (arr.length === 0) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-  const handleChange = (e) => {
-    setInputs((old) => ({
-      ...old,
-      [e.target.name]: e.target.value,
-    }));
-    setErr((old) => ({
-      ...old,
-      [e.target.name]: { ...old[e.target.name], indice: 0 },
-    }));
+  const handleChange = ({ target: { name, value } }) => {
+    setInputs((old) => ({ ...old, [name]: value }));
+    setErr((old) => ({ ...old, [name]: validate(name, value) }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let validacion = validar();
-    if (!validacion.includes(false)) {
+
+    const errors = validate(inputs);
+
+    if (!Object.values(errors).filter((error) => error).length) {
       dispatch(SingUp(inputs));
       dispatch(addUser(inputs));
+
       setInputs({
         username: "",
         password: "",
@@ -235,18 +57,25 @@ function Signup(props) {
         about: "",
         tags: "",
       });
+
       setErr((old) => ({
-        ...old,
-        listo: true,
+        username: "",
+        password: "",
+        name: "",
+        lastName: "",
+        email: "",
+        github: "",
       }));
+
+      setRegistered(true);
+    } else {
+      setErr((old) => errors);
     }
   };
 
   return (
     <div>
-      {err.listo ? (
-        <Redirect to="/home" />
-      ) : (
+      {!registered ? (
         <form
           className={style.container}
           onSubmit={(e) => handleSubmit(e)}
@@ -260,9 +89,7 @@ function Signup(props) {
             name="username"
             type="text"
           />
-          <div className={style.errores}>
-            {err.username.errores[err.username.indice]}
-          </div>
+          <div className={style.errores}>{err.username}</div>
           <label>Password</label>
           <input
             className={style.input}
@@ -270,9 +97,7 @@ function Signup(props) {
             name="password"
             type="password"
           />
-          <div className={style.errores}>
-            {err.password.errores[err.password.indice]}
-          </div>
+          <div className={style.errores}>{err.password}</div>
           <label>Name</label>
           <input
             className={style.input}
@@ -280,9 +105,7 @@ function Signup(props) {
             name="name"
             type="text"
           />
-          <div className={style.errores}>
-            {err.name.errores[err.name.indice]}
-          </div>
+          <div className={style.errores}>{err.name}</div>
           <label>Last Name</label>
           <input
             className={style.input}
@@ -290,9 +113,7 @@ function Signup(props) {
             name="lastName"
             type="text"
           />
-          <div className={style.errores}>
-            {err.lastName.errores[err.lastName.indice]}
-          </div>
+          <div className={style.errores}>{err.lastName}</div>
           <label>Email</label>
           <input
             className={style.input}
@@ -300,9 +121,7 @@ function Signup(props) {
             name="email"
             type="email"
           />
-          <div className={style.errores}>
-            {err.email.errores[err.email.indice]}
-          </div>
+          <div className={style.errores}>{err.email}</div>
           <label>GitHub</label>
           <input
             className={style.input}
@@ -310,9 +129,7 @@ function Signup(props) {
             name="github"
             type="text"
           />
-          <div className={style.errores}>
-            {err.github.errores[err.github.indice]}
-          </div>
+          <div className={style.errores}>{err.github}</div>
           <label>Avatar</label>
           <input
             className={style.input}
@@ -336,6 +153,8 @@ function Signup(props) {
           />
           <button type="submit">Submit</button>
         </form>
+      ) : (
+        <Redirect to="/home" />
       )}
     </div>
   );
