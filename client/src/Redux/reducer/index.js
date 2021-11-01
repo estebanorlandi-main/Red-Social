@@ -3,7 +3,9 @@
 import { combineReducers } from "redux";
 
 import postsReducer from "./posts.js";
+
 import sessionReducer from "./session.js";
+
 import usersReducer from "./users.js";
 
 export default combineReducers({

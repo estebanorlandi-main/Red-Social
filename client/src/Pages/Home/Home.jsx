@@ -7,7 +7,8 @@ import NewPost from "../../components/NewPost/NewPost";
 import styles from "./Home.module.css";
 
 function Home(props) {
-  const posts = useSelector((state) => state.posts);
+  const posts = useSelector((state) => state.postsReducer.posts);
+
   const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);
 
@@ -22,7 +23,6 @@ function Home(props) {
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
