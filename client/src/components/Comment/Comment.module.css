@@ -1,10 +1,13 @@
 .comment a {
+  display: block;
+  margin: 1em 0 0 0;
   color: #1e1e1e;
   text-decoration: none;
 }
 
 .comment {
   background-color: #fafafa;
+  min-width: 100%;
   display: block;
   list-style: none;
   padding: 0 var(--pX) 1em var(--pX) !important;

@@ -1,5 +1,5 @@
 import users from "../../Mockups/users.json";
-import { SEARCH_USER } from "../actions/Users";
+import { SEARCH_USER, ADD_USER } from "../actions/Users";
 
 const initialState = {
   users,
@@ -26,6 +26,8 @@ export default function root(state = initialState, action) {
           }),
         };
       }
+    case ADD_USER:
+      return { ...state, users: [...state.users, action.payload] };
     default:
       return state;
   }

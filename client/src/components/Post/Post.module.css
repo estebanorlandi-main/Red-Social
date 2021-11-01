@@ -153,13 +153,13 @@
 .newCommentContainer {
   width: 100%;
   background-color: #fafafa;
-  padding: 0.5em var(--pX);
+  padding: 0.5em var(--pX) 0 var(--pX);
 }
 
 .newComment {
   display: flex;
   width: 100%;
-  margin: 0.5em auto;
+  margin: 0.5em auto 0 auto;
   border: 1px solid #0002;
   border-radius: 5px;
   overflow: hidden;
