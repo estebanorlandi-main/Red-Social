@@ -153,23 +153,13 @@ export default function NewPost() {
           {errores.title.err[errores.title.indice]}
         </span>
       </label>
-
       <label className={style.wrapper}>
-        Content
-        <textarea value={data.content} name="content" type="text" />
+        Content {data.content.length}/1000
+        <textarea className={style.textarea} value={data.content} name="content" type="text" />
         <span className={style.error}>
           {errores.content.err[errores.content.indice]}
         </span>
       </label>
-      </div>
-      <div className={style.divs}>
-      <div>
-        <div>{data.content.length}/1000</div>
-        <textarea className={style.textarea} value={data.content} name="content" type="text" />
-        <div className={style.errores}>{errores.content.err[errores.content.indice]}</div>
-      </div>
-      </div>
-      <div className={style.divs}>
       {/*<label>
         image
          <br/>
