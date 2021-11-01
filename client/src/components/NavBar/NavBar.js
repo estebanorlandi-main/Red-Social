@@ -1,27 +1,17 @@
 import { Fragment } from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {useSelector, useDispatch} from 'react-redux'
+
 import logo from "../../images/logo.svg";
 import logoDark from "../../images/logo-dark.svg";
-import {LogOut} from "../../Redux/actions/Profile.js"
+
 import styles from "./NavBar.module.css";
 
 export default function NavBar(props) {
   const [loggedUser, setLoggedUser] = useState(false);
-  const usuario = useSelector(store=> store.sessionReducer)
-  const dispatch = useDispatch();
+
   const isLanding = useLocation().pathname === "/";
-  useEffect(()=>{
-    function verificar(){
-      if (usuario.username) {
-        setLoggedUser(true)
-      }else {
-        setLoggedUser(false)
-      }
-    }
-    verificar()
-  }, [usuario])
+
   return (
     <header className={styles.navbar + ` ${isLanding ? styles.landing : ""}`}>
       <nav className={"container"}>
@@ -45,9 +35,9 @@ export default function NavBar(props) {
                 </Link>
               </li>
               <li>
-                <span className={styles.link} onClick={()=>dispatch(LogOut())}>
+                <Link className={styles.link} to="/logout">
                   Log Out
-                </span>
+                </Link>
               </li>
             </Fragment>
           ) : (
