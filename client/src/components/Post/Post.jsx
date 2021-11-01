@@ -1,8 +1,19 @@
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
+import Comment from "../Comment/Comment";
 
 import styles from "./Post.module.css";
-import Comment from "../Comment/Comment";
+
+//Icons
+import {
+  MdFavoriteBorder,
+  MdFavorite,
+  MdOutlineModeComment,
+  MdShare,
+  MdSend,
+} from "react-icons/md";
 
 function Post({ post }) {
   const [firstLoad, setFirstLoad] = useState(true);
@@ -34,13 +45,18 @@ function Post({ post }) {
           <li key={i}>{tag}</li>
         ))}
       </ul>
-      <div className={styles.userContainer}>
-        <img className={styles.avatar} src={post.creator.avatar} />
+
+      <Link
+        className={styles.userContainer}
+        to={`/profile/${post.creator.username}`}
+      >
+        <img className={styles.avatar} src={post.creator.avatar} alt="avatar" />
         <div>
           <span className={styles.username}>{post.creator.username}</span>
           <span className={styles.github}>{post.creator.username}</span>
         </div>
-      </div>
+      </Link>
+
       <div className={styles.postBody}>
         <h3>{post.title}</h3>
 
@@ -65,25 +81,37 @@ function Post({ post }) {
       </div>
       {post.image ? <img className={styles.postImage} src={post.image} /> : ""}
       <div className={styles.options}>
-        <button>L {post.likes}</button>
-        <button>C {post.comments.length}</button>
-        <button>Share</button>
+        <button>
+          {post.likes ? <MdFavorite color="red" /> : <MdFavorite />}{" "}
+          {post.likes}
+        </button>
+        <button>
+          <MdOutlineModeComment /> {post.comments.length}
+        </button>
+        <button>
+          <MdShare /> Share
+        </button>
       </div>
       {/* 
         cuando el usuario este logeado mostrar input 
         {user.sesion ? <NuevoComentario />: ''} 
       */}
 
-      <span className={styles.maxLength}>{newComment.length} / 1000</span>
-      <form className={styles.newComment} onSubmit={handleSubmit}>
-        <textarea
-          className={styles.textarea}
-          onChange={handleComment}
-          name="text"
-          value={newComment}
-        />
-        <button type="submit"> Submit </button>
-      </form>
+      <div className={styles.newCommentContainer}>
+        <span className={styles.maxLength}>{newComment.length} / 1000</span>
+        <form className={styles.newComment} onSubmit={handleSubmit}>
+          <textarea
+            className={styles.textarea}
+            onChange={handleComment}
+            name="text"
+            value={newComment}
+            placeholder="New comment..."
+          />
+          <button type="submit">
+            <MdSend className={styles.icons} />
+          </button>
+        </form>
+      </div>
       <Comment comment={post.comments[0]} />
     </div>
   );

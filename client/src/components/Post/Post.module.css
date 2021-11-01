@@ -3,19 +3,16 @@
   padding: 0;
   margin: 0;
   text-align: left;
-}
-
-hr {
-  width: 100%;
-  border: 1px solid white;
+  text-decoration: none;
 }
 
 .container {
-  --c-tags: #4a90ae;
-  --c-bg: #f0f0f0;
-  --c-avatar-bg: #9fdfdb;
-  --c-font: #1e1e1e;
+  --pX: 1.5em;
+  --c-bg: var(--c-light);
+  --c-avatar-bg: var(--c-blue);
+  --c-font: var(--c-dark);
 
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -28,14 +25,18 @@ hr {
 
 .avatar {
   background-color: var(--c-avatar-bg);
-  box-shadow: 0 4px 7px rgba(22, 22, 22, 0.25);
   border-radius: 100%;
 }
+
 .userContainer {
+  color: var(--c-font);
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
-  margin: 1em 0 1em 1em;
+  align-items: center;
+  margin: 0.5em 0 var(--pX) var(--pX);
+}
+.userContainer:hover .avatar {
+  background-color: var(--c-enfasis);
 }
 
 .userContainer > div {
@@ -52,7 +53,7 @@ hr {
 }
 
 .postBody {
-  margin: 0 1em 0 1em;
+  margin: 0 var(--pX) 0 var(--pX);
 }
 
 .mainContent {
@@ -74,38 +75,37 @@ hr {
 }
 
 .seeMore {
-  z-index: 3;
-  background-color: #f0f0f0;
-  padding: 0 0 0 0.5em;
   position: absolute;
   bottom: 0;
   right: 0;
+  z-index: 3;
+  padding: 0.5em 0.5em 0 0.5em;
   border: none;
-  color: #5aa;
+  background-color: var(--c-light);
+  color: var(--c-light-blue);
+  font-size: 0.9rem;
   cursor: pointer;
-  align-self: flex-end;
-  transition: color 0.25s;
 }
 .seeMore > span {
   margin-right: 0.25rem;
 }
 .seeMore:hover {
-  color: #055;
+  color: var(--c-enfasis);
 }
 
 .postImage {
   width: 100%;
   max-height: 20rem;
   object-fit: cover;
-  background-color: red;
-  margin: 2em 0 1em 0;
+  background-color: #aaa;
+  margin: 2em 0 0 0;
 }
 
 .tags {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin: 1em;
+  padding: 1em var(--pX);
 }
 
 .tags > li {
@@ -113,7 +113,7 @@ hr {
   padding: 0.25em 1em;
   font-size: 0.85rem;
   color: #fff;
-  background-color: var(--c-tags);
+  background-color: var(--c-blue);
 }
 
 .tags > li:not(:first-child) {
@@ -131,21 +131,34 @@ hr {
 .options {
   display: flex;
   justify-content: space-between;
-  padding: 1em;
+  padding: 1.25em var(--pX) 1em var(--pX);
   width: 100%;
 }
 
 .options > button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   background-color: transparent;
   border: none;
-  font-size: 1rem;
-  font-weight: bold;
+  font-size: 0.9rem;
+  font-weight: 300;
   cursor: pointer;
+}
+
+.icons {
+  margin-right: 0.5em;
+}
+
+.newCommentContainer {
+  width: 100%;
+  background-color: #fafafa;
+  padding: 0.5em var(--pX);
 }
 
 .newComment {
   display: flex;
-  width: 90%;
+  width: 100%;
   margin: 0.5em auto;
   border: 1px solid #0002;
   border-radius: 5px;
@@ -156,13 +169,26 @@ hr {
   width: 100%;
   height: 2.5rem;
   resize: none;
-  padding: 0.5em;
+  padding: 1em;
 }
 .newComment > button {
-  background-color: #fff;
-  padding: 0.5em;
+  background-color: #f0f0f0;
+  padding: 0 var(--pX);
   border: none;
 }
+.newComment > button:hover {
+  background-color: var(--c-blue);
+}
+.newComment > button:hover .icons {
+  color: #fff;
+}
+
+.icons {
+  transform: translateX(4px);
+  width: 1.25em;
+  height: 1.25em;
+}
+
 .maxLength {
   font-size: 0.8rem;
   color: #888;

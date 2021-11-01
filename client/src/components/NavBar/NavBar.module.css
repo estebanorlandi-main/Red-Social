@@ -1,0 +1,88 @@
+.navbar * {
+  text-decoration: none;
+  color: var(--c-dark);
+}
+
+.navbar {
+  background: transparent;
+  position: sticky;
+  width: 100%;
+  z-index: 10;
+  top: 0;
+}
+
+.navbar > nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-evenly;
+}
+.nav li {
+  display: inline-block;
+  margin: 0 0.75em;
+}
+
+.nav li .link {
+  position: relative;
+  padding: 0.5rem 1rem;
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+.brand {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand h4 {
+  margin: 0 0 0 1em;
+}
+.brand span {
+  font-weight: 500;
+  opacity: 0.5;
+}
+
+.brand img {
+  transform: rotate(0deg);
+  transition: all 1s;
+}
+.brand:hover img {
+  transform: rotate(360deg);
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 10px;
+  height: 2px;
+  transform: translateX(-50%);
+  background-color: var(--c-dark);
+  transition: all 0.25s;
+}
+.link:hover::after {
+  width: 100%;
+}
+
+.landing {
+  color: #fff;
+  position: fixed;
+}
+
+.landing,
+.landing .brand h4,
+.landing .brand span,
+.landing .link {
+  color: #fff;
+}
+.landing .link::after {
+  background-color: #fff;
+}
