@@ -20,7 +20,6 @@ function App() {
   useEffect(() => {
     function verificar() {
       if (usuario.username) {
-        console.log("entre");
         localStorage.setItem("CodeNet", JSON.stringify(usuario));
       } else {
         localStorage.setItem("CodeNet", JSON.stringify({}));

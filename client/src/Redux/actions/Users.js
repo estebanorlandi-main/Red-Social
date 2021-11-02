@@ -1,6 +1,7 @@
 export const SEARCH_USER = "SEARCH_USER";
 export const ADD_USER = "ADD_USER";
 export const GET_USER = "GET_USER";
+export const UPDATE_USER = "UPDATE_USER";
 
 export function searchUser(users, input) {
   return function (dispatch) {
@@ -13,6 +14,10 @@ export function addUser(user) {
   return { type: ADD_USER, payload: user };
 }
 
-export function getUser(username) {
-  return { type: GET_USER, payload: username };
+export function getUser(user) {
+  return { type: GET_USER, payload: user };
+}
+
+export function updateUser(username, data) {
+  return { type: UPDATE_USER, payload: { username, ...data } };
 }

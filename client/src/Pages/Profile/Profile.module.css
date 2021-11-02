@@ -1,9 +1,54 @@
 .container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 50vw;
   margin: 0 auto;
   padding: 1em;
+  background: #fff;
+  margin-top: 6em;
+  border-radius: 10px;
+  padding-top: 5em;
+  box-shadow: 0 0.25em 0.5em #0001;
 }
 
 .container > h3 {
   margin-top: 1em;
+}
+
+.avatar {
+  position: absolute;
+  top: -5em;
+  left: 50%;
+  transform: translate(-50%, 0);
+
+  object-position: center;
+  object-fit: cover;
+  width: 100%;
+  max-width: 10em;
+  min-height: 10em;
+  border-radius: 100%;
+  background-color: blue;
+  align-self: center;
+}
+.select_container {
+  width: 100%;
+}
+
+.tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 1em var(--pX);
+}
+.tag {
+  background-color: var(--c-blue);
+  padding: 0.25em 1em;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.tag:not(:first-child) {
+  margin: 0 0.25em;
 }

@@ -1,48 +1,99 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "../../Redux/actions/Users";
+import { getUser, updateUser } from "../../Redux/actions/Users";
 import validate from "../../utils/validate";
 import styles from "./Profile.module.css";
 import Select from "react-select";
+
+const selectStyles = {
+  control: (styles) => ({ ...styles, width: "100%" }),
+};
+
+const options = [
+  { value: "js", label: "JavaScript" },
+  { value: "python", label: "Python" },
+  { value: "cpp", label: "C++" },
+  { value: "php", label: "PHP" },
+  { value: "java", label: "Java" },
+  { value: "c", label: "C" },
+  { value: "go", label: "Go" },
+  { value: "kotlin", label: "Kotiln" },
+  { value: "sql", label: "SQL" },
+  { value: "mongodb", label: "MongoDB" },
+  { value: "postgresql", label: "PostgreSQL" },
+];
 
 export default function Profile(props) {
   const dispatch = useDispatch();
   const [firstLoad, setFistLoad] = useState(true);
 
-  useEffect(() => {
-    if (firstLoad) {
-      dispatch(getUser(props.username));
-      setFistLoad(false);
-    }
-  });
+  dispatch(getUser(props.username));
 
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
 
-  const [input, setInput] = useState({
-    name: "",
-    lastName: "",
-    about: "",
-    tags: [],
+  const [inputs, setInputs] = useState({
+    name: session.name || "",
+    lastName: session.lastName || "",
+    about: session.about || "",
+    tags: session.tags || [],
   });
 
-  const onDropdownChange = (value) => {
-    //setTagsSelected(value);
-    console.log(value);
+  const [errors, setErrors] = useState({
+    name: "",
+    lastName: "",
+  });
+
+  const handleChange = ({ target: { name, value } }) => {
+    setInputs((old) => ({ ...old, [name]: value }));
+    setErrors((old) => ({ ...old, [name]: validate(name, value) }));
+  };
+
+  const handleSelect = (e) => {
+    setInputs((old) => ({ ...old, tags: e.map((option) => option.value) }));
+  };
+
+  const handleSubmit = (value) => {
+    const errs = validate(inputs);
+    console.log(errs);
+    if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
+    console.log(errs);
+    dispatch(updateUser(session.username, inputs));
   };
 
   return profile ? (
     <div className={styles.container}>
-      <img src={profile.avatar} alt="avatar" />
+      <img className={styles.avatar} src={profile.avatar} alt="avatar" />
 
       <h3>Username</h3>
-      <p> {profile.username}</p>
+      <p>{profile.username}</p>
 
       <h3>Name</h3>
-      <p>{profile.name}</p>
+      <div>
+        {session.username === profile.username ? (
+          <Fragment>
+            <input
+              name="name"
+              onChange={handleChange}
+              value={inputs.name}
+              placeholder={session.name}
+            />
+            <p>{errors.name}</p>
 
-      <h3>Github</h3>
-      <p>{profile.lastName}</p>
+            <input
+              name="lastName"
+              onChange={handleChange}
+              value={inputs.lastName}
+              placeholder={session.lastName}
+            />
+            <p>{errors.lastName}</p>
+          </Fragment>
+        ) : (
+          <p>
+            {profile.name} {profile.lastName}
+          </p>
+        )}
+      </div>
 
       <h3>Email</h3>
       <p>{profile.email}</p>
@@ -51,10 +102,42 @@ export default function Profile(props) {
       <p>{profile.github}</p>
 
       <h3>About</h3>
-      <p>{profile.about}</p>
+      {session.username === profile.username ? (
+        <Fragment>
+          <textarea
+            name="about"
+            onChange={handleChange}
+            value={inputs.about}
+            placeholder={session.about}
+          ></textarea>
+        </Fragment>
+      ) : (
+        <p>{profile.about}</p>
+      )}
 
       <h3>Tags</h3>
-      <div>{profile.tags && profile.tags.map((tag) => <span>{tag}</span>)}</div>
+      {session.username === profile.username ? (
+        <Select
+          onChange={handleSelect}
+          className={styles.select_container}
+          options={options}
+          styles={selectStyles}
+          isMulti
+        />
+      ) : (
+        ""
+      )}
+
+      <div className={styles.tags}>
+        {profile.tags &&
+          profile.tags.map((tag) => <span className={styles.tag}>{tag}</span>)}
+      </div>
+
+      {session.username === profile.username ? (
+        <button onClick={handleSubmit}>Change</button>
+      ) : (
+        ""
+      )}
     </div>
   ) : (
     ""

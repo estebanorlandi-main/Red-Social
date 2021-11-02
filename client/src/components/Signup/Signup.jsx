@@ -134,7 +134,7 @@ function Signup(props) {
             className={style.input}
             value={inputs.avatar}
             name="avatar"
-            type="image"
+            type="text"
           />
           <label>About</label>
           <textarea

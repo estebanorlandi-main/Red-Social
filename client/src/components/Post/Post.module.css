@@ -81,7 +81,7 @@
   z-index: 3;
   padding: 0.5em 0.5em 0 0.5em;
   border: none;
-  background-color: var(--c-light);
+  background-color: var(--c-lightPost);
   color: var(--c-light-blue);
   font-size: 0.9rem;
   cursor: pointer;

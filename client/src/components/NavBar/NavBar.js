@@ -52,7 +52,10 @@ export default function NavBar(props) {
             {loggedUser ? (
               <Fragment>
                 <li>
-                  <Link className={styles.link} to="/profile">
+                  <Link
+                    className={styles.link}
+                    to={`/profile/${usuario.username}`}
+                  >
                     <div className={styles.links}>
                       <CgProfile />
                       <span>Profile</span>
