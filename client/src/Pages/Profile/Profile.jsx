@@ -57,7 +57,7 @@ export default function Profile(props) {
     const errs = validate(inputs);
     if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
     dispatch(updateUser(session.username, inputs));
-    dispatch(ChangeSession(inputs));
+    dispatch(ChangeSession(session.username, inputs));
   };
 
   return profile ? (
