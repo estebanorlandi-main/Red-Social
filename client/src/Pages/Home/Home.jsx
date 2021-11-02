@@ -9,7 +9,7 @@ import styles from "./Home.module.css";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
-  
+  const user = useSelector(state => state.sessionReducer)
 
   const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);
@@ -37,11 +37,17 @@ function Home(props) {
 
       <UserCard />
       
-      <div>
+    {
+       user && user.username? 
+      <div className={styles.newPostBtn}>
         <button onClick={() => setCreatePost((old) => !old)}>
           Create Post
         </button>
       </div>
+      :
+      <div></div>
+    }
+      
 
       {createPost ? (
         <div
