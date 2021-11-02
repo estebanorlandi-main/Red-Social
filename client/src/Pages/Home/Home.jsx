@@ -9,6 +9,7 @@ import styles from "./Home.module.css";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
+  
 
   const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);

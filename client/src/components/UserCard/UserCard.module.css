@@ -8,6 +8,38 @@
     height: 65%;
     width: 20%;
     padding: 1%;
+    overflow: hidden;
+}
+
+.bkg{
+    position: absolute;
+    background-image: url(https://media.istockphoto.com/photos/programming-code-abstract-technology-background-of-software-developer-picture-id1224500457?b=1&k=20&m=1224500457&s=170667a&w=0&h=OOPEMFamnZo63_2t_W40mYSfU1WrFAHHZRBgNN-GSgI=);
+    height: 10vh;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+
+.profile{
+    position: absolute;
+    width: 100%;
+    top: 8%;
+    left: 0;
+    z-index: 2;
+}
+
+.profile img{
+    display: block;
+    border: 3px solid rgb(255, 255, 255);
+    border-radius: 50%;
+}
+
+.username{
+    margin-top: 40%;
+    margin-bottom: 4%;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
 }
 
 .container img{
@@ -15,6 +47,7 @@
     margin: auto;
     margin-bottom: 4%;
 }
+
 
 .container span{
     display: flex;
