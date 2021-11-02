@@ -4,7 +4,7 @@ import { getUser, updateUser } from "../../Redux/actions/Users";
 import validate from "../../utils/validate";
 import styles from "./Profile.module.css";
 import Select from "react-select";
-import {ChangeSession} from "../../Redux/actions/Profile.js"
+import { ChangeSession } from "../../Redux/actions/Profile.js";
 const selectStyles = {
   control: (styles) => ({ ...styles, width: "100%" }),
 };
@@ -22,7 +22,6 @@ const options = [
   { value: "mongodb", label: "MongoDB" },
   { value: "postgresql", label: "PostgreSQL" },
 ];
-
 
 export default function Profile(props) {
   const dispatch = useDispatch();
@@ -58,12 +57,16 @@ export default function Profile(props) {
     const errs = validate(inputs);
     if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
     dispatch(updateUser(session.username, inputs));
-    dispatch(ChangeSession(inputs))
+    dispatch(ChangeSession(inputs));
   };
 
   return profile ? (
     <div className={styles.container}>
-    { session.username === profile.username? <button onClick={()=> setEditar((old)=>!old)}>Editar</button> : "" }
+      {session.username === profile.username ? (
+        <button onClick={() => setEditar((old) => !old)}>Editar</button>
+      ) : (
+        ""
+      )}
       <img className={styles.avatar} src={profile.avatar} alt="avatar" />
 
       <h3>Username</h3>
@@ -131,7 +134,9 @@ export default function Profile(props) {
 
       <div className={styles.tags}>
         {profile.tags &&
-          profile.tags.map((tag) => <span className={styles.tag}>{tag}</span>)}
+          profile.tags
+            .filter((tag) => tag)
+            .map((tag) => <span className={styles.tag}>{tag}</span>)}
       </div>
 
       {session.username === profile.username && editar ? (
