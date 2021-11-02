@@ -2,8 +2,7 @@ import { useState } from "react";
 import style from "./Signup.module.css";
 import { SingUp } from "../../Redux/actions/Profile.js";
 import { addUser } from "../../Redux/actions/Users.js";
-import { useSelector, useDispatch } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { Redirect } from "react-router";
 
 import validate from "../../utils/validate";
@@ -12,13 +11,13 @@ function Signup(props) {
   const dispatch = useDispatch();
 
   const [inputs, setInputs] = useState({
-    username: "",
-    password: "",
-    name: "",
-    lastName: "",
-    email: "",
-    github: "",
-    about: "",
+    username: "estebanorlandi4",
+    password: "password1",
+    name: "esteban",
+    lastName: "orlandi",
+    email: "estebanorlandi4@gmail.com",
+    github: "estebanorlandi4",
+    about: "asdfasdf asdfasdf",
     tags: "",
   });
 
@@ -135,7 +134,7 @@ function Signup(props) {
             className={style.input}
             value={inputs.avatar}
             name="avatar"
-            type="image"
+            type="text"
           />
           <label>About</label>
           <textarea
