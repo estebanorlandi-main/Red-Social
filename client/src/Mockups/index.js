@@ -1,29 +1,36 @@
 const fs = require("fs");
-let posts = require("./posts.json");
 let users = require("./users.json");
+let posts = require("./posts.json");
 
-let newComments = require("./newData/CommentsRandom.json");
-let newPosts = require("./newData/postData.json");
+/*
+users = users.map((user) => {
+  if (!user) return;
+  const change = "firstName";
+  const by = "name";
 
-// change likes
+  user[by] = user[change];
+  delete user[change];
 
-//*
+  return user;
+});
+
+users = users.filter((user) => user);
+console.log(users[0].name, users[0].firstName);
+fs.writeFileSync("newUsers.json", JSON.stringify(users));
+
+//*/
+
+console.log(posts[0].creator);
 posts = posts.map((post) => {
   if (!post) return;
 
-  const cantLikes = Math.floor(Math.random() * users.length);
-  post.likes = [];
+  const rUser = users[Math.floor(Math.random() * users.length)];
 
-  for (let i = 0; i < cantLikes; i++) {
-    const randomUser = users[Math.floor(Math.random() * users.length)];
+  post.creator = { avatar: rUser.avatar, username: rUser.username };
 
-    post.likes.push(randomUser.username);
-  }
   return post;
 });
-//*/
 
-// filter undef
-posts = posts.filter((posts) => posts);
-
+posts = posts.filter((post) => post);
+// console.log(posts[0].creator);
 fs.writeFileSync("newPosts.json", JSON.stringify(posts));

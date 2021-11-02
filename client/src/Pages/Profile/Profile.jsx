@@ -1,164 +1,145 @@
-import { Fragment } from "react";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { Fragment, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser, updateUser } from "../../Redux/actions/Users";
+import validate from "../../utils/validate";
 import styles from "./Profile.module.css";
 import Select from "react-select";
-import {ChangeUser} from "../../Redux/actions/Profile.js" 
+import {ChangeUser} from "../../Redux/actions/Profile.js"
+const selectStyles = {
+  control: (styles) => ({ ...styles, width: "100%" }),
+};
+
+const options = [
+  { value: "js", label: "JavaScript" },
+  { value: "python", label: "Python" },
+  { value: "cpp", label: "C++" },
+  { value: "php", label: "PHP" },
+  { value: "java", label: "Java" },
+  { value: "c", label: "C" },
+  { value: "go", label: "Go" },
+  { value: "kotlin", label: "Kotiln" },
+  { value: "sql", label: "SQL" },
+  { value: "mongodb", label: "MongoDB" },
+  { value: "postgresql", label: "PostgreSQL" },
+];
+
 export default function Profile(props) {
-  const [loading, setLoading] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const dispatch = useDispatch();
+  const [firstLoad, setFistLoad] = useState(true);
 
-  const users = useSelector((state) => state.usersReducer.users);
+  dispatch(getUser(props.username));
 
-  const [input, setInput] = useState({
-    username: users[0].username,
-    firstname: users[0].firstName,
-    lastname: users[0].lastName,
-    mail: users[0].email,
-    github: users[0].github,
-    about: users[0].about,
-    tags: users[0].tags.map((tag) => tag),
+  const session = useSelector((state) => state.sessionReducer);
+  const profile = useSelector((state) => state.usersReducer.profile);
+
+  const [inputs, setInputs] = useState({
+    name: session.name || "",
+    lastName: session.lastName || "",
+    about: session.about || "",
+    tags: session.tags || [],
   });
 
-  const [error, setError] = useState({ name: "", lastname: "" });
-  const [tagsSelected, setTagsSelected] = useState();
+  const [errors, setErrors] = useState({
+    name: "",
+    lastName: "",
+  });
 
-  const handleChange = (event) => {
-    setInput({ ...input, [event.target.name]: event.target.value });
-    validate(event);
+  const handleChange = ({ target: { name, value } }) => {
+    setInputs((old) => ({ ...old, [name]: value }));
+    setErrors((old) => ({ ...old, [name]: validate(name, value) }));
   };
 
-  const validate = (event) => {
-    const { name, value } = event.target;
-
-    if (name === "name") {
-      if (value.length === 0) setError({ ...error, name: "Name is required." });
-      else setError({ ...error, name: "" });
-    } else if (name === "lastname") {
-      if (value.length === 0)
-        setError({ ...error, lastname: "Lastname is required." });
-      else setError({ ...error, lastname: "" });
-    }
+  const handleSelect = (e) => {
+    setInputs((old) => ({ ...old, tags: e.map((option) => option.value) }));
   };
 
-  const handleSubmit = () => {
-    // users = {
-    //   ...users,
-    //   username: input.username,
-    //   firstName: input.firstname,
-    //   lastName: input.lastname,
-    //   email: input.mail,
-    //   github: input.github,
-    //   about: input.about,
-    // };
-
-    users[0] = {
-      ...users[0],
-      firstName: input.firstname,
-      lastName: input.lastname,
-      email: input.mail,
-      github: input.github,
-      about: input.about,
-      tags: tagsSelected.map((tag) => tag.label),
-    };
-
-    console.log(users[0]);
+  const handleSubmit = (value) => {
+    const errs = validate(inputs);
+    console.log(errs);
+    if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
+    console.log(errs);
+    dispatch(updateUser(session.username, inputs));
   };
 
-  const onDropdownChange = (value) => {
-    setTagsSelected(value);
-    console.log(value);
-  };
-
-  return (
+  return profile ? (
     <div className={styles.container}>
-      <img src={users[0].avatar} alt="avatar" />
+      <img className={styles.avatar} src={profile.avatar} alt="avatar" />
 
-      <h3>{users[0].username}</h3>
-      {loggedIn ? (
-        <div class="wrapper">
-          <div class="input-data">
+      <h3>Username</h3>
+      <p>{profile.username}</p>
+
+      <h3>Name</h3>
+      <div>
+        {session.username === profile.username ? (
+          <Fragment>
             <input
-              name="firstname"
+              name="name"
               onChange={handleChange}
-              value={input.firstname}
-              type="text"
+              value={inputs.name}
+              placeholder={session.name}
             />
-            <label>First Name</label>
-          </div>
-        </div>
-      ) : (
-        users[0].firstName
-      )}
+            <p>{errors.name}</p>
 
-      {loggedIn ? (
-        <div class="wrapper">
-          <div class="input-data">
             <input
-              name="lastname"
-              value={input.lastname}
-              type="text"
+              name="lastName"
               onChange={handleChange}
+              value={inputs.lastName}
+              placeholder={session.lastName}
             />
-            <label>Last Name</label>
-          </div>
-        </div>
-      ) : (
-        users[0].lastName
-      )}
+            <p>{errors.lastName}</p>
+          </Fragment>
+        ) : (
+          <p>
+            {profile.name} {profile.lastName}
+          </p>
+        )}
+      </div>
 
-      <h5>Email</h5>
-      <div>{users[0].email}</div>
+      <h3>Email</h3>
+      <p>{profile.email}</p>
 
-      <h5>Github</h5>
-      <div>{users[0].github}</div>
+      <h3>Github</h3>
+      <p>{profile.github}</p>
 
       <h3>About</h3>
-      {loggedIn ? (
-        <textarea
-          name="about"
-          value={input.about}
-          type="text"
-          placeholder="About.."
-          onChange={handleChange}
-        />
+      {session.username === profile.username ? (
+        <Fragment>
+          <textarea
+            name="about"
+            onChange={handleChange}
+            value={inputs.about}
+            placeholder={session.about}
+          ></textarea>
+        </Fragment>
       ) : (
-        users[0].about
+        <p>{profile.about}</p>
       )}
 
-      <h5>Tags</h5>
-      {loggedIn ? (
+      <h3>Tags</h3>
+      {session.username === profile.username ? (
         <Select
-          value={tagsSelected}
-          options={[
-            { value: "javascript", label: "JavaScript" },
-            { value: "python", label: "Python" },
-            { value: "c#", label: "C#" },
-            { value: "c", label: "C" },
-            { value: "c++", label: "C++" },
-            { value: "java", label: "Java" },
-          ]}
-          onChange={onDropdownChange}
+          onChange={handleSelect}
+          className={styles.select_container}
+          options={options}
+          styles={selectStyles}
           isMulti
         />
       ) : (
-        <h5>
-          {users[0].tags.map((tag) => {
-            if (tag !== null) {
-              return tag + " ";
-            }
-          })}
-        </h5>
+        ""
       )}
 
-      {loggedIn ? (
-        <Fragment>
-          <button onClick={() => handleSubmit()}>Save</button>
-          <button onClick={() => setLoggedIn(false)}>Log Out</button>
-        </Fragment>
+      <div className={styles.tags}>
+        {profile.tags &&
+          profile.tags.map((tag) => <span className={styles.tag}>{tag}</span>)}
+      </div>
+
+      {session.username === profile.username ? (
+        <button onClick={handleSubmit}>Change</button>
       ) : (
-        <button onClick={() => setLoggedIn(true)}>Log In</button>
+        ""
       )}
     </div>
+  ) : (
+    ""
   );
 }

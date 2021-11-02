@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { likePost } from "../../Redux/actions/Post";
+import { likePost, commentPost } from "../../Redux/actions/Post";
 
 import Comment from "../Comment/Comment";
 
@@ -19,12 +19,13 @@ import {
 
 function Post({ post }) {
   const dispatch = useDispatch();
-  const session = useSelector((state) => state.sessionReducer.username || {});
+  const session = useSelector((state) => state.sessionReducer || {});
 
   const [firstLoad, setFirstLoad] = useState(true);
 
   const [seeMore, setSeeMore] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (firstLoad) {
@@ -38,6 +39,30 @@ function Post({ post }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const isValid = (comment) => {
+      if (comment.length < 3) {
+        setError("Minimo 3 letras");
+        return false;
+      }
+
+      if (comment.length > 1000) {
+        setError("Maximo 1000 letras");
+        return false;
+      }
+
+      setError("");
+      return true;
+    };
+
+    if (isValid(newComment))
+      dispatch(
+        commentPost(post.idPost, newComment, {
+          username: session.username,
+          avatar:
+            "https://robohash.org/reiciendisquisnemo.png?size=50x50&set=set1",
+        })
+      );
   };
 
   const handleLike = (e) => {
@@ -88,11 +113,7 @@ function Post({ post }) {
         </div>
       </div>
       {post.image ? (
-        <img
-          className={styles.postImage}
-          src={post.image}
-          alt={`${post.title}`}
-        />
+        <img className={styles.postImage} src={post.image} alt="Not found" />
       ) : (
         ""
       )}
@@ -119,10 +140,6 @@ function Post({ post }) {
           <MdShare /> Share
         </button>
       </div>
-      {/* 
-        cuando el usuario este logeado mostrar input 
-        {user.sesion ? <NuevoComentario />: ''} 
-      */}
 
       {session.username ? (
         <div className={styles.newCommentContainer}>
@@ -139,12 +156,13 @@ function Post({ post }) {
               <MdSend className={styles.icons} />
             </button>
           </form>
+          {error ? <span className={styles.error}>{error}</span> : ""}
         </div>
       ) : (
         ""
       )}
 
-      <Comment comment={post.comments[0]} />
+      <Comment comment={post.comments[post.comments.length - 1]} />
     </div>
   );
 }
