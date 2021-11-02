@@ -5,33 +5,6 @@ const { DataTypes, Sequelize } = require('sequelize');
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define('user', {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      min: 2,
-      max: 30,
-    },
-    lastname: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      min: 2,
-      max: 30
-    },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      max: 25,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      max: 16,
-      min: 8,
-      validate:{
-        isAlphanumeric: true
-      }
-    },
     id: {
       allowNull: false,
       unique: true,
@@ -39,19 +12,75 @@ module.exports = (sequelize) => {
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
     },
-    mail: {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate:{
+        isAlpha: {
+          args:true,
+          msg: "The name must contain only letters."
+        },
+        len: {
+          args:[2,30],
+          msg: "The name must have a minimum of two characters and a maximum of thirty."
+        }
+      }
+    },
+    lastname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate:{
+        isAlpha: {
+          args:true,
+          msg: "The lastname must contain only letters."
+        },
+        len: {
+          args:[2,30],
+          msg: "The lastname must have a minimum of two characters and a maximum of thirty."
+        }
+      }
+    },
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
       validate:{
-         isEmail: true
+        isAlphanumeric:{
+          args:true,
+          msg: "The username must contain only letters and numbers."
+        },
+        len: {
+          args:[3,16],
+          msg: "The username must be a minimum of three characters and a maximum of sixteen."
+        }
+      }
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate:{
+        len: {
+          args:[3,Infinity],
+          msg: "The username must be a minimum of three characters and a maximum of sixteen."
+        }
+      }
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate:{
+         isEmail: {
+          args:true,
+          msg: "must be an email."
+         }
       }
     },
     gitaccount: {
       type: DataTypes.STRING,
       validate:{
         validateGit: function(account){
-          if(!account.search(/github.com/)){
+          if(!account.match(/github.com/)){
             throw new Error("git account invalidate")
           }
         }
@@ -59,7 +88,28 @@ module.exports = (sequelize) => {
     },
     image: {
       type: DataTypes.STRING,
+      validate:{
+        validateImage: function(image){
+          if(!image.match(/\.(gif|jpg|jpeg|tiff|png)$/i)){
+            throw new Error("image invalide")
+          }
+        }
+      }
     },
+    about:{
+      type: DataTypes.STRING,
+      validate:{
+        len: [5,1000]
+      }
+    },
+    // tags:{
+    //   type: DataTypes.ARRAY(DataTypes.STRING),
+    //   validate:{
+    //     validateArr: function(arr){
+    //       if(!Array.isArray(arr)) throw new Error("tags invalide") 
+    //     }
+    //   }
+    // }
   },{
     timestamps: false,
   });
