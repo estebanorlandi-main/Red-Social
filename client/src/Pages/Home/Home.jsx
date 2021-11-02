@@ -9,9 +9,8 @@ import styles from "./Home.module.css";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
-  const user = useSelector(state => state.sessionReducer)
-  console.log(user)
   
+
   const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);
 
