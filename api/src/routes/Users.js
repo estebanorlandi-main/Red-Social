@@ -1,106 +1,108 @@
 const router = require('express').Router();
 const { Sequelize, Model } = require("sequelize");
-const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.js');
-const Op = Sequelize.Op;
-const {DB_UserID,validateUpdateUser} = require("./utils.js")
+const fn = require("./utils.js")
+const bcrypt = require("bcrypt")
+const saltRounds = 10;
 
+//MAIN USER
 router.get("/", async (req,res,next)=>{
-	console.log("error")
-	if(req.query.q) return next()
 	try {
-		const users = await User.findAll({})
-		res.send(users)
+		if(Object.keys(req.query).length != 0) return next()
+		let findUsers = await fn.DB_findUserAll()
+		res.send(findUsers)
 	} catch(e) {
-		res.sendStatus(404)
+		res.sendStatus(500)
 	}
 })
-
-//user query
+//QUERY USER
 router.get("/", async (req,res,next)=>{
-	const query = req.query.q
 	try {
-		const users = await User.findAll({
-			where:{
-				[Op.or]:{
-					name: query				
-				},
-				[Op.or]:{
-					lastname: query	
-				},
-				[Op.or]:{
-					username: query
-				}
-			}
-		})
-		res.send(users)
-	} catch(e) {
-		res.sendStatus(404)
-	}
-})
-//user params
-router.get("/:username", async (req,res,next)=>{
-	const {username} = req.params
-	try {
-		const userID = await DB_UserID(username)
-		userID?res.send(userID):res.sendStatus(404)
-	} catch(e) {
-		res.sendStatus(404)
-	}
-})
-//user params post
-router.get("/:username/posts", async (req,res,next)=>{
-	const {username} = req.params
-	try {
-		const userID = await DB_UserID(username)
-		userID?res.send(userID.posts):res.sendStatus(404)
-	} catch(e) {
-		res.sendStatus(404)
-	}
-})
-router.get("/:username/comments", async(req,res,next)=>{
-	const {username} = req.params
-	try {
-		const userID = await DB_UserID(username)
-		userID?res.send(userID.comments):res.sendStatus(404)
-	} catch(e) {
-		res.sendStatus(404)
-	}
-})
-router.post("/register", async (req,res,next)=>{
-	const {name,lastname,username, password,mail,gitaccount,image} = req.body
-	try {
-		const user = await User.findOrCreate({
-			where:{
-				mail:mail
-			},
-			defaults:{
-				name,
-				lastname,
-				username,
-				password,
-				mail,
-				gitaccount,
-				image
-			}
-		})
-		res.sendStatus(200)
-	} catch(e) {
-		res.sendStatus(400)
-	}
-})
-router.put("/:username", async (req,res,next)=>{
-	const {username} = req.params
-	try {
-		let userID = await DB_UserID(username)
-		const updateDates = validateUpdateUser(req.body,userID)
-		for(prop in updateDates){
-			userID[prop] = updateDates[prop]
+		if(req.query.email || req.query.username){
+			let findUser = await fn.DB_findUserQuery(req.query)
+			if(findUser != null) return res.send(findUser)
 		}
-		await userID.save()
-		res.send(userID)
+		res.send({errors:"USER not found"}).status(200) 		
 	} catch(e) {
-		res.sendStatus(400)
+		res.status(500)
 	}
 })
+//PARAMS USER
+router.get("/:username", async (req,res,next)=>{
+	try {
+		const findUser = await fn.DB_findUserParams(req.params.username)
+		findUser?res.send(findUser):
+		res.send({errors:"USER not found"}).status(200)
+	} catch(e) {
+		res.sendStatus(500)
+	}
+})
+//POSTS USERs
+router.get("/:username/posts", async (req,res,next)=>{
+	try {
+		const findUser = await fn.DB_findUserParams(req.params.username)
+		findUser?res.send(findUser.posts):
+		res.send({errors:"USER not found"}).status(200)
+	} catch(e) {
+		res.sendStatus(500)
+	}
+})
+//COMMENTS
+router.get("/:username/comments", async (req,res,next)=>{
+	try {
+		const findUser = await fn.DB_findUserParams(req.params.username)
+		findUser?res.send(findUser.comments):
+		res.send({errors:"USER not found"}).status(200)
+	} catch(e) {
+		res.sendStatus(500)
+	}
+})
+//REGISTER
+router.post("/register", async (req,res,next)=>{
+	try {
+		let {email,username,password} = req.body
+		let errorsPassword = await fn.DB_validatePassword(password)
+		let errorsUser = await fn.DB_findUserCreated({username:username,email:email})
+
+		let errors = {...errorsPassword,...errorsUser}
+		if(errors.email || errors.username || errors.password) return res.send(errors).status(400)
+
+		req.body.password = bcrypt.hashSync(password,saltRounds)
+		let validate = await fn.DB_createUser(req.body)
+		if(validate.email || validate.name || validate.lastname) return res.send(validate).status(400)
+		else return res.send({success: "User has been created"})
+	} catch(e) {
+		res.sendStatus(500)
+	}
+})
+//UPDATE
+router.put("/:id", async (req,res,next)=>{
+	try {	
+		if(req.body.password){
+			let errors = await fn.DB_validatePassword(req.body.password)
+			if(errors.password) return res.send(errors).status(400)
+			else req.body.password =bcrypt.hashSync(req.body.password,saltRounds)
+		}
+		let validate = await fn.DB_updateUser(req.body,req.params.id)
+		if(Object.keys(validate).length) return res.send(validate).status(400)
+		else {
+			return res.send({success: "User has been updated"})
+		} 	
+		res.send({errors:"USER not found"}).status(200)
+	} catch(e) {
+		res.sendStatus(500)
+	}
+})
+
+// FUNCIONES USADAS
+// DB_findUserAll
+// DB_findUserQuery
+// DB_findUserParams
+// DB_findUserCreated
+// DB_validatePassword
+
+// DB_createUser
+// DB_updateUser
+
+
 
 module.exports = router;

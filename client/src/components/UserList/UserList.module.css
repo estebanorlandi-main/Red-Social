@@ -1,0 +1,30 @@
+
+.list{
+    position: absolute;
+    top: 120%;
+    overflow-y: scroll;
+    border-radius: 8px;
+    height: 60vh;
+    width: 32vw;
+    padding-top: 2%;
+    background-color: #e6e3da;
+}
+
+.user{
+  display: flex;
+  align-items: center;
+  padding: 2%;
+}
+
+.user:hover{
+  background-color: rgb(143, 143, 143);
+}
+::-webkit-scrollbar{
+    width: 5px;
+    background-color: rgb(201, 201, 201);
+  }
+  
+::-webkit-scrollbar-thumb{
+background-color: rgb(56, 56, 56);
+border-radius: 3px;
+}

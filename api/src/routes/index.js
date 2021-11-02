@@ -6,13 +6,14 @@ const router = Router();
 // importar todas las routes
 const Users = require("./Users.js")
 const Comments = require("./Comments.js")
+const Post = require("./Post.js")
+const Login = require("./Login.js")
 
 // const ruta = require("archivo")
 // router.use("/", ruta)
-router.use('/', (req,res)=>{
-
-	res.status(202).json({
-		"Post":` GET -> /post - /post?q=tags - /post/:id
+router.get('/', (req,res)=>{
+	res.status(202).send({
+		"Post":` GET -> /post - /post?q=username - /post/:id
 		POST -> /post
 		PUT -> /post/:id
 		DELETE -> /post/:id`,
@@ -23,11 +24,12 @@ router.use('/', (req,res)=>{
 		POST -> /user/register`,
 		"Sesion": "/login - /register - /logout"
 	})
-
 })
 
 
 router.use("/user", Users);
 router.use("/comment", Comments);
+router.use("/post", Post);
+router.use("/login", Login);
 
 module.exports = router;
