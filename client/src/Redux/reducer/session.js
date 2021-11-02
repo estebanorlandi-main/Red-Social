@@ -9,6 +9,17 @@ export default function root(state = initialState, action) {
       return action.payload
     case "LOG_OUT":
       return {}
+    case "CHANGE_SESSION":
+    console.log(action.payload, "change")
+      return (
+        {
+          ...state,
+          name: action.payload.name,
+          lastName: action.payload.lastName,
+          about: action.payload.about,
+          tags: action.payload.tags,
+        }
+      )
     default:
       return state;
   }

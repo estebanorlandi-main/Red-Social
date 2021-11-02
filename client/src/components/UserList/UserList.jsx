@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import styles from "./UserList.module.css";
 
 function UserList(props) {
-  console.log(props);
   let filteredUsers = props.users;
   let input = props.input;
   return (
