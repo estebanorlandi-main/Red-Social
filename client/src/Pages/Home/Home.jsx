@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 import Post from "../../components/Post/Post";
 import NewPost from "../../components/NewPost/NewPost";
+import UserCard from "../../components/UserCard/UserCard";
 
 import styles from "./Home.module.css";
 
@@ -41,6 +42,9 @@ function Home(props) {
 
   return (
     <div className={createPost ? styles.noScroll : "" + ` ${styles.home}`}>
+
+      <UserCard />
+      
       <div>
         <button onClick={() => setCreatePost((old) => !old)}>
           Create Post

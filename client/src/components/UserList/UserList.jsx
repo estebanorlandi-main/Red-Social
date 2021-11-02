@@ -10,7 +10,7 @@ function UserList(props) {
   <div className={styles.list}>
     {filteredUsers.length > 0 ? (
         filteredUsers.map((user) =>
-          <div>
+          <div className={styles.user}>
             <img src={user.avatar}/>
             <p key={user.idUser}>{user.username}</p>
           </div>

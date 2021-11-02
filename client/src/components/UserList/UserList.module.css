@@ -6,10 +6,19 @@
     border-radius: 8px;
     height: 60vh;
     width: 32vw;
-    padding: 2%;
-    background-color: #F3F2EF;
+    padding-top: 2%;
+    background-color: #e6e3da;
 }
 
+.user{
+  display: flex;
+  align-items: center;
+  padding: 2%;
+}
+
+.user:hover{
+  background-color: rgb(143, 143, 143);
+}
 ::-webkit-scrollbar{
     width: 5px;
     background-color: rgb(201, 201, 201);

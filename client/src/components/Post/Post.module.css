@@ -8,7 +8,7 @@
 
 .container {
   --pX: 1.5em;
-  --c-bg: var(--c-light);
+  --c-bg: var(--c-lightPost);
   --c-avatar-bg: var(--c-blue);
   --c-font: var(--c-dark);
 
