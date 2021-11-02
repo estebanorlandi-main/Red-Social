@@ -1,98 +1,66 @@
 const { Router } = require("express");
 const { Sequelize, Model } = require("sequelize");
 const {User,Post} = require('../db.js');
-const { DB_UserID,
-    validateUpdatePost,
-    DB_Postsearch, 
-    DB_Postdestroy,
-    DB_Postedit} = require("./utils.js");
+const fn = require("./utils.js");
 const Op = Sequelize.Op;
 const router = Router();
 
-// const ruta = require("archivo")
-// router.use("/", ruta)
 
-// router.use("/", );
-
-//Devuelve post de una categoria o si no todos los post
-router.get("/", async (req, res) =>{
-    const{categoria} = req.query;
-    const allPosts = await Post.findAll({});
-    if(categoria){
-        let postCategoria = await allPost.filter(e => e.categoria.toLowerCase().includes(categoria.toLowerCase()));
-        allPosts[0]? res.status(200).send(postCategoria) :
-        res.status(404).send("There is no post with that tag");
-    }else{
-        res.status(200).send(allPosts);
-    };
-});
-
-//Trae todos los posteos que hizo un usuario
-router.get("/", async (req, res, next) =>{
-    try{
-        const {username} = req.body;
-        if(!!Number(username)){
-            return next()
-        }
-        const postName = await DB_Postsearch({'username':username})
-        postName? res.send(postName) : res.send("This user has no Post");
-    }catch(e){
-        res.status(404).send("Error with the username");
-    };
-});
-
-//Filtra por id post
-router.get(":id", async (req, res, next) =>{
-    try{
-        const {id} = req.params;
-        // if(Number(id).toString() === 'NaN'){
-        //     return next()
-        // }
-        const postId = await DB_Postsearch({'id':id})
-        postId? res.status(200).send(postId.dataValues) : res.send("No post with that id");
-    }catch(e){
-        res.status(404).send("Error with the id");
-    };
-});
-
-
-router.post("/", async (req, res, next) =>{
-    const{ 
-        title,
-        content,
-        image,
-        tag,
-        likes,
-        username
-    } = req.body;
-    // console.log(req.body)
+//MAIN--
+router.get("/", async (req, res,next) =>{
     try {
-        let userDB = await DB_UserID(username);
-        // console.log(userDB)
-        let createPost = await Post.create({
-            image,
-            likes,
-            content,
-            tag,
-            title,
-            'userId' : userDB.id
-        });
-        await userDB.addPost(createPost)
-        res.send("Success in post creation");
+        if(Object.keys(req.query).length != 0) return next()
+        let findPosts = await fn.DB_findPostsAll()
+        res.send(findPosts)
+    } catch(e) {
+        res.sendStatus(500)
+    }
+})
+//QUERY title and Tags
+router.get("/", async (req,res,next)=>{
+    try {
+        if(req.query.title || req.query.tag || req.query.content){
+            let findPosts = await fn.DB_findPostsQuery(req.query)
+            if(findPosts && findPosts.length) return res.send(findPosts)
+        }
+        res.send({errors:"Posts not found"}).status(200)         
+    } catch(e) {
+        res.status(500)
+    }
+})
+
+//PARAMS
+router.get("/:username", async (req, res, next) =>{
+    try {
+        const findUser = await fn.DB_findUserParams(req.params.username)
+        findUser?res.send(findUser):
+        res.send({errors:"USER not found"}).status(200)
+    } catch(e) {
+        res.sendStatus(500)
+    }
+});
+//CREATE POST
+router.post("/", async (req, res, next) =>{
+    const{userId} = req.body;
+    if(!userId) return res.send({userId:"User not found"}).status(200)
+    try {
+        let validate = await fn.DB_createPost(req.body)
+        if(validate.userId) return res.send(validate).status(400)
+        else return res.send({success: "User has been created"})
     }catch(e){
-        console.log(e)
-        res.sendStatus(404)
+        res.sendStatus(500)
     }
 })
 
 //Eliminacion de un Post
-router.delete("/:id", async (req, res) =>{
+router.delete("/:idPost", async (req, res) =>{
+    const {idPost} = req.params;
     try{
-        const {id} = req.params;
-        const deletePost = await DB_Postdestroy(id)
-        res.status(200).send('Post eliminado con exito');
+        const validate = await fn.DB_Postdestroy(idPost)
+        if(validate || validate.idPost) return res.send(validate).status(400)
+        else return res.send({success: "Post was removed successfully"}).status(200);
     }catch(e){
-        res.status(404).send('Cant delete post');
+        res.status(500)
     };   
 });
 
@@ -101,9 +69,9 @@ router.put("/:id", async (req, res) =>{
     try{
         const {id} = req.params;
         const updatePost = await DB_Postedit(id, req.body)
-        res.status(200).send(updatePost);
+        res.status(200).send({success:"Post was modified correctly"});
     }catch(e){
-        res.status(404).send('Cant apply changes')
+        res.status(500)
     }
 })
 

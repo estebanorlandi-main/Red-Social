@@ -7,26 +7,51 @@ module.exports = (sequelize) => {
   sequelize.define('post',{
     title: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull:false,
+      validate:{
+        notNull:{
+          args:true,
+          msg:"The post title must contain between 5 and 40 characters"
+        },
+        len:{
+          args:[5,40],
+          msg:"The post title must contain between 5 and 40 characters"
+        }
+      }
     },
     content: {
       type: DataTypes.TEXT,
-      allowNull: true,
+      allowNull:false,
+      validate:{
+        notNull:{
+          args:true,
+          msg:"The body of the post must contain between 5 and 1000 characters."
+        },
+        len:{
+          args:[5,1000],
+          msg:"The body of the post must contain between 5 and 1000 characters."
+        }
+      }
     },
     tag:{
-        type: DataTypes.ARRAY(DataTypes.JSON),
+        type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull:true
     },
     idPost:{
-      allowNull: false,
       unique: true,
       type: DataTypes.UUID,
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true
-     
     },
     image:{
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      validate:{
+        validateImage: function(image){
+          if(!image.match(/\.(gif|jpg|jpeg|tiff|png|svg)$/i)){
+            throw new Error("image invalide")
+          }
+        }
+      }
     },
     likes:{
       type: DataTypes.INTEGER

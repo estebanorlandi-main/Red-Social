@@ -16,6 +16,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate:{
+        notNull:{
+          args:true,
+          msg:"The name must have a minimum of two characters and a maximum of thirty."
+        },
         isAlpha: {
           args:true,
           msg: "The name must contain only letters."
@@ -30,6 +34,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate:{
+        notNull:{
+          args:true,
+          msg:"The lastname must have a minimum of two characters and a maximum of thirty."
+        },
         isAlpha: {
           args:true,
           msg: "The lastname must contain only letters."

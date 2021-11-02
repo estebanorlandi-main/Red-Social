@@ -4,29 +4,30 @@ const fn = require("./utils.js")
 const bcrypt = require("bcrypt")
 const saltRounds = 10;
 
-//MAIN USER
+//MAIN USER--
 router.get("/", async (req,res,next)=>{
 	try {
 		if(Object.keys(req.query).length != 0) return next()
 		let findUsers = await fn.DB_findUserAll()
 		res.send(findUsers)
 	} catch(e) {
+		console.log(e)
 		res.sendStatus(500)
 	}
 })
-//QUERY USER
+//QUERY USER--
 router.get("/", async (req,res,next)=>{
 	try {
-		if(req.query.email || req.query.username){
+		if(req.query.email || req.query.username || req.query.id){
 			let findUser = await fn.DB_findUserQuery(req.query)
 			if(findUser != null) return res.send(findUser)
 		}
-		res.send({errors:"USER not found"}).status(200) 		
+		return res.send({errors:"USER not found"}).status(200) 		
 	} catch(e) {
 		res.status(500)
 	}
 })
-//PARAMS USER
+//PARAMS USER--
 router.get("/:username", async (req,res,next)=>{
 	try {
 		const findUser = await fn.DB_findUserParams(req.params.username)
@@ -36,7 +37,7 @@ router.get("/:username", async (req,res,next)=>{
 		res.sendStatus(500)
 	}
 })
-//POSTS USERs
+//POSTS USERs--
 router.get("/:username/posts", async (req,res,next)=>{
 	try {
 		const findUser = await fn.DB_findUserParams(req.params.username)
@@ -46,7 +47,7 @@ router.get("/:username/posts", async (req,res,next)=>{
 		res.sendStatus(500)
 	}
 })
-//COMMENTS
+//COMMENTS--
 router.get("/:username/comments", async (req,res,next)=>{
 	try {
 		const findUser = await fn.DB_findUserParams(req.params.username)
@@ -56,10 +57,11 @@ router.get("/:username/comments", async (req,res,next)=>{
 		res.sendStatus(500)
 	}
 })
-//REGISTER
+//REGISTER--
 router.post("/register", async (req,res,next)=>{
 	try {
 		let {email,username,password} = req.body
+		if(!email || !username || !password) return res.send({errors: "Bad request"}).status(400)
 		let errorsPassword = await fn.DB_validatePassword(password)
 		let errorsUser = await fn.DB_findUserCreated({username:username,email:email})
 
@@ -74,7 +76,7 @@ router.post("/register", async (req,res,next)=>{
 		res.sendStatus(500)
 	}
 })
-//UPDATE
+//UPDATE--
 router.put("/:id", async (req,res,next)=>{
 	try {	
 		if(req.body.password){
@@ -99,7 +101,6 @@ router.put("/:id", async (req,res,next)=>{
 // DB_findUserParams
 // DB_findUserCreated
 // DB_validatePassword
-
 // DB_createUser
 // DB_updateUser
 
