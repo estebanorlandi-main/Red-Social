@@ -2,12 +2,16 @@
   --c-light: #f0f0f0;
   --c-dark: #1e1e1e;
 
+  --c-lightPost: #ffffff;
+
   --hue-blue: 198;
 
   --c-light-blue: hsl(198, 45%, 65%);
   --c-blue: hsl(198, 40%, 49%);
   --c-mix: #7f69a3;
   --c-enfasis: #a04972;
+
+  background-color: #F3F2EF;
 }
 
 .container {
