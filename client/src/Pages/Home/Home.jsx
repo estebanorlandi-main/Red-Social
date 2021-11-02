@@ -9,7 +9,7 @@ import styles from "./Home.module.css";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
-  const user = useSelector(state => state.sessionReducer)
+  const user = useSelector((state) => state.sessionReducer);
 
   const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);
@@ -34,22 +34,19 @@ function Home(props) {
 
   return (
     <div className={createPost ? styles.noScroll : "" + ` ${styles.home}`}>
-
       <UserCard />
-      
-    {
-       user && user.username? 
-      <div className={styles.newPostBtn}>
-        <button onClick={() => setCreatePost((old) => !old)}>
-          Create Post
-        </button>
-      </div>
-      :
-      <div></div>
-    }
-      
 
-      {/* createPost ? (
+      {user && user.username ? (
+        <div className={styles.newPostBtn}>
+          <button onClick={() => setCreatePost((old) => !old)}>
+            Create Post
+          </button>
+        </div>
+      ) : (
+        <div></div>
+      )}
+
+      {createPost ? (
         <div
           className={styles.newPost}
           id="close"
@@ -61,7 +58,7 @@ function Home(props) {
         </div>
       ) : (
         ""
-      ) */}
+      )}
 
       <ul>
         {posts.map((post, i) =>
