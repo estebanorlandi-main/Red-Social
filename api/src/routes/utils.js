@@ -2,6 +2,11 @@ const axios = require('axios');
 const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.js');
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
+const bcrypt = require("bcrypt");
+const saltRounds =10;
+const myPlaintextPassword = 's0/\/\P4$$w0rD';
+const someOtherPlaintextPassword = 'not_bacon';
+
 //fn
 const DB_findUsersEmail = async (email)=>{
 	if(email == null || email == undefined) {return null}
@@ -254,26 +259,29 @@ const DB_postCreates = async(data) =>{
 }
 
 const DB_userSearch= async (username, email, password)=>{
+	// const hashPassword =  bcrypt.hashSync(password,saltRounds)
+	// console.log(hashPassword)
+	
 	try{
-		var user;
 		if(username && username != null){
-			user = await User.findOne({
-					where:{
-						username:username
-					}
-				})
+			var user = await User.findOne({
+				where:{
+					username:username
+				}
+			})
+			
 			if(user=== null){
 				return {error:"username"}
 			}
 			if(email && user.email !== email){
-                return {error:"email"}}
-            
-            if(user.password !== password){
+				return {error:"email"}}
+			var validate = await bcrypt.compare(password,user.password)
+            if(!validate){
                 return {error:"password"}
 			}
-			return {user}
+			return user
 		}else{
-			user = await User.findOne({
+			var user = await User.findOne({
 				where:{
 					email:email
 				}
@@ -281,10 +289,11 @@ const DB_userSearch= async (username, email, password)=>{
 			if(user=== null){
 				return {error:"email"}
 			}
-            if(user.password !== password){
+			var validate = await bcrypt.compare(password,user.password)
+            if(!validate){
                 return {error:"password"}
                 }
-			return {user}
+			return user
 	}}catch(e){
 		return console.log('Error login',e)
 	}

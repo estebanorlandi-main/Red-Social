@@ -49,7 +49,7 @@ function Home(props) {
     }
       
 
-      {createPost ? (
+      {/* createPost ? (
         <div
           className={styles.newPost}
           id="close"
@@ -61,7 +61,7 @@ function Home(props) {
         </div>
       ) : (
         ""
-      )}
+      ) */}
 
       <ul>
         {posts.map((post, i) =>

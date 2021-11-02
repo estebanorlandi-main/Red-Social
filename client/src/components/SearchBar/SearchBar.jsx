@@ -28,6 +28,7 @@ export default function SearchBar(props) {
     }
   };
 
+
   return (
     <div>
       <div>
@@ -35,7 +36,7 @@ export default function SearchBar(props) {
           <span className={style.icon}>
           <BiSearch />
           </span>
-          <input onChange={handleChange} required 
+          <input onChange={handleChange} required
             placeholder='Search Users'
           />
         </div>

@@ -69,7 +69,9 @@ function Post({ post }) {
     if (session.username) dispatch(likePost(post.idPost, session.username));
   };
 
-  post.tags = post.tags.filter((tag) => !!tag);
+  const tags = new Set();
+  post.tags.filter((tag) => (!!tag ? tags.add(tag) : false));
+  post.tags = Array.from(tags);
 
   return (
     <div className={styles.container}>

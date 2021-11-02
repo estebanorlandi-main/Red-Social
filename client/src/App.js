@@ -14,19 +14,21 @@ import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "./components/SearchBar/SearchBar";
 
 function App() {
-  const usuario = useSelector((store) => store.sessionReducer);
+  const session = useSelector((store) => store.sessionReducer);
   const dispatch = useDispatch();
   const [first, setFirst] = useState(true);
   useEffect(() => {
     function verificar() {
-      if (usuario.username) {
-        localStorage.setItem("CodeNet", JSON.stringify(usuario));
+      console.log("hola")
+      if (session.username) {
+        localStorage.setItem("CodeNet", JSON.stringify(session));
       } else {
         localStorage.setItem("CodeNet", JSON.stringify({}));
       }
     }
     verificar();
-  }, [usuario]);
+  }, [session]);
+
 
   return (
     <div className="App">
