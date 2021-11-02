@@ -35,14 +35,15 @@ function Home(props) {
     <div className={createPost ? styles.noScroll : "" + ` ${styles.home}`}>
 
       <UserCard />
-      
-      <div>
+
+      {/*<div>
         <button onClick={() => setCreatePost((old) => !old)}>
           Create Post
         </button>
-      </div>
+      </div>*/}
 
-      {createPost ? (
+
+      {/* createPost ? (
         <div
           className={styles.newPost}
           id="close"
@@ -54,7 +55,7 @@ function Home(props) {
         </div>
       ) : (
         ""
-      )}
+      ) */}
 
       <ul>
         {posts.map((post, i) =>

@@ -6,6 +6,8 @@ export default function root(state = initialState, action) {
     case "LOG_IN":
       return action.payload
     case "SING_UP":
+      const nuevos = JSON.parse(localStorage.getItem("NewUsers")) || [];
+      localStorage.setItem("NewUsers", JSON.stringify([...nuevos, action.payload]));
       return action.payload
     case "LOG_OUT":
       return {}
