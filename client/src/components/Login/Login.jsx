@@ -8,12 +8,11 @@ import {Redirect} from "react-router"
 export default function Login() {
   const dispatch = useDispatch();
   const usuarios = useSelector(store=> store.usersReducer.users)
-
   const [input, setInput] = useState({
     name: "",
     password: "",
   });
-
+  const nuevos = JSON.parse(localStorage.getItem("NewUsers")) || [];
   const [logged, setLogged] = useState(false)
   function handleChange(e) {
     setInput({
@@ -24,7 +23,7 @@ export default function Login() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    let arr = usuarios.filter((usuario)=> usuario.username === input.name && usuario.password === input.password)
+    let arr = [...usuarios, ...nuevos].filter((usuario)=> usuario.username === input.name && usuario.password === input.password)
     if(arr.length !== 0){
       dispatch(LogIn(arr[0]))
       setInput({
@@ -57,7 +56,7 @@ export default function Login() {
         <div className={style.label}>
           <label>Password</label>
           <input
-            type="text"
+            type="password"
             value={input.password}
             name="password"
             onChange={(e) => handleChange(e)}

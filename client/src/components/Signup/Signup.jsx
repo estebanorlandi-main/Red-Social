@@ -15,6 +15,7 @@ function Signup(props) {
     password: "",
     name: "",
     lastName: "",
+    avatar:"",
     email: "",
     github: "",
     about: "",
@@ -60,8 +61,12 @@ function Signup(props) {
     const errors = validate(inputs);
 
     if (!Object.values(errors).filter((error) => error).length) {
-      dispatch(SingUp(inputs));
-      dispatch(addUser(inputs));
+      let obj = inputs
+      if (obj.avatar === "") {
+        obj.avatar = "https://cdn-icons-png.flaticon.com/512/147/147144.png"
+      }
+      dispatch(SingUp(obj));
+      dispatch(addUser(obj));
 
       setInputs({
         username: "",

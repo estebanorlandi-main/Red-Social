@@ -29,6 +29,7 @@ function App() {
     verificar();
   }, [session]);
 
+
   return (
     <div className="App">
       <NavBar />
