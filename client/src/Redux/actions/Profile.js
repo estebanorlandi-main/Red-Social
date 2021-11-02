@@ -3,6 +3,7 @@ export const SAVE_CHANGES = "SAVE_CHANGES";
 export const LOG_IN = "LOG_IN"
 export const LOG_OUT = "LOG_OUT"
 export const SING_UP = "SING_UP"
+export const CHANGE_USER = "CHANGE_USER"
 export function showTags() {
   // let tags = [];
   // axios.get("Tags in the api").then((response) => (tags = response.data));
@@ -20,6 +21,8 @@ export function LogOut(){
   return {type: LOG_OUT, payload:{}}
 }
 export function SingUp(obj){
-  console.log(obj)
   return {type: SING_UP, payload:obj}
+}
+export function ChangeUser(obj){
+  return {type: CHANGE_USER, payload:obj}
 }

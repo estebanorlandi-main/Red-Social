@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styles from "./Profile.module.css";
 import Select from "react-select";
-
+import {ChangeUser} from "../../Redux/actions/Profile.js" 
 export default function Profile(props) {
   const [loading, setLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);

@@ -9,6 +9,8 @@ export default function root(state = initialState, action) {
       return action.payload
     case "LOG_OUT":
       return {}
+    case "CHANGE_USER":
+      return action.payload
     default:
       return state;
   }
