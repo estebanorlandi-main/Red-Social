@@ -24,7 +24,7 @@ export function LogOut() {
 export function SingUp(obj){
   return {type: SING_UP, payload:obj}
 }
-export function ChangeSession(obj){
+export function ChangeSession(user,obj){
   console.log("actions")
-  return {type: CHANGE_SESSION, payload:obj}
+  return {type: CHANGE_SESSION, payload:{user, data:obj}}
 }

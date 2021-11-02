@@ -12,14 +12,28 @@ export default function root(state = initialState, action) {
     case "LOG_OUT":
       return {}
     case "CHANGE_SESSION":
-    console.log(action.payload, "change")
+    const nuevos2 = JSON.parse(localStorage.getItem("NewUsers")) || [];
+    let arr = nuevos2.map((user)=>{
+      if (action.payload.user === user.username) {
+        return({
+          ...user,
+          name: action.payload.data.name,
+          lastName: action.payload.data.lastName,
+          about: action.payload.data.about,
+          tags: action.payload.data.tags,
+        })
+      }else {
+        return user
+      }
+    })
+    localStorage.setItem("NewUsers", JSON.stringify(arr));
       return (
         {
           ...state,
-          name: action.payload.name,
-          lastName: action.payload.lastName,
-          about: action.payload.about,
-          tags: action.payload.tags,
+          name: action.payload.data.name,
+          lastName: action.payload.data.lastName,
+          about: action.payload.data.about,
+          tags: action.payload.data.tags,
         }
       )
     default:
