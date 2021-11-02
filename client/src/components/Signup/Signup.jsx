@@ -1,227 +1,73 @@
 import { useState } from "react";
 import style from "./Signup.module.css";
-import {SingUp} from "../../Redux/actions/Profile.js"
-import {AddUser} from "../../Redux/actions/Users.js"
-import {useSelector, useDispatch} from 'react-redux'
-function Signup(props) {
+import { SingUp } from "../../Redux/actions/Profile.js";
+import { addUser } from "../../Redux/actions/Users.js";
+import { useDispatch } from "react-redux";
+import { Redirect } from "react-router";
+import Select from "react-select";
+import validate from "../../utils/validate";
 
+function Signup(props) {
   const dispatch = useDispatch();
-  const usuarios = useSelector(store=> store.usersReducer.users)
-  console.log(usuarios)
+
   const [inputs, setInputs] = useState({
-    username: "cspirritt0",
-    password: "dasdsadsadasd2",
-    name: "dsadsa",
-    lastName: "asdsad",
-    email: "mateo@casc.com",
-    github: "csacsac",
+    username: "",
+    password: "",
+    name: "",
+    lastName: "",
+    avatar:"",
+    email: "",
+    github: "",
     about: "",
     tags: "",
   });
 
-
   const [err, setErr] = useState({
-    username: {
-      indice: 0,
-      errores: [
-        "",
-        "Este campo es Obligatorio",
-        "Solo numeros y letras",
-        "Minimo 1 letra",
-        "Minimo 1 numero",
-        "Minimo 3 caracteres",
-        "Maximo 16 caracteres",
-        "Este nombre de usuario ya existe",
-      ],
-    },
-    password: {
-      indice: 0,
-      errores: [
-        "",
-        "Este campo es Obligatorio",
-        "Solo numeros y letras",
-        "Minimo 1 letra",
-        "Minimo 1 numero",
-        "Minimo 8 caracteres",
-        "Maximo 16 caracteres",
-      ],
-    },
-    name: {
-      indice: 0,
-      errores: ["", "Este campo es Obligatorio", "Solo letras"],
-    },
-    lastName: {
-      indice: 0,
-      errores: ["", "Este campo es Obligatorio", "Solo letras"],
-    },
-    email: { indice: 0, errores: ["", "Este campo es Obligatorio"] },
-    github: {
-      indice: 0,
-      errores: [
-        "",
-        "Este campo es Obligatorio",
-        "Este usuario de github no existe",
-      ],
-    },
+    username: "",
+    password: "",
+    name: "",
+    lastName: "",
+    email: "",
+    github: "",
   });
 
-  function validarUsername(str) {
-    if (inputs.username.length < 3) {
-      return { num: 5, bol: false };
-    }
-    if (inputs.username.length > 16) {
-      return { num: 6, bol: false };
-    }
-    if (!tieneLet(str)) {
-      return { num: 3, bol: false };
-    }
-    if (!tieneNum(str)) {
-      return { num: 4, bol: false };
-    }
-    if (tieneSimb(str)) {
-      return { num: 2, bol: false };
-    }
-     if (existe()) {
-       return { num: 7, bol: false }
-     }
-    return { num: 0, bol: true };
-  }
+  const [registered, setRegistered] = useState(false);
+  const options = [
+    { value: "js", label: "JavaScript" },
+    { value: "python", label: "Python" },
+    { value: "cpp", label: "C++" },
+    { value: "php", label: "PHP" },
+    { value: "java", label: "Java" },
+    { value: "c", label: "C" },
+    { value: "go", label: "Go" },
+    { value: "kotlin", label: "Kotiln" },
+    { value: "sql", label: "SQL" },
+    { value: "mongodb", label: "MongoDB" },
+    { value: "postgresql", label: "PostgreSQL" },
+  ];
 
-  function validarPassword(str) {
-    if (inputs.password.length < 8) {
-      return { num: 5, bol: false };
-    }
-    if (inputs.password.length > 16) {
-      return { num: 6, bol: false };
-    }
-    if (!tieneLet(str)) {
-      return { num: 3, bol: false };
-    }
-    if (!tieneNum(str)) {
-      return { num: 4, bol: false };
-    }
-    if (tieneSimb(str)) {
-      return { num: 2, bol: false };
-    }
-    return { num: 0, bol: true };
-  }
-
-  function validarNombreyApellido(str) {
-    if (tieneNum(str) || tieneSimb(str)) {
-      return { num: 2, bol: false };
-    } else return { num: 0, bol: true };
-  }
-
-  function validar() {
-    var arr = [];
-    let validar = [];
-    for (var propiedad in inputs) {
-      if (!inputs[propiedad].length) {
-        arr.push(propiedad);
-      }
-    }
-
-    if (arr.length) {
-      arr.forEach((i) => {
-        if (i === "about" || i === "tags") {
-          return;
-        }
-        validar.push(false);
-        setErr((obj) => {
-          return { ...obj, [i]: { ...obj[i], indice: 1 } };
-        });
-      });
-    }
-
-    if (!arr.includes("username")) {
-      let indice = validarUsername("username");
-      validar.push(indice.bol);
-      setErr((old) => ({
-        ...old,
-        username: { ...old.username, indice: indice.num },
-      }));
-    }
-
-    if (!arr.includes("password")) {
-      let indice = validarPassword("password");
-      validar.push(indice.bol);
-      setErr((old) => ({
-        ...old,
-        password: { ...old.password, indice: indice.num },
-      }));
-    }
-
-    if (!arr.includes("name")) {
-      let indice = validarNombreyApellido("name");
-      validar.push(indice.bol);
-      setErr((old) => ({
-        ...old,
-        name: { ...old.name, indice: indice.num },
-      }));
-    }
-    if (!arr.includes("lastName")) {
-      let indice = validarNombreyApellido("lastName");
-      validar.push(indice.bol);
-      setErr((old) => ({
-        ...old,
-        lastName: { ...old.lastName, indice: indice.num },
-      }));
-    }
-    return validar;
-  }
-
-  function tieneNum(str) {
-    let regexnumeros = /([0-9]+)/;
-    if (regexnumeros.test(inputs[str])) {
-      return true;
-    }
-    return false;
-  }
-
-  function tieneLet(str) {
-    let regexletrasmin = /([a-z]+)/;
-    let regexletrasmay = /([A-Z]+)/;
-    if (regexletrasmay.test(inputs[str]) || regexletrasmin.test(inputs[str])) {
-      return true;
-    }
-    return false;
-  }
-
-  function tieneSimb(str) {
-    let regexFinal1 = /([\W])/;
-    let regexFinal2 = /[_]/;
-    if (regexFinal1.test(inputs[str]) || regexFinal2.test(inputs[str])) {
-      return true;
-    }
-    return false;
-  }
-
-  function existe(){
-    var arr = usuarios.filter((usuario)=>usuario.username === inputs.username)
-    if (arr.length === 0) {
-      return false
-    }else {
-      return true
-    }
-  }
-  const handleChange = (e) => {
-    setInputs((old) => ({
-      ...old,
-      [e.target.name]: e.target.value,
-    }));
-    setErr((old) => ({
-      ...old,
-      [e.target.name]: { ...old[e.target.name], indice: 0 },
-    }));
+  const handleChange = ({ target: { name, value } }) => {
+    setInputs((old) => ({ ...old, [name]: value }));
+    setErr((old) => ({ ...old, [name]: validate(name, value) }));
   };
 
+  const handleSelect = (e) => {
+    setInputs((old) => ({ ...old, tags: e.map((option) => option.value) }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let validacion = validar();
-    if (!validacion.includes(false)) {
-      dispatch(SingUp(inputs))
-      dispatch(AddUser(inputs))
+
+    const errors = validate(inputs);
+
+    if (!Object.values(errors).filter((error) => error).length) {
+      let obj = inputs
+      if (obj.avatar === "") {
+        obj.avatar = "https://cdn-icons-png.flaticon.com/512/147/147144.png"
+      }
+      dispatch(SingUp(obj));
+      dispatch(addUser(obj));
+
       setInputs({
         username: "",
         password: "",
@@ -232,95 +78,105 @@ function Signup(props) {
         about: "",
         tags: "",
       });
+
+      setErr((old) => ({
+        username: "",
+        password: "",
+        name: "",
+        lastName: "",
+        email: "",
+        github: "",
+      }));
+
+      setRegistered(true);
+    } else {
+      setErr((old) => errors);
     }
   };
 
   return (
-    <form
-      className={style.container}
-      onSubmit={(e) => handleSubmit(e)}
-      onChange={(e) => handleChange(e)}
-    >
-      Formulario de registro
-      <label>Username</label>
-      <input
-        className={style.input}
-        value={inputs.username}
-        name="username"
-        type="text"
-      />
-      <div className={style.errores}>
-        {err.username.errores[err.username.indice]}
-      </div>
-      <label>Password</label>
-      <input
-        className={style.input}
-        value={inputs.password}
-        name="password"
-        type="password"
-      />
-      <div className={style.errores}>
-        {err.password.errores[err.password.indice]}
-      </div>
-      <label>Name</label>
-      <input
-        className={style.input}
-        value={inputs.name}
-        name="name"
-        type="text"
-      />
-      <div className={style.errores}>{err.name.errores[err.name.indice]}</div>
-      <label>Last Name</label>
-      <input
-        className={style.input}
-        value={inputs.lastName}
-        name="lastName"
-        type="text"
-      />
-      <div className={style.errores}>
-        {err.lastName.errores[err.lastName.indice]}
-      </div>
-      <label>Email</label>
-      <input
-        className={style.input}
-        value={inputs.email}
-        name="email"
-        type="email"
-      />
-      <div className={style.errores}>{err.email.errores[err.email.indice]}</div>
-      <label>GitHub</label>
-      <input
-        className={style.input}
-        value={inputs.github}
-        name="github"
-        type="text"
-      />
-      <div className={style.errores}>
-        {err.github.errores[err.github.indice]}
-      </div>
-      <label>Avatar</label>
-      <input
-        className={style.input}
-        value={inputs.avatar}
-        name="avatar"
-        type="image"
-      />
-      <label>About</label>
-      <textarea
-        className={style.input}
-        value={inputs.about}
-        name="about"
-        type="text"
-      ></textarea>
-      <label>Tags</label>
-      <input
-        className={style.input}
-        value={inputs.tags}
-        name="tags"
-        type="text"
-      />
-      <button type="submit">Crear</button>
-    </form>
+    <div>
+      {!registered ? (
+        <form
+          className={style.container}
+          onSubmit={(e) => handleSubmit(e)}
+          onChange={(e) => handleChange(e)}
+        >
+          Formulario de registro
+          <label>Username</label>
+          <input
+            className={style.input}
+            value={inputs.username}
+            name="username"
+            type="text"
+          />
+          <div className={style.errores}>{err.username}</div>
+          <label>Password</label>
+          <input
+            className={style.input}
+            value={inputs.password}
+            name="password"
+            type="password"
+          />
+          <div className={style.errores}>{err.password}</div>
+          <label>Name</label>
+          <input
+            className={style.input}
+            value={inputs.name}
+            name="name"
+            type="text"
+          />
+          <div className={style.errores}>{err.name}</div>
+          <label>Last Name</label>
+          <input
+            className={style.input}
+            value={inputs.lastName}
+            name="lastName"
+            type="text"
+          />
+          <div className={style.errores}>{err.lastName}</div>
+          <label>Email</label>
+          <input
+            className={style.input}
+            value={inputs.email}
+            name="email"
+            type="email"
+          />
+          <div className={style.errores}>{err.email}</div>
+          <label>GitHub</label>
+          <input
+            className={style.input}
+            value={inputs.github}
+            name="github"
+            type="text"
+          />
+          <div className={style.errores}>{err.github}</div>
+          <label>Avatar</label>
+          <input
+            className={style.input}
+            value={inputs.avatar}
+            name="avatar"
+            type="text"
+          />
+          <label>About</label>
+          <textarea
+            className={style.input}
+            value={inputs.about}
+            name="about"
+            type="text"
+          ></textarea>
+          <label>Tags</label>
+          <Select
+            onChange={handleSelect}
+            options={options}
+            isMulti
+          />
+          <button type="submit">Submit</button>
+        </form>
+      ) : (
+        <Redirect to="/home" />
+      )}
+    </div>
   );
 }
 

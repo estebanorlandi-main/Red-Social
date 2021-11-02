@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 import Post from "../../components/Post/Post";
 import NewPost from "../../components/NewPost/NewPost";
+import UserCard from "../../components/UserCard/UserCard";
 
 import styles from "./Home.module.css";
 
@@ -11,7 +12,6 @@ function Home(props) {
 
   const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);
-  const [session, setSession] = useState(false);
 
   const handlePage = () => setPage(page + 1);
 
@@ -31,23 +31,19 @@ function Home(props) {
 
   console.log("total posts: ", (page + 1) * 10);
 
-  const session1 = {
-    username: "estebanorlandi4",
-  };
-  const session2 = {
-    username: "esteban",
-  };
-  const noSession = {};
-
   return (
     <div className={createPost ? styles.noScroll : "" + ` ${styles.home}`}>
-      <div>
+
+      <UserCard />
+
+      {/*<div>
         <button onClick={() => setCreatePost((old) => !old)}>
           Create Post
         </button>
-      </div>
+      </div>*/}
 
-      {createPost ? (
+
+      {/* createPost ? (
         <div
           className={styles.newPost}
           id="close"
@@ -59,21 +55,13 @@ function Home(props) {
         </div>
       ) : (
         ""
-      )}
+      ) */}
 
-      <button
-        onClick={() => {
-          console.log(session ? session1 : session2);
-          setSession((old) => !old);
-        }}
-      >
-        change user
-      </button>
       <ul>
         {posts.map((post, i) =>
           i < (page + 1) * 10 ? (
             <li>
-              <Post post={post} session={session ? session1 : session2} />
+              <Post post={post} />
             </li>
           ) : (
             ""
