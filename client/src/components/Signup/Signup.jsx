@@ -12,12 +12,12 @@ function Signup(props) {
   const dispatch = useDispatch();
 
   const [inputs, setInputs] = useState({
-    username: "estebanorlandi4",
-    password: "password1",
-    name: "esteban",
-    lastName: "orlandi",
-    email: "estebanorlandi4@gmail.com",
-    github: "estebanorlandi4",
+    username: "",
+    password: "",
+    name: "",
+    lastName: "",
+    email: "",
+    github: "",
     about: "",
     tags: "",
   });
