@@ -19,6 +19,7 @@ export default function NavBar(props) {
   const usuario = useSelector((store) => store.sessionReducer);
   const dispatch = useDispatch();
   const isLanding = useLocation().pathname === "/";
+
   useEffect(() => {
     function verificar() {
       if (usuario.username) {
@@ -29,6 +30,7 @@ export default function NavBar(props) {
     }
     verificar();
   }, [usuario]);
+
   return (
     <header className={styles.navbar + ` ${isLanding ? styles.landing : ""}`}>
       {!isLanding ? (
@@ -63,16 +65,14 @@ export default function NavBar(props) {
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                  className={styles.link}
-                  to="/home">
-                  <div
-                    onClick={() => dispatch(LogOut())}
-                    className={styles.links}
-                  >
-                    <BiLogOut />
-                    <span>Log out</span>
-                  </div>
+                  <Link className={styles.link} to="/home">
+                    <div
+                      onClick={() => dispatch(LogOut())}
+                      className={styles.links}
+                    >
+                      <BiLogOut />
+                      <span>Log out</span>
+                    </div>
                   </Link>
                 </li>
               </Fragment>

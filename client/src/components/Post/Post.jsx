@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { likePost, commentPost } from "../../Redux/actions/Post";
+import { commentPost } from "../../Redux/actions/Post";
 
 import Comment from "../Comment/Comment";
 
@@ -66,7 +66,7 @@ function Post({ post }) {
   };
 
   const handleLike = (e) => {
-    if (session.username) dispatch(likePost(post.idPost, session.username));
+    //if (session.username) dispatch(likePost(post.idPost, session.username));
   };
 
   const tags = new Set();
