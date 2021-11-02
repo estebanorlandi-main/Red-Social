@@ -63,14 +63,17 @@ export default function NavBar(props) {
                   </Link>
                 </li>
                 <li>
-                  <span
-                    className={styles.link}
+                  <Link 
+                  className={styles.link}
+                  to="/home">
+                  <div
                     onClick={() => dispatch(LogOut())}
                     className={styles.links}
                   >
                     <BiLogOut />
                     <span>Log out</span>
-                  </span>
+                  </div>
+                  </Link>
                 </li>
               </Fragment>
             ) : (
