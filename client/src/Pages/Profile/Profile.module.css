@@ -1,3 +1,9 @@
 .container {
-  background-color: var(--c-light);
+  width: 50vw;
+  margin: 0 auto;
+  padding: 1em;
+}
+
+.container > h3 {
+  margin-top: 1em;
 }

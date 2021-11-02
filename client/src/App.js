@@ -44,7 +44,7 @@ function App() {
             match: {
               params: { username },
             },
-          }) => <Profile user={username} />}
+          }) => <Profile username={username} />}
         />
 
         <Route path="/userlist" component={UserList} />
