@@ -4,7 +4,7 @@ import { getUser, updateUser } from "../../Redux/actions/Users";
 import validate from "../../utils/validate";
 import styles from "./Profile.module.css";
 import Select from "react-select";
-import {ChangeUser} from "../../Redux/actions/Profile.js"
+import {ChangeSession} from "../../Redux/actions/Profile.js"
 const selectStyles = {
   control: (styles) => ({ ...styles, width: "100%" }),
 };
@@ -26,7 +26,7 @@ const options = [
 export default function Profile(props) {
   const dispatch = useDispatch();
   const [firstLoad, setFistLoad] = useState(true);
-
+  const [editar, setEditar] = useState(false);
   dispatch(getUser(props.username));
 
   const session = useSelector((state) => state.sessionReducer);
@@ -55,14 +55,14 @@ export default function Profile(props) {
 
   const handleSubmit = (value) => {
     const errs = validate(inputs);
-    console.log(errs);
     if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
-    console.log(errs);
     dispatch(updateUser(session.username, inputs));
+    dispatch(ChangeSession(inputs))
   };
 
   return profile ? (
     <div className={styles.container}>
+    { session.username === profile.username? <button onClick={()=> setEditar((old)=>!old)}>Editar</button> : "" }
       <img className={styles.avatar} src={profile.avatar} alt="avatar" />
 
       <h3>Username</h3>
@@ -70,7 +70,7 @@ export default function Profile(props) {
 
       <h3>Name</h3>
       <div>
-        {session.username === profile.username ? (
+        {session.username === profile.username && editar ? (
           <Fragment>
             <input
               name="name"
@@ -102,7 +102,7 @@ export default function Profile(props) {
       <p>{profile.github}</p>
 
       <h3>About</h3>
-      {session.username === profile.username ? (
+      {session.username === profile.username && editar ? (
         <Fragment>
           <textarea
             name="about"
@@ -116,7 +116,7 @@ export default function Profile(props) {
       )}
 
       <h3>Tags</h3>
-      {session.username === profile.username ? (
+      {session.username === profile.username && editar ? (
         <Select
           onChange={handleSelect}
           className={styles.select_container}
@@ -133,7 +133,7 @@ export default function Profile(props) {
           profile.tags.map((tag) => <span className={styles.tag}>{tag}</span>)}
       </div>
 
-      {session.username === profile.username ? (
+      {session.username === profile.username && editar ? (
         <button onClick={handleSubmit}>Change</button>
       ) : (
         ""

@@ -4,20 +4,20 @@ import { SingUp } from "../../Redux/actions/Profile.js";
 import { addUser } from "../../Redux/actions/Users.js";
 import { useDispatch } from "react-redux";
 import { Redirect } from "react-router";
-
+import Select from "react-select";
 import validate from "../../utils/validate";
 
 function Signup(props) {
   const dispatch = useDispatch();
 
   const [inputs, setInputs] = useState({
-    username: "estebanorlandi4",
-    password: "password1",
-    name: "esteban",
-    lastName: "orlandi",
-    email: "estebanorlandi4@gmail.com",
-    github: "estebanorlandi4",
-    about: "asdfasdf asdfasdf",
+    username: "",
+    password: "",
+    name: "",
+    lastName: "",
+    email: "",
+    github: "",
+    about: "",
     tags: "",
   });
 
@@ -31,10 +31,27 @@ function Signup(props) {
   });
 
   const [registered, setRegistered] = useState(false);
+  const options = [
+    { value: "js", label: "JavaScript" },
+    { value: "python", label: "Python" },
+    { value: "cpp", label: "C++" },
+    { value: "php", label: "PHP" },
+    { value: "java", label: "Java" },
+    { value: "c", label: "C" },
+    { value: "go", label: "Go" },
+    { value: "kotlin", label: "Kotiln" },
+    { value: "sql", label: "SQL" },
+    { value: "mongodb", label: "MongoDB" },
+    { value: "postgresql", label: "PostgreSQL" },
+  ];
 
   const handleChange = ({ target: { name, value } }) => {
     setInputs((old) => ({ ...old, [name]: value }));
     setErr((old) => ({ ...old, [name]: validate(name, value) }));
+  };
+
+  const handleSelect = (e) => {
+    setInputs((old) => ({ ...old, tags: e.map((option) => option.value) }));
   };
 
   const handleSubmit = (e) => {
@@ -144,11 +161,10 @@ function Signup(props) {
             type="text"
           ></textarea>
           <label>Tags</label>
-          <input
-            className={style.input}
-            value={inputs.tags}
-            name="tags"
-            type="text"
+          <Select
+            onChange={handleSelect}
+            options={options}
+            isMulti
           />
           <button type="submit">Submit</button>
         </form>
