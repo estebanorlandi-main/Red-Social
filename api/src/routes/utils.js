@@ -109,20 +109,27 @@ const DB_Commentdestroy = async (id)=> {
 
 const DB_Postsearch = async ({username, id}) =>{
 	try{
-		let post_search;
-		if(username === undefined){
-			post_search = await Post.findOne({
+		if(username === undefined && id === undefined){
+			var post_search = await Post.findAll({
+				include: [{model: User, attributes:["image"]},Comment]
+			});
+			return post_search;
+		}
+		if(username === undefined && id){
+			var post_search = await Post.findOne({
             	where:{
                  	'idPost':id
             	},
+				include: [{model: User, attributes:["image"]},Comment]
         	});
         	return post_search;
-		} else if (id === undefined){
+		} else if (id === undefined && username){
 			let userDB = await DB_UserID(username);
-			post_search =await Post.findAll({
+			var post_search =await Post.findAll({
             	where:{
                 	userId:userDB.id
             	},
+				include: [{model: User, attributes:["image"]},Comment]
         	});
         	return post_search
 		}else {
