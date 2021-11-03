@@ -1,37 +1,39 @@
 import { useState } from "react";
-import style from "./Signup.module.css";
-import { SingUp } from "../../Redux/actions/Profile.js";
-import { addUser } from "../../Redux/actions/Users.js";
 import { useDispatch } from "react-redux";
 import { Redirect } from "react-router";
 import Select from "react-select";
+
+import { singUp } from "../../Redux/actions/Session.js";
 import validate from "../../utils/validate";
+
+import style from "./Signup.module.css";
 
 function Signup(props) {
   const dispatch = useDispatch();
 
   const [inputs, setInputs] = useState({
-    username: "",
-    password: "",
-    name: "",
-    lastName: "",
-    avatar:"",
-    email: "",
-    github: "",
-    about: "",
-    tags: "",
+    username: process.env.REACT_APP_USERNAME || "",
+    password: process.env.REACT_APP_PASSWORD || "",
+    name: process.env.REACT_APP_NAME || "",
+    lastname: process.env.REACT_APP_LAST_NAME || "",
+    avatar: process.env.REACT_APP_AVATAR || "",
+    email: process.env.REACT_APP_EMAIL || "",
+    gitaccount: process.env.REACT_APP_GITHUB || "",
+    about: process.env.REACT_APP_ABOUT || "",
+    tags: [],
   });
 
   const [err, setErr] = useState({
     username: "",
     password: "",
     name: "",
-    lastName: "",
+    lastname: "",
     email: "",
-    github: "",
+    gitaccount: "",
   });
 
   const [registered, setRegistered] = useState(false);
+
   const options = [
     { value: "js", label: "JavaScript" },
     { value: "python", label: "Python" },
@@ -61,20 +63,22 @@ function Signup(props) {
     const errors = validate(inputs);
 
     if (!Object.values(errors).filter((error) => error).length) {
-      let obj = inputs
+      let obj = inputs;
       if (obj.avatar === "") {
-        obj.avatar = "https://cdn-icons-png.flaticon.com/512/147/147144.png"
+        obj.avatar = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
       }
-      dispatch(SingUp(obj));
-      dispatch(addUser(obj));
+
+      obj.gitaccount = `https://github.com/${obj.gitaccount}`;
+
+      dispatch(singUp(obj));
 
       setInputs({
         username: "",
         password: "",
         name: "",
-        lastName: "",
+        lastname: "",
         email: "",
-        github: "",
+        gitaccount: "",
         about: "",
         tags: "",
       });
@@ -83,9 +87,9 @@ function Signup(props) {
         username: "",
         password: "",
         name: "",
-        lastName: "",
+        lastname: "",
         email: "",
-        github: "",
+        gitaccount: "",
       }));
 
       setRegistered(true);
@@ -130,11 +134,11 @@ function Signup(props) {
           <label>Last Name</label>
           <input
             className={style.input}
-            value={inputs.lastName}
-            name="lastName"
+            value={inputs.lastname}
+            name="lastname"
             type="text"
           />
-          <div className={style.errores}>{err.lastName}</div>
+          <div className={style.errores}>{err.lastname}</div>
           <label>Email</label>
           <input
             className={style.input}
@@ -146,11 +150,11 @@ function Signup(props) {
           <label>GitHub</label>
           <input
             className={style.input}
-            value={inputs.github}
-            name="github"
+            value={inputs.gitaccount}
+            name="gitaccount"
             type="text"
           />
-          <div className={style.errores}>{err.github}</div>
+          <div className={style.errores}>{err.gitaccount}</div>
           <label>Avatar</label>
           <input
             className={style.input}
@@ -166,11 +170,7 @@ function Signup(props) {
             type="text"
           ></textarea>
           <label>Tags</label>
-          <Select
-            onChange={handleSelect}
-            options={options}
-            isMulti
-          />
+          <Select onChange={handleSelect} options={options} isMulti />
           <button type="submit">Submit</button>
         </form>
       ) : (

@@ -103,7 +103,7 @@ export default function validate(input, value, cb) {
       if (p === "username") errors[p] = validarUsername(input[p]);
       if (p === "password") errors[p] = validarPassword(input[p]);
       if (p === "name") errors[p] = validarNombreyApellido(input[p]);
-      if (p === "lastName") errors[p] = validarNombreyApellido(input[p]);
+      if (p === "lastname") errors[p] = validarNombreyApellido(input[p]);
       if (p === "email") errors[p] = validarEmail(input[p]);
       if (p === "github") errors[p] = validarUsername(input[p]);
     }
@@ -113,7 +113,7 @@ export default function validate(input, value, cb) {
   if (input === "username") return validarUsername(value);
   if (input === "password") return validarPassword(value);
   if (input === "name") return validarNombreyApellido(value);
-  if (input === "lastName") return validarNombreyApellido(value);
+  if (input === "lastname") return validarNombreyApellido(value);
   if (input === "email") return validarEmail(value);
   if (input === "github") return validarGithub(value);
 

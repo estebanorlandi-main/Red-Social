@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { Sequelize } = require("sequelize");
 const fs = require("fs");
+const BulkTags = require("../Bulk.json")
 const path = require("path");
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
 
@@ -42,6 +43,8 @@ const { User,
   Comment_Post,
   User_Comment } = sequelize.models;
 
+//Comentar para no floodear la base de datos con tags :*
+Tags.bulkCreate(BulkTags, {returning: true})
 
 // Aca vendrian las relaciones
 //Usuario

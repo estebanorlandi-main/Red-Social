@@ -20,7 +20,7 @@ const DB_findUsersUsername = async (username)=>{
 }
 const DB_findUserAll = async (query)=>{
 		const findUserAll = await User.findAll({
-			attributes:["id","name","username","lastname","image","gitaccount"],
+			//attributes:["id","name","username","lastname","image","gitaccount"],
 			include: [Post,Comment]
 		})
 		return findUserAll
@@ -36,18 +36,18 @@ const DB_findUserCreated = async (date)=>{
 }
 const DB_findUserQuery = async (query)=>{
 	console.log(query)
-		const findUser = await User.findOne({
+		const findUser = await User.findAll({
 			where:{
 				[Op.or]:[
 				{
-					username: {[Op.iLike]:query.username}
+					username: {[Op.iLike]:query.username+'%'}
 				},
 				{
 					email: {[Op.iLike]:query.email}
 				}
 				]
 			},
-			attributes:["id","name","username","lastname","image","gitaccount"],
+			//attributes:["id","name","username","lastname","image","gitaccount"],
 			include:[Post,Comment]
 		})
 		return findUser
@@ -57,7 +57,7 @@ const DB_findUserParams = async (params)=>{
 			where:{
 				username:params
 			},
-			attributes:["id","name","username","lastname","image","gitaccount"],
+			//attributes:["id","name","username","lastname","image","gitaccount"],
 			include:[Post,Comment]
 		})
 		return findUser
@@ -67,7 +67,7 @@ const DB_UserID = async (username)=>{
 			where:{
 				username
 			},
-			attributes:["id","name","username","lastname","image","gitaccount"],
+			//attributes:["id","name","username","lastname","image","gitaccount"],
 			include: [Post,Comment]
 		})
 	return UserID;
@@ -273,8 +273,8 @@ const DB_userSearch= async (username, email, password)=>{
 			if(user=== null){
 				return {error:"username"}
 			}
-			if(email && user.email !== email){
-				return {error:"email"}}
+			/*if(email && user.email !== email){
+				return {error:"email"}}*/
 			var validate = await bcrypt.compare(password,user.password)
             if(!validate){
                 return {error:"password"}

@@ -1,10 +1,11 @@
 import { Fragment, useEffect, useState } from "react";
+import userimg from "../../images/userCard.png";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser, updateUser } from "../../Redux/actions/Users";
+import { getUser } from "../../Redux/actions/Users";
+import { updateUser } from "../../Redux/actions/Session";
 import validate from "../../utils/validate";
 import styles from "./Profile.module.css";
 import Select from "react-select";
-import { ChangeSession } from "../../Redux/actions/Profile.js";
 const selectStyles = {
   control: (styles) => ({ ...styles, width: "100%" }),
 };
@@ -25,23 +26,29 @@ const options = [
 
 export default function Profile(props) {
   const dispatch = useDispatch();
-  const [firstLoad, setFistLoad] = useState(true);
   const [editar, setEditar] = useState(false);
-  dispatch(getUser(props.username));
+  const [first, setFirst] = useState(true);
 
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
 
+  useEffect(() => {
+    if (first) {
+      dispatch(getUser(props.username));
+      setFirst(false);
+    }
+  }, [profile]);
+
   const [inputs, setInputs] = useState({
     name: session.name || "",
-    lastName: session.lastName || "",
+    lastname: session.lastname || "",
     about: session.about || "",
     tags: session.tags || [],
   });
 
   const [errors, setErrors] = useState({
     name: "",
-    lastName: "",
+    lastname: "",
   });
 
   const handleChange = ({ target: { name, value } }) => {
@@ -56,8 +63,7 @@ export default function Profile(props) {
   const handleSubmit = (value) => {
     const errs = validate(inputs);
     if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
-    dispatch(updateUser(session.username, inputs));
-    dispatch(ChangeSession(session.username, inputs));
+    dispatch(updateUser(profile.id, inputs));
   };
 
   return profile ? (
@@ -67,7 +73,11 @@ export default function Profile(props) {
       ) : (
         ""
       )}
-      <img className={styles.avatar} src={profile.avatar} alt="avatar" />
+      <img
+        className={styles.avatar}
+        src={profile.avatar || userimg}
+        alt="avatar"
+      />
 
       <h3>Username</h3>
       <p>{profile.username}</p>
@@ -85,16 +95,16 @@ export default function Profile(props) {
             <p>{errors.name}</p>
 
             <input
-              name="lastName"
+              name="lastname"
               onChange={handleChange}
-              value={inputs.lastName}
-              placeholder={session.lastName}
+              value={inputs.lastname}
+              placeholder={session.lasnName}
             />
-            <p>{errors.lastName}</p>
+            <p>{errors.lastname}</p>
           </Fragment>
         ) : (
           <p>
-            {profile.name} {profile.lastName}
+            {profile.name} {profile.lastname}
           </p>
         )}
       </div>
@@ -103,7 +113,7 @@ export default function Profile(props) {
       <p>{profile.email}</p>
 
       <h3>Github</h3>
-      <p>{profile.github}</p>
+      <p>{profile.gitaccount}</p>
 
       <h3>About</h3>
       {session.username === profile.username && editar ? (

@@ -13,6 +13,9 @@ function Home(props) {
 
   const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);
+  const [first, setFirst] = useState(true);
+
+  useEffect(() => {});
 
   const handlePage = () => setPage(page + 1);
 
