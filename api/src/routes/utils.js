@@ -2,6 +2,9 @@ const axios = require('axios');
 const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.js');
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
+const bcrypt = require("bcrypt")
+const saltRounds = 10;
+
 //fn
 const DB_findUsersEmail = async (email)=>{
 	if(email == null || email == undefined) {return null}
@@ -256,6 +259,7 @@ const DB_postCreates = async(data) =>{
 const DB_userSearch= async (username, email, password)=>{
 	try{
 		var user;
+		var passwordprov = bcrypt.hashSync(password,saltRounds)
 		if(username && username != null){
 			user = await User.findOne({
 					where:{
@@ -267,7 +271,7 @@ const DB_userSearch= async (username, email, password)=>{
 			}
 			/*if(email && user.email !== email){
                 return {error:"email"}}*/
-            if(user.password !== password){
+            if(user.password !== passwordprov){
                 return {error:"password"}
 			}
 			return {user}
