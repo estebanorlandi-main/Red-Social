@@ -89,7 +89,7 @@ router.delete("/:id", async (req, res) =>{
     try{
         const {id} = req.params;
         const deletePost = await DB_Postdestroy(id)
-        res.status(200).send('Post eliminado con exito');
+        res.status(200).send('Delete post');
     }catch(e){
         res.status(404).send('Cant delete post');
     };   
