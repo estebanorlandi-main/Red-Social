@@ -273,8 +273,8 @@ const DB_userSearch= async (username, email, password)=>{
 			if(user=== null){
 				return {error:"username"}
 			}
-			if(email && user.email !== email){
-				return {error:"email"}}
+			/*if(email && user.email !== email){
+				return {error:"email"}}*/
 			var validate = await bcrypt.compare(password,user.password)
             if(!validate){
                 return {error:"password"}

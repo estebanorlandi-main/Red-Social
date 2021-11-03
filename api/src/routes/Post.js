@@ -19,7 +19,7 @@ router.get("/", async (req, res) =>{
     const{categoria} = req.query;
     const allPosts = await Post.findAll({});
     if(categoria){
-        let postCategoria = await allPost.filter(e => e.categoria.toLowerCase().includes(categoria.toLowerCase()));
+        let postCategoria = await allPosts.filter(e => e.categoria.toLowerCase().includes(categoria.toLowerCase()));
         allPosts[0]? res.status(200).send(postCategoria) :
         res.status(404).send("There is no post with that tag");
     }else{
@@ -80,8 +80,7 @@ router.post("/", async (req, res, next) =>{
         await userDB.addPost(createPost)
         res.send("Success in post creation");
     }catch(e){
-        console.log(e)
-        res.sendStatus(404)
+        res.status(404).send({error: 'Invalid data for post creation'})
     }
 })
 
