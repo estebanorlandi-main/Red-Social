@@ -26,7 +26,6 @@ router.post('/', async (req, res)=>{
 		const {content, username, postid} = req.body
 		const UserAssociation = await database_Utils.DB_UserID(username)
 		const PostAssociation = await database_Utils.DB_Postsearch({'id' : postid})
-		console.log(PostAssociation, 'POSTEO')
 		const comment = await Comment.create({content, 
 			'userId':UserAssociation.id, 'postId': postid}
 			)
@@ -34,7 +33,6 @@ router.post('/', async (req, res)=>{
 		PostAssociation.addComment(comment)
 		return res.status(202).send(comment)
 	} catch(e) {
-		console.log(e)
 		return res.status(404).send('Invalid username for request')
 	}
 })
