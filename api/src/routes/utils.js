@@ -20,7 +20,7 @@ const DB_findUsersUsername = async (username)=>{
 }
 const DB_findUserAll = async (query)=>{
 		const findUserAll = await User.findAll({
-			attributes:["id","name","username","lastname","image","gitaccount"],
+			//attributes:["id","name","username","lastname","image","gitaccount"],
 			include: [Post,Comment]
 		})
 		return findUserAll

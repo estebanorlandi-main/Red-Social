@@ -11,7 +11,7 @@ const { DB_userCreates, DB_postCreates } = require("./src/routes/utils.js");
 conn.sync({ force: true }).then(() => {
   server.listen(3001, () => {
     //CARGA DE DATOS
-    // DB_userCreates(DataUsers)
+    DB_userCreates(DataUsers);
     //Descomentar esta linea para cargar los post
     // DB_postCreates(dataPosts)
     console.log("%s listening at 3001"); // eslint-disable-line no-console

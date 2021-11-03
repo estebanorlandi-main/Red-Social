@@ -1,8 +1,6 @@
 import axios from "axios";
 export const SEARCH_USER = "SEARCH_USER";
-export const ADD_USER = "ADD_USER";
 export const GET_USER = "GET_USER";
-export const UPDATE_USER = "UPDATE_USER";
 
 export function searchUser(users, input) {
   return function (dispatch) {

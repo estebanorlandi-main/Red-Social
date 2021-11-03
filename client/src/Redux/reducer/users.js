@@ -1,4 +1,4 @@
-import { SEARCH_USER, ADD_USER, GET_USER, UPDATE_USER } from "../actions/Users";
+import { SEARCH_USER, GET_USER, UPDATE_USER } from "../actions/Users";
 
 const initialState = {
   users: [],
@@ -8,6 +8,7 @@ const initialState = {
 
 export default function root(state = initialState, action) {
   switch (action.type) {
+    // SearchBar
     case SEARCH_USER:
       let nuevos3 = JSON.parse(localStorage.getItem("NewUsers")) || [];
       if (action.input === "") {
@@ -28,27 +29,11 @@ export default function root(state = initialState, action) {
         };
       }
 
+    // Perfil del usuario
     case GET_USER:
-      console.log(action.payload.data);
       return {
         ...state,
         profile: action.payload.data,
-      };
-
-    case UPDATE_USER:
-      return {
-        ...state,
-        users: state.users.map((user) => {
-          if (user.username === action.payload.username)
-            return {
-              ...user,
-              name: action.payload.name,
-              lastName: action.payload.lastName,
-              about: action.payload.about,
-              tags: action.payload.tags,
-            };
-          return user;
-        }),
       };
 
     default:
