@@ -27,6 +27,8 @@ function Post({ post }) {
   const [newComment, setNewComment] = useState("");
   const [error, setError] = useState("");
 
+  // askdo
+
   useEffect(() => {
     if (firstLoad) {
       setFirstLoad(false);
