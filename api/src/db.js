@@ -1,11 +1,12 @@
 require("dotenv").config();
 const { Sequelize } = require("sequelize");
 const fs = require("fs");
-const BulkTags = require("../Bulk.json")
+const BulkTags = require("../Bulk.json");
 const path = require("path");
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
 
-const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
+const sequelize = new Sequelize(
+  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
   {
     logging: false, // set to console.log to see the raw SQL queries
     native: false, // lets Sequelize know we can use pg-native for ~30% more speed
@@ -34,47 +35,58 @@ let capsEntries = entries.map((entry) => [
 sequelize.models = Object.fromEntries(capsEntries);
 
 // Importacion de modelos
-const { User, 
-  Post, 
-  Comment, 
+const {
+  User,
+  Post,
+  Comment,
   Privileges,
-  Tags, 
+  Tags,
   Post_User,
   Comment_Post,
   User_Comment,
-  Likes 
+  Likes,
 } = sequelize.models;
 
+//Comentar para no floodear la base de datos con tags :*
+//Tags.bulkCreate(BulkTags, { returning: true });
 
 // Aca vendrian las relaciones
 //Usuario
 // Relacion 1 a M  - User -> Post
-User.hasMany(Post)
-Post.belongsTo(User)
+User.hasMany(Post);
+Post.belongsTo(User);
 
 //Relacion 1 a 1 - User -> Privileges
-User.hasOne(Privileges)
+User.hasOne(Privileges);
 
 //Relacion 1 a M - User -> Comment
-User.belongsToMany(Comment, {through: User_Comment, onDelete: 'CASCADE'})
-Comment.belongsTo(User, {through: User_Comment, onDelete: 'CASCADE'})
+User.belongsToMany(Comment, { through: User_Comment, onDelete: "CASCADE" });
+Comment.belongsTo(User, { through: User_Comment, onDelete: "CASCADE" });
 
 //Post
 //Relacion M a 1 - Post -> Comment
-Post.belongsToMany(Comment, {through: Comment_Post, onDelete: 'CASCADE'})
-Comment.belongsTo(Post, {through: Comment_Post, onDelete: 'CASCADE'})
+Post.belongsToMany(Comment, { through: Comment_Post, onDelete: "CASCADE" });
+Comment.belongsTo(Post, { through: Comment_Post, onDelete: "CASCADE" });
 
 //Relacion M a M - Post -> Tags
-Post.belongsToMany(Tags, {through:'Post_Tags', onDelete: 'CASCADE'})
-Tags.belongsToMany(Post, {through:'Post_Tags', onDelete: 'CASCADE'})
-
+Post.belongsToMany(Tags, { through: "Post_Tags", onDelete: "CASCADE" });
+Tags.belongsToMany(Post, { through: "Post_Tags", onDelete: "CASCADE" });
 
 //Likes
+User.hasMany(Likes, { as: "postLikes" });
+Post.hasMany(Likes, { as: "userLikes" });
+Likes.belongsTo(User);
+Likes.belongsTo(Post);
+//Likes 
 User.hasMany(Likes,{as:"postLikes"})
 Post.hasMany(Likes,{as:"userLikes"})
 Likes.belongsTo(User)
 Likes.belongsTo(Post)
 
+//Follow
+
+User.belongsToMany(User, {foreignKey: 'userId',as: 'followers',through: "User_Follow"});
+User.belongsToMany(User, {foreignKey: 'followerId',as: 'following',through: "User_Follow"});
 
 module.exports = {
   ...sequelize.models,

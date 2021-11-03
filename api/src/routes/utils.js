@@ -1,5 +1,6 @@
 const axios = require('axios');
-const {User,Post,Comment,User_Comment,Comment_Post,Post_User,Likes} = require('../db.js');
+const {User,Post,Comment,User_Comment,Comment_Post,Post_User,Likes,User_Follow} = require('../db.js');
+const db = require('../db.js');
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
 const bcrypt = require("bcrypt");
@@ -11,9 +12,22 @@ const someOtherPlaintextPassword = 'not_bacon';
 
 const likeUserPost = {model:Likes,as:"postLikes",attributes:["postIdPost"],include:{model:Post,attributes:["title"]}}
 const likePostUser = {model:Likes,as:"userLikes",attributes:["userId"],include:{model:User,attributes:["username"]}}
+const followersInfo = {model:User,as:"followers",attributes:["id","username","image","name","lastname"]}
+const followedInfo = {model:User,as:"following",attributes:["id","username","image","name","lastname"]}
 
+const DB_UserFollow =async (date)=>{
+	const {userId,followerId} = date
+	const follow = await User_Follow.findOne({where:{userId}}).catch(e=>console.log(e))
+	if(follow){
+		return follow.destroy()
+	}
+	const user = await User.findOne({where:{id:userId}}).catch(e=> null)
+	const follower = await User.findOne({where:{id:followerId}}).catch(e=> null)
+	if(user || follower){
+		return newFollower		
+	}else return ({errors:"fatal errores"})
 
-
+}
 //fn
 const DB_findUsersEmail = async (email)=>{
 	if(email == null || email == undefined) {return null}
@@ -28,7 +42,7 @@ const DB_findUsersUsername = async (username)=>{
 const DB_findUserAll = async (query)=>{
 		const findUserAll = await User.findAll({
 			//attributes:["id","name","username","lastname","image","gitaccount"],
-			include: [likeUserPost,Comment,{model:Post,include:likePostUser}]
+			include: [likeUserPost,Comment,{model:Post,include:likePostUser},followersInfo,followedInfo]
 		})
 		return findUserAll
 }
@@ -55,7 +69,7 @@ const DB_findUserQuery = async (query)=>{
 				]
 			},
 			//attributes:["id","name","username","lastname","image","gitaccount"],
-			include:[{model:Post,include:likePostUser},Comment,"postLikes"]
+			include:[{model:Post,include:likePostUser},Comment,"postLikes",followersInfo,followedInfo]
 		})
 		return findUser
 }
@@ -65,7 +79,7 @@ const DB_findUserParams = async (params)=>{
 				username:params
 			},
 			//attributes:["id","name","username","lastname","image","gitaccount"],
-			include:[{model:Post,include:likePostUser},Comment,likeUserPost]
+			include:[{model:Post,include:likePostUser},Comment,likeUserPost,followersInfo,followedInfo]
 		})
 		return findUser
 }
@@ -344,4 +358,5 @@ module.exports = {
 	DB_userSearch,
 	DB_findUsersEmail,
 	DB_findUsersUsername,
+	DB_UserFollow
 }

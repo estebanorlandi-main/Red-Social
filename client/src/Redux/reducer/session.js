@@ -30,7 +30,7 @@ export default function root(state = initialState, action) {
         tags: action.user.tags,
       };
       localStorage.setItem("CodeNet", JSON.stringify(newData));
-      return;
+      return newData;
 
     default:
       return state;
