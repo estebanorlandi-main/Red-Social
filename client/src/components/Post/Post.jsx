@@ -1,5 +1,5 @@
-import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { commentPost } from "../../Redux/actions/Post";
@@ -31,7 +31,7 @@ function Post({ post }) {
     if (firstLoad) {
       setFirstLoad(false);
     }
-  });
+  }, [firstLoad, setFirstLoad]);
 
   const handleComment = (e) => {
     setNewComment(e.target.value);

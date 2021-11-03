@@ -1,6 +1,4 @@
 import { Route, Switch } from "react-router-dom";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
 
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import Home from "./Pages/Home/Home";
@@ -14,19 +12,6 @@ import NavBar from "./components/NavBar/NavBar.js";
 import "./App.css";
 
 function App() {
-  const session = useSelector((store) => store.sessionReducer);
-
-  useEffect(() => {
-    function verificar() {
-      if (session.username) {
-        localStorage.setItem("CodeNet", JSON.stringify(session));
-      } else {
-        localStorage.setItem("CodeNet", JSON.stringify({}));
-      }
-    }
-    verificar();
-  }, [session]);
-
   return (
     <div className="App">
       <NavBar />

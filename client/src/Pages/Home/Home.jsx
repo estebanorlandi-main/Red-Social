@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
-
 import Post from "../../components/Post/Post";
 import NewPost from "../../components/NewPost/NewPost";
 import UserCard from "../../components/UserCard/UserCard";
@@ -13,18 +12,14 @@ function Home(props) {
 
   const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);
-  const [first, setFirst] = useState(true);
 
-  useEffect(() => {});
-
-  const handlePage = () => setPage(page + 1);
-
-  const handleScroll = useCallback(function handleScroll() {
-    const bottom =
+  const handleScroll = useCallback(() => {
+    if (
       Math.ceil(window.innerHeight + window.scrollY) >=
-      document.documentElement.scrollHeight;
-    if (bottom) handlePage();
-  });
+      document.documentElement.scrollHeight
+    )
+      setPage(page + 1);
+  }, [page]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -36,7 +31,7 @@ function Home(props) {
   console.log("total posts: ", (page + 1) * 10);
 
   return (
-    <div className={createPost ? styles.noScroll : "" + ` ${styles.home}`}>
+    <div className={createPost ? styles.noScroll : ` ${styles.home}`}>
       <UserCard />
 
       {user && user.username ? (

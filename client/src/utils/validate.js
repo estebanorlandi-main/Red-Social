@@ -1,8 +1,3 @@
-const errType = {
-  email: ["", "Este campo es Obligatorio"],
-  github: ["", "Este campo es Obligatorio", "Este usuario de github no existe"],
-};
-
 export function tieneNum(str) {
   let regexnumeros = /([0-9]+)/;
   if (regexnumeros.test(str)) {

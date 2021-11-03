@@ -1,4 +1,4 @@
-import { SEARCH_USER, GET_USER, UPDATE_USER } from "../actions/Users";
+import { SEARCH_USER, GET_USER } from "../actions/Users";
 
 const initialState = {
   users: [],
