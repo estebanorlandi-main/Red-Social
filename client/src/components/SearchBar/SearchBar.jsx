@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import UserList from "../UserList/UserList";
-import "./SearchBar.css";
+import style from "./SearchBar.module.css";
 import { searchUser } from "../../Redux/actions/Users";
+import { BiSearch } from 'react-icons/bi'
 
 export default function SearchBar(props) {
   const users = useSelector((state) => state.usersReducer.users);
@@ -27,12 +28,17 @@ export default function SearchBar(props) {
     }
   };
 
+
   return (
     <div>
-      <div class="wrapper">
-        <div class="input-data">
-          <input onChange={handleChange} required />
-          <label>Search</label>
+      <div>
+        <div className={style.inputData}>
+          <span className={style.icon}>
+          <BiSearch />
+          </span>
+          <input onChange={handleChange} required
+            placeholder='Search Users'
+          />
         </div>
       </div>
       <UserList users={filteredUsers} input={input} />

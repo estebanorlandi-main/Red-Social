@@ -20,6 +20,26 @@
   background-color: #000a;
 }
 
+.newPostBtn{
+  position: fixed;
+  left: 5%;
+  top: 40%;
+  z-index: 2;
+}
+
+.newPostBtn button{
+  margin-top: 4%;
+  width: 18vw;
+  height: 6vh;
+  background-color: #4A9BBD;
+  border-radius: 4px;
+  color: white;
+  border: none;
+  font: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
 .cargando {
   display: flex;
   justify-content: center;

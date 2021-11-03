@@ -19,12 +19,13 @@ import {
 
 function Post({ post }) {
   const dispatch = useDispatch();
-  const session = useSelector((state) => state.sessionReducer.username || {});
+  const session = useSelector((state) => state.sessionReducer || {});
 
   const [firstLoad, setFirstLoad] = useState(true);
 
   const [seeMore, setSeeMore] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (firstLoad) {
@@ -39,20 +40,38 @@ function Post({ post }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(
-      commentPost(post.idPost, newComment, {
-        username: session.username,
-        avatar:
-          "https://robohash.org/reiciendisquisnemo.png?size=50x50&set=set1",
-      })
-    );
+    const isValid = (comment) => {
+      if (comment.length < 3) {
+        setError("Minimo 3 letras");
+        return false;
+      }
+
+      if (comment.length > 1000) {
+        setError("Maximo 1000 letras");
+        return false;
+      }
+
+      setError("");
+      return true;
+    };
+
+    if (isValid(newComment))
+      dispatch(
+        commentPost(post.idPost, newComment, {
+          username: session.username,
+          avatar:
+            "https://robohash.org/reiciendisquisnemo.png?size=50x50&set=set1",
+        })
+      );
   };
 
   const handleLike = (e) => {
     if (session.username) dispatch(likePost(post.idPost, session.username));
   };
 
-  post.tags = post.tags.filter((tag) => !!tag);
+  const tags = new Set();
+  post.tags.filter((tag) => (!!tag ? tags.add(tag) : false));
+  post.tags = Array.from(tags);
 
   return (
     <div className={styles.container}>
@@ -139,6 +158,7 @@ function Post({ post }) {
               <MdSend className={styles.icons} />
             </button>
           </form>
+          {error ? <span className={styles.error}>{error}</span> : ""}
         </div>
       ) : (
         ""
