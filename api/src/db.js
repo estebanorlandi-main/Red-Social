@@ -77,11 +77,15 @@ User.hasMany(Likes, { as: "postLikes" });
 Post.hasMany(Likes, { as: "userLikes" });
 Likes.belongsTo(User);
 Likes.belongsTo(Post);
-//Likes 
-User.hasMany(Likes,{as:"postLikes"})
+
+
+//Likes -----> Esta linea estaba repetida :)
+/*User.hasMany(Likes,{as:"postLikes"})
 Post.hasMany(Likes,{as:"userLikes"})
 Likes.belongsTo(User)
 Likes.belongsTo(Post)
+*/
+
 
 //Follow
 
