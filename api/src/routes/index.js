@@ -9,6 +9,9 @@ const Comments = require("./Comments.js")
 const Post = require("./Post.js")
 const Login = require("./Login.js")
 const Likes = require("./Likes.js")
+const Tags = require("./Tags.js")
+
+
 
 // const ruta = require("archivo")
 // router.use("/", ruta)
@@ -32,6 +35,7 @@ router.use("/user", Users);
 router.use("/comment", Comments);
 router.use("/post", Post);
 router.use("/login", Login);
+router.use("/tags", Tags)
 router.use("/likes", Likes);
 
 module.exports = router;
