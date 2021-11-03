@@ -71,12 +71,16 @@ Post.belongsToMany(Tags, {through:'Post_Tags', onDelete: 'CASCADE'})
 Tags.belongsToMany(Post, {through:'Post_Tags', onDelete: 'CASCADE'})
 
 
-//Likes
+//Likes 
 User.hasMany(Likes,{as:"postLikes"})
 Post.hasMany(Likes,{as:"userLikes"})
 Likes.belongsTo(User)
 Likes.belongsTo(Post)
 
+//Follow
+
+User.belongsToMany(User, {foreignKey: 'userId',as: 'followers',through: "User_Follow"});
+User.belongsToMany(User, {foreignKey: 'followerId',as: 'following',through: "User_Follow"});
 
 module.exports = {
   ...sequelize.models,
