@@ -11,6 +11,7 @@ router.get("/", async (req,res,next)=>{
 		let findUsers = await fn.DB_findUserAll()
 		res.send(findUsers)
 	} catch(e) {
+		console.log(e)
 		res.sendStatus(500)
 	}
 })
@@ -23,7 +24,7 @@ router.get("/", async (req,res,next)=>{
 		}
 		res.send({errors:"USER not found"}).status(200) 		
 	} catch(e) {
-		res.status(500)
+		res.sendStatus(500)
 	}
 })
 //PARAMS USER
@@ -33,6 +34,7 @@ router.get("/:username", async (req,res,next)=>{
 		findUser?res.send(findUser):
 		res.send({errors:"USER not found"}).status(200)
 	} catch(e) {
+		console.log(e)
 		res.sendStatus(500)
 	}
 })
@@ -92,6 +94,22 @@ router.put("/:id", async (req,res,next)=>{
 		res.sendStatus(500)
 	}
 })
+//FOLLOW/UNFOLLOW
+router.post("/follow", async (req,res,next)=>{
+
+	const validate = await fn.DB_UserFollow(req.body)
+
+	return res.send("ok")
+	try {
+		const findUser = await fn.DB_findUserParams(req.params.username)
+		findUser?res.send(findUser.comments):
+		res.send({errors:"USER not found"}).status(200)
+	} catch(e) {
+		res.sendStatus(500)
+	}
+})
+
+
 
 // FUNCIONES USADAS
 // DB_findUserAll
