@@ -8,6 +8,7 @@ const Users = require("./Users.js")
 const Comments = require("./Comments.js")
 const Post = require("./Post.js")
 const Login = require("./Login.js")
+const Likes = require("./Likes.js")
 
 // const ruta = require("archivo")
 // router.use("/", ruta)
@@ -31,5 +32,6 @@ router.use("/user", Users);
 router.use("/comment", Comments);
 router.use("/post", Post);
 router.use("/login", Login);
+router.use("/likes", Likes);
 
 module.exports = router;
