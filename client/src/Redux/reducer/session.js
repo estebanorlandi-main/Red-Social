@@ -1,41 +1,26 @@
+import { SIGN_UP, LOG_IN, LOG_OUT } from "../actions/Session";
 
 const initialState = JSON.parse(localStorage.getItem("CodeNet")) || {};
 
 export default function root(state = initialState, action) {
+  console.log(action.payload);
   switch (action.type) {
-    case "LOG_IN":
-      return action.payload
-    case "SING_UP":
-      const nuevos = JSON.parse(localStorage.getItem("NewUsers")) || [];
-      localStorage.setItem("NewUsers", JSON.stringify([...nuevos, action.payload]));
-      return action.payload
-    case "LOG_OUT":
-      return {}
-    case "CHANGE_SESSION":
-    const nuevos2 = JSON.parse(localStorage.getItem("NewUsers")) || [];
-    let arr = nuevos2.map((user)=>{
-      if (action.payload.user === user.username) {
-        return({
-          ...user,
-          name: action.payload.data.name,
-          lastName: action.payload.data.lastName,
-          about: action.payload.data.about,
-          tags: action.payload.data.tags,
-        })
-      }else {
-        return user
-      }
-    })
-    localStorage.setItem("NewUsers", JSON.stringify(arr));
-      return (
-        {
-          ...state,
-          name: action.payload.data.name,
-          lastName: action.payload.data.lastName,
-          about: action.payload.data.about,
-          tags: action.payload.data.tags,
-        }
-      )
+    case LOG_IN:
+      if (action.payload.data.Username === action.user.username)
+        localStorage.setItem("CodeNet", JSON.stringify(action.user));
+
+      return action.user;
+
+    case SIGN_UP:
+      if (action.payload.status === 200)
+        localStorage.setItem("CodeNet", JSON.stringify(action.user));
+
+      return action.user;
+
+    case LOG_OUT:
+      localStorage.removeItem("CodeNet");
+      return {};
+
     default:
       return state;
   }

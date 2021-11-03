@@ -1,10 +1,10 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, updateUser } from "../../Redux/actions/Users";
 import validate from "../../utils/validate";
 import styles from "./Profile.module.css";
 import Select from "react-select";
-import { ChangeSession } from "../../Redux/actions/Profile.js";
+import { ChangeSession } from "../../Redux/actions/Session.js";
 const selectStyles = {
   control: (styles) => ({ ...styles, width: "100%" }),
 };
@@ -25,7 +25,6 @@ const options = [
 
 export default function Profile(props) {
   const dispatch = useDispatch();
-  const [firstLoad, setFistLoad] = useState(true);
   const [editar, setEditar] = useState(false);
   dispatch(getUser(props.username));
 
