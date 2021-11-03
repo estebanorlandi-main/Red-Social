@@ -101,14 +101,11 @@ function Signup(props) {
   return (
     <div>
       {!registered ? (
-        <form
-          className={style.container}
-          onSubmit={(e) => handleSubmit(e)}
-          onChange={(e) => handleChange(e)}
-        >
+        <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
           Formulario de registro
           <label>Username</label>
           <input
+            onChange={(e) => handleChange(e)}
             className={style.input}
             value={inputs.username}
             name="username"
@@ -117,6 +114,7 @@ function Signup(props) {
           <div className={style.errores}>{err.username}</div>
           <label>Password</label>
           <input
+            onChange={(e) => handleChange(e)}
             className={style.input}
             value={inputs.password}
             name="password"
@@ -125,6 +123,7 @@ function Signup(props) {
           <div className={style.errores}>{err.password}</div>
           <label>Name</label>
           <input
+            onChange={(e) => handleChange(e)}
             className={style.input}
             value={inputs.name}
             name="name"
@@ -133,6 +132,7 @@ function Signup(props) {
           <div className={style.errores}>{err.name}</div>
           <label>Last Name</label>
           <input
+            onChange={(e) => handleChange(e)}
             className={style.input}
             value={inputs.lastname}
             name="lastname"
@@ -141,6 +141,7 @@ function Signup(props) {
           <div className={style.errores}>{err.lastname}</div>
           <label>Email</label>
           <input
+            onChange={(e) => handleChange(e)}
             className={style.input}
             value={inputs.email}
             name="email"
@@ -149,6 +150,7 @@ function Signup(props) {
           <div className={style.errores}>{err.email}</div>
           <label>GitHub</label>
           <input
+            onChange={(e) => handleChange(e)}
             className={style.input}
             value={inputs.gitaccount}
             name="gitaccount"
@@ -157,6 +159,7 @@ function Signup(props) {
           <div className={style.errores}>{err.gitaccount}</div>
           <label>Avatar</label>
           <input
+            onChange={(e) => handleChange(e)}
             className={style.input}
             value={inputs.avatar}
             name="avatar"
@@ -164,6 +167,7 @@ function Signup(props) {
           />
           <label>About</label>
           <textarea
+            onChange={(e) => handleChange(e)}
             className={style.input}
             value={inputs.about}
             name="about"

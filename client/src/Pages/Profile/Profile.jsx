@@ -38,10 +38,7 @@ export default function Profile(props) {
   const myProfile = session.username === profile.username;
 
   useEffect(() => {
-    if (first) {
-      dispatch(getUser(props.username));
-      setFirst(false);
-    }
+    dispatch(getUser(props.username));
   }, [profile, dispatch, first, props.username]);
 
   const [inputs, setInputs] = useState({
@@ -68,6 +65,7 @@ export default function Profile(props) {
   const handleSubmit = () => {
     const errs = validate(inputs);
     if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
+
     dispatch(updateUser(profile.id, inputs));
   };
 
@@ -151,7 +149,11 @@ export default function Profile(props) {
         {profile.tags &&
           profile.tags
             .filter((tag) => tag)
-            .map((tag) => <span className={styles.tag}>{tag}</span>)}
+            .map((tag, i) => (
+              <span key={i} className={styles.tag}>
+                {tag}
+              </span>
+            ))}
       </div>
 
       {myProfile && editar ? (
