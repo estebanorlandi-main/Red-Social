@@ -1,11 +1,12 @@
 import { useState } from "react";
-import style from "./Signup.module.css";
-import { singUp } from "../../Redux/actions/Session.js";
-import { addUser } from "../../Redux/actions/Users.js";
 import { useDispatch } from "react-redux";
 import { Redirect } from "react-router";
 import Select from "react-select";
+
+import { singUp } from "../../Redux/actions/Session.js";
 import validate from "../../utils/validate";
+
+import style from "./Signup.module.css";
 
 function Signup(props) {
   const dispatch = useDispatch();

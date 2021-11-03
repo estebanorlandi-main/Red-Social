@@ -2,10 +2,11 @@ import axios from "axios";
 export const SEARCH_USER = "SEARCH_USER";
 export const GET_USER = "GET_USER";
 
-export function searchUser(users, input) {
-  return function (dispatch) {
-    dispatch({ type: SEARCH_USER, payload: users, input });
-  };
+export function searchUser(q) {
+  return (dispatch) =>
+    axios
+      .get(`http://localhost:3001/user?username=${q}`)
+      .then((res) => dispatch({ type: SEARCH_USER, payload: res }));
 }
 
 export function getUser(user) {

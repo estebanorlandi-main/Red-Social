@@ -36,11 +36,11 @@ const DB_findUserCreated = async (date)=>{
 }
 const DB_findUserQuery = async (query)=>{
 	console.log(query)
-		const findUser = await User.findOne({
+		const findUser = await User.findAll({
 			where:{
 				[Op.or]:[
 				{
-					username: {[Op.iLike]:query.username}
+					username: {[Op.iLike]:query.username+'%'}
 				},
 				{
 					email: {[Op.iLike]:query.email}
