@@ -18,7 +18,7 @@ export default function UserCard() {
         <div>
           <div className={styles.bkg}></div>
           <div className={styles.profile}>
-            <img src={userimg} width="60px" />
+            <img src={userimg} width="60px" alt="" />
           </div>
           <div className={styles.username}>{user.username}</div>
           <hr></hr>
@@ -45,4 +45,3 @@ export default function UserCard() {
     </div>
   );
 }
-

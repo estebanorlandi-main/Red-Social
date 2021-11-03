@@ -47,7 +47,7 @@ const DB_findUserQuery = async (query)=>{
 				}
 				]
 			},
-			attributes:["id","name","username","lastname","image","gitaccount"],
+			//attributes:["id","name","username","lastname","image","gitaccount"],
 			include:[Post,Comment]
 		})
 		return findUser
@@ -57,7 +57,7 @@ const DB_findUserParams = async (params)=>{
 			where:{
 				username:params
 			},
-			attributes:["id","name","username","lastname","image","gitaccount"],
+			//attributes:["id","name","username","lastname","image","gitaccount"],
 			include:[Post,Comment]
 		})
 		return findUser
@@ -67,7 +67,7 @@ const DB_UserID = async (username)=>{
 			where:{
 				username
 			},
-			attributes:["id","name","username","lastname","image","gitaccount"],
+			//attributes:["id","name","username","lastname","image","gitaccount"],
 			include: [Post,Comment]
 		})
 	return UserID;

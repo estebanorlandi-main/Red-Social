@@ -17,7 +17,7 @@ function Signup(props) {
     lastname: process.env.REACT_APP_LAST_NAME || "",
     avatar: process.env.REACT_APP_AVATAR || "",
     email: process.env.REACT_APP_EMAIL || "",
-    github: process.env.REACT_APP_GITHUB || "",
+    gitaccount: process.env.REACT_APP_GITHUB || "",
     about: process.env.REACT_APP_ABOUT || "",
     tags: [],
   });
@@ -28,7 +28,7 @@ function Signup(props) {
     name: "",
     lastname: "",
     email: "",
-    github: "",
+    gitaccount: "",
   });
 
   const [registered, setRegistered] = useState(false);
@@ -67,7 +67,7 @@ function Signup(props) {
         obj.avatar = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
       }
 
-      obj.github = `https://github.com/${obj.github}`;
+      obj.gitaccount = `https://github.com/${obj.gitaccount}`;
 
       dispatch(singUp(obj));
 
@@ -77,7 +77,7 @@ function Signup(props) {
         name: "",
         lastname: "",
         email: "",
-        github: "",
+        gitaccount: "",
         about: "",
         tags: "",
       });
@@ -88,7 +88,7 @@ function Signup(props) {
         name: "",
         lastname: "",
         email: "",
-        github: "",
+        gitaccount: "",
       }));
 
       setRegistered(true);
@@ -149,11 +149,11 @@ function Signup(props) {
           <label>GitHub</label>
           <input
             className={style.input}
-            value={inputs.github}
-            name="github"
+            value={inputs.gitaccount}
+            name="gitaccount"
             type="text"
           />
-          <div className={style.errores}>{err.github}</div>
+          <div className={style.errores}>{err.gitaccount}</div>
           <label>Avatar</label>
           <input
             className={style.input}
