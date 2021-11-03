@@ -44,6 +44,7 @@ const {
   Post_User,
   Comment_Post,
   User_Comment,
+  Likes,
 } = sequelize.models;
 
 //Comentar para no floodear la base de datos con tags :*
@@ -52,8 +53,8 @@ const {
 // Aca vendrian las relaciones
 //Usuario
 // Relacion 1 a M  - User -> Post
-User.belongsToMany(Post, { through: Post_User, onDelete: "CASCADE" });
-Post.belongsTo(User, { through: Post_User, onDelete: "CASCADE" });
+User.hasMany(Post);
+Post.belongsTo(User);
 
 //Relacion 1 a 1 - User -> Privileges
 User.hasOne(Privileges);
@@ -70,6 +71,12 @@ Comment.belongsTo(Post, { through: Comment_Post, onDelete: "CASCADE" });
 //Relacion M a M - Post -> Tags
 Post.belongsToMany(Tags, { through: "Post_Tags", onDelete: "CASCADE" });
 Tags.belongsToMany(Post, { through: "Post_Tags", onDelete: "CASCADE" });
+
+//Likes
+User.hasMany(Likes, { as: "postLikes" });
+Post.hasMany(Likes, { as: "userLikes" });
+Likes.belongsTo(User);
+Likes.belongsTo(Post);
 
 module.exports = {
   ...sequelize.models,

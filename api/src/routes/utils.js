@@ -1,11 +1,18 @@
 const axios = require('axios');
-const {User,Post,Comment,User_Comment,Comment_Post,Post_User} = require('../db.js');
+const {User,Post,Comment,User_Comment,Comment_Post,Post_User,Likes} = require('../db.js');
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
 const bcrypt = require("bcrypt");
 const saltRounds =10;
 const myPlaintextPassword = 's0/\/\P4$$w0rD';
 const someOtherPlaintextPassword = 'not_bacon';
+
+
+
+const likeUserPost = {model:Likes,as:"postLikes",attributes:["postIdPost"],include:{model:Post,attributes:["title"]}}
+const likePostUser = {model:Likes,as:"userLikes",attributes:["userId"],include:{model:User,attributes:["username"]}}
+
+
 
 //fn
 const DB_findUsersEmail = async (email)=>{
@@ -21,7 +28,7 @@ const DB_findUsersUsername = async (username)=>{
 const DB_findUserAll = async (query)=>{
 		const findUserAll = await User.findAll({
 			//attributes:["id","name","username","lastname","image","gitaccount"],
-			include: [Post,Comment]
+			include: [likeUserPost,Comment,{model:Post,include:likePostUser}]
 		})
 		return findUserAll
 }
@@ -48,7 +55,7 @@ const DB_findUserQuery = async (query)=>{
 				]
 			},
 			//attributes:["id","name","username","lastname","image","gitaccount"],
-			include:[Post,Comment]
+			include:[{model:Post,include:likePostUser},Comment,"postLikes"]
 		})
 		return findUser
 }
@@ -58,7 +65,7 @@ const DB_findUserParams = async (params)=>{
 				username:params
 			},
 			//attributes:["id","name","username","lastname","image","gitaccount"],
-			include:[Post,Comment]
+			include:[{model:Post,include:likePostUser},Comment,likeUserPost]
 		})
 		return findUser
 }
@@ -68,7 +75,7 @@ const DB_UserID = async (username)=>{
 				username
 			},
 			//attributes:["id","name","username","lastname","image","gitaccount"],
-			include: [Post,Comment]
+			include: [{model:Post,include:likePostUser},Comment]
 		})
 	return UserID;
 }
@@ -306,7 +313,16 @@ const DB_validatePassword = (password)=>{
 	else return ({})
 }
 
+
+
 module.exports = {
+	DB_findUserAll,
+	DB_findUserQuery,	
+	DB_findUserParams,
+	DB_validatePassword,
+	DB_findUserCreated,
+	DB_createUser,	
+	DB_updateUser,	
 	DB_UserID,
 	DB_Allcomments,
 	DB_Commentedit,
@@ -317,15 +333,8 @@ module.exports = {
 	validateUpdateUser,
 	validateUpdateUser,
 	DB_userCreates,
-	DB_findUserAll,
-	DB_findUserQuery,
-	DB_findUserParams,
 	DB_postCreates,
 	DB_userSearch,
 	DB_findUsersEmail,
 	DB_findUsersUsername,
-	DB_validatePassword,
-	DB_findUserCreated,
-	DB_createUser,
-	DB_updateUser
 }

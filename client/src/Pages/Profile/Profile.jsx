@@ -16,7 +16,7 @@ const selectStyles = {
 const options = [
   { value: "js", label: "JavaScript" },
   { value: "python", label: "Python" },
-  { value: "cpp", label: "C++" },
+  { value: "c++", label: "C++" },
   { value: "php", label: "PHP" },
   { value: "java", label: "Java" },
   { value: "c", label: "C" },
@@ -37,10 +37,13 @@ export default function Profile(props) {
 
   const myProfile = session.username === profile.username;
 
+<<<<<<< HEAD
   useEffect(() => {
     dispatch(getUser(props.username));
   }, [profile, dispatch, first, props.username]);
 
+=======
+>>>>>>> b4d1ec02772401e8655fb1f06fbd4ff15f29f55f
   const [inputs, setInputs] = useState({
     name: session.name || "",
     lastname: session.lastname || "",
@@ -52,6 +55,13 @@ export default function Profile(props) {
     name: "",
     lastname: "",
   });
+
+  useEffect(() => {
+    if (first) {
+      dispatch(getUser(props.username));
+      setFirst(false);
+    }
+  }, [profile, dispatch, first, props.username]);
 
   const handleChange = ({ target: { name, value } }) => {
     setInputs((old) => ({ ...old, [name]: value }));
@@ -67,6 +77,7 @@ export default function Profile(props) {
     if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
 
     dispatch(updateUser(profile.id, inputs));
+    dispatch(getUser(props.username));
   };
 
   return profile ? (
