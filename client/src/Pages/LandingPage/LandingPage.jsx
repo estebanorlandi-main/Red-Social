@@ -1,13 +1,10 @@
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 import { Link } from "react-router-dom";
-import styles from "./LandingPage.module.css";
 
 import deco from "../../images/deco.svg";
+import styles from "./LandingPage.module.css";
 
 export default function LandingPage() {
-  const dispatch = useDispatch();
-
   return (
     <div className={styles.landing}>
       <div className={styles.text}>
@@ -19,7 +16,7 @@ export default function LandingPage() {
           Start now!
         </Link>
       </div>
-      <img src={deco} />
+      <img src={deco} alt="" />
     </div>
   );
 }

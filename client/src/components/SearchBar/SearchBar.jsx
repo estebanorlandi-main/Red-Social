@@ -12,7 +12,7 @@ export default function SearchBar(props) {
 
   const [input, setInput] = useState("");
 
-  useEffect(() => dispatch(searchUser(input)), [input]);
+  useEffect(() => dispatch(searchUser(input)), [input, dispatch]);
 
   const handleChange = ({ target: { value } }) => {
     setInput(value);

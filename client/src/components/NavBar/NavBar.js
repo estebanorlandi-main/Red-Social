@@ -44,7 +44,7 @@ export default function NavBar(props) {
           <SearchBar />
           <ul className={styles.nav}>
             <li>
-              <Link class={styles.link} to="/home">
+              <Link className={styles.link} to="/home">
                 <div className={styles.links}>
                   <ImHome3 />
                   <span>Home</span>
@@ -97,7 +97,7 @@ export default function NavBar(props) {
               </Fragment>
             )}
             <li>
-              <Link class={styles.link} to="/test">
+              <Link className={styles.link} to="/test">
                 <div className={styles.links}>
                   <FaLaptopCode />
                   <span>Test</span>
@@ -116,7 +116,7 @@ export default function NavBar(props) {
           </Link>
           <ul className={styles.nav}>
             <li>
-              <Link class={styles.link} to="/home">
+              <Link className={styles.link} to="/home">
                 Home
               </Link>
             </li>
@@ -154,7 +154,7 @@ export default function NavBar(props) {
               </Fragment>
             )}
             <li>
-              <Link class={styles.link} to="/test">
+              <Link className={styles.link} to="/test">
                 test
               </Link>
             </li>

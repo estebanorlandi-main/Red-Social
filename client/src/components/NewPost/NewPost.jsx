@@ -24,11 +24,6 @@ export default function NewPost() {
     image: { indice: 0, err: ["", "Por lo menos un content o imagen"] },
   });
 
-  const [img, setImg] = useState({
-    url: "",
-    mostrar: false,
-  });
-
   function separarTags(str) {
     var arr = str.split(",");
     setData((old) => ({
@@ -88,14 +83,7 @@ export default function NewPost() {
       separarTags(e.target.value);
       return;
     }
-    if (e.target.name === "image") {
-      setImg((old) => ({
-        ...old,
-        url: e.target.value,
-        mostrar: false,
-      }));
-      return;
-    }
+
     if (e.target.name === "content" && data.content.length === 1000) {
       if (e.target.value.length > 1000) {
         setErrores((old) => ({
@@ -122,10 +110,6 @@ export default function NewPost() {
   }
 
   function handleSubmit(e) {
-    setImg((old) => ({
-      ...old,
-      mostrar: true,
-    }));
     e.preventDefault();
     if (verificar()) {
       dispatch(createPost(data));

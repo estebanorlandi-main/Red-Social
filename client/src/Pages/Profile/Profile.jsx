@@ -1,15 +1,18 @@
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import userimg from "../../images/userCard.png";
 import { useDispatch, useSelector } from "react-redux";
+
 import { getUser } from "../../Redux/actions/Users";
 import { updateUser } from "../../Redux/actions/Session";
 import validate from "../../utils/validate";
 import styles from "./Profile.module.css";
 import Select from "react-select";
+
 const selectStyles = {
   control: (styles) => ({ ...styles, width: "100%" }),
 };
 
+// cambiar a estado traido de la DB
 const options = [
   { value: "js", label: "JavaScript" },
   { value: "python", label: "Python" },
@@ -32,12 +35,14 @@ export default function Profile(props) {
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
 
+  const myProfile = session.username === profile.username;
+
   useEffect(() => {
     if (first) {
       dispatch(getUser(props.username));
       setFirst(false);
     }
-  }, [profile]);
+  }, [profile, dispatch, first, props.username]);
 
   const [inputs, setInputs] = useState({
     name: session.name || "",
@@ -60,7 +65,7 @@ export default function Profile(props) {
     setInputs((old) => ({ ...old, tags: e.map((option) => option.value) }));
   };
 
-  const handleSubmit = (value) => {
+  const handleSubmit = () => {
     const errs = validate(inputs);
     if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
     dispatch(updateUser(profile.id, inputs));
@@ -84,8 +89,8 @@ export default function Profile(props) {
 
       <h3>Name</h3>
       <div>
-        {session.username === profile.username && editar ? (
-          <Fragment>
+        {myProfile && editar ? (
+          <>
             <input
               name="name"
               onChange={handleChange}
@@ -101,7 +106,7 @@ export default function Profile(props) {
               placeholder={session.lasnName}
             />
             <p>{errors.lastname}</p>
-          </Fragment>
+          </>
         ) : (
           <p>
             {profile.name} {profile.lastname}
@@ -116,21 +121,21 @@ export default function Profile(props) {
       <p>{profile.gitaccount}</p>
 
       <h3>About</h3>
-      {session.username === profile.username && editar ? (
-        <Fragment>
+      {myProfile && editar ? (
+        <>
           <textarea
             name="about"
             onChange={handleChange}
             value={inputs.about}
             placeholder={session.about}
           ></textarea>
-        </Fragment>
+        </>
       ) : (
         <p>{profile.about}</p>
       )}
 
       <h3>Tags</h3>
-      {session.username === profile.username && editar ? (
+      {myProfile && editar ? (
         <Select
           onChange={handleSelect}
           className={styles.select_container}
@@ -149,7 +154,7 @@ export default function Profile(props) {
             .map((tag) => <span className={styles.tag}>{tag}</span>)}
       </div>
 
-      {session.username === profile.username && editar ? (
+      {myProfile && editar ? (
         <button onClick={handleSubmit}>Change</button>
       ) : (
         ""

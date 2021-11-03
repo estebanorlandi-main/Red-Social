@@ -9,9 +9,13 @@ function UserList(props) {
       {filteredUsers.length ? (
         <div className={styles.list}>
           {filteredUsers.length > 0 ? (
-            filteredUsers.map((user) => (
-              <Link to={`/profile/${user.username}`} className={styles.user}>
-                <img src={user.avatar} />
+            filteredUsers.map((user, i) => (
+              <Link
+                key={i}
+                to={`/profile/${user.username}`}
+                className={styles.user}
+              >
+                <img src={user.avatar} alt="" />
                 <p key={user.idUser}>{user.username}</p>
               </Link>
             ))
