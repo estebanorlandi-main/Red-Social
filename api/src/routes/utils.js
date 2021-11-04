@@ -125,7 +125,7 @@ const DB_Postsearch = async ({username, id}) =>{
 	try{
 		if(username === undefined && id === undefined){
 			var post_search = await Post.findAll({
-				include: [{model: User, attributes:["image"]},Comment]
+				include: [{model: User, attributes:["image", "username"]},Comment]
 			});
 			return post_search;
 		}
@@ -134,7 +134,7 @@ const DB_Postsearch = async ({username, id}) =>{
             	where:{
                  	'idPost':id
             	},
-				include: [{model: User, attributes:["image"]},Comment]
+				include: [{model: User, attributes:["image", "username"]},Comment]
         	});
         	return post_search;
 		} else if (id === undefined && username){
@@ -143,7 +143,7 @@ const DB_Postsearch = async ({username, id}) =>{
             	where:{
                 	userId:userDB.id
             	},
-				include: [{model: User, attributes:["image"]},Comment]
+				include: [{model: User, attributes:["image", "username"]},Comment]
         	});
         	return post_search
 		}else {
