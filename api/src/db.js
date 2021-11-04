@@ -99,11 +99,10 @@ User.belongsToMany(User, {
   through: "User_Follow",
 });
 
+
 //Support 1 a M 'Un mensaje pertenece a un usuario'
-// Support.belongsToMany(User, {foreignKey:'username', as:'username', through: 'Support_User', onDelete: "CASCADE" });
-// User.belongsTo(Support, { through: 'Support_User', onDelete: "CASCADE" });
-User.hasMany(Support,{onDelete: "CASCADE" });
-Support.belongsTo(User,{onDelete: "CASCADE" });
+User.belongsToMany(Support, { through: 'Support_User', onDelete: "CASCADE" });
+Support.belongsTo(User, {foreignKey: "username", through: 'Support_User', onDelete: "CASCADE" });
 
 module.exports = {
   ...sequelize.models,
