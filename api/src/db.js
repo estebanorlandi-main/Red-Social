@@ -104,6 +104,10 @@ User.belongsToMany(User, {
 User.belongsToMany(Support, { through: 'Support_User', onDelete: "CASCADE" });
 Support.belongsTo(User, {foreignKey: "username", through: 'Support_User', onDelete: "CASCADE" });
 
+// User.hasMany(Support,{onDelete: "CASCADE" });
+// Support.belongsTo(User,{onDelete: "CASCADE" });
+
+
 module.exports = {
   ...sequelize.models,
   conn: sequelize,

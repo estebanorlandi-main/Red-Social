@@ -1,21 +1,26 @@
+const { default: axios } = require("axios");
 const { Router } = require("express");
 const { Sequelize, Model, Association } = require("sequelize");
 const {Support} = require('../db.js');
-const { DB_findUsersUsername } = require("./utils.js");
+const { DB_findUsersUsername, BD_searchSupport } = require("./utils.js");
 const router = Router();
 
 
 router.post("/", async (req, res) =>{
     try{
 
-        const {username,
+        var {username,
         content,
         title,
         postReported,
         commentReported,
         userReported} = req.body
-
-        const user = await DB_findUsersUsername(username)
+        
+        if(!postReported && !commentReported && !userReported){
+            postReported = null;
+            commentReported = null;
+            userReported = null
+        }
         var createMessage = await Support.findOrCreate({
             where:{
                 content,
@@ -23,7 +28,9 @@ router.post("/", async (req, res) =>{
                 postReported,
                 commentReported,
                 userReported,
+                username,
                 userId:user.id
+
             }
         })
         
@@ -32,6 +39,15 @@ router.post("/", async (req, res) =>{
     }catch(e){
         console.log(e)
         res.status(404).send({error: 'Invalid data for message creation'})
+    }
+})
+
+router.get("/", async (req, res)=>{
+    try{
+        const allMessage = await BD_searchSupport();
+        res.status(200).send(allMessage)
+    }catch(e){
+        res.status(400).send("Error in suppor message")
     }
 })
 
