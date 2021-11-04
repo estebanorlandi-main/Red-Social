@@ -1,61 +1,75 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux' ;
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import style from './Login.module.css';
+import { logIn } from "../../Redux/actions/Session.js";
+import validate from "../../utils/validate.js";
+import style from "./Login.module.css";
+import { Redirect } from "react-router";
 
+export default function Login() {
+  const dispatch = useDispatch();
 
-export default function Login(){
+  const [input, setInput] = useState({
+    username: process.env.REACT_APP_LOGIN_USERNAME || "",
+    password: process.env.REACT_APP_LOGIN_PASSWORD || "",
+  });
 
-    const dispatch = useDispatch();
+  const [logged, setLogged] = useState(false);
+  function handleChange(e) {
+    setInput({
+      ...input,
+      [e.target.name]: e.target.value.replaceAll(/^\s+/g, ""),
+    });
+  }
 
-    const [input, setInput] = useState({
-        name: '',
-        password: ''
-    })
+  function handleSubmit(e) {
+    e.preventDefault();
+    const errors = validate(input);
+    console.log(errors);
 
-    function handleChange(e){
-        setInput({
-            ...input,
-            [e.target.name] : e.target.value.replaceAll(/^\s+/g, "")
-        })
+    if (!Object.values(errors).filter((error) => error).length) {
+      dispatch(logIn(input));
+
+      setInput({
+        username: "",
+        password: "",
+      });
+      setLogged(true);
+    } else {
+      alert("Usuario o contrasena no validas");
     }
+  }
 
-    function handleSubmit(e){
-        e.preventDefault();
-        // dispatch();
-        setInput({
-            name: '',
-            password: ''
-        })
-    }
-
-    function handleClick(e){
-        e.preventDefault();
-    }
-
-    return(
+  return (
+    <div>
+      {logged ? (
+        <Redirect to="/home" />
+      ) : (
         <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
-            <div className={style.label} >
-                <label>Name</label>
-                <input 
-                    type="text"
-                    value={input.name}
-                    name="name"
-                    onChange={ (e) => handleChange(e) }
-                />
-            </div>
-            <div className={style.label} >
-                <label>Password</label>
-                <input 
-                    type="text"
-                    value={input.password}
-                    name="password"
-                    onChange={ (e) => handleChange(e) }
-                />
-            </div>
-            <button type='submit'>Create</button>
-            <hr style={{margin:'4%'}}></hr>
-            <button className={style.create} onClick={(e) => handleClick(e)}>Crear una nueva cuenta</button>
+          <div className={style.label}>
+            <label>Username</label>
+            <input
+              type="text"
+              value={input.username}
+              name="username"
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+
+          <div className={style.label}>
+            <label>Password</label>
+            <input
+              type="password"
+              value={input.password}
+              name="password"
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+          <button type="submit">LogIn</button>
+          <hr style={{ margin: "4%" }}></hr>
+          <Link to="/signup">SignUp</Link>
         </form>
-    ) 
+      )}
+    </div>
+  );
 }
