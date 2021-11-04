@@ -8,6 +8,7 @@ import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import NavBar from "./components/NavBar/NavBar.js";
 
+import Popup from "./components/Support/SupportLocalPopUp.jsx"
 // Variables CSS
 import "./App.css";
 
@@ -34,7 +35,7 @@ function App() {
         <Route
           path="/test"
           render={() => {
-            return <div />;
+            return <Popup />;
           }}
         />
       </Switch>
