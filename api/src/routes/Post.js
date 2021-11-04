@@ -21,7 +21,7 @@ const paginate = (page = 0, arr) => {
   const to = page * postsPerPage + postsPerPage;
 
   return {
-    posts: arr.slice(page * postsPerPage, to < allPosts.length ? to : allPosts),
+    posts: arr.slice(page * postsPerPage, to < arr.length ? to : arr),
     totalPages: arr.length,
   };
 };
@@ -107,8 +107,6 @@ router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const deletePost = await DB_Postdestroy(id);
-
-    const allPosts = await DB_Postsearch({});
 
     const allPosts = await DB_Postsearch({});
     const { posts, totalPages } = paginate(page, allPosts);
