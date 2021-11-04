@@ -5,6 +5,9 @@ export const POST_SHARE = "POST_SHARE";
 export const POST_COMMENT = "POST_COMMENT";
 export const POST_DELETE = "POST_DELETE";
 export const POST_UPDATE = "POST_UPDATE";
+export const GET_POSTS = "GET_POSTS";
+export const GET_POST_FOR_ID = "GET_POST_FOR_ID";
+export const GET_POST_FOR_USERNAME = "GET_POST_FOR_USERNAME";
 
 // Crear Posteo
 // return (dispatch) => axios.post('localhost:3001/post')
@@ -54,6 +57,29 @@ export function commentPost(postId, content, username) {
       .then((res) => console.log(res));
 
   //return { type: POST_COMMENT, payload: { idPost, text, user } };
+}
+
+export function getPosts() {
+  return (dispatch) =>
+    axios
+      .get(`localhost:3001/`)
+      .then((res) => dispatch({ type: GET_POSTS, payload: res.data }));
+}
+
+export function getPostForId(id) {
+  return (dispatch) =>
+    axios
+      .get(`localhost:3001/${id}`)
+      .then((res) => dispatch({ type: GET_POST_FOR_ID, payload: res.data }));
+}
+
+export function getPostForUsername(username) {
+  return (dispatch) =>
+    axios
+      .get(`localhost:3001/`, username)
+      .then((res) =>
+        dispatch({ type: GET_POST_FOR_USERNAME, payload: res.data })
+      );
 }
 
 /*

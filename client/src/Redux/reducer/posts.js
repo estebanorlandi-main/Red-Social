@@ -1,7 +1,14 @@
-import { POST_LIKE, POST_COMMENT } from "../actions/Post";
+import {
+  POST_LIKE,
+  POST_COMMENT,
+  GET_POSTS,
+  GET_POST_FOR_ID,
+  GET_POST_FOR_USERNAME,
+} from "../actions/Post";
 
 const initialState = {
   posts: [],
+  post: {},
 };
 
 export default function root(state = initialState, action) {
@@ -35,6 +42,27 @@ export default function root(state = initialState, action) {
 
           return post;
         }),
+      };
+
+    case GET_POSTS:
+      console.log(action.payload);
+      return {
+        ...state,
+        posts: action.payload,
+      };
+
+    case GET_POST_FOR_ID:
+      console.log(action.payload);
+      return {
+        ...state,
+        post: action.payload,
+      };
+
+    case GET_POST_FOR_USERNAME:
+      console.log(action.payload);
+      return {
+        ...state,
+        post: action.payload,
       };
 
     default:

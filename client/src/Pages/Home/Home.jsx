@@ -1,14 +1,17 @@
 import { useState, useEffect, useCallback } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Post from "../../components/Post/Post";
 import NewPost from "../../components/NewPost/NewPost";
 import UserCard from "../../components/UserCard/UserCard";
 
 import styles from "./Home.module.css";
+import { getPosts } from "../../Redux/actions/Post";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
   const user = useSelector((state) => state.sessionReducer);
+
+  const dispatch = useDispatch();
 
   const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);
@@ -29,6 +32,8 @@ function Home(props) {
   }, [handleScroll]);
 
   console.log("total posts: ", (page + 1) * 10);
+
+  console.log(posts[0]);
 
   return (
     <div className={createPost ? styles.noScroll : ` ${styles.home}`}>
@@ -58,6 +63,7 @@ function Home(props) {
         ""
       )}
 
+      <button onClick={() => dispatch(getPosts())}></button>
       <ul>
         {posts.map((post, i) =>
           i < (page + 1) * 10 ? (
