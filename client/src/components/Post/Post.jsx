@@ -95,6 +95,7 @@ function Post({ post }) {
       ) : (
         ""
       )}
+
       <div className={styles.postBody}>
         <h3>{post.title}</h3>
 
