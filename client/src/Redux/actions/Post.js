@@ -62,7 +62,7 @@ export function commentPost(postId, content, username) {
 export function getPosts() {
   return (dispatch) =>
     axios
-      .get(`localhost:3001/`)
+      .get(`http://localhost:3001/post`)
       .then((res) => dispatch({ type: GET_POSTS, payload: res.data }));
 }
 

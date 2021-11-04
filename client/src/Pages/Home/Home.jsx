@@ -63,7 +63,6 @@ function Home(props) {
         ""
       )}
 
-      <button onClick={() => dispatch(getPosts())}></button>
       <ul>
         {posts.map((post, i) =>
           i < (page + 1) * 10 ? (
@@ -75,6 +74,7 @@ function Home(props) {
           )
         )}
       </ul>
+      <button onClick={() => dispatch(getPosts())}>asdasda</button>
       <div className={styles.cargando}>Cargando...</div>
     </div>
   );

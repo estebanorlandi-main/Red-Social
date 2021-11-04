@@ -20,7 +20,6 @@ import {
 function Post({ post }) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
-  const posts = useSelector((state) => state.postsReducer.posts);
 
   const [firstLoad, setFirstLoad] = useState(true);
 
@@ -33,8 +32,6 @@ function Post({ post }) {
       setFirstLoad(false);
     }
   }, [firstLoad, setFirstLoad]);
-
-  console.log(posts);
 
   const handleComment = (e) => {
     setNewComment(e.target.value);
@@ -73,29 +70,29 @@ function Post({ post }) {
   };
 
   const tags = new Set();
-  post.tags.filter((tag) => (!!tag ? tags.add(tag) : false));
-  post.tags = Array.from(tags);
+  post.tag.filter((tag) => (!!tag ? tags.add(tag) : false));
+  post.tag = Array.from(tags);
 
   return (
     <div className={styles.container}>
       <ul className={styles.tags}>
-        {post.tags.map((tag, i) => (
+        {post.tag.map((tag, i) => (
           <li key={i}>{tag}</li>
         ))}
       </ul>
 
       <button>asdasd</button>
 
-      <Link
+      {/* <Link
         className={styles.userContainer}
-        to={`/profile/${post.creator.username}`}
+        to={`/profile/${post.user.username}`}
       >
         <img className={styles.avatar} src={post.creator.avatar} alt="avatar" />
         <div>
           <span className={styles.username}>{post.creator.username}</span>
           <span className={styles.github}>{post.creator.username}</span>
         </div>
-      </Link>
+      </Link> */}
 
       <div className={styles.postBody}>
         <h3>{post.title}</h3>
@@ -129,16 +126,16 @@ function Post({ post }) {
           className={!session.username ? styles.disabled : ""}
           onClick={handleLike}
         >
-          {post.likes.filter((user) => user === session.username).length ? (
+          {/* {post.likes.filter((user) => user === session.username).length ? (
             <MdFavorite color="red" />
           ) : (
             <MdFavoriteBorder />
-          )}
-          {post.likes.length} |
-          <span>
+          )} */}
+          {post.likes} |
+          {/* <span>
             {post.likes[post.likes.length - 1]},{" "}
             {post.likes[post.likes.length - 2]}
-          </span>
+          </span> */}
         </button>
         <button>
           <MdOutlineModeComment /> {post.comments.length}
@@ -169,7 +166,7 @@ function Post({ post }) {
         ""
       )}
 
-      <Comment comment={post.comments[post.comments.length - 1]} />
+      {/* <Comment comment={post.comments[post.comments.length - 1]} /> */}
     </div>
   );
 }
