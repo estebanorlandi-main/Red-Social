@@ -8,6 +8,7 @@ const router = Router();
 router.post("/", async (req, res) =>{
     try{
         const {username, content, title} = req.body
+        console.log(username, content, title)
         const user = await DB_findUsersUsername(username)
         var createMessage = await Support.findOrCreate({
             where:{
