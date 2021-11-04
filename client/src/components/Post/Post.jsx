@@ -81,6 +81,7 @@ function Post({ post }) {
         ))}
       </ul>
 
+      {/* <Link
       <Link
         className={styles.userContainer}
         to={`/profile/${post.user.username}`}
