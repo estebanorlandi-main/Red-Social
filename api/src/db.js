@@ -79,7 +79,6 @@ Post.hasMany(Likes, { as: "userLikes" });
 Likes.belongsTo(User);
 Likes.belongsTo(Post);
 
-
 //Likes -----> Esta linea estaba repetida :)
 /*User.hasMany(Likes,{as:"postLikes"})
 Post.hasMany(Likes,{as:"userLikes"})
@@ -87,11 +86,18 @@ Likes.belongsTo(User)
 Likes.belongsTo(Post)
 */
 
-
 //Follow
 
-User.belongsToMany(User, {foreignKey: 'userId',as: 'followers',through: "User_Follow"});
-User.belongsToMany(User, {foreignKey: 'followerId',as: 'following',through: "User_Follow"});
+User.belongsToMany(User, {
+  foreignKey: "userId",
+  as: "followers",
+  through: "User_Follow",
+});
+User.belongsToMany(User, {
+  foreignKey: "followerId",
+  as: "following",
+  through: "User_Follow",
+});
 
 //Support 1 a M 'Un mensaje pertenece a un usuario'
 // Support.belongsToMany(User, {foreignKey:'username', as:'username', through: 'Support_User', onDelete: "CASCADE" });

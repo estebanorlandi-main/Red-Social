@@ -16,7 +16,7 @@ function Signup(props) {
     password: process.env.REACT_APP_PASSWORD || "",
     name: process.env.REACT_APP_NAME || "",
     lastname: process.env.REACT_APP_LAST_NAME || "",
-    avatar: process.env.REACT_APP_AVATAR || "",
+    image: process.env.REACT_APP_AVATAR || "",
     email: process.env.REACT_APP_EMAIL || "",
     gitaccount: process.env.REACT_APP_GITHUB || "",
     about: process.env.REACT_APP_ABOUT || "",
@@ -64,9 +64,9 @@ function Signup(props) {
 
     if (!Object.values(errors).filter((error) => error).length) {
       let obj = inputs;
-      if (obj.avatar === "") {
-        obj.avatar = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
-      }
+
+      if (obj.image === "")
+        obj.image = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
 
       obj.gitaccount = `https://github.com/${obj.gitaccount}`;
 
@@ -161,8 +161,8 @@ function Signup(props) {
           <input
             onChange={(e) => handleChange(e)}
             className={style.input}
-            value={inputs.avatar}
-            name="avatar"
+            value={inputs.image}
+            name="image"
             type="text"
           />
           <label>About</label>

@@ -81,19 +81,16 @@ function Post({ post }) {
         ))}
       </ul>
 
-      <button>asdasd</button>
-
-      {/* <Link
+      <Link
         className={styles.userContainer}
         to={`/profile/${post.user.username}`}
       >
-        <img className={styles.avatar} src={post.creator.avatar} alt="avatar" />
+        <img className={styles.avatar} src={post.user.image} alt="avatar" />
         <div>
-          <span className={styles.username}>{post.creator.username}</span>
-          <span className={styles.github}>{post.creator.username}</span>
+          <span className={styles.username}>{post.user.username}</span>
+          <span className={styles.github}>{post.user.username}</span>
         </div>
-      </Link> */}
-
+      </Link>
       <div className={styles.postBody}>
         <h3>{post.title}</h3>
 
@@ -105,7 +102,7 @@ function Post({ post }) {
             className={styles.text}
             style={seeMore ? { marginBottom: "1em" } : { marginBottom: "0" }}
           >
-            {post.text}
+            {post.content}
           </p>
           <button
             className={styles.seeMore}
@@ -131,6 +128,7 @@ function Post({ post }) {
           ) : (
             <MdFavoriteBorder />
           )} */}
+          <MdFavoriteBorder />
           {post.likes} |
           {/* <span>
             {post.likes[post.likes.length - 1]},{" "}
@@ -166,7 +164,11 @@ function Post({ post }) {
         ""
       )}
 
-      {/* <Comment comment={post.comments[post.comments.length - 1]} /> */}
+      {post.comments.length ? (
+        <Comment comment={post.comments[post.comments.length - 1]} />
+      ) : (
+        ""
+      )}
     </div>
   );
 }

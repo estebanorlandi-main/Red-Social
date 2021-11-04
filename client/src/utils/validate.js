@@ -100,7 +100,7 @@ export default function validate(input, value, cb) {
       if (p === "name") errors[p] = validarNombreyApellido(input[p]);
       if (p === "lastname") errors[p] = validarNombreyApellido(input[p]);
       if (p === "email") errors[p] = validarEmail(input[p]);
-      if (p === "github") errors[p] = validarUsername(input[p]);
+      if (p === "gitaccount") errors[p] = validarUsername(input[p]);
     }
     return errors;
   }
@@ -110,7 +110,7 @@ export default function validate(input, value, cb) {
   if (input === "name") return validarNombreyApellido(value);
   if (input === "lastname") return validarNombreyApellido(value);
   if (input === "email") return validarEmail(value);
-  if (input === "github") return validarGithub(value);
+  if (input === "gitaccount") return validarGithub(value);
 
   return "Field not found";
 }
