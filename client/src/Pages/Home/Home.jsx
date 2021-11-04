@@ -25,8 +25,8 @@ function Home(props) {
   }, [page]);
 
   useEffect(() => {
-    dispatch(getPosts());
-  }, [dispatch]);
+    dispatch(getPosts(page));
+  }, [dispatch, page]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -66,15 +66,11 @@ function Home(props) {
       )}
 
       <ul>
-        {posts.map((post, i) =>
-          i < (page + 1) * 10 ? (
-            <li>
-              <Post post={post} />
-            </li>
-          ) : (
-            ""
-          )
-        )}
+        {posts.map((post, i) => (
+          <li>
+            <Post post={post} />
+          </li>
+        ))}
       </ul>
       <div className={styles.cargando}>Cargando...</div>
     </div>
