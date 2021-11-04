@@ -25,6 +25,10 @@ function Home(props) {
   }, [page]);
 
   useEffect(() => {
+    dispatch(getPosts());
+  }, [dispatch]);
+
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -32,8 +36,6 @@ function Home(props) {
   }, [handleScroll]);
 
   console.log("total posts: ", (page + 1) * 10);
-
-  console.log(posts[0]);
 
   return (
     <div className={createPost ? styles.noScroll : ` ${styles.home}`}>
@@ -74,7 +76,6 @@ function Home(props) {
           )
         )}
       </ul>
-      <button onClick={() => dispatch(getPosts())}>asdasda</button>
       <div className={styles.cargando}>Cargando...</div>
     </div>
   );

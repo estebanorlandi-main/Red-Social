@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { commentPost, getPosts } from "../../Redux/actions/Post";
+import { commentPost } from "../../Redux/actions/Post";
 
 import Comment from "../Comment/Comment";
 
@@ -81,17 +81,21 @@ function Post({ post }) {
         ))}
       </ul>
 
-      {/* <Link
-      <Link
-        className={styles.userContainer}
-        to={`/profile/${post.user.username}`}
-      >
-        <img className={styles.avatar} src={post.user.image} alt="avatar" />
-        <div>
-          <span className={styles.username}>{post.user.username}</span>
-          <span className={styles.github}>{post.user.username}</span>
-        </div>
-      </Link>
+      {post.user ? (
+        <Link
+          className={styles.userContainer}
+          to={`/profile/${post.user.username}`}
+        >
+          <img className={styles.avatar} src={post.user.image} alt="avatar" />
+          <div>
+            <span className={styles.username}>{post.user.username}</span>
+            <span className={styles.github}>{post.user.username}</span>
+          </div>
+        </Link>
+      ) : (
+        ""
+      )}
+
       <div className={styles.postBody}>
         <h3>{post.title}</h3>
 
@@ -137,7 +141,7 @@ function Post({ post }) {
           </span> */}
         </button>
         <button>
-          <MdOutlineModeComment /> {post.comments.length}
+          <MdOutlineModeComment /> {post.comments && post.comments.length}
         </button>
         <button>
           <MdShare /> Share
@@ -165,7 +169,7 @@ function Post({ post }) {
         ""
       )}
 
-      {post.comments.length ? (
+      {post.comments && post.comments.length ? (
         <Comment comment={post.comments[post.comments.length - 1]} />
       ) : (
         ""
