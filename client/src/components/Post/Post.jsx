@@ -81,11 +81,7 @@ function Post({ post }) {
         ))}
       </ul>
 
-<<<<<<< HEAD
-      {/* <Link
-=======
       <Link
->>>>>>> 74137e959e3f239205267487eb535f7462050a0c
         className={styles.userContainer}
         to={`/profile/${post.user.username}`}
       >
@@ -132,7 +128,6 @@ function Post({ post }) {
           ) : (
             <MdFavoriteBorder />
           )} */}
-          <MdFavoriteBorder />
           {post.likes} |
           {/* <span>
             {post.likes[post.likes.length - 1]},{" "}

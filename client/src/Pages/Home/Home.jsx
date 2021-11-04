@@ -15,6 +15,7 @@ function Home(props) {
 
   const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);
+  const [first, setFirst] = useState(true);
 
   const handleScroll = useCallback(() => {
     if (
@@ -25,6 +26,10 @@ function Home(props) {
   }, [page]);
 
   useEffect(() => {
+    if (first) {
+      dispatch(getPosts());
+      setFirst(false);
+    }
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -74,7 +79,6 @@ function Home(props) {
           )
         )}
       </ul>
-      <button onClick={() => dispatch(getPosts())}>asdasda</button>
       <div className={styles.cargando}>Cargando...</div>
     </div>
   );
