@@ -30,6 +30,8 @@ function Signup(props) {
     lastname: "",
     email: "",
     gitaccount: "",
+    image: "",
+    about: "",
   });
 
   const [registered, setRegistered] = useState(false);
@@ -165,6 +167,7 @@ function Signup(props) {
             name="image"
             type="text"
           />
+          <div className={style.errores}>{err.image}</div>
           <label>About</label>
           <textarea
             onChange={(e) => handleChange(e)}
@@ -173,6 +176,7 @@ function Signup(props) {
             name="about"
             type="text"
           ></textarea>
+          <div className={style.errores}>{err.about}</div>
           <label>Tags</label>
           <Select onChange={handleSelect} options={options} isMulti />
           <button type="submit">Submit</button>
