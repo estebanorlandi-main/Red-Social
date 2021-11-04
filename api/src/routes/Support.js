@@ -28,7 +28,9 @@ router.post("/", async (req, res) =>{
                 postReported,
                 commentReported,
                 userReported,
-                username
+                username,
+                userId:user.id
+
             }
         })
         
