@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { commentPost } from "../../Redux/actions/Post";
+import { commentPost, getPosts } from "../../Redux/actions/Post";
 
 import Comment from "../Comment/Comment";
 
@@ -20,6 +20,7 @@ import {
 function Post({ post }) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
+  const posts = useSelector((state) => state.postsReducer.posts);
 
   const [firstLoad, setFirstLoad] = useState(true);
 
@@ -27,13 +28,13 @@ function Post({ post }) {
   const [newComment, setNewComment] = useState("");
   const [error, setError] = useState("");
 
-  // askdo
-
   useEffect(() => {
     if (firstLoad) {
       setFirstLoad(false);
     }
   }, [firstLoad, setFirstLoad]);
+
+  console.log(posts);
 
   const handleComment = (e) => {
     setNewComment(e.target.value);
@@ -82,6 +83,8 @@ function Post({ post }) {
           <li key={i}>{tag}</li>
         ))}
       </ul>
+
+      <button>asdasd</button>
 
       <Link
         className={styles.userContainer}
