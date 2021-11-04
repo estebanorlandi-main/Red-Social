@@ -175,6 +175,8 @@ export default function Profile(props) {
             <p>{profile.about}</p>
           )}
         </section>
+        {profile.posts &&
+          profile.posts.map((post, i) => <Post key={i} post={post} />)}
       </div>
       <div className={styles.right}>
         <section>
