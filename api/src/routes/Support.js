@@ -8,7 +8,6 @@ const router = Router();
 
 router.post("/", async (req, res) =>{
     try{
-
         var {username,
         content,
         title,
