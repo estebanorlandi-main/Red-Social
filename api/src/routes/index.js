@@ -10,6 +10,7 @@ const Post = require("./Post.js")
 const Login = require("./Login.js")
 const Likes = require("./Likes.js")
 const Tags = require("./Tags.js")
+const Support = require("./Support.js")
 
 
 
@@ -37,5 +38,6 @@ router.use("/post", Post);
 router.use("/login", Login);
 router.use("/tags", Tags)
 router.use("/likes", Likes);
+router.use("/support",Support);
 
 module.exports = router;

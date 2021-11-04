@@ -17,7 +17,7 @@ const router = Router();
 //Devuelve post de una categoria o si no todos los post
 router.get("/", async (req, res) =>{
     const{categoria} = req.query;
-    const allPosts = await Post.findAll({});
+    const allPosts = await DB_Postsearch({});
     if(categoria){
         let postCategoria = await allPosts.filter(e => e.categoria.toLowerCase().includes(categoria.toLowerCase()));
         allPosts[0]? res.status(200).send(postCategoria) :
@@ -42,7 +42,7 @@ router.get("/", async (req, res, next) =>{
 });
 
 //Filtra por id post
-router.get(":id", async (req, res, next) =>{
+router.get("/:id", async (req, res, next) =>{
     try{
         const {id} = req.params;
         // if(Number(id).toString() === 'NaN'){
@@ -89,7 +89,7 @@ router.delete("/:id", async (req, res) =>{
     try{
         const {id} = req.params;
         const deletePost = await DB_Postdestroy(id)
-        res.status(200).send('Post eliminado con exito');
+        res.status(200).send('Delete post');
     }catch(e){
         res.status(404).send('Cant delete post');
     };   
