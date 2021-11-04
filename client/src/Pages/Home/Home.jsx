@@ -26,10 +26,17 @@ function Home(props) {
   }, [page]);
 
   useEffect(() => {
+<<<<<<< HEAD
     if (first) {
       dispatch(getPosts());
       setFirst(false);
     }
+=======
+    dispatch(getPosts());
+  }, [dispatch]);
+
+  useEffect(() => {
+>>>>>>> 808657f000eb7ce10dac26c01170269e4d19caf7
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -37,8 +44,6 @@ function Home(props) {
   }, [handleScroll]);
 
   console.log("total posts: ", (page + 1) * 10);
-
-  console.log(posts[0]);
 
   return (
     <div className={createPost ? styles.noScroll : ` ${styles.home}`}>
