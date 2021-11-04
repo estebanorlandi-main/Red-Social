@@ -76,10 +76,7 @@ export default function NavBar(props) {
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    className={styles.link}
-                    to={`/support`}
-                  >
+                  <Link className={styles.link} to={`/support`}>
                     <div className={styles.links}>
                       {/* <CgProfile /> */}
                       <span>Support</span>

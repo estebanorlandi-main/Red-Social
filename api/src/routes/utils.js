@@ -1,5 +1,5 @@
 const axios = require('axios');
-const {User,Post,Comment,User_Comment,Comment_Post,Post_User,Likes,User_Follow} = require('../db.js');
+const {User,Post,Comment,User_Comment,Comment_Post,Post_User,Likes,User_Follow, Support} = require('../db.js');
 const db = require('../db.js');
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
@@ -334,6 +334,14 @@ const DB_validatePassword = (password)=>{
 	else return ({})
 }
 
+const BD_searchSupport = async()=>{
+	try{
+		const allMessage = await Support.findAll()
+		return(allMessage)
+	}catch(e){
+		return console.log("Error search message support",e)
+	}
+}
 
 
 module.exports = {
@@ -358,5 +366,6 @@ module.exports = {
 	DB_userSearch,
 	DB_findUsersEmail,
 	DB_findUsersUsername,
-	DB_UserFollow
+	DB_UserFollow,
+	BD_searchSupport
 }
