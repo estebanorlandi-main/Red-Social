@@ -7,6 +7,7 @@ const router = Router();
 
 router.post("/", async (req, res) =>{
     try{
+
         const {username,
         content,
         title,
@@ -19,6 +20,9 @@ router.post("/", async (req, res) =>{
             where:{
                 content,
                 title,
+                postReported
+                commentReported
+                userReported
                 userId:user.id
             }
         })
