@@ -11,8 +11,14 @@ const { DB_userCreates, DB_postCreates } = require("./src/routes/utils.js");
 conn.sync({ force: false }).then(() => {
   server.listen(3001, () => {
     //CARGA DE DATOS
+    //PASOS A SEGUIR : 
+    //1---> DESCOMENTE PRIMERO: DB_userCreates(DataUsers)
+    //2---> COMENTE: DB_userCreates(DataUsers) 
+    //3---> DESCOMENTE SEGUNDO:  DB_postCreates(dataPosts)
+    //4---> COMENTE: DB_postCreates(dataPosts) 
+
     // DB_userCreates(DataUsers);
-    //Descomentar esta linea para cargar los post
+  
     // DB_postCreates(dataPosts);
     console.log("%s listening at 3001"); // eslint-disable-line no-console
   });
