@@ -9,6 +9,7 @@ import { updateUser } from "../../Redux/actions/Session";
 import validate from "../../utils/validate";
 import styles from "./Profile.module.css";
 import Select from "react-select";
+import { BsFillPencilFill } from "react-icons/bs";
 
 const selectStyles = {
   control: (styles) => ({ ...styles, width: "100%" }),
@@ -41,7 +42,6 @@ export default function Profile(props) {
 
   useEffect(() => {
     if (first) {
-      console.log(profile);
       dispatch(getUser(props.username));
       setFirst(false);
     }
@@ -74,104 +74,114 @@ export default function Profile(props) {
 
     dispatch(updateUser(profile.id, inputs));
     setEditar(false);
-    setFirst(true);
   };
 
+  let git = profile.gitaccount && profile.gitaccount.split("/");
+  git = git && git[git.length - 1];
+
   return profile ? (
-    <>
-      <div className={styles.container}>
-        {session.username === profile.username ? (
-          <button onClick={() => setEditar((old) => !old)}>Editar</button>
-        ) : (
-          ""
-        )}
-        <img className={styles.image} src={profile.image || userimg} alt="" />
-
-        <h3>Username</h3>
-        <p>{profile.username}</p>
-
-        <h3>Name</h3>
-        <div>
+    <main className={styles.container}>
+      <div className={styles.left}>
+        <section>
           {myProfile && editar ? (
-            <>
-              <input
-                name="name"
-                onChange={handleChange}
-                value={inputs.name}
-                placeholder={session.name}
-              />
-              <p>{errors.name}</p>
-
-              <input
-                name="lastname"
-                onChange={handleChange}
-                value={inputs.lastname}
-                placeholder={session.lasnName}
-              />
-              <p>{errors.lastname}</p>
-            </>
+            <button onClick={handleSubmit}>Change</button>
           ) : (
-            <p>
+            ""
+          )}
+          {myProfile ? (
+            <button
+              className={styles.edit}
+              onClick={() => setEditar((old) => !old)}
+            >
+              <BsFillPencilFill style={{ color: "#C94F4F" }} />
+              Edit
+            </button>
+          ) : (
+            ""
+          )}
+
+          <img className={styles.image} src={profile.image || userimg} alt="" />
+
+          {myProfile && editar ? (
+            <div className={styles.inputGroup}>
+              <label>
+                <input
+                  name="name"
+                  onChange={handleChange}
+                  value={inputs.name}
+                  placeholder={session.name}
+                />
+                <span>{errors.name}</span>
+              </label>
+
+              <label>
+                <input
+                  name="lastname"
+                  onChange={handleChange}
+                  value={inputs.lastname}
+                  placeholder={session.lasnName}
+                />
+                <span>{errors.lastname}</span>
+              </label>
+            </div>
+          ) : (
+            <p className={styles.name}>
               {profile.name} {profile.lastname}
             </p>
           )}
-        </div>
 
-        <h3>Email</h3>
-        <p>{profile.email}</p>
+          <p className={styles.email}>{profile.email}</p>
 
-        <h3>Github</h3>
-        <p>{profile.gitaccount}</p>
+          <a className={styles.github} href={profile.gitaccount}>
+            {git}
+          </a>
 
-        <h3>About</h3>
-        {myProfile && editar ? (
-          <>
-            <textarea
-              name="about"
-              onChange={handleChange}
-              value={inputs.about}
-              placeholder={session.about}
-            ></textarea>
-          </>
-        ) : (
-          <p>{profile.about}</p>
-        )}
+          {myProfile && editar ? (
+            <Select
+              onChange={handleSelect}
+              className={styles.select_container}
+              options={options}
+              styles={selectStyles}
+              isMulti
+            />
+          ) : (
+            ""
+          )}
 
-        <h3>Tags</h3>
-        {myProfile && editar ? (
-          <Select
-            onChange={handleSelect}
-            className={styles.select_container}
-            options={options}
-            styles={selectStyles}
-            isMulti
-          />
-        ) : (
-          ""
-        )}
+          <div className={styles.tags}>
+            {profile.tags &&
+              profile.tags
+                .filter((tag) => tag)
+                .map((tag, i) => (
+                  <span key={i} className={styles.tag}>
+                    {tag}
+                  </span>
+                ))}
+          </div>
+        </section>
 
-        <div className={styles.tags}>
-          {profile.tags &&
-            profile.tags
-              .filter((tag) => tag)
-              .map((tag, i) => (
-                <span key={i} className={styles.tag}>
-                  {tag}
-                </span>
-              ))}
-        </div>
-
-        {myProfile && editar ? (
-          <button onClick={handleSubmit}>Change</button>
-        ) : (
-          ""
-        )}
+        <section>
+          <h3>About</h3>
+          {myProfile && editar ? (
+            <>
+              <textarea
+                name="about"
+                onChange={handleChange}
+                value={inputs.about}
+                placeholder={session.about}
+              ></textarea>
+            </>
+          ) : (
+            <p>{profile.about}</p>
+          )}
+        </section>
       </div>
-      <div>
-        {/* ESTO ES PARA MOSTRAR LOS POSTS PERO FALTA CAMBIAR EL COMPONENTE */}
-        {/*profile.posts && profile.posts.map((post) => <Post post={post} />)*/}
+      <div className={styles.right}>
+        <section>
+          <h3>Recomendaciones?</h3>
+        </section>
       </div>
-    </>
+    </main>
   ) : (
     ""
   );
