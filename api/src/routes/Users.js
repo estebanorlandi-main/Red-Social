@@ -62,6 +62,7 @@ router.get("/:username/comments", async (req,res,next)=>{
 router.post("/register", async (req,res,next)=>{
 	try {
 		let {email,username,password} = req.body
+		console.log(email,username,password)
 		let errorsPassword = await fn.DB_validatePassword(password)
 		let errorsUser = await fn.DB_findUserCreated({username:username,email:email})
 

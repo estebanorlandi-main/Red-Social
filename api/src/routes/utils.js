@@ -49,8 +49,8 @@ const DB_findUserAll = async (query)=>{
 const DB_findUserCreated = async (date)=>{
 	const {username,email} = date
 	let errors = {}
-	byEmail = await User.findOne({where:{email}})
-	byUsername = await User.findOne({where:{username}})
+	var byEmail = await User.findOne({where:{email}})
+	var byUsername = await User.findOne({where:{username}})
 	if(byEmail) errors={...errors,email:"Is already in use"}
 	if(byUsername) errors={...errors,username:"Is already in use"}
 	return errors
