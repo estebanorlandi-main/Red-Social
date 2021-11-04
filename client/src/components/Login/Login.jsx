@@ -10,9 +10,8 @@ export default function Login() {
   const dispatch = useDispatch();
 
   const [input, setInput] = useState({
-    username: "",
-    email: "",
-    password: "",
+    username: process.env.REACT_APP_LOGIN_USERNAME || "",
+    password: process.env.REACT_APP_LOGIN_PASSWORD || "",
   });
 
   const [logged, setLogged] = useState(false);
@@ -33,7 +32,6 @@ export default function Login() {
 
       setInput({
         username: "",
-        email: "",
         password: "",
       });
       setLogged(true);
@@ -54,16 +52,6 @@ export default function Login() {
               type="text"
               value={input.username}
               name="username"
-              onChange={(e) => handleChange(e)}
-            />
-          </div>
-
-          <div className={style.label}>
-            <label>Email</label>
-            <input
-              type="email"
-              value={input.email}
-              name="email"
               onChange={(e) => handleChange(e)}
             />
           </div>

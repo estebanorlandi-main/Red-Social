@@ -8,10 +8,12 @@
 
   --c-light-blue: hsl(198, 45%, 65%);
   --c-blue: hsl(198, 40%, 49%);
+  --c-red: #c94f4f;
   --c-mix: #7f69a3;
   --c-enfasis: #a04972;
 
-  background-color: #F3F2EF;
+  background-color: #f3f2ef;
+  min-height: 100vh;
 }
 
 .container {
