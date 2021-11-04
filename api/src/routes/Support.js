@@ -28,11 +28,8 @@ router.post("/", async (req, res) =>{
                 commentReported,
                 userReported,
                 username,
-                userId:user.id
-
             }
         })
-        
         res.status(200).send("Success in message creation");
 
     }catch(e){
