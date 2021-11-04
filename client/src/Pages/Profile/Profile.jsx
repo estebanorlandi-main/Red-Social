@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import userimg from "../../images/userCard.png";
 import { useDispatch, useSelector } from "react-redux";
+import { removeProfile } from "../../Redux/actions/Users";
 
 import Post from "../../components/Post/Post";
 
@@ -33,7 +34,6 @@ const options = [
 export default function Profile(props) {
   const dispatch = useDispatch();
   const [editar, setEditar] = useState(false);
-  const [first, setFirst] = useState(true);
 
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
@@ -41,11 +41,9 @@ export default function Profile(props) {
   const myProfile = session.username === profile.username;
 
   useEffect(() => {
-    if (first) {
-      dispatch(getUser(props.username));
-      setFirst(false);
-    }
-  }, [profile, dispatch, first, props.username]);
+    dispatch(getUser(props.username));
+    return () => dispatch(removeProfile());
+  }, [dispatch, props.username]);
 
   const [inputs, setInputs] = useState({
     name: session.name || "",
@@ -175,8 +173,7 @@ export default function Profile(props) {
             <p>{profile.about}</p>
           )}
         </section>
-        {profile.posts &&
-          profile.posts.map((post, i) => <Post key={i} post={post} />)}
+        {profile.posts ? profile.posts.map((post) => <Post post={post} />) : ""}
       </div>
       <div className={styles.right}>
         <section>

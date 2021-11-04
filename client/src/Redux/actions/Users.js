@@ -1,6 +1,7 @@
 import axios from "axios";
 export const SEARCH_USER = "SEARCH_USER";
 export const GET_USER = "GET_USER";
+export const REMOVE_PROFILE = "REMOVE_PROFILE";
 
 export function searchUser(q) {
   return (dispatch) =>
@@ -16,4 +17,8 @@ export function getUser(user) {
       .get(`http://localhost:3001/user/${user}`)
       .then((res) => dispatch({ type: GET_USER, payload: res }))
       .catch((e) => console.log(e));
+}
+
+export function removeProfile() {
+  return { type: REMOVE_PROFILE, payload: {} };
 }
