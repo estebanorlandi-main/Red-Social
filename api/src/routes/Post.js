@@ -16,6 +16,16 @@ const router = Router();
 
 // router.use("/", );
 
+const paginate = (page = 0, arr) => {
+  const postsPerPage = 15;
+  const to = page * postsPerPage + postsPerPage;
+
+  return {
+    posts: arr.slice(page * postsPerPage, to < arr.length ? to : arr),
+    totalPages: arr.length,
+  };
+};
+
 //Devuelve post de una categoria o si no todos los post
 router.get("/", async (req, res) => {
   
@@ -24,8 +34,6 @@ router.get("/", async (req, res) => {
 
   const { tag, page } = req.query;
   const allPosts = await DB_Postsearch({});
-
-  const postsPerPage = 15;
 
   if (tag) {
     let postCategoria = allPosts.filter((e) =>
@@ -37,23 +45,12 @@ router.get("/", async (req, res) => {
     if (!postCategoria.length)
       res.status(404).send("There is no post with that tag");
 
-    // paginate
-    const to = page * postsPerPage + postsPerPage;
-    const pagePosts = allPosts.slice(
-      page * postsPerPage,
-      to < allPosts.length ? to : allPosts
-    );
+    const { posts, totalPages } = paginate(page, postCategoria);
 
-    if (!pagePosts.length) res.status(404).send("Page not found");
-
-    res.status(200).send(pagePosts);
+    res.status(200).send({ posts, totalPages });
   } else {
-    const to = page * postsPerPage + postsPerPage;
-    const pagePosts = allPosts.slice(
-      page * postsPerPage,
-      to < allPosts.length ? to : allPosts
-    );
-    res.status(200).send(pagePosts);
+    const { posts, totalPages } = paginate(page, allPosts);
+    res.status(200).send({ posts, totalPages });
   }
 });
 
@@ -89,10 +86,8 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   const { title, content, image, tag, likes, username } = req.body;
-  // console.log(req.body)
   try {
     let userDB = await DB_UserID(username);
-    // console.log(userDB)
     let createPost = await Post.create({
       image,
       likes,
@@ -102,9 +97,12 @@ router.post("/", async (req, res, next) => {
       userId: userDB.id,
     });
     await userDB.addPost(createPost);
-    res.send("Success in post creation");
+
+    const allPosts = await DB_Postsearch({});
+    const { posts, totalPages } = paginate(page, allPosts);
+    res.status(200).send({ posts, totalPages });
   } catch (e) {
-    res.status(404).send({ error: "Invalid data for post creation" });
+    res.status(404).send({ success: false, error: "Cant create post" });
   }
 });
 
@@ -113,9 +111,12 @@ router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const deletePost = await DB_Postdestroy(id);
-    res.status(200).send("Delete post");
+
+    const allPosts = await DB_Postsearch({});
+    const { posts, totalPages } = paginate(page, allPosts);
+    res.status(200).send({ posts, totalPages, success: true });
   } catch (e) {
-    res.status(404).send("Cant delete post");
+    res.status(404).send({ success: false, error: "Cant delete post" });
   }
 });
 
@@ -124,9 +125,12 @@ router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const updatePost = await DB_Postedit(id, req.body);
-    res.status(200).send(updatePost);
+
+    const allPosts = await DB_Postsearch({});
+    const { posts, totalPages } = paginate(page, allPosts);
+    res.status(200).send({ posts, totalPages, success: true });
   } catch (e) {
-    res.status(404).send("Cant apply changes");
+    res.status(404).send({ success: false, error: "Cant apply changes" });
   }
 });
 

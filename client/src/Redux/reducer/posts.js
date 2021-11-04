@@ -9,6 +9,7 @@ import {
 const initialState = {
   posts: [],
   post: {},
+  totalPages: 0,
 };
 
 export default function root(state = initialState, action) {
@@ -47,7 +48,8 @@ export default function root(state = initialState, action) {
     case GET_POSTS:
       return {
         ...state,
-        posts: [...state.posts, ...action.payload],
+        posts: [...state.posts, ...action.payload.posts],
+        totalPages: action.payload.totalPages,
       };
 
     case GET_POST_FOR_ID:
