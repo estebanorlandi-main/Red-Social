@@ -59,10 +59,10 @@ export function commentPost(postId, content, username) {
   //return { type: POST_COMMENT, payload: { idPost, text, user } };
 }
 
-export function getPosts() {
+export function getPosts(page) {
   return (dispatch) =>
     axios
-      .get(`http://localhost:3001/post`)
+      .get(`http://localhost:3001/post?page=${page}`)
       .then((res) => dispatch({ type: GET_POSTS, payload: res.data }));
 }
 

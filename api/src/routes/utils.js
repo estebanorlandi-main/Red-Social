@@ -1,5 +1,5 @@
 const axios = require('axios');
-const {User,Post,Comment,User_Comment,Comment_Post,Post_User,Likes,User_Follow} = require('../db.js');
+const {User,Post,Comment,User_Comment,Comment_Post,Post_User,Likes,User_Follow, Support} = require('../db.js');
 const db = require('../db.js');
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
@@ -125,7 +125,8 @@ const DB_Postsearch = async ({username, id}) =>{
 	try{
 		if(username === undefined && id === undefined){
 			var post_search = await Post.findAll({
-				include: [{model: User, attributes:["image", "username"]},Comment]
+				include: [{model: User, attributes:["image", "username"]},Comment],
+				order: [['createdAt', 'DESC']]
 			});
 			return post_search;
 		}
@@ -134,7 +135,8 @@ const DB_Postsearch = async ({username, id}) =>{
             	where:{
                  	'idPost':id
             	},
-				include: [{model: User, attributes:["image", "username"]},Comment]
+				include: [{model: User, attributes:["image", "username"]},Comment],
+				order: [['createdAt', 'DESC']]
         	});
         	return post_search;
 		} else if (id === undefined && username){
@@ -143,7 +145,8 @@ const DB_Postsearch = async ({username, id}) =>{
             	where:{
                 	userId:userDB.id
             	},
-				include: [{model: User, attributes:["image", "username"]},Comment]
+				include: [{model: User, attributes:["image", "username"]},Comment],
+				order: [['createdAt', 'DESC']]
         	});
         	return post_search
 		}else {
@@ -250,7 +253,7 @@ const DB_userCreates = async(date)=>{
 
 //DESCOMENTAR LAS SIGUIENTES LINEAS SIII SE QUIERE VER LOS STATUS EN LA TERMINAL Y COMENTAR LA DE ABAJO
 	if(typeof date == "object"){
-		date.forEach(async e=>{
+		await date.forEach(async e=>{
 			await axios.post("http://localhost:3001/user/register",e).catch(e=>e)			
 		})
 
@@ -265,7 +268,7 @@ const DB_userCreates = async(date)=>{
 
 const DB_postCreates = async(data) =>{
 	if(typeof data == "object"){
-		data.forEach(async e =>{
+		await data.forEach(async e =>{
 			var obj ={};
 			const user = await User.findAll({attributes:['username']})
 			var index = Math.floor((Math.random() * 100))
@@ -334,6 +337,14 @@ const DB_validatePassword = (password)=>{
 	else return ({})
 }
 
+const BD_searchSupport = async()=>{
+	try{
+		const allMessage = await Support.findAll()
+		return(allMessage)
+	}catch(e){
+		return console.log("Error search message support",e)
+	}
+}
 
 
 module.exports = {
@@ -358,5 +369,6 @@ module.exports = {
 	DB_userSearch,
 	DB_findUsersEmail,
 	DB_findUsersUsername,
-	DB_UserFollow
+	DB_UserFollow,
+	BD_searchSupport
 }
