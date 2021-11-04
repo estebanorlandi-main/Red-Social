@@ -20,9 +20,9 @@ router.post("/", async (req, res) =>{
             where:{
                 content,
                 title,
-                postReported
-                commentReported
-                userReported
+                postReported,
+                commentReported,
+                userReported,
                 userId:user.id
             }
         })

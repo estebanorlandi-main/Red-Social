@@ -18,6 +18,10 @@ const router = Router();
 
 //Devuelve post de una categoria o si no todos los post
 router.get("/", async (req, res) => {
+  
+  // const posts = await Post.findAll({order: [['createdAt', 'DESC']]})
+  // return res.send(posts)
+
   const { tag, page } = req.query;
   const allPosts = await DB_Postsearch({});
 
