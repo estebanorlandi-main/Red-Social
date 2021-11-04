@@ -81,8 +81,6 @@ function Post({ post }) {
         ))}
       </ul>
 
-      <button>asdasd</button>
-
       {/* <Link
         className={styles.userContainer}
         to={`/profile/${post.user.username}`}
