@@ -18,17 +18,38 @@ const router = Router();
 
 //Devuelve post de una categoria o si no todos los post
 router.get("/", async (req, res) => {
-  const { categoria } = req.query;
+  const { tag, page } = req.query;
   const allPosts = await DB_Postsearch({});
-  if (categoria) {
-    let postCategoria = await allPosts.filter((e) =>
-      e.categoria.toLowerCase().includes(categoria.toLowerCase())
+
+  const postsPerPage = 15;
+
+  if (tag) {
+    let postCategoria = allPosts.filter((e) =>
+      e.tag
+        .map((postTag) => postTag && postTag.toLowerCase())
+        .includes(tag.toLowerCase())
     );
-    allPosts[0]
-      ? res.status(200).send(postCategoria)
-      : res.status(404).send("There is no post with that tag");
+
+    if (!postCategoria.length)
+      res.status(404).send("There is no post with that tag");
+
+    // paginate
+    const to = page * postsPerPage + postsPerPage;
+    const pagePosts = allPosts.slice(
+      page * postsPerPage,
+      to < allPosts.length ? to : allPosts
+    );
+
+    if (!pagePosts.length) res.status(404).send("Page not found");
+
+    res.status(200).send(pagePosts);
   } else {
-    res.status(200).send(allPosts);
+    const to = page * postsPerPage + postsPerPage;
+    const pagePosts = allPosts.slice(
+      page * postsPerPage,
+      to < allPosts.length ? to : allPosts
+    );
+    res.status(200).send(pagePosts);
   }
 });
 

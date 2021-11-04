@@ -45,10 +45,9 @@ export default function root(state = initialState, action) {
       };
 
     case GET_POSTS:
-      console.log(action.payload);
       return {
         ...state,
-        posts: action.payload,
+        posts: [...state.posts, ...action.payload],
       };
 
     case GET_POST_FOR_ID:
