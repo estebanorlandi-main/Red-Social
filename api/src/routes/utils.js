@@ -289,7 +289,7 @@ const DB_postCreates = async(data) =>{
 
 const DB_userSearch= async (username, email, password)=>{
 	// const hashPassword =  bcrypt.hashSync(password,saltRounds)
-	// console.log(hashPassword)
+
 	
 	try{
 		if(username && username != null){
