@@ -250,7 +250,7 @@ const DB_userCreates = async(date)=>{
 
 //DESCOMENTAR LAS SIGUIENTES LINEAS SIII SE QUIERE VER LOS STATUS EN LA TERMINAL Y COMENTAR LA DE ABAJO
 	if(typeof date == "object"){
-		date.forEach(async e=>{
+		await date.forEach(async e=>{
 			await axios.post("http://localhost:3001/user/register",e).catch(e=>e)			
 		})
 
@@ -265,7 +265,7 @@ const DB_userCreates = async(date)=>{
 
 const DB_postCreates = async(data) =>{
 	if(typeof data == "object"){
-		data.forEach(async e =>{
+		await data.forEach(async e =>{
 			var obj ={};
 			const user = await User.findAll({attributes:['username']})
 			var index = Math.floor((Math.random() * 100))
