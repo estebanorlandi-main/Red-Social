@@ -8,8 +8,9 @@ import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import NavBar from "./components/NavBar/NavBar.js";
 import Support from "./components/Support/Support";
-
+import AdminLogin from "./components/Admin/AdminLogin";
 import Popup from "./components/Support/SupportLocalPopUp.jsx"
+import AdminSupport from "./components/Admin/AdminSupport";
 // Variables CSS
 import "./App.css";
 
@@ -24,7 +25,8 @@ function App() {
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
         <Route path="/support" component={Support}/>
-
+        <Route path="/loginAdmin" component={AdminLogin}/>
+        <Route path="/supportAdmin" component={AdminSupport}/>
         <Route
           path="/profile/:username"
           render={({

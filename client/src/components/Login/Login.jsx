@@ -68,6 +68,7 @@ export default function Login() {
           <button type="submit">LogIn</button>
           <hr style={{ margin: "4%" }}></hr>
           <Link to="/signup">SignUp</Link>
+          <Link to="/loginAdmin">LoginAdmin</Link>
         </form>
       )}
     </div>
