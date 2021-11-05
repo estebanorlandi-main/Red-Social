@@ -7,6 +7,7 @@ import Profile from "./Pages/Profile/Profile.jsx";
 import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import NavBar from "./components/NavBar/NavBar.js";
+import Messenger from "./Pages/Messenger/Messenger";
 
 // Variables CSS
 import "./App.css";
@@ -31,6 +32,7 @@ function App() {
           }) => <Profile username={username} />}
         />
 
+        <Route exact path='/messenger' component={Messenger}/>
         <Route
           path="/test"
           render={() => {
