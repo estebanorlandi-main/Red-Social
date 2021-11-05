@@ -27,7 +27,9 @@ export const UPDATE_PAGE = "UPDATE_PAGE"
 
 export function createPost(data) {
   return (dispatch) =>
-    axios.post("localhost:3001/post", data).then((res) => console.log(res));
+    axios
+    .post("http://localhost:3001/post/", data,{withCredentials:true})
+    .then((res) => console.log(res.data));
 
   // return { type: POST_CREATE, payload: data };
 }
@@ -45,8 +47,8 @@ export function deletePost(postId) {
 export function updatePost(postId, data) {
   return (dispatch) =>
     axios
-      .put(`localhost:3001/post/${postId}`, data)
-      .then((res) => console.log(res));
+      .put(`http://localhost:3001/post/${postId}`, data, {withCredentials:true})
+      .then((res) => ({ type: POST_UPDATE, payload: res.data }));
 
   //return { type: POST_UPDATE, payload: { postId } };
 }

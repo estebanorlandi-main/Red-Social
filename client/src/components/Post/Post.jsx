@@ -80,12 +80,28 @@ function Post({ post, customClass, user }) {
     let hola = await dispatch(deletePost(post.idPost));
     dispatch(updatePage(true, hola.payload.posts))
   }
-
+  //console.log(post)
   async function editar(){
+    let obj;
     setModo(old=>!old)
+    if (modo === true) {
+      if ((post.title !== data.title && data.title) || (post.content !== data.content && data.content)) {
+        console.log("ifif")
+        obj = await dispatch(updatePost(post.idPost, {
+          ...post,
+          title:data.title,
+          content: data.content,
+          image: data.image
+        }))
+        dispatch(updatePage(true, obj.payload.posts))
+      }
+    }
   }
 
   function handleChange(e){
+    if (e.target.value === "" && (((!data.content && e.target.name === "image") || (!data.image && e.target.name === "content")) || e.target.name === "title")) {
+      return
+    }
     setData(old=>({
       ...old,
       [e.target.name]:e.target.value
@@ -111,7 +127,7 @@ function Post({ post, customClass, user }) {
         </div>
            :"" */}
         <li>
-          <button onClick={()=>editar()}>editar</button>
+          <button onClick={()=>editar()}>{modo?"guardar":"editar"}</button>
         </li>
         <li>
           <button onClick={()=>{borrar()}}>borrar</button>
@@ -129,7 +145,7 @@ function Post({ post, customClass, user }) {
         </div>
       </Link>
       <div className={styles.postBody}>
-        {modo ? <input value={data.title} name="title" onChange={(e)=>handleChange(e)}/> : <h3>{post.title}</h3>}
+        {modo ? <input value={data.title} name="title" onChange={(e)=>handleChange(e)}/> : <h3>{data.title}</h3>}
 
         {modo ? <div><textarea value={data.content} name="content" onChange={(e)=>handleChange(e)} /></div> :
         <div
@@ -140,7 +156,7 @@ function Post({ post, customClass, user }) {
           className={styles.text}
           style={seeMore ? { marginBottom: "1em" } : { marginBottom: "0" }}
         >
-          {post.content}
+          {data.content}
         </p>
         <button
           className={styles.seeMore}
