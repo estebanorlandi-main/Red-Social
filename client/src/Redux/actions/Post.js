@@ -8,7 +8,7 @@ export const POST_UPDATE = "POST_UPDATE";
 export const GET_POSTS = "GET_POSTS";
 export const GET_POST_FOR_ID = "GET_POST_FOR_ID";
 export const GET_POST_FOR_USERNAME = "GET_POST_FOR_USERNAME";
-
+export const UPDATE_PAGE = "UPDATE_PAGE"
 // Crear Posteo
 // return (dispatch) => axios.post('localhost:3001/post')
 //  -> title
@@ -33,10 +33,11 @@ export function createPost(data) {
 }
 
 export function deletePost(postId) {
+  console.log(postId)
   return (dispatch) =>
     axios
-      .delete(`localhost:3001/post/${postId}`)
-      .then((res) => console.log(res));
+      .delete(`http://localhost:3001/post/${postId}`, {withCredentials:true})
+      .then((res) => ({ type: POST_DELETE, payload: res.data }));
 
   // return { type: POST_DELETE, payload: postId };
 }
@@ -82,6 +83,9 @@ export function getPostForUsername(username) {
       );
 }
 
+export function updatePage(bol, post){
+  return ({type:UPDATE_PAGE, payload:{bol, post}})
+}
 /*
 export function likePost(idPost, username) {
   return { type: POST_LIKE, payload: { idPost, username } };

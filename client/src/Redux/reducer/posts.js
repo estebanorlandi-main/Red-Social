@@ -4,11 +4,14 @@ import {
   GET_POSTS,
   GET_POST_FOR_ID,
   GET_POST_FOR_USERNAME,
+  POST_DELETE,
+  UPDATE_PAGE,
 } from "../actions/Post";
 
 const initialState = {
   posts: [],
   post: {},
+  page: 0,
   totalPages: 0,
 };
 
@@ -46,6 +49,12 @@ export default function root(state = initialState, action) {
       };
 
     case GET_POSTS:
+    if (action.page === 0) {
+        return {
+          ...state,
+          posts: action.payload.posts
+        }
+      }
       return {
         ...state,
         posts: [...state.posts, ...action.payload.posts],
@@ -65,6 +74,20 @@ export default function root(state = initialState, action) {
         ...state,
         post: action.payload,
       };
+
+    case UPDATE_PAGE:
+      if (action.payload.bol) {
+        return ({
+          ...state,
+          page:-1,
+          posts:action.payload.post
+        })
+      }else {
+        return ({
+          ...state,
+          page: state.page + 1
+        })
+      }
 
     default:
       return state;
