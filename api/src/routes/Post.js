@@ -28,7 +28,7 @@ const paginate = (page = 0, arr) => {
 
 //Devuelve post de una categoria o si no todos los post
 router.get("/", async (req, res) => {
-  
+
   // const posts = await Post.findAll({order: [['createdAt', 'DESC']]})
   // return res.send(posts)
 
@@ -99,7 +99,7 @@ router.post("/", async (req, res, next) => {
     await userDB.addPost(createPost);
 
     const allPosts = await DB_Postsearch({});
-    const { posts, totalPages } = paginate(page, allPosts);
+    const { posts, totalPages } = paginate(0, allPosts);
     res.status(200).send({ posts, totalPages });
   } catch (e) {
     res.status(404).send({ success: false, error: "Cant create post" });
@@ -108,12 +108,14 @@ router.post("/", async (req, res, next) => {
 
 //Eliminacion de un Post
 router.delete("/:id", async (req, res) => {
+
   try {
     const { id } = req.params;
+    console.log(id)
     const deletePost = await DB_Postdestroy(id);
-
+    console.log(deletePost)
     const allPosts = await DB_Postsearch({});
-    const { posts, totalPages } = paginate(page, allPosts);
+    const { posts, totalPages } = paginate(0, allPosts);
     res.status(200).send({ posts, totalPages, success: true });
   } catch (e) {
     res.status(404).send({ success: false, error: "Cant delete post" });
@@ -125,10 +127,10 @@ router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const updatePost = await DB_Postedit(id, req.body);
-
+    console.log(updatePost)
     const allPosts = await DB_Postsearch({});
-    const { posts, totalPages } = paginate(page, allPosts);
-    res.status(200).send({ posts, totalPages, success: true });
+    const { posts, totalPages } = paginate(0, allPosts);
+    res.status(200).send({ posts, totalPages, success: true , post: updatePost});
   } catch (e) {
     res.status(404).send({ success: false, error: "Cant apply changes" });
   }

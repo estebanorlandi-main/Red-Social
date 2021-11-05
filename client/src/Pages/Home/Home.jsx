@@ -5,15 +5,14 @@ import NewPost from "../../components/NewPost/NewPost";
 import UserCard from "../../components/UserCard/UserCard";
 
 import styles from "./Home.module.css";
-import { getPosts } from "../../Redux/actions/Post";
+import { getPosts, updatePage } from "../../Redux/actions/Post";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
   const user = useSelector((state) => state.sessionReducer);
-
+  const page = useSelector((state) => state.postsReducer.page);
   const dispatch = useDispatch();
 
-  const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);
   const [first, setFirst] = useState(true);
 
@@ -22,14 +21,20 @@ function Home(props) {
       Math.ceil(window.innerHeight + window.scrollY) >=
       document.documentElement.scrollHeight
     )
-      setPage(page + 1);
+      dispatch(updatePage(false))
   }, [page]);
-
+  console.log(posts)
   useEffect(() => {
+    console.log("entre")
     if (first) {
-      dispatch(getPosts());
+      dispatch(getPosts(0));
       setFirst(false);
+      return
     }
+    if (page === -1) {
+      window.scroll(0,0)
+      dispatch(updatePage(false))
+      return}
     dispatch(getPosts(page));
   }, [dispatch, page]);
 
