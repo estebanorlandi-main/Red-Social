@@ -45,6 +45,8 @@ const {
   Comment_Post,
   User_Comment,
   Likes,
+  Message,
+  Conversation,
   Support
 } = sequelize.models;
 
@@ -78,6 +80,13 @@ User.hasMany(Likes, { as: "postLikes" });
 Post.hasMany(Likes, { as: "userLikes" });
 Likes.belongsTo(User);
 Likes.belongsTo(Post);
+
+// //Conversaciones
+// Conversation.belongsToMany(User, { through: "User_Conversations", onDelete: "CASCADE" });
+
+// //Messages
+Conversation.hasMany(Message, { as: "conversationMessages" })
+Message.belongsTo(Conversation, { through: "Conversation_Messages", onDelete: "CASCADE" })
 
 //Likes -----> Esta linea estaba repetida :)
 /*User.hasMany(Likes,{as:"postLikes"})
