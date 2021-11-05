@@ -17,7 +17,7 @@ import {
   MdSend,
 } from "react-icons/md";
 
-function Post({ post }) {
+function Post({ post, customClass }) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
 
@@ -26,6 +26,9 @@ function Post({ post }) {
   const [seeMore, setSeeMore] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [error, setError] = useState("");
+
+  const createdAt = new Date(post.createdAt).getTime();
+  const now = new Date().getTime();
 
   useEffect(() => {
     if (firstLoad) {
@@ -74,7 +77,7 @@ function Post({ post }) {
   post.tag = Array.from(tags);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container + ` ${customClass}`}>
       <ul className={styles.tags}>
         {post.tag.map((tag, i) => (
           <li key={i}>{tag}</li>
@@ -101,7 +104,9 @@ function Post({ post }) {
           <img className={styles.avatar} src={post.user.image} alt="avatar" />
           <div>
             <span className={styles.username}>{post.user.username}</span>
-            <span className={styles.github}>{post.user.username}</span>
+            <span className={styles.github}>
+              Created at {Math.floor((now - createdAt) / (1000 * 60 * 60))}
+            </span>
           </div>
         </Link>
       ) : (

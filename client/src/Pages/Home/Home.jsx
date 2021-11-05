@@ -27,6 +27,7 @@ function Home(props) {
 
   useEffect(() => {
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (first) {
       dispatch(getPosts());
       setFirst(false);
@@ -34,6 +35,10 @@ function Home(props) {
 =======
     dispatch(getPosts());
   }, [dispatch]);
+=======
+    dispatch(getPosts(page));
+  }, [dispatch, page]);
+>>>>>>> de88678619a962beb12a4c8dc50cbb5657c5100c
 
   useEffect(() => {
 >>>>>>> 808657f000eb7ce10dac26c01170269e4d19caf7
@@ -74,15 +79,11 @@ function Home(props) {
       )}
 
       <ul>
-        {posts.map((post, i) =>
-          i < (page + 1) * 10 ? (
-            <li>
-              <Post post={post} />
-            </li>
-          ) : (
-            ""
-          )
-        )}
+        {posts.map((post, i) => (
+          <li>
+            <Post post={post} />
+          </li>
+        ))}
       </ul>
       <div className={styles.cargando}>Cargando...</div>
     </div>

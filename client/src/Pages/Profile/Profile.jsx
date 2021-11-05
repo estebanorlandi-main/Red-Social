@@ -173,7 +173,13 @@ export default function Profile(props) {
             <p>{profile.about}</p>
           )}
         </section>
-        {profile.posts ? profile.posts.map((post) => <Post post={post} />) : ""}
+        <section className={styles.posts}>
+          {profile.posts
+            ? profile.posts.map((post) => (
+                <Post customClass={styles.post} post={post} />
+              ))
+            : ""}
+        </section>
       </div>
       <div className={styles.right}>
         <section>

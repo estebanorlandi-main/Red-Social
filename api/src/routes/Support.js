@@ -7,15 +7,26 @@ const router = Router();
 
 router.post("/", async (req, res) =>{
     try{
-        const {username, content, title} = req.body
+
+        const {username,
+        content,
+        title,
+        postReported,
+        commentReported,
+        userReported} = req.body
+
         const user = await DB_findUsersUsername(username)
         var createMessage = await Support.findOrCreate({
             where:{
                 content,
                 title,
+                postReported,
+                commentReported,
+                userReported,
                 userId:user.id
             }
         })
+
         res.status(200).send("Success in message creation");
 
     }catch(e){

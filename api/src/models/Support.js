@@ -17,7 +17,17 @@ module.exports = (sequelize) => {
             defaultValue: Sequelize.UUIDV4,
             primaryKey: true
            
-        }}),
+        },
+        postReported: {
+            type: DataTypes.UUID,
+        },
+        commentReported: {
+            type: DataTypes.UUID,
+        },
+        userReported: {
+            type: DataTypes.UUID
+        }
+    }),
         {
             timestamps: false,
         }

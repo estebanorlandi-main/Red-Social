@@ -21,14 +21,11 @@ export default function NavBar(props) {
   const isLanding = useLocation().pathname === "/";
 
   useEffect(() => {
-    function verificar() {
-      if (usuario.username) {
-        setLoggedUser(true);
-      } else {
-        setLoggedUser(false);
-      }
+    if (usuario.username) {
+      setLoggedUser(true);
+    } else {
+      setLoggedUser(false);
     }
-    verificar();
   }, [usuario]);
 
   return (
@@ -41,7 +38,9 @@ export default function NavBar(props) {
               Code<span>Net</span>
             </h4>
           </Link>
+
           <SearchBar />
+
           <ul className={styles.nav}>
             <li>
               <Link className={styles.link} to="/home">
@@ -72,6 +71,14 @@ export default function NavBar(props) {
                     >
                       <BiLogOut />
                       <span>Log out</span>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link className={styles.link} to={`/support`}>
+                    <div className={styles.links}>
+                      {/* <CgProfile /> */}
+                      <span>Support</span>
                     </div>
                   </Link>
                 </li>

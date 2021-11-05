@@ -20,8 +20,8 @@ export function singUp(user) {
   return (dispatch) =>
     axios
       .post(`http://localhost:3001/user/register`, user)
-      .then((res) => dispatch({ type: SIGN_UP, payload: res, user }))
-      .catch((e) => console.log(e));
+      .then((res) => dispatch({ type: SIGN_UP, payload: res }))
+      .catch((err) => console.log(err));
 }
 
 export function logIn(user) {
@@ -29,7 +29,7 @@ export function logIn(user) {
     axios
       .post(`http://localhost:3001/login`, user)
       .then((res) => dispatch({ type: LOG_IN, payload: res, user }))
-      .catch((e) => console.log(e));
+      .catch((err) => console.log(err));
 }
 
 export function updateUser(id, user) {
@@ -37,7 +37,7 @@ export function updateUser(id, user) {
     axios
       .put(`http://localhost:3001/user/${id}`, user)
       .then((res) => dispatch({ type: UPDATE_USER, payload: res, user }))
-      .catch((e) => console.log(e));
+      .catch((err) => console.log(err));
 }
 
 export function logOut() {
