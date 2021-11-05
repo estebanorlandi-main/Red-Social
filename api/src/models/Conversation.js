@@ -12,7 +12,7 @@ module.exports = (sequelize) => {
         primaryKey: true,
       }, 
       members: {
-        type: Array,
+        type: DataTypes.ARRAY(DataTypes.STRING),
       },   
   },{
     timestamps: true,

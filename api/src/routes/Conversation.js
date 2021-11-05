@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const Sequelize = require('sequelize');
 const {
     Conversation
 } = require('../db.js');
@@ -21,11 +22,16 @@ router.post("/", async (req, res) => {
 
 router.get("/:userId", async (req, res) => {
   try {
-    const conversation = await Conversation.find({
-      members: { $in: [req.params.userId] },
+    console.log(req.params.userId)
+    const conversation = await Conversation.findAll({
+        members: { [Sequelize.Op.in]: [req.params.userId] },
     });
+
+    console.log(conversation)
+
     res.status(200).json(conversation);
   } catch (err) {
+    console.log(err)
     res.status(500).json(err);
   }
 });
@@ -35,7 +41,7 @@ router.get("/:userId", async (req, res) => {
 router.get("/find/:firstUserId/:secondUserId", async (req, res) => {
   try {
     const conversation = await Conversation.findOne({
-      members: { $all: [req.params.firstUserId, req.params.secondUserId] },
+      members: { [Sequelize.Op.all]: [req.params.firstUserId, req.params.secondUserId] },
     });
     res.status(200).json(conversation)
   } catch (err) {

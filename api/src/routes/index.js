@@ -41,8 +41,8 @@ router.use("/login", Login);
 router.use("/tags", Tags)
 router.use("/likes", Likes);
 router.use("/support",Support);
-// router.use("/conversation",Conversation);
-// router.use("/message",Message);
+router.use("/conversation",Conversation);
+router.use("/message",Message);
 
 
 module.exports = router;

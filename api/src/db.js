@@ -82,11 +82,15 @@ Likes.belongsTo(User);
 Likes.belongsTo(Post);
 
 // //Conversaciones
-// Conversation.belongsToMany(User, { through: "User_Conversations", onDelete: "CASCADE" });
+Conversation.belongsToMany(User, { through: "User_Conversations", onDelete: "CASCADE" });
+User.belongsToMany(Conversation, { through: "User_Conversations", onDelete: "CASCADE" });
+
 
 // //Messages
-Conversation.hasMany(Message, { as: "conversationMessages" })
-Message.belongsTo(Conversation, { through: "Conversation_Messages", onDelete: "CASCADE" })
+User.hasMany(Message, { as: "usserMessanges" });
+Message.belongsTo(User);
+// Conversation.hasMany(Message, { as: "conversationMessages" })
+// Message.belongsTo(Conversation);
 
 //Likes -----> Esta linea estaba repetida :)
 /*User.hasMany(Likes,{as:"postLikes"})
