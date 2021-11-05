@@ -1,18 +1,18 @@
 import style from "./NewPost.module.css";
 import { useState } from "react";
 import { createPost } from "../../Redux/actions/Post.js";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 
 export default function NewPost() {
   const dispatch = useDispatch();
-
+  const session = useSelector((state) => state.sessionReducer || {});
   const [data, setData] = useState({
     title: "",
     content: "",
     image: "",
-    tag: "",
-    likes: [],
-    username: "aca iria el nombre del usuario",
+    tag: [],
+    likes: 0,
+    username: session.username,
   });
 
   const [errores, setErrores] = useState({
@@ -78,7 +78,6 @@ export default function NewPost() {
   }
 
   function handleChange(e) {
-    console.log(e.target.value.length);
     if (e.target.name === "tag") {
       separarTags(e.target.value);
       return;
@@ -112,14 +111,15 @@ export default function NewPost() {
   function handleSubmit(e) {
     e.preventDefault();
     if (verificar()) {
+      console.log(data)
       dispatch(createPost(data));
       setData({
         title: "",
         content: "",
         image: "",
-        tag: "",
-        likes: [],
-        username: "aca iria el nombre del usuario",
+        tag: [],
+        likes: 0,
+        username: session.username,
       });
     }
   }
