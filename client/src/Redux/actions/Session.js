@@ -19,7 +19,9 @@ export const UPDATE_USER = "UPDATE_USER";
 export function singUp(user) {
   return (dispatch) =>
     axios
-      .post(`http://localhost:3001/user/register`, user)
+      .post(`http://localhost:3001/user/register`, user, {
+        withCredentials: true,
+      })
       .then((res) => {
         dispatch({ type: SIGN_UP, payload: res });
       })
@@ -29,19 +31,25 @@ export function singUp(user) {
 export function logIn(user) {
   return (dispatch) =>
     axios
-      .post(`http://localhost:3001/login`, user)
-      .then((res) => dispatch({ type: LOG_IN, payload: res, user }))
+      .post(`http://localhost:3001/login`, user, { withCredentials: true })
+      .then((res) => dispatch({ type: LOG_IN, payload: res }))
       .catch((err) => console.log(err));
 }
 
-export function updateUser(id, user) {
+export function updateUser(username, user) {
   return (dispatch) =>
     axios
-      .put(`http://localhost:3001/user/${id}`, user)
-      .then((res) => dispatch({ type: UPDATE_USER, payload: res, user }))
+      .put(`http://localhost:3001/user/${username}`, user, {
+        withCredentials: true,
+      })
+      .then((res) => dispatch({ type: UPDATE_USER, payload: res }))
       .catch((err) => console.log(err));
 }
 
 export function logOut() {
-  return { type: LOG_OUT, payload: {} };
+  return (dispatch) =>
+    axios
+      .get(`http://localhost:3001/logout`, { withCredentials: true })
+      .then((res) => dispatch({ type: LOG_OUT, res }))
+      .catch((err) => console.log(err));
 }

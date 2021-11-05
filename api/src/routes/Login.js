@@ -1,5 +1,7 @@
 const { Router } = require("express");
 const { DB_userSearch } = require("./utils.js");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET, JWT_EXPIRE_TIME, JWT_COOKIE_EXPIRE } = process.env;
 const router = Router();
 
 router.post("/", async (req, res) => {
@@ -25,19 +27,20 @@ router.post("/", async (req, res) => {
       tags: userLogin.tags,
     };
 
-    const id = userLogin.id
-      const token = jwt.sign({id:id}, JWT_SECRET, {
-        expiresIn: JWT_EXPIRE_TIM 
-      })
+    const id = userLogin.id;
+    const token = jwt.sign({ id: id }, JWT_SECRET, {
+      expiresIn: JWT_EXPIRE_TIME,
+    });
     const cookiesOptions = {
-        expires: new Date(Date.now()+JWT_COOKIE_EXPIRE* 3600 * 1000),
-        httponly: true,
-        Secure: true
-    }
+      expires: new Date(Date.now() + JWT_COOKIE_EXPIRE * 3600 * 1000),
+      httponly: true,
+      Secure: true,
+    };
 
-    res.cookie('jwt', token, cookiesOptions)
+    res.cookie("codenet", token, cookiesOptions);
     res.status(200).send({ user: sanitized, success: true });
   } catch (e) {
+    console.log(e);
     res.status(404).send({ errors: e, success: false });
   }
 });

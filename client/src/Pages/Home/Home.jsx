@@ -40,8 +40,6 @@ function Home(props) {
     };
   }, [handleScroll]);
 
-  console.log("total posts: ", (page + 1) * 10);
-
   return (
     <div className={createPost ? styles.noScroll : ` ${styles.home}`}>
       <UserCard />
