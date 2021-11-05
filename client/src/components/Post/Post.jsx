@@ -84,7 +84,6 @@ function Post({ post, customClass }) {
         ))}
       </ul>
 
-<<<<<<< HEAD
       <Link
         className={styles.userContainer}
         to={`/profile/${post.user.username}`}
@@ -95,25 +94,6 @@ function Post({ post, customClass }) {
           <span className={styles.github}>{post.user.username}</span>
         </div>
       </Link>
-=======
-      {post.user ? (
-        <Link
-          className={styles.userContainer}
-          to={`/profile/${post.user.username}`}
-        >
-          <img className={styles.avatar} src={post.user.image} alt="avatar" />
-          <div>
-            <span className={styles.username}>{post.user.username}</span>
-            <span className={styles.github}>
-              Created at {Math.floor((now - createdAt) / (1000 * 60 * 60))}
-            </span>
-          </div>
-        </Link>
-      ) : (
-        ""
-      )}
-
->>>>>>> 808657f000eb7ce10dac26c01170269e4d19caf7
       <div className={styles.postBody}>
         <h3>{post.title}</h3>
 

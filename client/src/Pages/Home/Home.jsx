@@ -26,22 +26,14 @@ function Home(props) {
   }, [page]);
 
   useEffect(() => {
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (first) {
       dispatch(getPosts());
       setFirst(false);
     }
-=======
-    dispatch(getPosts());
-  }, [dispatch]);
-=======
     dispatch(getPosts(page));
   }, [dispatch, page]);
->>>>>>> de88678619a962beb12a4c8dc50cbb5657c5100c
 
   useEffect(() => {
->>>>>>> 808657f000eb7ce10dac26c01170269e4d19caf7
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
