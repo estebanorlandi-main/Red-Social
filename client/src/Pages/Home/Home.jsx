@@ -15,6 +15,7 @@ function Home(props) {
 
   const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);
+  const [first, setFirst] = useState(true);
 
   const handleScroll = useCallback(() => {
     if (
@@ -25,6 +26,10 @@ function Home(props) {
   }, [page]);
 
   useEffect(() => {
+    if (first) {
+      dispatch(getPosts());
+      setFirst(false);
+    }
     dispatch(getPosts(page));
   }, [dispatch, page]);
 
