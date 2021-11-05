@@ -1,5 +1,5 @@
 const axios = require('axios');
-const {User,Post,Comment,User_Comment,Comment_Post,Post_User,Likes,User_Follow, Support} = require('../db.js');
+const {User,Post,Comment,User_Comment,Comment_Post,Post_User,Likes,User_Follow, Support,Message,Conversation} = require('../db.js');
 const db = require('../db.js');
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
@@ -14,6 +14,38 @@ const likeUserPost = {model:Likes,as:"postLikes",attributes:["postIdPost"],inclu
 const likePostUser = {model:Likes,as:"userLikes",attributes:["userId"],include:{model:User,attributes:["username"]}}
 const followersInfo = {model:User,as:"followers",attributes:["id","username","image","name","lastname"]}
 const followedInfo = {model:User,as:"following",attributes:["id","username","image","name","lastname"]}
+
+// para las conversaciones
+const findAllUsers = async (dates)=>{
+
+
+
+	let all = await User.findAll({
+		where:{
+			id:{[Op.in]:dates}
+		},
+		attributes:["id"]
+	}).catch(()=> null)
+	return all
+}
+
+const conversation = async (date)=>{
+	const {receiverId,userId} = date
+
+	const messageFind = await Message.findAll({
+		where:{
+			[Op.or]:[{
+				userId: userId,
+				receiverId:receiverId,
+			},{
+				userId:receiverId,
+				receiverId:userId
+			}]
+		},
+		order: [['createdAt', 'DESC']]
+	})
+	return messageFind
+}
 
 const DB_UserFollow =async (date)=>{
 	const {userId,followerId} = date
@@ -42,7 +74,7 @@ const DB_findUsersUsername = async (username)=>{
 const DB_findUserAll = async (query)=>{
 		const findUserAll = await User.findAll({
 			//attributes:["id","name","username","lastname","image","gitaccount"],
-			include: [likeUserPost,Comment,{model:Post,include:likePostUser},followersInfo,followedInfo]
+			include: [likeUserPost,Comment,{model:Post,include:likePostUser},followersInfo,followedInfo,{model:Conversation,attributes:["id","name","members",],include:["messages"]}]
 		})
 		return findUserAll
 }
@@ -56,10 +88,12 @@ const DB_findUserCreated = async (date)=>{
 	return errors
 }
 const DB_findUserQuery = async (query)=>{
-	console.log(query)
 		const findUser = await User.findAll({
 			where:{
 				[Op.or]:[
+				{
+					id:query.id
+				},				
 				{
 					username: {[Op.iLike]:query.username+'%'}
 				},
@@ -69,7 +103,7 @@ const DB_findUserQuery = async (query)=>{
 				]
 			},
 			//attributes:["id","name","username","lastname","image","gitaccount"],
-			include:[{model:Post,include:likePostUser},Comment,"postLikes",followersInfo,followedInfo]
+			include:[{model:Post,include:likePostUser},Comment,"postLikes",followersInfo,followedInfo,{model:Conversation,attributes:["id","name","members",],include:["messages"]}]
 		})
 		return findUser
 }
@@ -79,7 +113,7 @@ const DB_findUserParams = async (params)=>{
 				username:params
 			},
 			//attributes:["id","name","username","lastname","image","gitaccount"],
-			include:[{model:Post,include:likePostUser},Comment,likeUserPost,followersInfo,followedInfo]
+			include:[{model:Post,include:likePostUser},Comment,likeUserPost,followersInfo,followedInfo,{model:Conversation,attributes:["id","name","members",],include:["messages"]}]
 		})
 		return findUser
 }
@@ -370,5 +404,7 @@ module.exports = {
 	DB_findUsersEmail,
 	DB_findUsersUsername,
 	DB_UserFollow,
-	BD_searchSupport
+	BD_searchSupport,
+	conversation,
+	findAllUsers
 }

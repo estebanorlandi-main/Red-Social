@@ -46,6 +46,8 @@ const {
   User_Comment,
   Likes,
   Support,
+  Message,
+  Conversation
 } = sequelize.models;
 
 //Comentar para no floodear la base de datos con tags :*
@@ -103,6 +105,19 @@ User.belongsToMany(User, {
 //Support 1 a M 'Un mensaje pertenece a un usuario'
 User.belongsToMany(Support, { through: 'Support_User', onDelete: "CASCADE" });
 Support.belongsTo(User, {foreignKey: "username", through: 'Support_User', onDelete: "CASCADE" });
+
+
+// Message
+Message.belongsTo(User)
+// User Conversation
+Conversation.belongsToMany(User,{through:"User_Conversation"})
+User.belongsToMany(Conversation,{through:"User_Conversation"})
+// Conversation 
+Message.belongsTo(Conversation)
+Conversation.hasMany(Message)
+
+
+
 
 module.exports = {
   ...sequelize.models,
