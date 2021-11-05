@@ -40,6 +40,15 @@ function Post({ post, customClass, user }) {
     }
   }, [firstLoad, setFirstLoad]);
 
+  useEffect(() => {
+    setData({
+      title: post.title,
+      content: post.content,
+      image: post.image
+    })
+    setModo(false)
+  }, [post])
+  console.log(data, post)
   const handleComment = (e) => {
     setNewComment(e.target.value);
   };
@@ -98,6 +107,14 @@ function Post({ post, customClass, user }) {
     }
   }
 
+  function cancel(){
+    setModo((old)=> !old)
+    setData({
+      title: post.title,
+      content: post.content,
+      image: post.image
+    })
+  }
   function handleChange(e){
     if (e.target.value === "" && (((!data.content && e.target.name === "image") || (!data.image && e.target.name === "content")) || e.target.name === "title")) {
       return
@@ -132,6 +149,12 @@ function Post({ post, customClass, user }) {
         <li>
           <button onClick={()=>{borrar()}}>borrar</button>
         </li>
+        {modo ?
+          <li>
+            <button onClick={()=>{cancel()}}>cancel</button>
+          </li>
+          :""}
+
       </ul>
 
       <Link
@@ -145,7 +168,7 @@ function Post({ post, customClass, user }) {
         </div>
       </Link>
       <div className={styles.postBody}>
-        {modo ? <input value={data.title} name="title" onChange={(e)=>handleChange(e)}/> : <h3>{data.title}</h3>}
+        {modo ? <input value={data.title} name="title" onChange={(e)=>handleChange(e)}/> : <h3>{post.title}</h3>}
 
         {modo ? <div><textarea value={data.content} name="content" onChange={(e)=>handleChange(e)} /></div> :
         <div
@@ -156,7 +179,7 @@ function Post({ post, customClass, user }) {
           className={styles.text}
           style={seeMore ? { marginBottom: "1em" } : { marginBottom: "0" }}
         >
-          {data.content}
+          {post.content}
         </p>
         <button
           className={styles.seeMore}

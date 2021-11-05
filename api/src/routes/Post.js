@@ -127,10 +127,10 @@ router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const updatePost = await DB_Postedit(id, req.body);
-
+    console.log(updatePost)
     const allPosts = await DB_Postsearch({});
     const { posts, totalPages } = paginate(0, allPosts);
-    res.status(200).send({ posts, totalPages, success: true });
+    res.status(200).send({ posts, totalPages, success: true , post: updatePost});
   } catch (e) {
     res.status(404).send({ success: false, error: "Cant apply changes" });
   }
