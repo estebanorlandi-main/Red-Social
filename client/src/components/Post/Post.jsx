@@ -17,7 +17,7 @@ import {
   MdSend,
 } from "react-icons/md";
 
-function Post({ post, customClass }) {
+function Post({ post, customClass, user }) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
 

@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { Sequelize, Model } = require("sequelize");
+const { User, Post } = require("../db.js");
 const fn = require("./utils.js");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -15,6 +16,7 @@ const sanitizeUser = (data) => {
       email: user.email,
       about: user.about,
       tags: user.tags,
+      posts: user.posts,
     }));
   }
 
@@ -27,6 +29,7 @@ const sanitizeUser = (data) => {
     email: data.email,
     about: data.about,
     tags: data.tags,
+    posts: data.posts,
   };
 };
 
@@ -137,13 +140,21 @@ router.put("/:id", async (req, res, next) => {
       else req.body.password = bcrypt.hashSync(req.body.password, saltRounds);
     }
 
-    let validate = await fn.DB_updateUser(req.body, req.params.id);
+    const UserID = await User.findOne({
+      where: {
+        username: req.params.id,
+      },
+      include: [Post],
+    });
 
-    if (Object.keys(validate).length) return res.send(validate).status(400);
+    let validate = await fn.DB_updateUser(req.body, UserID.id);
 
-    let userUpdated = await fn.DB_findUsersUsername(req.body.username);
+    if (Object.keys(validate).length) return res.status(400).send(validate);
 
-    userUpdated = sanitizeUser(validate);
+    let userUpdated = await fn.DB_findUserParams(req.params.id);
+
+    userUpdated = sanitizeUser(userUpdated);
+
     return res.send({ user: userUpdated, success: true });
   } catch (e) {
     res.sendStatus(500).send({ errors: e, success: false });
