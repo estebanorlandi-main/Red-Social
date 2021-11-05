@@ -209,10 +209,8 @@ const DB_Postsearch = async ({ username, id }) => {
 const DB_Postdestroy = async (id) => {
   try {
     const erasePost = await Post.findOne({ where: { idPost: id } });
-    console.log(erasePost)
     await erasePost.destroy();
     return "Deleted Succesfully";
-    console.log("llegue")
   } catch (e) {
     throw new Error("We had a problem with your Delete");
   }

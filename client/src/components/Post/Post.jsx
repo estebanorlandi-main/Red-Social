@@ -48,7 +48,6 @@ function Post({ post, customClass, user }) {
     })
     setModo(false)
   }, [post])
-  console.log(data, post)
   const handleComment = (e) => {
     setNewComment(e.target.value);
   };

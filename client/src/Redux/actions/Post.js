@@ -28,8 +28,8 @@ export const UPDATE_PAGE = "UPDATE_PAGE"
 export function createPost(data) {
   return (dispatch) =>
     axios
-    .post("http://localhost:3001/post/", data,{withCredentials:true})
-    .then((res) => console.log(res.data));
+    .post("http://localhost:3001/post", data, {withCredentials:true})
+    .then((res) => ({ type: POST_CREATE, payload: res.data }));
 
   // return { type: POST_CREATE, payload: data };
 }

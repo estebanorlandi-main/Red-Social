@@ -111,9 +111,7 @@ router.delete("/:id", async (req, res) => {
 
   try {
     const { id } = req.params;
-    console.log(id)
     const deletePost = await DB_Postdestroy(id);
-    console.log(deletePost)
     const allPosts = await DB_Postsearch({});
     const { posts, totalPages } = paginate(0, allPosts);
     res.status(200).send({ posts, totalPages, success: true });
@@ -127,10 +125,10 @@ router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const updatePost = await DB_Postedit(id, req.body);
-    console.log(updatePost)
+
     const allPosts = await DB_Postsearch({});
     const { posts, totalPages } = paginate(0, allPosts);
-    res.status(200).send({ posts, totalPages, success: true , post: updatePost});
+    res.status(200).send({ posts, totalPages, success: true });
   } catch (e) {
     res.status(404).send({ success: false, error: "Cant apply changes" });
   }
