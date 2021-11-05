@@ -36,7 +36,7 @@ router.get('/', (req,res)=>{
 //Middlewares
 router.use("/user", Users);
 router.use("/comment", AuthControllers.isAuthenticated, Comments);
-router.use("/post", AuthControllers.isAuthenticated, Post);
+router.use("/post", Post);
 router.use("/login", Login);
 router.use("/tags", AuthControllers.isAuthenticated, Tags)
 router.use("/likes",  AuthControllers.isAuthenticated, Likes);
