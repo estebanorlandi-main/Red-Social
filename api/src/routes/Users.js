@@ -71,9 +71,9 @@ router.post("/register", async (req,res,next)=>{
 		req.body.password = bcrypt.hashSync(password,saltRounds)
 		let validate = await fn.DB_createUser(req.body)
 		if(validate.email || validate.name || validate.lastname) return res.send(validate).status(400)
-		else return res.send({success: "User has been created"})
+		else return res.status(200).send({success: "User has been created"})
 	} catch(e) {
-		res.sendStatus(500)
+		res.status(400).send('Error in register', e)
 	}
 })
 //UPDATE

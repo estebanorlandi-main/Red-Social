@@ -27,7 +27,7 @@ export function singUp(user) {
 export function logIn(user) {
   return (dispatch) =>
     axios
-      .post(`http://localhost:3001/user/login`, user)
+      .get(`http://localhost:3001/user/login`, user)
       .then((res) => dispatch({ type: LOG_IN, payload: res, user }))
       .catch((e) => console.log(e));
 }

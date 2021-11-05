@@ -1,5 +1,5 @@
 const axios = require('axios');
-const {User,Post,Comment,User_Comment,Comment_Post,Post_User,Likes,User_Follow, Support} = require('../db.js');
+const {User,Post,Comment,User_Comment,Comment_Post, Privileges,Post_User,Likes,User_Follow, Support} = require('../db.js');
 const db = require('../db.js');
 const { Sequelize } = require("sequelize");
 const Op = Sequelize.Op;
@@ -346,6 +346,15 @@ const BD_searchSupport = async()=>{
 	}
 }
 
+const BD_createPrivileges = async (userId,title) =>{
+	const privileges = await Privileges.create({
+		title,
+		userId,
+		checked: true 
+	})
+	return privileges
+}
+
 
 module.exports = {
 	DB_findUserAll,
@@ -370,5 +379,6 @@ module.exports = {
 	DB_findUsersEmail,
 	DB_findUsersUsername,
 	DB_UserFollow,
-	BD_searchSupport
+	BD_searchSupport,
+	BD_createPrivileges
 }
