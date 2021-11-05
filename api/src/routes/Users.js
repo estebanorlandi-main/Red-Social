@@ -4,21 +4,39 @@ const fn = require("./utils.js");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
+const sanitizeUser = (data) => {
+  if (Array.isArray(data)) {
+    return data.map((user) => ({
+      username: user.username,
+      name: user.name,
+      lastname: user.lastname,
+      gitaccount: user.gitaccount,
+      image: userCreated.image,
+      email: user.email,
+      about: user.about,
+      tags: user.tags,
+    }));
+  }
+
+  return {
+    username: data.username,
+    name: data.name,
+    lastname: data.lastname,
+    gitaccount: data.gitaccount,
+    image: data.image,
+    email: data.email,
+    about: data.about,
+    tags: data.tags,
+  };
+};
+
 //MAIN USER
 router.get("/", async (req, res, next) => {
   try {
     if (Object.keys(req.query).length != 0) return next();
     let findUsers = await fn.DB_findUserAll();
 
-    findUsers = findUsers.map((user) => ({
-      username: user.username,
-      name: user.name,
-      lastname: user.lastname,
-      gitaccount: user.gitaccount,
-      email: user.email,
-      about: user.about,
-      tags: user.tags,
-    }));
+    findUsers = sanitizeUser(findUsers);
 
     res.send(findUsers);
   } catch (e) {
@@ -33,16 +51,7 @@ router.get("/", async (req, res, next) => {
     if (req.query.email || req.query.username) {
       let findUser = await fn.DB_findUserQuery(req.query);
 
-      findUser = findUser.map((user) => ({
-        username: user.username,
-        name: user.name,
-        lastname: user.lastname,
-        gitaccount: user.gitaccount,
-        image: user.image,
-        email: user.email,
-        about: user.about,
-        tags: user.tags,
-      }));
+      findUser = sanitizeUser(findUser);
 
       if (findUser != null) return res.send(findUser);
       res.send({ errors: "User not found" }).status(200);
@@ -57,16 +66,7 @@ router.get("/:username", async (req, res, next) => {
   try {
     let findUser = await fn.DB_findUserParams(req.params.username);
 
-    findUser = {
-      username: findUser.username,
-      name: findUser.name,
-      lastname: findUser.lastname,
-      gitaccount: findUser.gitaccount,
-      image: findUser.image,
-      email: findUser.email,
-      about: findUser.about,
-      tags: findUser.tags,
-    };
+    findUser = sanitizeUser(findUser);
 
     findUser
       ? res.send(findUser)
@@ -79,6 +79,9 @@ router.get("/:username", async (req, res, next) => {
 router.get("/:username/posts", async (req, res, next) => {
   try {
     const findUser = await fn.DB_findUserParams(req.params.username);
+
+    findUser = sanitizeUser(findUser);
+
     findUser
       ? res.send(findUser.posts)
       : res.send({ errors: "USER not found" }).status(200);
@@ -116,7 +119,10 @@ router.post("/register", async (req, res, next) => {
     if (validate.email || validate.name || validate.lastname)
       return res.send(validate).status(400);
 
-    const userCreated = await fn.DB_findUsersUsername(req.body.username);
+    let userCreated = await fn.DB_findUsersUsername(req.body.username);
+
+    userCreated = sanitizeUser(userCreated);
+
     return res.send({ user: userCreated, success: true });
   } catch (e) {
     res.sendStatus(500).send({ errors: e, success: false });
@@ -130,14 +136,17 @@ router.put("/:id", async (req, res, next) => {
       if (errors.password) return res.send(errors).status(400);
       else req.body.password = bcrypt.hashSync(req.body.password, saltRounds);
     }
+
     let validate = await fn.DB_updateUser(req.body, req.params.id);
+
     if (Object.keys(validate).length) return res.send(validate).status(400);
-    else {
-      return res.send({ success: "User has been updated" });
-    }
-    res.send({ errors: "USER not found" }).status(200);
+
+    let userUpdated = await fn.DB_findUsersUsername(req.body.username);
+
+    userUpdated = sanitizeUser(validate);
+    return res.send({ user: userUpdated, success: true });
   } catch (e) {
-    res.sendStatus(500);
+    res.sendStatus(500).send({ errors: e, success: false });
   }
 });
 //FOLLOW/UNFOLLOW

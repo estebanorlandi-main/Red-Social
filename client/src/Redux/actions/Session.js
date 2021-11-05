@@ -20,7 +20,9 @@ export function singUp(user) {
   return (dispatch) =>
     axios
       .post(`http://localhost:3001/user/register`, user)
-      .then((res) => dispatch({ type: SIGN_UP, payload: res }))
+      .then((res) => {
+        dispatch({ type: SIGN_UP, payload: res });
+      })
       .catch((err) => console.log(err));
 }
 
