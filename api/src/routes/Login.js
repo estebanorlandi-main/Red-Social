@@ -25,6 +25,17 @@ router.post("/", async (req, res) => {
       tags: userLogin.tags,
     };
 
+    const id = userLogin.id
+      const token = jwt.sign({id:id}, JWT_SECRET, {
+        expiresIn: JWT_EXPIRE_TIM 
+      })
+    const cookiesOptions = {
+        expires: new Date(Date.now()+JWT_COOKIE_EXPIRE* 3600 * 1000),
+        httponly: true,
+        Secure: true
+    }
+
+    res.cookie('jwt', token, cookiesOptions)
     res.status(200).send({ user: sanitized, success: true });
   } catch (e) {
     res.status(404).send({ errors: e, success: false });
