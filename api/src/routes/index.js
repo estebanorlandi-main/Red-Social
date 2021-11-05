@@ -1,7 +1,9 @@
 const { Router } = require("express");
-
 const router = Router();
 
+//Controladores de sesion
+
+const AuthControllers = require('../controllers/AuthControllers.js')
 
 // importar todas las routes
 const Users = require("./Users.js")
@@ -31,13 +33,14 @@ router.get('/', (req,res)=>{
 	})
 })
 
-
+//Middlewares
 router.use("/user", Users);
-router.use("/comment", Comments);
-router.use("/post", Post);
+router.use("/comment", AuthControllers.isAuthenticated, Comments);
+router.use("/post", AuthControllers.isAuthenticated, Post);
 router.use("/login", Login);
-router.use("/tags", Tags)
-router.use("/likes", Likes);
-router.use("/support",Support);
+router.use("/tags", AuthControllers.isAuthenticated, Tags)
+router.use("/likes",  AuthControllers.isAuthenticated, Likes);
+router.use("/support",  AuthControllers.isAuthenticated, Support);
+router.get('/logout', AuthControllers.logout)
 
 module.exports = router;
