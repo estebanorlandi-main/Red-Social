@@ -7,6 +7,8 @@ import Profile from "./Pages/Profile/Profile.jsx";
 import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import NavBar from "./components/NavBar/NavBar.js";
+
+import Messenger from "./Pages/Messenger/Messenger";
 import Support from "./components/Support/Support";
 
 import Popup from "./components/Support/SupportLocalPopUp.jsx";
@@ -35,6 +37,7 @@ function App() {
           }) => <Profile username={username} />}
         />
 
+        <Route exact path='/messenger' component={Messenger}/>
         <Route
           path="/test"
           render={() => {
