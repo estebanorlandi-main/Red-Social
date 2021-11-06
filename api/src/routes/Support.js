@@ -14,7 +14,13 @@ router.post("/", async (req, res) =>{
         postReported,
         commentReported,
         userReported} = req.body
-
+        
+    
+        if(!postReported && !commentReported && !userReported){
+            postReported = null;
+            commentReported = null;
+            userReported = null;
+        }
         const user = await DB_findUsersUsername(username)
         var createMessage = await Support.findOrCreate({
             where:{

@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
     }
 
     let userLogin = await DB_userSearch(username, email, password);
-    
+
 
     if (userLogin.error) throw new Error(userLogin.error);
 
