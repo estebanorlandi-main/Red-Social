@@ -1,30 +1,56 @@
-import { SIGN_UP, LOG_IN, LOG_OUT, UPDATE_USER } from "../actions/Session";
+import axios from "axios";
+import { ERROR } from "./Errors";
 
-import Cookie from "universal-cookie";
-const cookie = new Cookie();
+export const LOG_IN = "LOG_IN";
+export const LOG_OUT = "LOG_OUT";
+export const SIGN_UP = "SIGN_UP";
+export const UPDATE_USER = "UPDATE_USER";
 
-const initialState = cookie.get("codenet_user") || {};
+// - Modelo -
+// username
+// name
+// lastname
+// password
+// email
+// gitaccount
+// image
+// about
+// tags
 
-export default function root(state = initialState, action) {
-  switch (action.type) {
-    case LOG_IN:
-      cookie.set("codenet_user", action.payload.data.user, { path: "/" });
-      return cookie.get("codenet_user");
+export function singUp(user) {
+  return (dispatch) =>
+    axios
+      .post(`http://localhost:3001/user/register`, user, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        dispatch({ type: SIGN_UP, payload: res });
+      })
+      .catch((err) => dispatch({ type: ERROR, payload: err }));
+}
 
-    case SIGN_UP:
-      cookie.set("codenet_user", action.payload.data.user, { path: "/" });
-      return cookie.get("codenet_user");
+export function logIn(user) {
+  return (dispatch) =>
+    axios
+      .post(`http://localhost:3001/login`, user, { withCredentials: true })
+      .then((res) => dispatch({ type: LOG_IN, payload: res }))
+      .catch((err) => dispatch({ type: ERROR, payload: err }));
+}
 
-    case LOG_OUT:
-      cookie.remove("codenet");
-      cookie.remove("codenet_user");
-      return {};
+export function updateUser(username, user) {
+  return (dispatch) =>
+    axios
+      .put(`http://localhost:3001/user/${username}`, user, {
+        withCredentials: true,
+      })
+      .then((res) => dispatch({ type: UPDATE_USER, payload: res }))
+      .catch((err) => dispatch({ type: ERROR, payload: err }));
+}
 
-    case UPDATE_USER:
-      cookie.set("codenet_user", action.payload.data.user, { path: "/" });
-      return cookie.get("codenet_user");
-
-    default:
-      return state;
-  }
+export function logOut() {
+  return (dispatch) =>
+    axios
+      .get(`http://localhost:3001/logout`, { withCredentials: true })
+      .then((res) => dispatch({ type: LOG_OUT, res }))
+      .catch((err) => dispatch({ type: ERROR, payload: err }));
 }
