@@ -22,6 +22,7 @@
       background-color: #1877f2;
       color: white;
       max-width: 300px;
+      word-wrap: break-word
   }
   
   .messageBottom{
@@ -37,6 +38,10 @@
   }
   
   .messageOwn .messageText{
-      background-color: rgb(245, 241, 241);
+      background-color: rgb(219, 235, 255);
       color: black;
+      padding: 10px;
+      border-radius: 20px;
+      max-width: 300px;
+      word-wrap: break-word
   }
