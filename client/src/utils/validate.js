@@ -29,20 +29,14 @@ export function validarUsername(str) {
     "",
     "Este campo es Obligatorio",
     "Solo numeros y letras",
-    "Minimo 1 letra",
-    "Minimo 1 numero",
     "Minimo 3 caracteres",
     "Maximo 16 caracteres",
-    "Este nombre de usuario ya existe",
   ];
 
   if (!str.length) return errType[1];
-  if (str.length < 3) return errType[5];
-  if (str.length > 16) return errType[6];
-  if (!tieneLet(str)) return errType[3];
-  if (!tieneNum(str)) return errType[4];
+  if (str.length < 3) return errType[3];
+  if (str.length > 16) return errType[4];
   if (tieneSimb(str)) return errType[2];
-  //if (existe()) return errType[7];
 
   return errType[0];
 }
@@ -52,45 +46,63 @@ export function validarPassword(str) {
     "",
     "Este campo es Obligatorio",
     "Solo numeros y letras",
-    "Minimo 1 letra",
-    "Minimo 1 numero",
     "Minimo 8 caracteres",
     "Maximo 16 caracteres",
   ];
 
   if (!str.length) return errType[1];
-  if (str.length < 8) return errType[5];
-  if (str.length > 16) return errType[6];
-  if (!tieneLet(str)) return errType[3];
-  if (!tieneNum(str)) return errType[4];
+  if (str.length < 8) return errType[3];
+  if (str.length > 16) return errType[4];
   if (tieneSimb(str)) return errType[2];
 
   return errType[0];
 }
 
 export function validarNombreyApellido(str) {
-  const errType = ["", "Este campo es Obligatorio", "Solo letras"];
+  const errType = [
+    "",
+    "Este campo es Obligatorio",
+    "Solo letras",
+    "Minimo 2 caracteres",
+    "Maximo 30 caracteres",
+  ];
+
   if (!str.length) return errType[1];
+  if (str.length < 2) return errType[3];
+  if (str.length > 30) return errType[4];
   if (tieneNum(str) || tieneSimb(str)) return errType[2];
+
   return errType[0];
 }
 
 export function validarEmail(str) {
   const errType = ["", "Este campo es Obligatorio"];
   if (!str.length) return errType[1];
-  if (str.length) return errType[0];
+  return errType[0];
 }
 
 export function validarGithub(str) {
   const errType = ["", "Este campo es Obligatorio"];
   if (!str.length) return errType[1];
-  if (str.length) return errType[0];
+  return errType[0];
+}
+
+export function validarImagen(str) {
+  if (str.length && !str.match(/\.(gif|jpg|jpeg|tiff|png)$/i))
+    return "Image not valid";
+  return "";
+}
+
+export function validarAbout(str) {
+  if (str.length && str.length < 5) return "Minimo 5 caracteres";
+  if (str.length && str.length > 1000) return "Maximo 1000 caracteres";
+  return "";
 }
 
 // 1. nombre del input y valor
 // 2. objeto con todos los nombres y valores
 // si el input no se encuentra devuelve 'field not found' en el valor del input
-export default function validate(input, value, cb) {
+export default function validate(input, value) {
   const errors = {};
 
   if (typeof input === "object") {
@@ -100,7 +112,9 @@ export default function validate(input, value, cb) {
       if (p === "name") errors[p] = validarNombreyApellido(input[p]);
       if (p === "lastname") errors[p] = validarNombreyApellido(input[p]);
       if (p === "email") errors[p] = validarEmail(input[p]);
-      if (p === "gitaccount") errors[p] = validarUsername(input[p]);
+      if (p === "gitaccount") errors[p] = validarGithub(input[p]);
+      if (p === "image") errors[p] = validarImagen(input[p]);
+      if (p === "About") errors[p] = validarAbout(input[p]);
     }
     return errors;
   }
@@ -111,6 +125,8 @@ export default function validate(input, value, cb) {
   if (input === "lastname") return validarNombreyApellido(value);
   if (input === "email") return validarEmail(value);
   if (input === "gitaccount") return validarGithub(value);
+  if (input === "image") return validarImagen(value);
+  if (input === "about") return validarAbout(value);
 
   return "Field not found";
 }

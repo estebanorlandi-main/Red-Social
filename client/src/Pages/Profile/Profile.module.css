@@ -3,10 +3,10 @@
 }
 .container {
   --br: 10px;
-  width: 85vw;
-  margin: 0 auto;
+  width: 50vw;
+  margin: 1em auto;
   display: grid;
-  grid-template-columns: auto minmax(15em, 25em);
+  grid-template-columns: auto minmax(10em, 20em);
 }
 .container .image {
   max-width: 10em;
@@ -19,6 +19,7 @@
   padding: 2em;
   margin: 1em 1em;
   border-radius: var(--br);
+  box-shadow: 0 0.5em 1em #0001;
 }
 
 .left {
@@ -39,6 +40,7 @@
   font-size: 1.5rem;
   font-weight: 500;
 }
+
 .email,
 .github {
   display: block;
@@ -56,4 +58,10 @@
 }
 .right > section {
   height: 100%;
+}
+
+.posts {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }

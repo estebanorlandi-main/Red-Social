@@ -5,28 +5,38 @@ import NewPost from "../../components/NewPost/NewPost";
 import UserCard from "../../components/UserCard/UserCard";
 
 import styles from "./Home.module.css";
-import { getPosts } from "../../Redux/actions/Post";
+import { getPosts, updatePage } from "../../Redux/actions/Post";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
   const user = useSelector((state) => state.sessionReducer);
-
+  const page = useSelector((state) => state.postsReducer.page);
   const dispatch = useDispatch();
 
-  const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);
+  const [first, setFirst] = useState(true);
 
   const handleScroll = useCallback(() => {
     if (
       Math.ceil(window.innerHeight + window.scrollY) >=
       document.documentElement.scrollHeight
     )
-      setPage(page + 1);
+      dispatch(updatePage(false))
   }, [page]);
-
+  console.log(posts)
   useEffect(() => {
-    dispatch(getPosts());
-  }, [dispatch]);
+    console.log("entre")
+    if (first) {
+      dispatch(getPosts(0));
+      setFirst(false);
+      return
+    }
+    if (page === -1) {
+      window.scroll(0,0)
+      dispatch(updatePage(false))
+      return}
+    dispatch(getPosts(page));
+  }, [dispatch, page]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -34,8 +44,6 @@ function Home(props) {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [handleScroll]);
-
-  console.log("total posts: ", (page + 1) * 10);
 
   return (
     <div className={createPost ? styles.noScroll : ` ${styles.home}`}>
@@ -66,15 +74,11 @@ function Home(props) {
       )}
 
       <ul>
-        {posts.map((post, i) =>
-          i < (page + 1) * 10 ? (
-            <li>
-              <Post post={post} />
-            </li>
-          ) : (
-            ""
-          )
-        )}
+        {posts.map((post, i) => (
+          <li>
+            <Post post={post} />
+          </li>
+        ))}
       </ul>
       <div className={styles.cargando}>Cargando...</div>
     </div>

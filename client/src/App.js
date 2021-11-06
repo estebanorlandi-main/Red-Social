@@ -7,8 +7,11 @@ import Profile from "./Pages/Profile/Profile.jsx";
 import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import NavBar from "./components/NavBar/NavBar.js";
-import Messenger from "./Pages/Messenger/Messenger";
 
+import Messenger from "./Pages/Messenger/Messenger";
+import Support from "./components/Support/Support";
+
+import Popup from "./components/Support/SupportLocalPopUp.jsx"
 // Variables CSS
 import "./App.css";
 
@@ -22,6 +25,7 @@ function App() {
         <Route path="/home" component={Home} />
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
+        <Route path="/support" component={Support}/>
 
         <Route
           path="/profile/:username"
@@ -36,7 +40,7 @@ function App() {
         <Route
           path="/test"
           render={() => {
-            return <div />;
+            return <Popup />;
           }}
         />
       </Switch>

@@ -69,8 +69,9 @@ export default function Profile(props) {
   const handleSubmit = () => {
     const errs = validate(inputs);
     if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
+    console.log(profile.username, inputs);
 
-    dispatch(updateUser(profile.id, inputs));
+    dispatch(updateUser(profile.username, inputs));
     setEditar(false);
   };
 
@@ -173,7 +174,16 @@ export default function Profile(props) {
             <p>{profile.about}</p>
           )}
         </section>
-        {profile.posts ? profile.posts.map((post) => <Post post={post} />) : ""}
+        <section className={styles.posts}>
+          {profile.posts
+            ? profile.posts.map((post) => (
+                <Post
+                  customClass={styles.post}
+                  post={{ ...post, user: profile }}
+                />
+              ))
+            : ""}
+        </section>
       </div>
       <div className={styles.right}>
         <section>

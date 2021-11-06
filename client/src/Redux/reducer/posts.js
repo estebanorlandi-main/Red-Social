@@ -4,11 +4,15 @@ import {
   GET_POSTS,
   GET_POST_FOR_ID,
   GET_POST_FOR_USERNAME,
+  POST_DELETE,
+  UPDATE_PAGE,
 } from "../actions/Post";
 
 const initialState = {
   posts: [],
   post: {},
+  page: 0,
+  totalPages: 0,
 };
 
 export default function root(state = initialState, action) {
@@ -45,10 +49,16 @@ export default function root(state = initialState, action) {
       };
 
     case GET_POSTS:
-      console.log(action.payload);
+    if (action.page === 0) {
+        return {
+          ...state,
+          posts: action.payload.posts
+        }
+      }
       return {
         ...state,
-        posts: action.payload,
+        posts: [...state.posts, ...action.payload.posts],
+        totalPages: action.payload.totalPages,
       };
 
     case GET_POST_FOR_ID:
@@ -64,6 +74,20 @@ export default function root(state = initialState, action) {
         ...state,
         post: action.payload,
       };
+
+    case UPDATE_PAGE:
+      if (action.payload.bol) {
+        return ({
+          ...state,
+          page:-1,
+          posts:action.payload.post
+        })
+      }else {
+        return ({
+          ...state,
+          page: state.page + 1
+        })
+      }
 
     default:
       return state;
