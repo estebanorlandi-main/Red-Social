@@ -80,7 +80,9 @@ function Home(props) {
         </ul>
       </section>
 
-      <section>algo</section>
+      <section>
+        <div>algo</div>
+      </section>
     </div>
   );
 }

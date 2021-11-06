@@ -37,13 +37,14 @@ function App() {
           }) => <Profile username={username} />}
         />
 
-        <Route exact path='/messenger' component={Messenger}/>
+        <Route exact path="/messenger" component={Messenger} />
         <Route
           path="/test"
           render={() => {
             return <Popup />;
           }}
         />
+
         <Route
           path="/algo"
           render={() => {

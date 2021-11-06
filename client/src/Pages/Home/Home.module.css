@@ -15,12 +15,18 @@
 }
 
 .home section:last-child {
-  background-color: red;
   text-align: right;
 }
 
+.home section:last-child > div {
+  background-color: #fff;
+  margin-top: 2em;
+  border-radius: 10px;
+  padding: 1em;
+}
+
 .home section {
-  margin: 2em auto;
+  margin: 1em auto;
 }
 
 .sectionPosts {

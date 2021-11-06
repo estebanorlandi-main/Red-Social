@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { useState, useEffect } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useHistory, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../SearchBar/SearchBar";
 import logo from "../../images/logo.svg";
@@ -13,10 +13,23 @@ import { BiLogIn, BiLogOut } from "react-icons/bi";
 import { FaLaptopCode } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { GoSignIn } from "react-icons/go";
+import { FiLogOut } from "react-icons/fi";
 
 import newLogo from "../../images/deco.svg";
 export default function Navbar(props) {
+  const history = useHistory();
+  const user = useSelector((store) => store.sessionReducer);
   const isLanding = useLocation().pathname === "/";
+  const dispatch = useDispatch();
+
+  const [showMenu, setShowMenu] = useState(false);
+  const handleMenu = () => setShowMenu(!showMenu);
+
+  const logOutR = () => {
+    dispatch(logOut());
+    history.push("/home");
+  };
+
   return (
     <header className={styles.navbar + ` ${isLanding ? styles.landing : ""}`}>
       <nav className={styles.nav}>
@@ -36,9 +49,55 @@ export default function Navbar(props) {
                 Home
               </NavLink>
             </li>
+            <li></li>
+            <li>
+              <NavLink
+                className={styles.link}
+                activeClassName={styles.active}
+                to="/support"
+              >
+                Support
+              </NavLink>
+            </li>
           </ul>
 
           {isLanding ? "" : <SearchBar />}
+
+          {user.username ? (
+            <div className={styles.profile__container}>
+              <button onClick={handleMenu} className={styles.profile}>
+                <span>{user.username}</span> <img src={user.image} alt="" />
+              </button>
+              <div
+                className={
+                  `${showMenu ? styles.show : styles.hide} ` +
+                  styles.profile__menu
+                }
+              >
+                <Link
+                  className={`${styles.link}`}
+                  to={`/profile/${user.username}`}
+                >
+                  Profile <CgProfile />
+                </Link>
+                <button
+                  className={`${styles.link} ${styles.logout}`}
+                  onClick={() => logOutR()}
+                >
+                  Log Out
+                  <FiLogOut />
+                </button>
+              </div>
+            </div>
+          ) : (
+            <NavLink
+              className={styles.signup}
+              activeClassName={styles.active}
+              to="/login"
+            >
+              Log In
+            </NavLink>
+          )}
         </div>
       </nav>
     </header>
@@ -95,15 +154,7 @@ export default function Navbar(props) {
                   </Link>
                 </li>
                 <li>
-                  <Link className={styles.link} to="/home">
-                    <div
-                      onClick={() => dispatch(logOut())}
-                      className={styles.links}
-                    >
-                      <BiLogOut />
-                      <span>Log out</span>
-                    </div>
-                  </Link>
+                  
                 </li>
                 <li>
                   <Link className={styles.link} to={`/support`}>
