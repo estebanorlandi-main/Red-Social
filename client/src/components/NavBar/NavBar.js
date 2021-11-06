@@ -111,6 +111,14 @@ export default function NavBar(props) {
                 </div>
               </Link>
             </li>
+            <li>
+              <Link className={styles.link} to="/messenger">
+                <div className={styles.links}>
+                  <FaLaptopCode />
+                  <span>Messenger</span>
+                </div>
+              </Link>
+            </li>
           </ul>
         </nav>
       ) : (
