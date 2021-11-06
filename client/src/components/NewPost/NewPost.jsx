@@ -1,18 +1,19 @@
 import style from "./NewPost.module.css";
 import { useState } from "react";
-import { createPost } from "../../Redux/actions/Post.js";
-import { useDispatch } from "react-redux";
+import { createPost, updatePage } from "../../Redux/actions/Post.js";
+import { useDispatch,useSelector } from "react-redux";
+import Select from "react-select";
 
 export default function NewPost() {
   const dispatch = useDispatch();
-
+  const session = useSelector((state) => state.sessionReducer || {});
   const [data, setData] = useState({
     title: "",
     content: "",
     image: "",
-    tag: "",
-    likes: [],
-    username: "aca iria el nombre del usuario",
+    tag: [],
+    likes: 0,
+    username: session.username,
   });
 
   const [errores, setErrores] = useState({
@@ -24,10 +25,19 @@ export default function NewPost() {
     image: { indice: 0, err: ["", "Por lo menos un content o imagen"] },
   });
 
-  const [img, setImg] = useState({
-    url: "",
-    mostrar: false,
-  });
+  const options = [
+    { value: "js", label: "JavaScript" },
+    { value: "python", label: "Python" },
+    { value: "cpp", label: "C++" },
+    { value: "php", label: "PHP" },
+    { value: "java", label: "Java" },
+    { value: "c", label: "C" },
+    { value: "go", label: "Go" },
+    { value: "kotlin", label: "Kotiln" },
+    { value: "sql", label: "SQL" },
+    { value: "mongodb", label: "MongoDB" },
+    { value: "postgresql", label: "PostgreSQL" },
+  ];
 
   function separarTags(str) {
     var arr = str.split(",");
@@ -83,19 +93,6 @@ export default function NewPost() {
   }
 
   function handleChange(e) {
-    console.log(e.target.value.length);
-    if (e.target.name === "tag") {
-      separarTags(e.target.value);
-      return;
-    }
-    if (e.target.name === "image") {
-      setImg((old) => ({
-        ...old,
-        url: e.target.value,
-        mostrar: false,
-      }));
-      return;
-    }
     if (e.target.name === "content" && data.content.length === 1000) {
       if (e.target.value.length > 1000) {
         setErrores((old) => ({
@@ -121,22 +118,25 @@ export default function NewPost() {
     }));
   }
 
-  function handleSubmit(e) {
-    setImg((old) => ({
-      ...old,
-      mostrar: true,
-    }));
+  const handleSelect = (e) => {
+    setData((old) => ({ ...old, tag: e.map((option) => option.value) }));
+  };
+
+  async function handleSubmit(e) {
     e.preventDefault();
     if (verificar()) {
-      dispatch(createPost(data));
+      console.log(data)
+      let obj = await dispatch(createPost(data));
       setData({
         title: "",
         content: "",
         image: "",
-        tag: "",
-        likes: [],
-        username: "aca iria el nombre del usuario",
+        tag: [],
+        likes: 0,
+        username: session.username,
       });
+      console.log(obj)
+      dispatch(updatePage(true, obj.payload.posts))
     }
   }
   return (
@@ -191,7 +191,7 @@ export default function NewPost() {
 
       <label className={style.wrapper}>
         Tags
-        <input value={data.tag} name="tag" type="text" placeholder="Tags" />
+        <Select onChange={handleSelect} options={options} isMulti />
         <span className={style.error}></span>
       </label>
 

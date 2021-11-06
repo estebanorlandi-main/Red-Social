@@ -1,7 +1,8 @@
-const router = require('express').Router();
+const router = require("express").Router();
 const { Sequelize, Model } = require("sequelize");
-const fn = require("./utils.js")
-const bcrypt = require("bcrypt")
+const { User, Post } = require("../db.js");
+const fn = require("./utils.js");
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 //MAIN USER--
@@ -103,7 +104,5 @@ router.put("/:id", async (req,res,next)=>{
 // DB_validatePassword
 // DB_createUser
 // DB_updateUser
-
-
 
 module.exports = router;

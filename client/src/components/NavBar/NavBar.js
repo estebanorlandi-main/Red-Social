@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../SearchBar/SearchBar";
 import logo from "../../images/logo.svg";
 import logoDark from "../../images/logo-dark.svg";
-import { LogOut } from "../../Redux/actions/Profile.js";
+import { logOut } from "../../Redux/actions/Session.js";
 import styles from "./NavBar.module.css";
 
 import { ImHome3 } from "react-icons/im";
@@ -19,16 +19,15 @@ export default function NavBar(props) {
   const usuario = useSelector((store) => store.sessionReducer);
   const dispatch = useDispatch();
   const isLanding = useLocation().pathname === "/";
+
   useEffect(() => {
-    function verificar() {
-      if (usuario.username) {
-        setLoggedUser(true);
-      } else {
-        setLoggedUser(false);
-      }
+    if (usuario.username) {
+      setLoggedUser(true);
+    } else {
+      setLoggedUser(false);
     }
-    verificar();
   }, [usuario]);
+
   return (
     <header className={styles.navbar + ` ${isLanding ? styles.landing : ""}`}>
       {!isLanding ? (
@@ -39,10 +38,12 @@ export default function NavBar(props) {
               Code<span>Net</span>
             </h4>
           </Link>
+
           <SearchBar />
+
           <ul className={styles.nav}>
             <li>
-              <Link class={styles.link} to="/home">
+              <Link className={styles.link} to="/home">
                 <div className={styles.links}>
                   <ImHome3 />
                   <span>Home</span>
@@ -63,16 +64,22 @@ export default function NavBar(props) {
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                  className={styles.link}
-                  to="/home">
-                  <div
-                    onClick={() => dispatch(LogOut())}
-                    className={styles.links}
-                  >
-                    <BiLogOut />
-                    <span>Log out</span>
-                  </div>
+                  <Link className={styles.link} to="/home">
+                    <div
+                      onClick={() => dispatch(logOut())}
+                      className={styles.links}
+                    >
+                      <BiLogOut />
+                      <span>Log out</span>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link className={styles.link} to={`/support`}>
+                    <div className={styles.links}>
+                      {/* <CgProfile /> */}
+                      <span>Support</span>
+                    </div>
                   </Link>
                 </li>
               </Fragment>
@@ -97,10 +104,18 @@ export default function NavBar(props) {
               </Fragment>
             )}
             <li>
-              <Link class={styles.link} to="/test">
+              <Link className={styles.link} to="/test">
                 <div className={styles.links}>
                   <FaLaptopCode />
                   <span>Test</span>
+                </div>
+              </Link>
+            </li>
+            <li>
+              <Link className={styles.link} to="/messenger">
+                <div className={styles.links}>
+                  <FaLaptopCode />
+                  <span>Messenger</span>
                 </div>
               </Link>
             </li>
@@ -116,7 +131,7 @@ export default function NavBar(props) {
           </Link>
           <ul className={styles.nav}>
             <li>
-              <Link class={styles.link} to="/home">
+              <Link className={styles.link} to="/home">
                 Home
               </Link>
             </li>
@@ -133,7 +148,7 @@ export default function NavBar(props) {
                 <li>
                   <span
                     className={styles.link}
-                    onClick={() => dispatch(LogOut())}
+                    onClick={() => dispatch(logOut())}
                   >
                     Log Out
                   </span>
@@ -154,7 +169,7 @@ export default function NavBar(props) {
               </Fragment>
             )}
             <li>
-              <Link class={styles.link} to="/test">
+              <Link className={styles.link} to="/test">
                 test
               </Link>
             </li>

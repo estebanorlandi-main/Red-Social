@@ -1,41 +1,29 @@
+import { SIGN_UP, LOG_IN, LOG_OUT, UPDATE_USER } from "../actions/Session";
 
-const initialState = JSON.parse(localStorage.getItem("CodeNet")) || {};
+import Cookie from "universal-cookie";
+const cookie = new Cookie();
+
+const initialState = cookie.get("codenet_user") || {};
 
 export default function root(state = initialState, action) {
   switch (action.type) {
-    case "LOG_IN":
-      return action.payload
-    case "SING_UP":
-      const nuevos = JSON.parse(localStorage.getItem("NewUsers")) || [];
-      localStorage.setItem("NewUsers", JSON.stringify([...nuevos, action.payload]));
-      return action.payload
-    case "LOG_OUT":
-      return {}
-    case "CHANGE_SESSION":
-    const nuevos2 = JSON.parse(localStorage.getItem("NewUsers")) || [];
-    let arr = nuevos2.map((user)=>{
-      if (action.payload.user === user.username) {
-        return({
-          ...user,
-          name: action.payload.data.name,
-          lastName: action.payload.data.lastName,
-          about: action.payload.data.about,
-          tags: action.payload.data.tags,
-        })
-      }else {
-        return user
-      }
-    })
-    localStorage.setItem("NewUsers", JSON.stringify(arr));
-      return (
-        {
-          ...state,
-          name: action.payload.data.name,
-          lastName: action.payload.data.lastName,
-          about: action.payload.data.about,
-          tags: action.payload.data.tags,
-        }
-      )
+    case LOG_IN:
+      cookie.set("codenet_user", action.payload.data.user, { path: "/" });
+      return cookie.get("codenet_user");
+
+    case SIGN_UP:
+      cookie.set("codenet_user", action.payload.data.user, { path: "/" });
+      return cookie.get("codenet_user");
+
+    case LOG_OUT:
+      cookie.remove("codenet");
+      cookie.remove("codenet_user");
+      return {};
+
+    case UPDATE_USER:
+      cookie.set("codenet_user", action.payload.data.user, { path: "/" });
+      return cookie.get("codenet_user");
+
     default:
       return state;
   }

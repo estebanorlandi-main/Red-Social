@@ -1,27 +1,42 @@
 import { useState, useEffect, useCallback } from "react";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
 import Post from "../../components/Post/Post";
 import NewPost from "../../components/NewPost/NewPost";
 import UserCard from "../../components/UserCard/UserCard";
 
 import styles from "./Home.module.css";
+import { getPosts, updatePage } from "../../Redux/actions/Post";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
-  const user = useSelector(state => state.sessionReducer)
+  const user = useSelector((state) => state.sessionReducer);
+  const page = useSelector((state) => state.postsReducer.page);
+  const dispatch = useDispatch();
 
-  const [page, setPage] = useState(0);
   const [createPost, setCreatePost] = useState(false);
+  const [first, setFirst] = useState(true);
 
-  const handlePage = () => setPage(page + 1);
-
-  const handleScroll = useCallback(function handleScroll() {
-    const bottom =
+  const handleScroll = useCallback(() => {
+    if (
       Math.ceil(window.innerHeight + window.scrollY) >=
-      document.documentElement.scrollHeight;
-    if (bottom) handlePage();
-  });
+      document.documentElement.scrollHeight
+    )
+      dispatch(updatePage(false))
+  }, [page]);
+  console.log(posts)
+  useEffect(() => {
+    console.log("entre")
+    if (first) {
+      dispatch(getPosts(0));
+      setFirst(false);
+      return
+    }
+    if (page === -1) {
+      window.scroll(0,0)
+      dispatch(updatePage(false))
+      return}
+    dispatch(getPosts(page));
+  }, [dispatch, page]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -30,26 +45,21 @@ function Home(props) {
     };
   }, [handleScroll]);
 
-  console.log("total posts: ", (page + 1) * 10);
-
   return (
-    <div className={createPost ? styles.noScroll : "" + ` ${styles.home}`}>
-
+    <div className={createPost ? styles.noScroll : ` ${styles.home}`}>
       <UserCard />
-      
-    {
-       user && user.username? 
-      <div className={styles.newPostBtn}>
-        <button onClick={() => setCreatePost((old) => !old)}>
-          Create Post
-        </button>
-      </div>
-      :
-      <div></div>
-    }
-      
 
-      {/* createPost ? (
+      {user && user.username ? (
+        <div className={styles.newPostBtn}>
+          <button onClick={() => setCreatePost((old) => !old)}>
+            Create Post
+          </button>
+        </div>
+      ) : (
+        <div></div>
+      )}
+
+      {createPost ? (
         <div
           className={styles.newPost}
           id="close"
@@ -61,18 +71,14 @@ function Home(props) {
         </div>
       ) : (
         ""
-      ) */}
+      )}
 
       <ul>
-        {posts.map((post, i) =>
-          i < (page + 1) * 10 ? (
-            <li>
-              <Post post={post} />
-            </li>
-          ) : (
-            ""
-          )
-        )}
+        {posts.map((post, i) => (
+          <li>
+            <Post post={post} />
+          </li>
+        ))}
       </ul>
       <div className={styles.cargando}>Cargando...</div>
     </div>
