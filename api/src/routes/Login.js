@@ -14,7 +14,9 @@ router.post("/", async (req, res) => {
 
     let userLogin = await DB_userSearch(username, email, password);
 
-    if (userLogin.error) throw userLogin.error;
+
+    if (userLogin.error) throw new Error(userLogin.error);
+
 
     let sanitized = {
       username: userLogin.username,
@@ -44,3 +46,7 @@ router.post("/", async (req, res) => {
   }
 });
 module.exports = router;
+
+
+
+
