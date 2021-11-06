@@ -1,0 +1,28 @@
+
+.inputData{
+    background:#F3F2EF;
+    height: 32px;
+    border-radius: 8px;
+    padding-left: 0px;
+    margin-top: 1%;
+    position: relative;
+}
+
+.inputData input{
+   border: none;
+   background: none;  
+   outline: none;
+   float: right;
+   padding: 0;
+   color: #595959;
+   font-size: 14px;
+   line-height: 32px;
+   width: 280px;
+   padding-left: 10%;
+}
+
+.icon{
+ position: absolute;
+ top: 12%;
+ left: 2%
+}

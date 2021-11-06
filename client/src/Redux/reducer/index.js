@@ -1,21 +1,18 @@
 //const initialState = {}
 
-import posteos from "../../Mockups/post.json";
-import users from "../../Mockups/users.json";
-import comments from "../../Mockups/comments.json";
+import { combineReducers } from "redux";
 
-const initialState = {
-  posteos,
-  users,
-  comments,
-};
+import postsReducer from "./posts.js";
 
-function rootReducer(state = initialState, action) {
-  switch (action.type) {
-    default:
-      return state;
-  }
-}
+import sessionReducer from "./session.js";
 
-export default rootReducer;
+import usersReducer from "./users.js";
 
+import errorsReducer from "./errors.js";
+
+export default combineReducers({
+  postsReducer, // Array con todos los posteos / filtrar posteos - busqueda - ordernar
+  sessionReducer, // Objeto Datos del usuario logeado / login - logout - register
+  usersReducer, // Array con todos los usuarios / Filtrar usuarios - busqueda - ordenar
+  errorsReducer, // Contiene los errores de todos los reducers
+});

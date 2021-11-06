@@ -14,4 +14,11 @@ DB_PASSWORD=<la password que quieras>
 DB_HOST=localhost
 
 DB_NAME=<nombre DB>
+
+JWT_SECRET = <secret KEY>
+
+JWT_EXPIRE_TIME = <Expire time>
+
+JWT_COOKIE_EXPIRE = <Expire time for cookie>
 `
+funciona

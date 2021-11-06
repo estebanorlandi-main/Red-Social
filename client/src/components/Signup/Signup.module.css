@@ -1,0 +1,17 @@
+.container{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 550px;
+  align-items: flex-start;
+  margin-left: 20px;
+}
+.input{
+  margin-left: 20px;
+}
+.errores{
+  color:red;
+  font-size: 0.8em;
+  width: auto;
+  height: auto;
+}
