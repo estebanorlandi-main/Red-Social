@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../SearchBar/SearchBar";
 import logo from "../../images/logo.svg";
@@ -14,7 +14,38 @@ import { FaLaptopCode } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { GoSignIn } from "react-icons/go";
 
-export default function NavBar(props) {
+import newLogo from "../../images/deco.svg";
+export default function Navbar(props) {
+  const isLanding = useLocation().pathname === "/";
+  return (
+    <header className={styles.navbar + ` ${isLanding ? styles.landing : ""}`}>
+      <nav className={styles.nav}>
+        <Link className={styles.brand} to="/">
+          <img src={newLogo} width="20px" alt="" />
+          Code<span>Net</span>
+        </Link>
+
+        <div className={styles.right}>
+          <ul className={styles.menu}>
+            <li>
+              <NavLink
+                className={styles.link}
+                activeClassName={styles.active}
+                to="/home"
+              >
+                Home
+              </NavLink>
+            </li>
+          </ul>
+
+          {isLanding ? "" : <SearchBar />}
+        </div>
+      </nav>
+    </header>
+  );
+}
+
+/*export default function NavBar(props) {
   const [loggedUser, setLoggedUser] = useState(false);
   const usuario = useSelector((store) => store.sessionReducer);
   const dispatch = useDispatch();
@@ -77,7 +108,6 @@ export default function NavBar(props) {
                 <li>
                   <Link className={styles.link} to={`/support`}>
                     <div className={styles.links}>
-                      {/* <CgProfile /> */}
                       <span>Support</span>
                     </div>
                   </Link>
@@ -170,4 +200,4 @@ export default function NavBar(props) {
       )}
     </header>
   );
-}
+}*/
