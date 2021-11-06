@@ -1,11 +1,12 @@
 const { Router } = require("express");
 const { Sequelize, Model, Association } = require("sequelize");
+const AuthControllers = require('../controllers/AuthControllers.js')
 const {Support} = require('../db.js');
 const { DB_findUsersUsername } = require("./utils.js");
 const router = Router();
 
 
-router.post("/", async (req, res) =>{
+router.post("/", AuthControllers.isAuthenticated, async (req, res) =>{
     try{
 
         const {username,

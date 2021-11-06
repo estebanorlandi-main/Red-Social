@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const { Sequelize, Model } = require("sequelize");
+const { User } = require("../db.js")
+const AuthControllers = require('../controllers/AuthControllers.js')
 const fn = require("./utils.js");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -129,7 +131,7 @@ router.post("/register", async (req, res, next) => {
   }
 });
 //UPDATE
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", AuthControllers.isAuthenticated, async (req, res, next) => {
   try {
     if (req.body.password) {
       let errors = await fn.DB_validatePassword(req.body.password);
@@ -137,7 +139,13 @@ router.put("/:id", async (req, res, next) => {
       else req.body.password = bcrypt.hashSync(req.body.password, saltRounds);
     }
 
-    let validate = await fn.DB_updateUser(req.body, req.params.id);
+    const UserID = await User.findOne({
+      where: {
+        'username':req.params.id
+      },
+    });
+
+    let validate = await fn.DB_updateUser(req.body, UserID.id);
 
     if (Object.keys(validate).length) return res.send(validate).status(400);
 
@@ -150,7 +158,7 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 //FOLLOW/UNFOLLOW
-router.post("/follow", async (req, res, next) => {
+router.post("/follow", AuthControllers.isAuthenticated, async (req, res, next) => {
   const validate = await fn.DB_UserFollow(req.body);
 
   return res.send("ok");

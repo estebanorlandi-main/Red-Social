@@ -35,12 +35,12 @@ router.get('/', (req,res)=>{
 
 //Middlewares
 router.use("/user", Users);
-router.use("/comment", AuthControllers.isAuthenticated, Comments);
+router.use("/comment", Comments);
 router.use("/post", Post);
 router.use("/login", Login);
-router.use("/tags", AuthControllers.isAuthenticated, Tags)
-router.use("/likes",  AuthControllers.isAuthenticated, Likes);
-router.use("/support",  AuthControllers.isAuthenticated, Support);
+router.use("/tags", Tags)
+router.use("/likes", Likes);
+router.use("/support", Support);
 router.get('/logout', AuthControllers.logout)
 
 module.exports = router;

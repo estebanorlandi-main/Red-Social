@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { Sequelize, Model } = require("sequelize");
+const AuthControllers = require('../controllers/AuthControllers.js')
 const { User, Post } = require("../db.js");
 const {
   DB_UserID,
@@ -84,7 +85,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", AuthControllers.isAuthenticated, async (req, res, next) => {
   const { title, content, image, tag, likes, username } = req.body;
   try {
     let userDB = await DB_UserID(username);
@@ -107,7 +108,7 @@ router.post("/", async (req, res, next) => {
 });
 
 //Eliminacion de un Post
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", AuthControllers.isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     const deletePost = await DB_Postdestroy(id);
@@ -121,7 +122,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 //Edicion de post
-router.put("/:id", async (req, res) => {
+router.put("/:id", AuthControllers.isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     const updatePost = await DB_Postedit(id, req.body);

@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const AuthControllers = require('../controllers/AuthControllers.js')
 const {User,
 	Post,
 	Comment,
@@ -21,7 +22,7 @@ router.get('/:username', async (req, res)=>{
 	}
 })
 
-router.post('/', async (req, res)=>{
+router.post('/', AuthControllers.isAuthenticated, async (req, res)=>{
 	try {
 		const {content, username, postid} = req.body
 		const UserAssociation = await database_Utils.DB_UserID(username)
@@ -37,7 +38,7 @@ router.post('/', async (req, res)=>{
 	}
 })
 
-router.put('/:id', async (req, res)=>{
+router.put('/:id', AuthControllers.isAuthenticated, async (req, res)=>{
 	if(!req.body.contentData){
 		return res.status(404).send('Invalid content for editing')	
 	}
@@ -52,7 +53,7 @@ router.put('/:id', async (req, res)=>{
 	}
 })
 
-router.delete('/:id', async (req, res)=>{
+router.delete('/:id', AuthControllers.isAuthenticated, async (req, res)=>{
 	try {
 		const {id} = req.params
 		const Comment = await database_Utils.DB_Commentdestroy(id)
