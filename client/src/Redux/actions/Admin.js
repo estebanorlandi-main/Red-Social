@@ -15,9 +15,12 @@ export function sidnupAdmin(admin){
 export function loginAdmin(admin){
     return (dispatch) =>
         axios   
-            .post(`http://localhost:3001/login/`, admin)
-            .then((res) => dispatch({type: LOGIN_ADMIN, payload:res, admin}))
-            .catch((e) => console.log("Error in login admin", e))
+            .post(`http://localhost:3001/login/`,admin)
+            .then((res) => dispatch({type: LOGIN_ADMIN, payload:res}))
+            .catch((e) =>
+                console.log('Error in authentication admin ',e),
+                alert("Error your not admin")
+            )
 }
 
 export function logOutAdmin(){

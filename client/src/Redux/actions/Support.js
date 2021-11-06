@@ -9,11 +9,10 @@ export function createSupport(payload){
 }
 
 export function getSupport(){
-    console.log("entraaa")
-    return async function (dispatch){
-        return (dispatch) =>
-        axios
-          .get(`http://localhost:3001/support`)
-          .then((res) => dispatch({ type: GET_SUPPORT_MESSAGE, payload: res.data } ));
-    }
+    return (dispatch) =>
+    axios
+      .get(`http://localhost:3001/support`)
+      .then((res) => dispatch({ type: GET_SUPPORT_MESSAGE, payload: res.data } ));
+     
+
 }

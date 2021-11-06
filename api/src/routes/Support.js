@@ -43,6 +43,7 @@ router.post("/", async (req, res) =>{
 router.get("/", async (req, res) =>{
     try{
         const allMessage = await BD_searchSupport();
+        console.log(allMessage)
         res.status(200).send(allMessage)
     }catch(e){
         console.log("Error in support",e)

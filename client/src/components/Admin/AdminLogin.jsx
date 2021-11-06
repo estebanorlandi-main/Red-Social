@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import style from "./styless.css"
 import { Link } from "react-router-dom";
 import { loginAdmin } from "../../Redux/actions/Admin";
@@ -8,12 +8,18 @@ import { Redirect } from "react-router";
 
 export default function AdminLogin(){
     const dispatch = useDispatch();
+    // var [flags, setFlags]= useState(true)
     const [input, setInput] = useState({
-        username: "",
-        password:"",
-        title:""});
-    
-    const [logged, setLogged] = useState(false);
+      username: "",
+      password:"",
+      title:""});
+      var admin = useSelector(state => state.adminReducer.admin)
+      
+      const [error, setError] = useState({});
+      // useEffect(()=>{
+      //   console.log('Entra')
+      //   dispatch(loginAdmin(input));
+      // },)
     
     const handleChange = (e)=>{
         setInput({
@@ -21,26 +27,25 @@ export default function AdminLogin(){
             [e.target.name]: e.target.value.replaceAll(/^\s+/g, ""),
           });
     }
+    
     const handleSubmit=(e)=>{
         e.preventDefault();
         const errors = validate(input);
-        
-        if (!Object.values(errors).filter((error) => error).length) {
-            dispatch(loginAdmin(input));
-      
-            setInput({
-              username: "",
-              password: "",
-              title:""
-            });
-            setLogged(true);
-          } else {
+        if (Object.values(errors).filter((error) => error).length) {
             alert("Usuario o contrasena no validas");
-          }
-    }
+          }else{ 
+            setError({message:"Error your not admin"})
+            dispatch(loginAdmin(input));
+        }       
+        
+      }
+   
+    console.log(admin)
+    console.log(error)
     return(
         <div>{
-          logged ? (
+          
+          admin.admin ==true ? (
             <Redirect to="/supportAdmin"/>
           ):(
             <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
