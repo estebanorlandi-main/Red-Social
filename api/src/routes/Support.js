@@ -23,7 +23,7 @@ router.post("/", async (req, res) =>{
                 postReported,
                 commentReported,
                 userReported,
-                userId:user.id
+                username:user.username
             }
         })
 
