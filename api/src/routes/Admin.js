@@ -1,8 +1,11 @@
 const { Router } = require("express");
-const {DB_userSearch,DB_validatePassword, DB_findUserCreated,DB_createUser} = require("./utils.js");
-const router = Router();
 const {Privileges} = require("../db.js");
-
+const { DB_UserID,BD_createPrivileges,DB_validatePassword,DB_findUserCreated, DB_userSearch,DB_createUser, DB_findUsersUsername } = require("./utils.js");
+const router = Router();
+const bcrypt = require("bcrypt")
+const saltRounds = 10;
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET, JWT_EXPIRE_TIME, JWT_COOKIE_EXPIRE } = process.env;
 
 router.post('/', async (req, res) => {
     const {email, username, password, title} = req.body;
@@ -11,43 +14,43 @@ router.post('/', async (req, res) => {
             res.status(400).send(`Error, you must provide an email or username`);
           }
           
-          if(!title) return res.status(400).send({error:'Error missing admin title'})
+        if(!title) return res.status(400).send({error:'Error missing admin title'})
+        
+        else{
           
-          else{
-            
-            let userLogin = await DB_userSearch(username, email, password);
-            if (userLogin.error) throw new Error(userLogin.error);
-            
-            const admin = await Privileges.findOne({ where:{userId:userLogin.id}});
-            
-            if(admin === null){
-                return res.status(400).send('Error your not admin')
-            
-            }else{
-                let sanitized = {
-                    username: userLogin.username,
-                    name: userLogin.name,
-                    lastname: userLogin.lastname,
-                    email: userLogin.email,
-                    gitaccount: userLogin.gitaccount,
-                    image: userLogin.image,
-                    about: userLogin.about,
-                    tags: userLogin.tags,
-                  };
-              
-                  const id = userLogin.id;
-                  const token = jwt.sign({ id: id }, JWT_SECRET, {
-                    expiresIn: JWT_EXPIRE_TIME,
-                  });
-                  const cookiesOptions = {
-                    expires: new Date(Date.now() + JWT_COOKIE_EXPIRE * 3600 * 1000),
-                    httponly: true,
-                    Secure: true,
-                  };
-              
-                  res.cookie("codenet", token, cookiesOptions);
-                  res.status(200).send({ user: sanitized, success: true , admin:true});
-            }
+          let userLogin = await DB_userSearch(username, email, password);
+          if (userLogin.error) throw new Error(userLogin.error);
+          
+          const admin = await Privileges.findOne({ where:{userId:userLogin.id}});
+          
+          if(admin === null){
+              return res.status(400).send('Error your not admin')
+          
+          }else{
+              let sanitized = {
+                  username: userLogin.username,
+                  name: userLogin.name,
+                  lastname: userLogin.lastname,
+                  email: userLogin.email,
+                  gitaccount: userLogin.gitaccount,
+                  image: userLogin.image,
+                  about: userLogin.about,
+                  tags: userLogin.tags,
+              };
+                           
+              const id = userLogin.id;       
+              const token = jwt.sign({ id: id }, JWT_SECRET, {
+                expiresIn: JWT_EXPIRE_TIME,
+              });
+              const cookiesOptions = {
+                expires: new Date(Date.now() + JWT_COOKIE_EXPIRE * 3600 * 1000),
+                httponly: true,
+                Secure: true,
+              };
+          
+              res.cookie("codenet", token, cookiesOptions);
+              res.status(200).send({ user: sanitized, success: true , admin:true});
+          }
         }
     }catch(e){
         console.log(e);
@@ -69,9 +72,14 @@ router.post('/', async (req, res) => {
       if(validate.email || validate.name || validate.lastname) return res.send(validate).status(400)
       
       const user = await DB_findUsersUsername(username)
+      const privileges = await BD_createPrivileges(user, title) 
       console.log(user.id)
-      const privileges = await BD_createPrivileges(user.id, title) 
-      res.status(200).send(privileges)
+      const admin ={
+        username:privileges.username,
+        checked:privileges.checked,
+        title:privileges.title
+      }
+      res.status(200).send(admin)
     } catch (e) {
       res.status(404).send('Error in privileges', e);
     }

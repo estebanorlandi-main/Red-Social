@@ -9,6 +9,7 @@ const {
   Likes,
   User_Follow,
   Support,
+  Privileges
 } = require("../db.js");
 const db = require("../db.js");
 const { Sequelize } = require("sequelize");
@@ -391,12 +392,15 @@ const BD_searchSupport = async () => {
   }
 };
 
-const BD_createPrivileges = async (userId,title) =>{
-	const privileges = await Privileges.create({
+const BD_createPrivileges = async (user,title) =>{
+	var privileges = await Privileges.create({
 		title,
-		userId,
+		userId:user.id,
+    username:user.username,
 		checked: true 
 	})
+  // privileges.findOne({include:User.username})
+  console.log(privileges)
 	return privileges
 }
 
