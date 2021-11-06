@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
 
     let userLogin = await DB_userSearch(username, email, password);
 
-    if (userLogin.error) throw new Error(userLogin.error);
+    if (userLogin.error) throw userLogin.error;
 
     let sanitized = {
       username: userLogin.username,
@@ -40,8 +40,7 @@ router.post("/", async (req, res) => {
     res.cookie("codenet", token, cookiesOptions);
     res.status(200).send({ user: sanitized, success: true });
   } catch (e) {
-    console.log(e);
-    res.status(404).send({ errors: e, success: false });
+    res.status(500).send({ errors: e, success: false });
   }
 });
 module.exports = router;
