@@ -1,48 +1,49 @@
-const router = require('express').Router();
+const router = require("express").Router();
 const { Sequelize, Model } = require("sequelize");
-const fn = require("./utils.js")
-const db = require('../db.js');
-const bcrypt = require("bcrypt")
+const fn = require("./utils.js");
+const db = require("../db.js");
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 //MAIN USER
-router.get("/", async (req,res,next)=>{
-	try {
-		let findLikes = await db.Likes.findAll({include:[{
-	model:db.User,
-	attributes:["username","image"]
-}],
-// attributes:[]
-})
-		res.send(findLikes)
-	} catch(e) {
-		res.sendStatus(500)
-	}
-})
+router.get("/", async (req, res, next) => {
+  try {
+    let findLikes = await db.Likes.findAll({
+      include: [
+        {
+          model: db.User,
+          attributes: ["username", "image"],
+        },
+      ],
+      // attributes:[]
+    });
+    res.send(findLikes);
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
 //POSTS Likes/Dislike
-router.post("/", async (req,res,next)=>{
-	const {userId,postIdPost} = req.body
-	if(!userId || !postIdPost) return res.send({errors:"datos falsos"})
-	try {
-		let findPost = await db.Likes.findOne({where:{userId,postIdPost}}).catch(e=> ({errors:"fatal errors"}))
-		if(findPost && findPost.errors) return res.send(findPost)
-		if(findPost){
-			findPost.destroy()
-			return res.send({like:"se elimino el like"})
-		}
-	let likePost = await db.Likes.create(req.body)
-	if(likePost) return res.send({like:"se agrego un like"});
-	else return res.send({errors: "Post not found"}).status(200)
-	} catch(e) {
-		res.sendStatus(500)
-	}
-})
-
-
-
-
-
-
+router.post("/", async (req, res, next) => {
+  console.log(req.body);
+  return;
+  const { userId, postIdPost } = req.body;
+  if (!userId || !postIdPost) return res.send({ errors: "datos falsos" });
+  try {
+    let findPost = await db.Likes.findOne({
+      where: { userId, postIdPost },
+    }).catch((e) => ({ errors: "fatal errors" }));
+    if (findPost && findPost.errors) return res.send(findPost);
+    if (findPost) {
+      findPost.destroy();
+      return res.send({ like: "se elimino el like" });
+    }
+    let likePost = await db.Likes.create(req.body);
+    if (likePost) return res.send({ like: "se agrego un like" });
+    else return res.send({ errors: "Post not found" }).status(200);
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
 
 // //QUERY USER
 // router.get("/", async (req,res,next)=>{
@@ -51,7 +52,7 @@ router.post("/", async (req,res,next)=>{
 // 			let findUser = await fn.DB_findUserQuery(req.query)
 // 			if(findUser != null) return res.send(findUser)
 // 		}
-// 		res.send({errors:"USER not found"}).status(200) 		
+// 		res.send({errors:"USER not found"}).status(200)
 // 	} catch(e) {
 // 		res.status(500)
 // 	}
@@ -106,7 +107,7 @@ router.post("/", async (req,res,next)=>{
 // })
 // //UPDATE
 // router.put("/:id", async (req,res,next)=>{
-// 	try {	
+// 	try {
 // 		if(req.body.password){
 // 			let errors = await fn.DB_validatePassword(req.body.password)
 // 			if(errors.password) return res.send(errors).status(400)
@@ -116,13 +117,11 @@ router.post("/", async (req,res,next)=>{
 // 		if(Object.keys(validate).length) return res.send(validate).status(400)
 // 		else {
 // 			return res.send({success: "User has been updated"})
-// 		} 	
+// 		}
 // 		res.send({errors:"USER not found"}).status(200)
 // 	} catch(e) {
 // 		res.sendStatus(500)
 // 	}
 // })
-
-
 
 module.exports = router;
