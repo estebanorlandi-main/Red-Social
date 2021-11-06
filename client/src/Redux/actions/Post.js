@@ -88,6 +88,13 @@ export function getPostForUsername(username) {
 export function updatePage(bol, post){
   return ({type:UPDATE_PAGE, payload:{bol, post}})
 }
+
+export function likePost(data){
+  return (dispatch) =>
+  axios
+  .post("http://localhost:3001/likes", data, {withCredentials:true})
+  .then(res => ({type: POST_LIKE, payload: res.data}))
+}
 /*
 export function likePost(idPost, username) {
   return { type: POST_LIKE, payload: { idPost, username } };

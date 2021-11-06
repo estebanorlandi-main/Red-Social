@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { commentPost, deletePost, updatePost,getPosts, updatePage } from "../../Redux/actions/Post";
+import { commentPost, deletePost, updatePost,getPosts, updatePage, likePost } from "../../Redux/actions/Post";
 
 import Comment from "../Comment/Comment";
 
@@ -81,7 +81,7 @@ function Post({ post, customClass, user }) {
   };
 
   const handleLike = (e) => {
-    //if (session.username) dispatch(likePost(post.idPost, session.username));
+    if (session.username) dispatch(likePost({postIdPost:post.idPost, userId:session.username}));
   };
 
   async function borrar(){
