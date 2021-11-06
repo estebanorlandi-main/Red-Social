@@ -21,20 +21,21 @@ function Home(props) {
       Math.ceil(window.innerHeight + window.scrollY) >=
       document.documentElement.scrollHeight
     )
-      dispatch(updatePage(false))
+      dispatch(updatePage(false));
   }, [page]);
-  console.log(posts)
+  console.log(posts);
   useEffect(() => {
-    console.log("entre")
+    console.log("entre");
     if (first) {
       dispatch(getPosts(0));
       setFirst(false);
-      return
+      return;
     }
     if (page === -1) {
-      window.scroll(0,0)
-      dispatch(updatePage(false))
-      return}
+      window.scroll(0, 0);
+      dispatch(updatePage(false));
+      return;
+    }
     dispatch(getPosts(page));
   }, [dispatch, page]);
 
@@ -46,41 +47,42 @@ function Home(props) {
   }, [handleScroll]);
 
   return (
-    <div className={createPost ? styles.noScroll : ` ${styles.home}`}>
-      <UserCard />
+    <div className={styles.home + ` ${createPost ? styles.noScroll : ""} `}>
+      <section className={styles.userCard}>
+        <UserCard showPostForm={() => setCreatePost((old) => !old)} />
 
-      {user && user.username ? (
-        <div className={styles.newPostBtn}>
-          <button onClick={() => setCreatePost((old) => !old)}>
-            Create Post
-          </button>
-        </div>
-      ) : (
-        <div></div>
-      )}
+        {createPost ? (
+          <div
+            className={styles.newPost}
+            id="close"
+            onClick={(e) =>
+              e.target.id === "close" ? setCreatePost((old) => false) : ""
+            }
+          >
+            <NewPost />
+          </div>
+        ) : (
+          ""
+        )}
+      </section>
 
-      {createPost ? (
-        <div
-          className={styles.newPost}
-          id="close"
-          onClick={(e) =>
-            e.target.id === "close" ? setCreatePost((old) => false) : ""
-          }
-        >
-          <NewPost />
-        </div>
-      ) : (
-        ""
-      )}
+      <section className={styles.sectionPosts}>
+        <ul>
+          {posts.map((post, i) => (
+            <li>
+              <Post post={post} />
+            </li>
+          ))}
 
-      <ul>
-        {posts.map((post, i) => (
           <li>
-            <Post post={post} />
+            <div className={styles.cargando}>Cargando...</div>
           </li>
-        ))}
-      </ul>
-      <div className={styles.cargando}>Cargando...</div>
+        </ul>
+      </section>
+
+      <section>
+        <div>algo</div>
+      </section>
     </div>
   );
 }
