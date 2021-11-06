@@ -16,14 +16,21 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  max-width: 32em;
+  width: 100%;
+  max-width: 30em;
+  min-width: 300px;
   margin: 2em auto 0 auto;
+  padding: 1em 0;
   border-radius: 10px;
   overflow: hidden;
   background-color: var(--c-bg);
 }
 
 .avatar {
+  object-fit: cover;
+  object-position: center;
+  width: 3em;
+  height: 3em;
   background-color: var(--c-avatar-bg);
   border-radius: 100%;
 }
@@ -105,7 +112,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding: 1em var(--pX);
+  padding: 0 var(--pX) 1em var(--pX);
 }
 
 .tags > li {

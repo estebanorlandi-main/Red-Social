@@ -1,8 +1,15 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import image from "../../images/userCard.png";
 
-import { commentPost } from "../../Redux/actions/Post";
+import {
+  commentPost,
+  deletePost,
+  updatePost,
+  getPosts,
+  updatePage,
+} from "../../Redux/actions/Post";
 
 import Comment from "../Comment/Comment";
 
@@ -17,18 +24,25 @@ import {
   MdSend,
 } from "react-icons/md";
 
-function Post({ post, customClass }) {
+function Post({ post, customClass, user }) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
 
   const [firstLoad, setFirstLoad] = useState(true);
-
   const [seeMore, setSeeMore] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [error, setError] = useState("");
+  const [modo, setModo] = useState(false);
+
+  const [data, setData] = useState({
+    title: post.title,
+    content: post.content,
+    image: post.image,
+  });
 
   const createdAt = new Date(post.createdAt).getTime();
   const now = new Date().getTime();
+  const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
 
   useEffect(() => {
     if (firstLoad) {
@@ -36,6 +50,14 @@ function Post({ post, customClass }) {
     }
   }, [firstLoad, setFirstLoad]);
 
+  useEffect(() => {
+    setData({
+      title: post.title,
+      content: post.content,
+      image: post.image,
+    });
+    setModo(false);
+  }, [post]);
   const handleComment = (e) => {
     setNewComment(e.target.value);
   };
@@ -72,49 +94,152 @@ function Post({ post, customClass }) {
     //if (session.username) dispatch(likePost(post.idPost, session.username));
   };
 
+  function borrar() {
+    let hola = dispatch(deletePost(post.idPost));
+    dispatch(updatePage(true, hola.payload.posts));
+  }
+
+  function editar() {
+    let obj;
+    setModo((old) => !old);
+    if (!modo) return;
+
+    if (
+      (post.title !== data.title && data.title) ||
+      (post.content !== data.content && data.content)
+    ) {
+      dispatch(
+        updatePost(post.idPost, {
+          ...post,
+          title: data.title,
+          content: data.content,
+          image: data.image,
+        })
+      );
+      dispatch(updatePage(true, obj.payload.posts));
+    }
+  }
+
+  function cancel() {
+    setModo((old) => !old);
+    setData({
+      title: post.title,
+      content: post.content,
+      image: post.image,
+    });
+  }
+
+  function handleChange(e) {
+    if (
+      e.target.value === "" &&
+      ((!data.content && e.target.name === "image") ||
+        (!data.image && e.target.name === "content") ||
+        e.target.name === "title")
+    ) {
+      return;
+    }
+    setData((old) => ({
+      ...old,
+      [e.target.name]: e.target.value,
+    }));
+  }
+
   const tags = new Set();
   post.tag.filter((tag) => (!!tag ? tags.add(tag) : false));
   post.tag = Array.from(tags);
 
   return (
     <div className={styles.container + ` ${customClass}`}>
+      <div>
+        {session.username === post.user.username ? (
+          <>
+            <button onClick={() => editar()}>editar</button>
+            <button
+              onClick={() => {
+                borrar();
+              }}
+            >
+              borrar
+            </button>
+          </>
+        ) : (
+          ""
+        )}
+      </div>
+
       <ul className={styles.tags}>
         {post.tag.map((tag, i) => (
           <li key={i}>{tag}</li>
         ))}
+
+        {modo ? (
+          <li>
+            <button
+              onClick={() => {
+                cancel();
+              }}
+            >
+              cancel
+            </button>
+          </li>
+        ) : (
+          ""
+        )}
       </ul>
 
       <Link
         className={styles.userContainer}
         to={`/profile/${post.user.username}`}
       >
-        <img className={styles.avatar} src={post.user.image} alt="avatar" />
+        <img
+          className={styles.avatar}
+          src={post.user.image || image}
+          alt="avatar"
+        />
         <div>
           <span className={styles.username}>{post.user.username}</span>
-          <span className={styles.github}>{post.user.username}</span>
+          <span className={styles.github}>Posted {TimeSpan}hr</span>
         </div>
       </Link>
       <div className={styles.postBody}>
-        <h3>{post.title}</h3>
+        {modo ? (
+          <input
+            value={data.title}
+            name="title"
+            onChange={(e) => handleChange(e)}
+          />
+        ) : (
+          <h3>{post.title}</h3>
+        )}
 
-        <div
-          className={styles.mainContent + ` ${seeMore ? styles.expand : ""}`}
-          style={seeMore ? { overflowY: "visible" } : { overflowY: "hidden" }}
-        >
-          <p
-            className={styles.text}
-            style={seeMore ? { marginBottom: "1em" } : { marginBottom: "0" }}
+        {modo ? (
+          <div>
+            <textarea
+              value={data.content}
+              name="content"
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+        ) : (
+          <div
+            className={styles.mainContent + ` ${seeMore ? styles.expand : ""}`}
+            style={seeMore ? { overflowY: "visible" } : { overflowY: "hidden" }}
           >
-            {post.content}
-          </p>
-          <button
-            className={styles.seeMore}
-            style={seeMore ? { bottom: "-2em" } : { bottom: "0" }}
-            onClick={() => setSeeMore((old) => !old)}
-          >
-            {seeMore ? "...See less" : "...See more"}
-          </button>
-        </div>
+            <p
+              className={styles.text}
+              style={seeMore ? { marginBottom: "1em" } : { marginBottom: "0" }}
+            >
+              {post.content}
+            </p>
+            <button
+              className={styles.seeMore}
+              style={seeMore ? { bottom: "-2em" } : { bottom: "0" }}
+              onClick={() => setSeeMore((old) => !old)}
+            >
+              {seeMore ? "...See less" : "...See more"}
+            </button>
+          </div>
+        )}
       </div>
       {post.image ? (
         <img className={styles.postImage} src={post.image} alt="Not found" />
@@ -131,6 +256,7 @@ function Post({ post, customClass }) {
           ) : (
             <MdFavoriteBorder />
           )} */}
+          <MdFavoriteBorder />
           {post.likes} |
           {/* <span>
             {post.likes[post.likes.length - 1]},{" "}

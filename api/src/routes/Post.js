@@ -29,7 +29,7 @@ const paginate = (page = 0, arr) => {
 
 //Devuelve post de una categoria o si no todos los post
 router.get("/", async (req, res) => {
-  
+
   // const posts = await Post.findAll({order: [['createdAt', 'DESC']]})
   // return res.send(posts)
 
@@ -100,7 +100,7 @@ router.post("/", AuthControllers.isAuthenticated, async (req, res, next) => {
     await userDB.addPost(createPost);
 
     const allPosts = await DB_Postsearch({});
-    const { posts, totalPages } = paginate(page, allPosts);
+    const { posts, totalPages } = paginate(0, allPosts);
     res.status(200).send({ posts, totalPages });
   } catch (e) {
     res.status(404).send({ success: false, error: "Cant create post" });
@@ -108,13 +108,17 @@ router.post("/", AuthControllers.isAuthenticated, async (req, res, next) => {
 });
 
 //Eliminacion de un Post
+<<<<<<< HEAD
 router.delete("/:id", AuthControllers.isAuthenticated, async (req, res) => {
+=======
+router.delete("/:id", async (req, res) => {
+
+>>>>>>> 3d8fe4e6cd8132895e9379f789a67afe0ab69a84
   try {
     const { id } = req.params;
     const deletePost = await DB_Postdestroy(id);
-
     const allPosts = await DB_Postsearch({});
-    const { posts, totalPages } = paginate(page, allPosts);
+    const { posts, totalPages } = paginate(0, allPosts);
     res.status(200).send({ posts, totalPages, success: true });
   } catch (e) {
     res.status(404).send({ success: false, error: "Cant delete post" });
@@ -128,7 +132,7 @@ router.put("/:id", AuthControllers.isAuthenticated, async (req, res) => {
     const updatePost = await DB_Postedit(id, req.body);
 
     const allPosts = await DB_Postsearch({});
-    const { posts, totalPages } = paginate(page, allPosts);
+    const { posts, totalPages } = paginate(0, allPosts);
     res.status(200).send({ posts, totalPages, success: true });
   } catch (e) {
     res.status(404).send({ success: false, error: "Cant apply changes" });

@@ -19,7 +19,11 @@ conn.sync({ force: false }).then(() => {
 
     // DB_userCreates(DataUsers);
 
+<<<<<<< HEAD
     /*DB_postCreates(dataPosts);*/
+=======
+    //DB_postCreates(dataPosts);
+>>>>>>> 3d8fe4e6cd8132895e9379f789a67afe0ab69a84
     console.log("%s listening at 3001"); // eslint-disable-line no-console
   });
 });

@@ -3,10 +3,10 @@
 }
 .container {
   --br: 10px;
-  width: 85vw;
+  width: 50vw;
   margin: 1em auto;
   display: grid;
-  grid-template-columns: auto minmax(15em, 25em);
+  grid-template-columns: auto minmax(10em, 20em);
 }
 .container .image {
   max-width: 10em;
@@ -40,6 +40,7 @@
   font-size: 1.5rem;
   font-weight: 500;
 }
+
 .email,
 .github {
   display: block;
@@ -60,8 +61,6 @@
 }
 
 .posts {
-  display: flex !important;
-  flex-wrap: wrap;
   background-color: transparent !important;
   box-shadow: none !important;
   padding: 0 !important;
