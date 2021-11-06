@@ -60,7 +60,8 @@
 }
 
 .postBody {
-  margin: 0 var(--pX) 0 var(--pX);
+  padding: 0 var(--pX) 0 var(--pX);
+  width: 100%;
 }
 
 .mainContent {
@@ -76,6 +77,7 @@
 }
 
 .text {
+  word-break: break-all;
   font-size: 1rem;
   line-height: 1.45rem;
   margin: 0.5em 0 0 0;
