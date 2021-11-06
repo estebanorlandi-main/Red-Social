@@ -391,6 +391,15 @@ const BD_searchSupport = async () => {
   }
 };
 
+const BD_createPrivileges = async (userId,title) =>{
+	const privileges = await Privileges.create({
+		title,
+		userId,
+		checked: true 
+	})
+	return privileges
+}
+
 module.exports = {
   DB_findUserAll,
   DB_findUserQuery,
@@ -415,4 +424,5 @@ module.exports = {
   DB_findUsersUsername,
   DB_UserFollow,
   BD_searchSupport,
+  BD_createPrivileges
 };

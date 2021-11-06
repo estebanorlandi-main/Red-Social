@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const {DB_userSearch} = require("./utils.js");
+const {DB_userSearch,DB_validatePassword, DB_findUserCreated,DB_createUser} = require("./utils.js");
 const router = Router();
 const {Privileges} = require("../db.js");
 
@@ -55,26 +55,27 @@ router.post('/', async (req, res) => {
     }
 })
   
-  // router.post("/register", async (req, res) =>{
-  //   try {
-  //     const {username, password,email, title} =req.body
-  //     let errorsPassword = await DB_validatePassword(password)
-  //         let errorsUser = await DB_findUserCreated({username:username,email:email})
-  //     let errors = {...errorsPassword,...errorsUser}
-  //     if(errors.email || errors.username || errors.password) return res.send(errors).status(400)
-  
-  //         req.body.password = bcrypt.hashSync(password,saltRounds)
-  //         let validate = await DB_createUser(req.body)
-  //         if(validate.email || validate.name || validate.lastname) return res.send(validate).status(400)
+  router.post("/register", async (req, res) =>{
+    try {
+      const {username, password,email, title} =req.body
+      console.log(username, password,email, title)
+      let errorsPassword = await DB_validatePassword(password)
+      let errorsUser = await DB_findUserCreated({username:username,email:email})
+      let errors = {...errorsPassword,...errorsUser}
+      if(errors.email || errors.username || errors.password) return res.send(errors).status(400)
       
-  //     const user = await DB_findUsersUsername(username)
+      req.body.password = bcrypt.hashSync(password,saltRounds)
+      let validate = await DB_createUser(req.body)
+      if(validate.email || validate.name || validate.lastname) return res.send(validate).status(400)
       
-  //     const privileges = await BD_createPrivileges(user.id, title) 
-  //     res.status(200).send('Admin saccess')
-  //   } catch (e) {
-  //     res.status(404).send('Error in privileges', e);
-  //   }
-  // })
+      const user = await DB_findUsersUsername(username)
+      console.log(user.id)
+      const privileges = await BD_createPrivileges(user.id, title) 
+      res.status(200).send(privileges)
+    } catch (e) {
+      res.status(404).send('Error in privileges', e);
+    }
+  })
   
   module.exports = router;
   
