@@ -366,7 +366,7 @@ const DB_userSearch = async (username, email, password) => {
       if (!validate) {
         return { error: "password" };
       }
-      return user;
+      return user;Sea
     }
   } catch (e) {
     return console.log("Error login", e);
