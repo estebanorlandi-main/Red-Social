@@ -1,11 +1,7 @@
 const router = require("express").Router();
 const { Sequelize, Model } = require("sequelize");
-<<<<<<< HEAD
-const { User } = require("../db.js")
 const AuthControllers = require('../controllers/AuthControllers.js')
-=======
 const { User, Post } = require("../db.js");
->>>>>>> 3d8fe4e6cd8132895e9379f789a67afe0ab69a84
 const fn = require("./utils.js");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -147,22 +143,15 @@ router.put("/:id", AuthControllers.isAuthenticated, async (req, res, next) => {
 
     const UserID = await User.findOne({
       where: {
-<<<<<<< HEAD
         'username':req.params.id
       },
     });
 
     let validate = await fn.DB_updateUser(req.body, UserID.id);
-=======
-        username: req.params.id,
-      },
-      include: [Post],
-    });
 
-    let validate = await fn.DB_updateUser(req.body, UserID.id);
 
     if (Object.keys(validate).length) return res.status(400).send(validate);
->>>>>>> 3d8fe4e6cd8132895e9379f789a67afe0ab69a84
+
 
     let userUpdated = await fn.DB_findUserParams(req.params.id);
 
