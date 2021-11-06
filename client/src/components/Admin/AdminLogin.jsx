@@ -36,12 +36,9 @@ export default function AdminLogin(){
           }else{ 
             setError({message:"Error your not admin"})
             dispatch(loginAdmin(input));
-        }       
-        
+        }        
       }
    
-    console.log(admin)
-    console.log(error)
     return(
         <div>{
           

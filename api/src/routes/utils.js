@@ -338,8 +338,26 @@ const DB_validatePassword = (password)=>{
 }
 
 const BD_searchSupport = async()=>{
+
 	try{
-		const allMessage = await Support.findAll()
+		const allMessage = await Support.findAll();
+		// if(allMessage.length >0){
+		// 	var userMessage = await allMessage.map(async (e) => {
+		// 		user.username})
+		// 	}
+		var user ={}
+		for(var i=0; i<allMessage.length; i++){
+			user[1] = await User.findOne({where:{id:allMessage[i].userId}})
+
+		}
+			// for ( p in e ){
+			// 	if(p === 'userId') {
+			// 		return {'username': user.id}
+		console.log(user[1].username)
+		
+		allMessage[0].userID = user[1].username
+		console.log(allMessage[0])
+		
 		return(allMessage)
 	}catch(e){
 		return console.log("Error search message support",e)
