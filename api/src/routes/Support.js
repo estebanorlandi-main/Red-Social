@@ -8,7 +8,7 @@ const router = Router();
 router.post("/", async (req, res) =>{
     try{
 
-        const {username,
+        var {username,
         content,
         title,
         postReported,
