@@ -15,6 +15,10 @@ import Popup from "./components/Support/SupportLocalPopUp.jsx"
 // Variables CSS
 import "./App.css";
 
+
+// chat v.2
+import Chat from "./components/Chat/Chat"
+
 function App() {
   return (
     <div className="App">
@@ -26,6 +30,9 @@ function App() {
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
         <Route path="/support" component={Support}/>
+
+
+        <Route path="/chat/test" component={Chat}/>
 
         <Route
           path="/profile/:username"
