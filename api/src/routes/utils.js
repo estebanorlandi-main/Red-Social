@@ -9,6 +9,7 @@ const {
   Likes,
   User_Follow,
   Support,
+  Privileges
 } = require("../db.js");
 const db = require("../db.js");
 const { Sequelize } = require("sequelize");
@@ -366,7 +367,7 @@ const DB_userSearch = async (username, email, password) => {
       if (!validate) {
         return { error: "password" };
       }
-      return user;
+      return user;Sea
     }
   } catch (e) {
     return console.log("Error login", e);
@@ -390,6 +391,18 @@ const BD_searchSupport = async () => {
     return console.log("Error search message support", e);
   }
 };
+
+const BD_createPrivileges = async (user,title) =>{
+	var privileges = await Privileges.create({
+		title,
+		userId:user.id,
+    username:user.username,
+		checked: true 
+	})
+  // privileges.findOne({include:User.username})
+  console.log(privileges)
+	return privileges
+}
 
 module.exports = {
   DB_findUserAll,
@@ -415,4 +428,5 @@ module.exports = {
   DB_findUsersUsername,
   DB_UserFollow,
   BD_searchSupport,
+  BD_createPrivileges
 };

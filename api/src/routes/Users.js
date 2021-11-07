@@ -12,7 +12,7 @@ const sanitizeUser = (data) => {
       name: user.name,
       lastname: user.lastname,
       gitaccount: user.gitaccount,
-      image: userCreated.image,
+      image: user.image,
       email: user.email,
       about: user.about,
       tags: user.tags,

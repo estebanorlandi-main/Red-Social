@@ -16,6 +16,8 @@ const Support = require("./Support.js")
 const Conversation = require("./Conversation.js")
 const Message = require("./Message.js")
 const Prueba = require("./PRUEBA.js")
+const Admin = require("./Admin.js")
+
 
 
 // const ruta = require("archivo")
@@ -40,6 +42,7 @@ router.use("/user", Users);
 router.use("/comment", AuthControllers.isAuthenticated, Comments);
 router.use("/post", Post);
 router.use("/login", Login);
+router.use("/admin", Admin,  AuthControllers.isAuthenticated, Admin);
 // router.use("/tags", Tags)
 // router.use("/likes", Likes);
 // router.use("/support",Support);

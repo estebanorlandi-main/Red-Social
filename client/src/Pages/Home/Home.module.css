@@ -1,5 +1,37 @@
 .home {
   overflow-y: auto;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  width: 75vw;
+  margin: 0 auto;
+  gap: 1em;
+}
+
+.home li {
+  list-style: none;
+}
+.home section {
+  min-width: 320px;
+}
+
+.home section:last-child {
+  text-align: right;
+}
+
+.home section:last-child > div {
+  background-color: #fff;
+  margin-top: 2em;
+  border-radius: 10px;
+  padding: 1em;
+}
+
+.home section {
+  margin: 1em auto;
+}
+
+.sectionPosts {
+  max-width: max-content;
+  margin: 0 auto;
 }
 
 .noScroll {
@@ -20,18 +52,18 @@
   background-color: #000a;
 }
 
-.newPostBtn{
+.newPostBtn {
   position: fixed;
   left: 5%;
   top: 40%;
   z-index: 2;
 }
 
-.newPostBtn button{
+.newPostBtn button {
   margin-top: 4%;
   width: 18vw;
   height: 6vh;
-  background-color: #4A9BBD;
+  background-color: #4a9bbd;
   border-radius: 4px;
   color: white;
   border: none;
@@ -49,4 +81,47 @@
   text-align: center;
   font-size: 1.25rem;
   min-height: 7em;
+}
+
+@media screen and (max-width: 1400px) {
+  .home {
+    width: 90vw;
+    grid-template-columns: auto auto auto;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .home {
+    width: 95vw;
+    grid-template-columns: auto auto;
+  }
+  .home section:last-child {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .home {
+    width: 80vw;
+    grid-template-columns: auto auto;
+  }
+
+  .home section:last-child {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .home {
+    width: 98vw;
+    grid-template-columns: auto;
+  }
+
+  .home section:first-child {
+    display: none;
+  }
+
+  .home section:last-child {
+    display: none;
+  }
 }
