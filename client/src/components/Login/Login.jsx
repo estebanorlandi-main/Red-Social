@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logIn } from "../../Redux/actions/Session.js";
 import validate from "../../utils/validate.js";
 import style from "./Login.module.css";
 import { Redirect } from "react-router";
 
+import { FaUserCircle, FaKey } from "react-icons/fa";
+
 export default function Login() {
   const dispatch = useDispatch();
+  const session = useSelector((state) => state.sessionReducer);
 
   const [input, setInput] = useState({
     username: process.env.REACT_APP_LOGIN_USERNAME || "",
@@ -25,7 +28,6 @@ export default function Login() {
   function handleSubmit(e) {
     e.preventDefault();
     const errors = validate(input);
-    console.log(errors);
 
     if (!Object.values(errors).filter((error) => error).length) {
       dispatch(logIn(input));
@@ -36,40 +38,48 @@ export default function Login() {
       });
       setLogged(true);
     } else {
-      alert("Usuario o contrasena no validas");
+      alert("Usuario o contraseña no validas");
     }
   }
 
-  return (
-    <div>
-      {logged ? (
-        <Redirect to="/home" />
-      ) : (
-        <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
-          <div className={style.label}>
-            <label>Username</label>
-            <input
-              type="text"
-              value={input.username}
-              name="username"
-              onChange={(e) => handleChange(e)}
-            />
-          </div>
+  return logged || session.username ? (
+    <Redirect to="/home" />
+  ) : (
+    <div className={style.container}>
+      <img
+        src="https://images.pexels.com/photos/1851415/pexels-photo-1851415.jpeg"
+        alt=""
+      />
+      <form onSubmit={(e) => handleSubmit(e)}>
+        <label>
+          <FaUserCircle />
+          <input
+            type="text"
+            value={input.username}
+            name="username"
+            onChange={(e) => handleChange(e)}
+          />
+        </label>
 
-          <div className={style.label}>
-            <label>Password</label>
-            <input
-              type="password"
-              value={input.password}
-              name="password"
-              onChange={(e) => handleChange(e)}
-            />
-          </div>
-          <button type="submit">LogIn</button>
-          <hr style={{ margin: "4%" }}></hr>
-          <Link to="/signup">SignUp</Link>
-        </form>
-      )}
+        <label>
+          <FaKey />
+          <input
+            type="password"
+            value={input.password}
+            name="password"
+            onChange={(e) => handleChange(e)}
+          />
+        </label>
+
+        <div className="f--column">
+          <button className="btn" type="submit">
+            LogIn
+          </button>
+          <Link className="btn" to="/signup">
+            SignUp
+          </Link>
+        </div>
+      </form>
     </div>
   );
 }

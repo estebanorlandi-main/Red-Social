@@ -1,4 +1,4 @@
-.container{
+.container {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -6,11 +6,11 @@
   align-items: flex-start;
   margin-left: 20px;
 }
-.input{
+.input {
   margin-left: 20px;
 }
-.errores{
-  color:red;
+.errores {
+  color: red;
   font-size: 0.8em;
   width: auto;
   height: auto;
