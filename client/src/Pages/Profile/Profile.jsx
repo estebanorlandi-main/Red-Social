@@ -82,6 +82,16 @@ export default function Profile(props) {
     <main className={styles.container}>
       <div className={styles.left}>
         <section>
+          <div className={styles.tags}>
+            {profile.tags &&
+              profile.tags
+                .filter((tag) => tag)
+                .map((tag, i) => (
+                  <span key={i} className={styles.tag}>
+                    {tag}
+                  </span>
+                ))}
+          </div>
           {myProfile && editar ? (
             <button onClick={handleSubmit}>Change</button>
           ) : (
@@ -146,17 +156,6 @@ export default function Profile(props) {
           ) : (
             ""
           )}
-
-          <div className={styles.tags}>
-            {profile.tags &&
-              profile.tags
-                .filter((tag) => tag)
-                .map((tag, i) => (
-                  <span key={i} className={styles.tag}>
-                    {tag}
-                  </span>
-                ))}
-          </div>
         </section>
 
         <section>

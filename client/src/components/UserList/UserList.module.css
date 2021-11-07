@@ -1,30 +1,38 @@
-
-.list{
-    position: absolute;
-    top: 120%;
-    overflow-y: scroll;
-    border-radius: 8px;
-    height: 60vh;
-    width: 32vw;
-    padding-top: 2%;
-    background-color: #e6e3da;
+.list {
+  position: absolute;
+  top: 3em;
+  left: 0;
+  overflow-y: scroll;
+  height: 25vh;
+  width: 100%;
+  padding: 1em;
+  background-color: #fff;
 }
 
-.user{
+.user {
   display: flex;
   align-items: center;
-  padding: 2%;
+  padding: 0.5em;
 }
 
-.user:hover{
+.user > img {
+  object-fit: cover;
+  object-position: center;
+  width: 2em;
+  height: 2em;
+  max-width: 3em;
+  border-radius: 100%;
+  margin: 0 1em 0 0;
+}
+
+.user:hover {
   background-color: rgb(143, 143, 143);
 }
-::-webkit-scrollbar{
-    width: 5px;
-    background-color: rgb(201, 201, 201);
-  }
-  
-::-webkit-scrollbar-thumb{
-background-color: rgb(56, 56, 56);
-border-radius: 3px;
+::-webkit-scrollbar {
+  width: 5px;
+  background-color: rgb(201, 201, 201);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(56, 56, 56);
 }
