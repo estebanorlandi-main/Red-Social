@@ -18,6 +18,10 @@ import UserCard from "./components/UserCard/UserCard";
 import { useDispatch, useSelector } from "react-redux";
 import { removeError } from "./Redux/actions/Errors";
 
+
+// chat v.2
+import Chat from "./components/Chat/Chat"
+
 function App() {
   const dispatch = useDispatch();
   const errors = useSelector((state) => state.errorsReducer);
@@ -44,6 +48,9 @@ function App() {
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
         <Route path="/support" component={Support} />
+
+
+        <Route path="/chat/test" component={Chat}/>
 
         <Route
           path="/profile/:username"

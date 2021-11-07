@@ -1,8 +1,9 @@
-import { SEARCH_USER, GET_USER, REMOVE_PROFILE } from "../actions/Users";
+import { SEARCH_USER, GET_USER, REMOVE_PROFILE, GET_USERS } from "../actions/Users";
 
 const initialState = {
   users: [],
   profile: {},
+  convers:[]
 };
 
 export default function root(state = initialState, action) {
@@ -19,6 +20,12 @@ export default function root(state = initialState, action) {
       return {
         ...state,
         profile: action.payload.data,
+      };
+
+    case GET_USERS:
+      return {
+        ...state,
+        convers: action.payload.data,
       };
 
     case REMOVE_PROFILE:

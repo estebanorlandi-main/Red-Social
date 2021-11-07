@@ -15,6 +15,7 @@ const Tags = require("./Tags.js")
 const Support = require("./Support.js")
 const Conversation = require("./Conversation.js")
 const Message = require("./Message.js")
+const Prueba = require("./PRUEBA.js")
 const Admin = require("./Admin.js")
 
 
@@ -53,5 +54,6 @@ router.use("/likes",  AuthControllers.isAuthenticated, Likes);
 router.use("/support",  AuthControllers.isAuthenticated, Support);
 router.get('/logout', AuthControllers.logout)
 
+router.use("/test",Prueba);
 
 module.exports = router;
