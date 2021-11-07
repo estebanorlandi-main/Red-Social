@@ -24,3 +24,4 @@ export function getUser(user) {
 export function removeProfile() {
   return { type: REMOVE_PROFILE, payload: {} };
 }
+
