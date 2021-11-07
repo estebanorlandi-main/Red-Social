@@ -17,17 +17,18 @@ export default function Login() {
     password: process.env.REACT_APP_LOGIN_PASSWORD || "",
   });
 
-  const [logged, setLogged] = useState(false);
-  function handleChange(e) {
-    setInput({
-      ...input,
-      [e.target.name]: e.target.value.replaceAll(/^\s+/g, ""),
-    });
+  const [errors, setErrors] = useState({
+    username: "",
+    password: "",
+  });
+
+  function handleChange({ target: { name, value } }) {
+    setInput({ ...input, [name]: value.replaceAll(/^\s+/g, "") });
+    setErrors({ ...errors, [name]: validate(name, value) });
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    const errors = validate(input);
 
     if (!Object.values(errors).filter((error) => error).length) {
       dispatch(logIn(input));
@@ -36,13 +37,14 @@ export default function Login() {
         username: "",
         password: "",
       });
-      setLogged(true);
-    } else {
-      alert("Usuario o contraseña no validas");
+      setErrors({
+        username: "",
+        password: "",
+      });
     }
   }
 
-  return logged || session.username ? (
+  return session.username ? (
     <Redirect to="/home" />
   ) : (
     <div className={style.container}>
@@ -50,28 +52,33 @@ export default function Login() {
         src="https://images.pexels.com/photos/1851415/pexels-photo-1851415.jpeg"
         alt=""
       />
+
       <form onSubmit={(e) => handleSubmit(e)}>
-        <label>
+        <label className={errors.username ? "error" : ""}>
           <FaUserCircle />
           <input
             type="text"
             value={input.username}
             name="username"
             onChange={(e) => handleChange(e)}
+            placeholder="username"
           />
         </label>
+        <span>{errors.username}</span>
 
-        <label>
+        <label className={errors.password ? "error" : ""}>
           <FaKey />
           <input
             type="password"
             value={input.password}
             name="password"
             onChange={(e) => handleChange(e)}
+            placeholder="password"
           />
         </label>
+        <span>{errors.password}</span>
 
-        <div className="f--column">
+        <div className="buttonContainer">
           <button className="btn" type="submit">
             LogIn
           </button>

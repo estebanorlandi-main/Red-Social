@@ -26,10 +26,14 @@
   box-sizing: border-box;
 }
 
-.f--column {
+.buttonContainer {
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+
+form .buttonContainer {
+  margin: 1em 0 0 0;
 }
 
 form {
@@ -46,21 +50,33 @@ label {
   width: 100%;
   border: 1px solid #ccc;
   background-color: #fff !important;
-  margin: 0 0 1em 0;
+  margin: 1em 0 0 0;
   padding: 0 0 0 1em;
+  border-radius: 4px;
 }
 
-label input {
-  border-radius: 4px;
+label input,
+label textarea {
   padding: 0.75em;
+  border: none;
+  width: 100%;
 
   border: none;
+  background-color: #fff;
 }
 
-textarea {
-  border: none;
-  border-radius: 4px;
-  background-color: #f4f4f4;
+label:focus-within {
+  outline: 2px solid var(--c-blue);
+}
+
+label:focus-within.error {
+  outline: 2px solid red;
+}
+
+form span {
+  color: #f55;
+  font-size: 0.9rem;
+  margin: 0.25em 0 0 0;
 }
 
 .btn {

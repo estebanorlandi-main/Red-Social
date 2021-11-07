@@ -2,14 +2,19 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Redirect } from "react-router";
 import Select from "react-select";
+import { Link } from "react-router-dom";
 
 import { singUp } from "../../Redux/actions/Session.js";
 import validate from "../../utils/validate";
+
+import { MdEmail } from "react-icons/md";
+import { FaKey, FaUserCircle } from "react-icons/fa";
 
 import style from "./Signup.module.css";
 
 function Signup(props) {
   const dispatch = useDispatch();
+  const [section, setSection] = useState(1);
 
   const [inputs, setInputs] = useState({
     username: process.env.REACT_APP_USERNAME || "",
@@ -100,87 +105,153 @@ function Signup(props) {
     }
   };
 
+  const handleSection = () => setSection((old) => (old < 5 ? ++old : old));
+
   return (
-    <div>
+    <div className={style.container}>
       {!registered ? (
-        <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
-          Formulario de registro
-          <label>Username</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.username}
-            name="username"
-            type="text"
+        <>
+          <img
+            src="https://images.pexels.com/photos/1851415/pexels-photo-1851415.jpeg"
+            alt=""
           />
-          <div className={style.errores}>{err.username}</div>
-          <label>Password</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.password}
-            name="password"
-            type="password"
-          />
-          <div className={style.errores}>{err.password}</div>
-          <label>Name</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.name}
-            name="name"
-            type="text"
-          />
-          <div className={style.errores}>{err.name}</div>
-          <label>Last Name</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.lastname}
-            name="lastname"
-            type="text"
-          />
-          <div className={style.errores}>{err.lastname}</div>
-          <label>Email</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.email}
-            name="email"
-            type="email"
-          />
-          <div className={style.errores}>{err.email}</div>
-          <label>GitHub</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.gitaccount}
-            name="gitaccount"
-            type="text"
-          />
-          <div className={style.errores}>{err.gitaccount}</div>
-          <label>Avatar</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.image}
-            name="image"
-            type="text"
-          />
-          <div className={style.errores}>{err.image}</div>
-          <label>About</label>
-          <textarea
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.about}
-            name="about"
-            type="text"
-          ></textarea>
-          <div className={style.errores}>{err.about}</div>
-          <label>Tags</label>
-          <Select onChange={handleSelect} options={options} isMulti />
-          <button type="submit">Submit</button>
-        </form>
+          <form onSubmit={(e) => handleSubmit(e)}>
+            <div>
+              <button
+                type="button"
+                onClick={() => setSection((old) => (old > 1 ? --old : old))}
+              >
+                prev
+              </button>
+              <button
+                type="button"
+                onClick={() => setSection((old) => (old < 4 ? ++old : old))}
+              >
+                next
+              </button>
+            </div>
+
+            <section style={{ display: section === 1 ? "block" : "none" }}>
+              <label>
+                <FaUserCircle />
+                <input
+                  onChange={(e) => handleChange(e)}
+                  className={style.input}
+                  value={inputs.username}
+                  name="username"
+                  type="text"
+                  placeholder="username"
+                />
+              </label>
+              <span>{err.username}</span>
+
+              <label>
+                <MdEmail />
+                <input
+                  onChange={(e) => handleChange(e)}
+                  className={style.input}
+                  value={inputs.email}
+                  name="email"
+                  type="email"
+                  placeholder="email"
+                />
+              </label>
+              <span>{err.email}</span>
+
+              <label>
+                <FaKey />
+                <input
+                  onChange={(e) => handleChange(e)}
+                  className={style.input}
+                  value={inputs.password}
+                  name="password"
+                  type="password"
+                  placeholder="password"
+                />
+              </label>
+              <span>{err.password}</span>
+            </section>
+
+            <section style={{ display: section === 2 ? "block" : "none" }}>
+              <label>
+                <input
+                  onChange={(e) => handleChange(e)}
+                  className={style.input}
+                  value={inputs.name}
+                  name="name"
+                  type="text"
+                  placeholder="name"
+                />
+              </label>
+              <span>{err.name}</span>
+
+              <label>
+                <input
+                  onChange={(e) => handleChange(e)}
+                  className={style.input}
+                  value={inputs.lastname}
+                  name="lastname"
+                  type="text"
+                  placeholder="lastname"
+                />
+              </label>
+              <span>{err.lastname}</span>
+            </section>
+
+            <section style={{ display: section === 3 ? "block" : "none" }}>
+              <label>
+                <input
+                  onChange={(e) => handleChange(e)}
+                  className={style.input}
+                  value={inputs.gitaccount}
+                  name="gitaccount"
+                  type="text"
+                  placeholder="gitaccount"
+                />
+              </label>
+              <span>{err.gitaccount}</span>
+
+              <label>
+                <input
+                  onChange={(e) => handleChange(e)}
+                  className={style.input}
+                  value={inputs.image}
+                  name="image"
+                  type="text"
+                  placeholder="image"
+                />
+              </label>
+              <span>{err.image}</span>
+            </section>
+
+            <section style={{ display: section === 4 ? "block" : "none" }}>
+              <label>
+                <textarea
+                  onChange={(e) => handleChange(e)}
+                  className={style.input}
+                  value={inputs.about}
+                  name="about"
+                  type="text"
+                  placeholder="about"
+                ></textarea>
+              </label>
+              <span>{err.about}</span>
+
+              <label>
+                <Select onChange={handleSelect} options={options} isMulti />
+              </label>
+            </section>
+
+            <div className="buttonContainer">
+              <button className="btn" type="submit">
+                SignUp
+              </button>
+              <Link className="btn" to="/login">
+                LogIn
+              </Link>
+            </div>
+          </form>
+        </>
       ) : (
         <Redirect to="/home" />
       )}
