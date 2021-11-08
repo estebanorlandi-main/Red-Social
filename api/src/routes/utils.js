@@ -175,7 +175,7 @@ const DB_Postsearch = async ({ username, id }) => {
   try {
     if (username === undefined && id === undefined) {
       var post_search = await Post.findAll({
-        include: [{ model: User, attributes: ["image", "username"] }, Comment],
+        include: [{ model: User, attributes: ["image", "username"] }, Comment, {model:Likes, as:"userLikes", include:[{model:User,attributes:["username"]}]}],
         order: [["createdAt", "DESC"]],
       });
       return post_search;
@@ -397,7 +397,7 @@ const BD_createPrivileges = async (user,title) =>{
 		title,
 		userId:user.id,
     username:user.username,
-		checked: true 
+		checked: true
 	})
   // privileges.findOne({include:User.username})
   console.log(privileges)
