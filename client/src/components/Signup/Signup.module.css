@@ -27,5 +27,30 @@
 }
 
 .container label {
-  margin-top: 1em !important;
+  display: block;
+  margin: 1em 0 0 0;
+}
+
+.dots {
+  margin: 1em 0;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+.dot {
+  display: block;
+  list-style: none;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 100%;
+  background-color: #aaa;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.active {
+  cursor: default;
+  background-color: var(--c-blue);
+  width: 1em;
+  height: 1em;
 }

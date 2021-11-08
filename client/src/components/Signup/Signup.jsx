@@ -110,6 +110,19 @@ function Signup(props) {
       {!registered ? (
         <>
           <form onSubmit={(e) => handleSubmit(e)}>
+            <h1>Sign Up</h1>
+            <ul className={style.dots}>
+              {[1, 2, 3, 4].map((value, i) => (
+                <li
+                  key={value}
+                  onClick={() => setSection(value)}
+                  className={`${style.dot} ${
+                    value === section ? style.active : ""
+                  }`}
+                ></li>
+              ))}
+            </ul>
+            {/*
             <div>
               <button
                 type="button"
@@ -124,7 +137,7 @@ function Signup(props) {
                 next
               </button>
             </div>
-
+            */}
             <section style={{ display: section === 1 ? "block" : "none" }}>
               <label>
                 Username
@@ -175,7 +188,6 @@ function Signup(props) {
 
               <span>{err.password}</span>
             </section>
-
             <section style={{ display: section === 2 ? "block" : "none" }}>
               <label>
                 Name
@@ -208,7 +220,6 @@ function Signup(props) {
               </label>
               <span>{err.lastname}</span>
             </section>
-
             <section style={{ display: section === 3 ? "block" : "none" }}>
               <label>
                 Git Account
@@ -240,7 +251,6 @@ function Signup(props) {
               </label>
               <span>{err.image}</span>
             </section>
-
             <section style={{ display: section === 4 ? "block" : "none" }}>
               <label>
                 About
@@ -262,7 +272,6 @@ function Signup(props) {
                 <Select onChange={handleSelect} options={options} isMulti />
               </label>
             </section>
-
             <div className="buttonContainer">
               <button className="btn" type="submit">
                 SignUp

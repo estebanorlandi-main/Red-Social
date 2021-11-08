@@ -162,39 +162,24 @@
 
 .newCommentContainer {
   width: 100%;
-  background-color: #fafafa;
-  padding: 0.5em var(--pX) 0 var(--pX);
+  padding: 0 var(--pX);
 }
 
-.newComment {
-  display: flex;
+.newComment > label {
+  width: 100%;
+  display: flex !important;
   flex-direction: row;
-  align-items: center;
-  width: 100%;
-  margin: 0.5em auto 0 auto;
-  border: 1px solid #0002;
-  border-radius: 5px;
-  overflow: hidden;
 }
-.textarea {
-  border: none;
-  width: 100%;
-  height: 2.5rem;
+
+.newComment textarea {
   resize: none;
   padding: 1em;
+  height: calc(1rem + 2em);
 }
-.newComment > button {
-  background-color: #f0f0f0;
-  height: 3em !important;
-  border-radius: 0 !important;
-  padding: 0 var(--pX);
-  border: none;
-}
-.newComment > button:hover {
-  background-color: var(--c-blue);
-}
-.newComment > button:hover .icons {
-  color: #fff;
+
+.newComment button[type="submit"] {
+  max-width: 7em;
+  border-radius: 0 4px 4px 0;
 }
 
 .icons {

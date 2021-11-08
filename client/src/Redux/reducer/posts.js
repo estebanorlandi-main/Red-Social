@@ -5,6 +5,7 @@ import {
   GET_POST_FOR_ID,
   GET_POST_FOR_USERNAME,
   UPDATE_PAGE,
+  CLEAR_POST,
 } from "../actions/Post";
 
 const initialState = {
@@ -85,6 +86,9 @@ export default function root(state = initialState, action) {
           page: state.page + 1,
         };
       }
+
+    case CLEAR_POST:
+      return { ...initialState, posts: [] };
 
     default:
       return state;

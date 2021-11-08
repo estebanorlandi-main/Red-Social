@@ -5,7 +5,7 @@ import NewPost from "../../components/NewPost/NewPost";
 import UserCard from "../../components/UserCard/UserCard";
 
 import styles from "./Home.module.css";
-import { getPosts, updatePage } from "../../Redux/actions/Post";
+import { clearPosts, getPosts, updatePage } from "../../Redux/actions/Post";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);

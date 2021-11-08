@@ -1,4 +1,4 @@
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useLocation } from "react-router-dom";
 
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import Home from "./Pages/Home/Home";
@@ -22,6 +22,9 @@ import { BiMessageAltDetail } from "react-icons/bi";
 
 function App() {
   const dispatch = useDispatch();
+
+  const isLanding = useLocation().pathname === "/";
+
   const errors = useSelector((state) => state.errorsReducer);
 
   const handleDelete = (id) => dispatch(removeError());
@@ -38,12 +41,14 @@ function App() {
         ""
       )}
 
-      <Link className="message" to="/messenger">
-        <BiMessageAltDetail
-          style={{ margin: "0", width: "1.5em", height: "1.5em" }}
-        />
-        <span>Messages</span>
-      </Link>
+      {!isLanding && (
+        <Link className="message" to="/messenger">
+          <BiMessageAltDetail
+            style={{ margin: "0", width: "1.5em", height: "1.5em" }}
+          />
+          <span>Messages</span>
+        </Link>
+      )}
 
       <NavBar />
 
