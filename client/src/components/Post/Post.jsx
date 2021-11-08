@@ -89,12 +89,12 @@ function Post({ post, customClass, user }) {
     if (session.username) dispatch(likePost({postIdPost:post.idPost, userId:session.username}));
   };
 
-  function borrar() {
-    let hola = dispatch(deletePost(post.idPost));
+  async function borrar() {
+    let hola = await dispatch(deletePost(post.idPost));
     dispatch(updatePage(true, hola.payload.posts));
   }
 
-  function editar() {
+  async function editar() {
     let obj;
     setModo((old) => !old);
     if (!modo) return;
@@ -103,7 +103,7 @@ function Post({ post, customClass, user }) {
       (post.title !== data.title && data.title) ||
       (post.content !== data.content && data.content)
     ) {
-      dispatch(
+      obj = await dispatch(
         updatePost(post.idPost, {
           ...post,
           title: data.title,
