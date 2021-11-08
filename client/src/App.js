@@ -15,10 +15,27 @@ import Popup from "./components/Support/SupportLocalPopUp.jsx";
 // Variables CSS
 import "./App.css";
 import UserCard from "./components/UserCard/UserCard";
+import { useDispatch, useSelector } from "react-redux";
+import { removeError } from "./Redux/actions/Errors";
 
 function App() {
+  const dispatch = useDispatch();
+  const errors = useSelector((state) => state.errorsReducer);
+
+  const handleDelete = (id) => dispatch(removeError());
+
   return (
     <div className="App">
+      {errors && errors.length ? (
+        <ul>
+          {errors.map((error) => (
+            <li onClick={() => handleDelete(error.id)}>{error.message}</li>
+          ))}
+        </ul>
+      ) : (
+        ""
+      )}
+
       <NavBar />
 
       <Switch>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import image from "../../images/userCard.png";
+import { likePost } from "../../Redux/actions/Post";
 
 
 import { commentPost, deletePost, updatePost,getPosts, updatePage, likePost } from "../../Redux/actions/Post";
@@ -242,10 +243,7 @@ function Post({ post, customClass, user }) {
         ""
       )}
       <div className={styles.options}>
-        <button
-          className={!session.username ? styles.disabled : ""}
-          onClick={handleLike}
-        >
+        <button className={!session.username ? "" : ""} onClick={handleLike}>
           {/* {post.likes.filter((user) => user === session.username).length ? (
             <MdFavorite color="red" />
           ) : (

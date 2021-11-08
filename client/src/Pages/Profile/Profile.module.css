@@ -49,6 +49,19 @@
   text-decoration: none;
   margin: 0.25em 0 0 0;
 }
+.tags {
+  margin: 0 0 1em 0;
+  display: flex;
+  gap: 0.25em;
+}
+.tag {
+  font-size: 0.85rem;
+  border-radius: 4px;
+  width: max-content;
+  background-color: var(--c-blue);
+  color: #fff;
+  padding: 0.5em 1em;
+}
 
 .right {
   column-width: 85%;
