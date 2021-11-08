@@ -9,7 +9,6 @@ import { getPosts, updatePage } from "../../Redux/actions/Post";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
-  const user = useSelector((state) => state.sessionReducer);
   const page = useSelector((state) => state.postsReducer.page);
   const dispatch = useDispatch();
 
@@ -22,10 +21,9 @@ function Home(props) {
       document.documentElement.scrollHeight
     )
       dispatch(updatePage(false));
-  }, [page]);
-  console.log(posts);
+  }, [dispatch]);
+
   useEffect(() => {
-    console.log("entre");
     if (first) {
       dispatch(getPosts(0));
       setFirst(false);
@@ -37,7 +35,7 @@ function Home(props) {
       return;
     }
     dispatch(getPosts(page));
-  }, [dispatch, page]);
+  }, [dispatch, page, first]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -69,7 +67,7 @@ function Home(props) {
       <section className={styles.sectionPosts}>
         <ul>
           {posts.map((post, i) => (
-            <li>
+            <li key={i}>
               <Post post={post} />
             </li>
           ))}

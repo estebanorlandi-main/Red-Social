@@ -1,18 +1,18 @@
-import { Fragment } from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, NavLink, useHistory, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../SearchBar/SearchBar";
-import logo from "../../images/logo.svg";
-import logoDark from "../../images/logo-dark.svg";
 import { logOut } from "../../Redux/actions/Session.js";
 import styles from "./NavBar.module.css";
 
+/*
 import { ImHome3 } from "react-icons/im";
 import { BiLogIn, BiLogOut } from "react-icons/bi";
 import { FaLaptopCode } from "react-icons/fa";
-import { CgProfile } from "react-icons/cg";
 import { GoSignIn } from "react-icons/go";
+*/
+
+import { CgProfile } from "react-icons/cg";
 import { FiLogOut } from "react-icons/fi";
 
 import newLogo from "../../images/deco.svg";

@@ -8,7 +8,6 @@ import {
   commentPost,
   deletePost,
   updatePost,
-  getPosts,
   updatePage,
 } from "../../Redux/actions/Post";
 
@@ -19,7 +18,6 @@ import styles from "./Post.module.css";
 //Icons
 import {
   MdFavoriteBorder,
-  MdFavorite,
   MdOutlineModeComment,
   MdShare,
   MdSend,
@@ -95,21 +93,22 @@ function Post({ post, customClass, user }) {
     dispatch(likePost(post.idPost, session.username));
   };
 
-  function borrar() {
-    let hola = dispatch(deletePost(post.idPost));
-    dispatch(updatePage(true, hola.payload.posts));
+  async function borrar() {
+    let res = await dispatch(deletePost(post.idPost));
+    dispatch(updatePage(true, res.payload.posts));
   }
 
-  function editar() {
+  async function editar() {
     let obj;
     setModo((old) => !old);
+
     if (!modo) return;
 
     if (
       (post.title !== data.title && data.title) ||
       (post.content !== data.content && data.content)
     ) {
-      dispatch(
+      obj = await dispatch(
         updatePost(post.idPost, {
           ...post,
           title: data.title,
@@ -117,6 +116,7 @@ function Post({ post, customClass, user }) {
           image: data.image,
         })
       );
+
       dispatch(updatePage(true, obj.payload.posts));
     }
   }

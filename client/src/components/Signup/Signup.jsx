@@ -105,16 +105,10 @@ function Signup(props) {
     }
   };
 
-  const handleSection = () => setSection((old) => (old < 5 ? ++old : old));
-
   return (
     <div className={style.container}>
       {!registered ? (
         <>
-          <img
-            src="https://images.pexels.com/photos/1851415/pexels-photo-1851415.jpeg"
-            alt=""
-          />
           <form onSubmit={(e) => handleSubmit(e)}>
             <div>
               <button
@@ -133,111 +127,138 @@ function Signup(props) {
 
             <section style={{ display: section === 1 ? "block" : "none" }}>
               <label>
-                <FaUserCircle />
-                <input
-                  onChange={(e) => handleChange(e)}
-                  className={style.input}
-                  value={inputs.username}
-                  name="username"
-                  type="text"
-                  placeholder="username"
-                />
+                Username
+                <div className="input-group">
+                  <FaUserCircle />
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.username}
+                    name="username"
+                    type="text"
+                    placeholder="username"
+                  />
+                </div>
               </label>
               <span>{err.username}</span>
 
               <label>
-                <MdEmail />
-                <input
-                  onChange={(e) => handleChange(e)}
-                  className={style.input}
-                  value={inputs.email}
-                  name="email"
-                  type="email"
-                  placeholder="email"
-                />
+                Email
+                <div className="input-group">
+                  <MdEmail />
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.email}
+                    name="email"
+                    type="email"
+                    placeholder="email"
+                  />
+                </div>
               </label>
               <span>{err.email}</span>
 
               <label>
-                <FaKey />
-                <input
-                  onChange={(e) => handleChange(e)}
-                  className={style.input}
-                  value={inputs.password}
-                  name="password"
-                  type="password"
-                  placeholder="password"
-                />
+                Password
+                <div className="input-group">
+                  <FaKey />
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.password}
+                    name="password"
+                    type="password"
+                    placeholder="password"
+                  />
+                </div>
               </label>
+
               <span>{err.password}</span>
             </section>
 
             <section style={{ display: section === 2 ? "block" : "none" }}>
               <label>
-                <input
-                  onChange={(e) => handleChange(e)}
-                  className={style.input}
-                  value={inputs.name}
-                  name="name"
-                  type="text"
-                  placeholder="name"
-                />
+                Name
+                <div className="input-group">
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.name}
+                    name="name"
+                    type="text"
+                    placeholder="name"
+                  />
+                </div>
               </label>
+
               <span>{err.name}</span>
 
               <label>
-                <input
-                  onChange={(e) => handleChange(e)}
-                  className={style.input}
-                  value={inputs.lastname}
-                  name="lastname"
-                  type="text"
-                  placeholder="lastname"
-                />
+                Last Name
+                <div className="input-group">
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.lastname}
+                    name="lastname"
+                    type="text"
+                    placeholder="lastname"
+                  />
+                </div>
               </label>
               <span>{err.lastname}</span>
             </section>
 
             <section style={{ display: section === 3 ? "block" : "none" }}>
               <label>
-                <input
-                  onChange={(e) => handleChange(e)}
-                  className={style.input}
-                  value={inputs.gitaccount}
-                  name="gitaccount"
-                  type="text"
-                  placeholder="gitaccount"
-                />
+                Git Account
+                <div className="input-group">
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.gitaccount}
+                    name="gitaccount"
+                    type="text"
+                    placeholder="gitaccount"
+                  />
+                </div>
               </label>
               <span>{err.gitaccount}</span>
 
               <label>
-                <input
-                  onChange={(e) => handleChange(e)}
-                  className={style.input}
-                  value={inputs.image}
-                  name="image"
-                  type="text"
-                  placeholder="image"
-                />
+                Profile Image
+                <div className="input-group">
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.image}
+                    name="image"
+                    type="text"
+                    placeholder="image"
+                  />
+                </div>
               </label>
               <span>{err.image}</span>
             </section>
 
             <section style={{ display: section === 4 ? "block" : "none" }}>
               <label>
-                <textarea
-                  onChange={(e) => handleChange(e)}
-                  className={style.input}
-                  value={inputs.about}
-                  name="about"
-                  type="text"
-                  placeholder="about"
-                ></textarea>
+                About
+                <div className="input-group">
+                  <textarea
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.about}
+                    name="about"
+                    type="text"
+                    placeholder="about"
+                  ></textarea>
+                </div>
               </label>
               <span>{err.about}</span>
 
               <label>
+                Technologies
                 <Select onChange={handleSelect} options={options} isMulti />
               </label>
             </section>

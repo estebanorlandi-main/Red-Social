@@ -1,18 +1,27 @@
 .container {
   --p: 5em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 var(--p) 0 0;
-  gap: var(--p);
+  border-radius: 1em;
   margin: 0 0 0 auto;
-  height: calc(100vh - 4em);
   background-color: #fff;
 }
 
-.container > img {
-  object-fit: cover;
-  object-position: center;
-  width: 100%;
-  height: calc(100vh - 4em);
+.container {
+  margin: 0 auto;
+  overflow: hidden;
+  box-shadow: 0 0.25em 1em #0002;
+}
+
+.container > form {
+  padding: 2.5em 5em;
+}
+
+.container button[type="submit"] {
+  border-radius: 0;
 }

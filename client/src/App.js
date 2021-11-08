@@ -17,6 +17,8 @@ import "./App.css";
 import UserCard from "./components/UserCard/UserCard";
 import { useDispatch, useSelector } from "react-redux";
 import { removeError } from "./Redux/actions/Errors";
+import { Link } from "react-router-dom";
+import { BiMessageAltDetail } from "react-icons/bi";
 
 function App() {
   const dispatch = useDispatch();
@@ -35,6 +37,13 @@ function App() {
       ) : (
         ""
       )}
+
+      <Link className="message" to="/messenger">
+        <BiMessageAltDetail
+          style={{ margin: "0", width: "1.5em", height: "1.5em" }}
+        />
+        <span>Messages</span>
+      </Link>
 
       <NavBar />
 

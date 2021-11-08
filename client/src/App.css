@@ -33,7 +33,7 @@
 }
 
 form .buttonContainer {
-  margin: 1em 0 0 0;
+  margin: 2em 0 0 0;
 }
 
 form {
@@ -43,16 +43,14 @@ form {
   background-color: #fff !important;
 }
 
+form > h1 {
+  margin: 0 0 0.5em 0;
+  color: #1e1e1e;
+}
+
 label {
-  display: flex;
-  align-items: center;
-  font-size: 0.9rem;
-  width: 100%;
-  border: 1px solid #ccc;
-  background-color: #fff !important;
   margin: 1em 0 0 0;
-  padding: 0 0 0 1em;
-  border-radius: 4px;
+  font-size: 0.9rem;
 }
 
 label input,
@@ -61,16 +59,10 @@ label textarea {
   border: none;
   width: 100%;
 
+  font-size: 0.9rem;
+
   border: none;
   background-color: #fff;
-}
-
-label:focus-within {
-  outline: 2px solid var(--c-blue);
-}
-
-label:focus-within.error {
-  outline: 2px solid red;
 }
 
 form span {
@@ -82,6 +74,7 @@ form span {
 .btn {
   padding: 1em;
   text-align: center;
+  font-size: 1rem;
 }
 
 button[type="submit"] {
@@ -91,40 +84,67 @@ button[type="submit"] {
   background-color: var(--c-blue);
 }
 
-/*
-.wrapper {
-  width: 450px;
-  background: var(--c-light);
-  padding: 30px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-.wrapper .input-data {
-  height: 40px;
+.input-group {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
   width: 100%;
-  position: relative;
+  border: 1px solid #ccc;
+  background-color: #fff !important;
+  padding: 0 0 0 1em;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.input-group:focus-within {
+  outline: 2px solid var(--c-blue);
+}
+.input-group:focus-within.error {
+  outline: 2px solid red;
 }
 
-.wrapper .input-data input {
-  height: 100%;
+.btn.simple {
+  text-decoration: none;
+  align-self: flex-end;
+  padding: 0;
+  color: #1e1e1e;
+  font-size: 0.8rem;
+}
+
+button {
+  display: flex;
   width: 100%;
-  border: none;
-  font-size: 17px;
-  border-bottom: 2px solid silver;
+  align-items: center;
+  cursor: pointer;
+  justify-content: center;
 }
 
-.input-data input:focus ~ label,
-.input-data input:valid ~ label {
-  transform: translateY(-20px);
-  font-size: 15px;
-  color: var(--c-blue);
+a {
+  color: #1e1e1e;
+  text-decoration: none;
+  font-size: 0.9rem !important;
 }
 
-.wrapper .input-data label {
-  position: absolute;
-  bottom: 10px;
-  left: 0;
-  color: var(--c-light);
-  pointer-events: none;
-  transition: all 0.3 ease;
-}*/
+.message {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  width: 10em;
+  height: 3em;
+  border-radius: 1em 1em 0 0;
+  position: fixed;
+  bottom: 0;
+  right: 7em;
+  z-index: 999;
+  background-color: #fff;
+  padding: 1em;
+  box-shadow: 0 0 0.5em #0002;
+  transition: all 0.5s ease;
+}
+
+.message:hover {
+  box-shadow: 0 0.5em 0.75em #0005;
+}
+
+.message > span {
+  margin: 0 0 0 1em;
+}

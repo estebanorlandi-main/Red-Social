@@ -1,7 +1,7 @@
 import style from "./NewPost.module.css";
 import { useState } from "react";
 import { createPost, updatePage } from "../../Redux/actions/Post.js";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 
 export default function NewPost() {
@@ -39,13 +39,13 @@ export default function NewPost() {
     { value: "postgresql", label: "PostgreSQL" },
   ];
 
-  function separarTags(str) {
+  /*function separarTags(str) {
     var arr = str.split(",");
     setData((old) => ({
       ...old,
       tag: arr,
     }));
-  }
+  }*/
 
   function existe(str, str2, str3) {
     var textos = [str, str2, str3];
@@ -125,7 +125,7 @@ export default function NewPost() {
   async function handleSubmit(e) {
     e.preventDefault();
     if (verificar()) {
-      console.log(data)
+      console.log(data);
       let obj = await dispatch(createPost(data));
       setData({
         title: "",
@@ -135,8 +135,8 @@ export default function NewPost() {
         likes: 0,
         username: session.username,
       });
-      console.log(obj)
-      dispatch(updatePage(true, obj.payload.posts))
+      console.log(obj);
+      dispatch(updatePage(true, obj.payload.posts));
     }
   }
   return (

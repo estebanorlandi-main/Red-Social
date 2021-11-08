@@ -48,35 +48,45 @@ export default function Login() {
     <Redirect to="/home" />
   ) : (
     <div className={style.container}>
-      <img
+      {/*<img
         src="https://images.pexels.com/photos/1851415/pexels-photo-1851415.jpeg"
         alt=""
-      />
+      />*/}
 
       <form onSubmit={(e) => handleSubmit(e)}>
+        <h1>Log In</h1>
         <label className={errors.username ? "error" : ""}>
-          <FaUserCircle />
-          <input
-            type="text"
-            value={input.username}
-            name="username"
-            onChange={(e) => handleChange(e)}
-            placeholder="username"
-          />
+          Username
+          <div className="input-group">
+            <FaUserCircle />
+            <input
+              type="text"
+              value={input.username}
+              name="username"
+              onChange={(e) => handleChange(e)}
+              placeholder="Enter username"
+            />
+          </div>
         </label>
         <span>{errors.username}</span>
 
         <label className={errors.password ? "error" : ""}>
-          <FaKey />
-          <input
-            type="password"
-            value={input.password}
-            name="password"
-            onChange={(e) => handleChange(e)}
-            placeholder="password"
-          />
+          Password
+          <div className="input-group">
+            <FaKey />
+            <input
+              type="password"
+              value={input.password}
+              name="password"
+              onChange={(e) => handleChange(e)}
+              placeholder="Enter password"
+            />
+          </div>
         </label>
         <span>{errors.password}</span>
+        <Link className="btn simple" to="/signup">
+          forgot password?
+        </Link>
 
         <div className="buttonContainer">
           <button className="btn" type="submit">
