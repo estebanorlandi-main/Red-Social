@@ -1,13 +1,15 @@
 .container * {
   box-sizing: border-box;
 }
+
 .container {
   --br: 10px;
-  width: 50vw;
   margin: 1em auto;
+  max-width: 60em;
   display: grid;
-  grid-template-columns: auto minmax(10em, 20em);
+  grid-template-columns: auto minmax(20em, 20em);
 }
+
 .container .image {
   max-width: 10em;
   border-radius: var(--br);
@@ -77,4 +79,13 @@
   background-color: transparent !important;
   box-shadow: none !important;
   padding: 0 !important;
+}
+
+@media screen and (max-width: 700px) {
+  .container {
+    grid-template-columns: auto;
+  }
+  .right {
+    display: none;
+  }
 }

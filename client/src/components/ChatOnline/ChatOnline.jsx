@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import styles from "./ChatOnline.module.css";
 
 export default function ChatOnline({ onlineUsers, currentId, setCurrentChat }) {
-  const [friends, setFriends] = useState([]);
+  const [friends] = useState([]);
   const [onlineFriends, setOnlineFriends] = useState([]);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
+  /*
   useEffect(() => {
     const getFriends = async () => {
       const res = await axios.get("/users/friends/" + currentId);
@@ -15,6 +16,7 @@ export default function ChatOnline({ onlineUsers, currentId, setCurrentChat }) {
 
     getFriends();
   }, [currentId]);
+  */
 
   useEffect(() => {
     setOnlineFriends(friends.filter((f) => onlineUsers.includes(f._id)));
