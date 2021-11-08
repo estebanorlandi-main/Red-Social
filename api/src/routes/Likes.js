@@ -52,7 +52,7 @@ router.post("/", async (req, res, next) => {
     }).catch((e) => ({ errors: "fatal errors" }));
     if (findPost && findPost.errors) return res.send(findPost);
     if (findPost) {
-    findPost.destroy();
+    await findPost.destroy();
     const allPosts = await DB_Postsearch({});
     const { posts, totalPages } = paginate(0, allPosts);
     return res.send({ like: "se elimino el like", posts: posts});

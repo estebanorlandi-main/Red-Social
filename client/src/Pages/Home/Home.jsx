@@ -22,7 +22,7 @@ function Home(props) {
     )
       dispatch(updatePage(false));
   }, [dispatch]);
-
+  console.log(posts)
   useEffect(() => {
     if (first) {
       dispatch(getPosts(0));
