@@ -5,6 +5,7 @@ export const SEARCH_USER = "SEARCH_USER";
 export const GET_USER = "GET_USER";
 export const REMOVE_PROFILE = "REMOVE_PROFILE";
 export const GET_USERS = "GET_USERS"
+export const NEW_MSG = "NEW_MSG"
 
 export function searchUser(q) {
   return (dispatch) =>
@@ -29,7 +30,15 @@ export function removeProfile() {
 export function getUsers(user){
   return (dispatch)=>
     axios
-      .get("http://localhost:3001/user/")
+      .get(`http://localhost:3001/test/c/${user}/all`)
       .then((res)=> dispatch({type: GET_USERS, payload: res}))
+      .catch((e)=> console.log(e))
+}
+
+export function newMsg(payload) {
+  return (dispatch) =>
+    axios
+      .post("http://localhost:3001/test/c/m/new", payload)
+      .then((res) => dispatch({type:NEW_MSG, payload: res }))
       .catch((e)=> console.log(e))
 }

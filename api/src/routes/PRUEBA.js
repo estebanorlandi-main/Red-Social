@@ -26,7 +26,7 @@ router.get("/c/all", async (req, res,next) => {
 // get --> conversaciones del usuario
 router.get("/c/:username/all", async (req, res,next) => {
   try {
-    const userConvers = await db.User.findAll({
+    const userConvers = await db.User.findOne({
       where:req.params,
       include:[{
         model:db.Conver,
@@ -34,11 +34,15 @@ router.get("/c/:username/all", async (req, res,next) => {
         include:[{
           model:db.User,
           attributes:["id","username","name","lastname"],
-          through:{attributes:[]}
+          through:{attributes:[]},
         },{
-          model:db.Msg
+          model:db.Msg,
+          include:{
+            model:db.User,
+            attributes:["username"]
+          }
         }]
-      }]
+      }],
     })
     res.send(userConvers)
   } catch(e) {
@@ -90,11 +94,11 @@ router.post("/c/m/new", async (req, res,next) => {
   try {
     let {message,userId,converId} = req.body
     if(message && userId && converId && typeof userId == "string" && typeof message == "string"){
-      let findUser = await db.User.findOne({where:{id:userId}}).catch(e=>null)
+      let findUser = await db.User.findOne({where:{username:userId}}).catch(e=>null)
       if(!findUser) return res.send({errors:"Username does not exist"})
-      let findConver = await db.Conver.findOne({where:{members:{[Op.contains]:[userId]},id:converId}}).catch(e=>null)
+      let findConver = await db.Conver.findOne({where:{members:{[Op.contains]:[findUser.id]},id:converId}}).catch(e=>null)
       if(findConver){
-        let newMsg = await db.Msg.create(req.body).catch(e=>console.log(e))
+        let newMsg = await db.Msg.create({message:message,userId:findUser.id,converId:converId}).catch(e=>console.log(e))
         return res.send({sucess:"Message sent successfully"})
       }
       return res.send({errors:"The user does not belong to the chat"})

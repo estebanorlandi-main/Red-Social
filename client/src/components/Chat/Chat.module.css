@@ -34,4 +34,9 @@
       display: none;
     }
   }
-  
+
+.scroll{
+  overflow: scroll;
+  width: 15em;
+  height: 15em;
+  }

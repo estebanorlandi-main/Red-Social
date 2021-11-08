@@ -1,21 +1,49 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {useDispatch, useSelector} from "react-redux"
-import styles from "./Chat.module.css";
-import {getUsers} from "../../Redux/actions/Users.js"
+// import styles from "./Chat.module.css";
+import {getUsers,newMsg} from "../../Redux/actions/Users.js"
+import Message from "./Message.jsx"
+import { io } from "socket.io-client";
+
 
 export default function Chat() {
 
   const dispatch = useDispatch()
-  let convers = useSelector((state)=> {console.log(state);return state.usersReducer.convers})
-  useEffect(()=>{dispatch(getUsers())},[dispatch])
+  let user = useSelector((state)=> {return state.sessionReducer.username})
+  let userConvers = useSelector((state)=> state.usersReducer.convers)
+ 
+  let [msg, setMsg] = useState({
+    message:"",
+    userId:user,
+    converId:""
+  })
+
+  let handleChange = (e)=>{
+    e.preventDefault()
+    setMsg({...msg,message:e.target.value})
+  }
+
+  let handleSubmit = async (e)=>{
+    e.preventDefault()
+    e.target.value=""
+    setMsg({userId:user,converId:msg.converId,message:""})
+    dispatch(newMsg(msg))
+    dispatch(getUsers(user))
+  }
+
+
+ useEffect(()=>dispatch(getUsers(user)),[dispatch])
+ useEffect(()=>dispatch(getUsers(user)),[dispatch])
+
 
 
   return (
     <div>
-      <ul>
-      {convers? convers.map(e=><li><button>{e.username}</button></li>):<></>}
-      </ul>
+      {userConvers.id? userConvers.convers.map(e=>(
+        <Message key={e.id} dates={e} setMsg={setMsg} msg={msg}/>
+        )):<></>}
+      <textarea value={msg.message}onChange={(e)=>{handleChange(e)}}name="asjdkla" id="1231245" cols="30" rows="10"/>
+      <button onClick={(e)=>handleSubmit(e)}>submit</button>
     </div>
   );
 }

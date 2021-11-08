@@ -1,9 +1,9 @@
-import { SEARCH_USER, GET_USER, REMOVE_PROFILE, GET_USERS } from "../actions/Users";
+import { SEARCH_USER, GET_USER, REMOVE_PROFILE, GET_USERS,NEW_MSG } from "../actions/Users";
 
 const initialState = {
   users: [],
   profile: {},
-  convers:[]
+  convers:{}
 };
 
 export default function root(state = initialState, action) {
@@ -26,6 +26,11 @@ export default function root(state = initialState, action) {
       return {
         ...state,
         convers: action.payload.data,
+      };
+
+    case NEW_MSG:
+      return {
+        ...state
       };
 
     case REMOVE_PROFILE:

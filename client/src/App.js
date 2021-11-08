@@ -50,7 +50,7 @@ function App() {
         <Route path="/support" component={Support} />
 
 
-        <Route path="/chat/test" component={Chat}/>
+        <Route exact path="/chat/test" component={Chat}/>
 
         <Route
           path="/profile/:username"
