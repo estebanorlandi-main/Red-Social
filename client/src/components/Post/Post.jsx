@@ -8,6 +8,7 @@ import {
   deletePost,
   updatePost,
   updatePage,
+  likePost
 } from "../../Redux/actions/Post";
 
 import Comment from "../Comment/Comment";
@@ -20,6 +21,7 @@ import {
   MdOutlineModeComment,
   MdShare,
   MdSend,
+  MdFavorite
 } from "react-icons/md";
 
 import { BiCommentDetail } from "react-icons/bi";
@@ -116,13 +118,9 @@ console.log(post)
   };
 
   async function borrar() {
-<<<<<<< HEAD
-    let hola = await dispatch(deletePost(post.idPost));
-    dispatch(updatePage(true, hola.payload.posts));
-=======
+
     let res = await dispatch(deletePost(post.idPost));
     dispatch(updatePage(true, res.payload.posts));
->>>>>>> f379d030f6184505e10790bfccef71bbea630f66
   }
 
   async function editar() {
