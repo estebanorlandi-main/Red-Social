@@ -25,12 +25,13 @@ export default function AdminSupport(){
         <div>
         { message.length > 0 ? message.map(e =>
             <div>
+                <h3>{e.username}</h3>
                 <h3>{e.title}</h3>
                 <p>{e.content}</p>
 
-            </div>): true}
+            </div>): <div>Welcom support</div>}
         {/* <button onClick={e => handleClick(e)}>recargar</button> */}
-            Welcom support
+            
        
         </div>
     )
