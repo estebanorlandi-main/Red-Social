@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import image from "../../images/userCard.png";
-import { likePost } from "../../Redux/actions/Post";
 
 
 import { commentPost, deletePost, updatePost,getPosts, updatePage, likePost } from "../../Redux/actions/Post";
@@ -39,7 +38,7 @@ function Post({ post, customClass, user }) {
   const createdAt = new Date(post.createdAt).getTime();
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
-
+console.log(post)
   useEffect(() => {
     if (firstLoad) {
       setFirstLoad(false);
@@ -86,8 +85,10 @@ function Post({ post, customClass, user }) {
       );
   };
 
-  const handleLike = (e) => {
-    if (session.username) dispatch(likePost({postIdPost:post.idPost, userId:session.username}));
+  const handleLike = async (e) => {
+    let obj;
+    if (session.username) {obj =await dispatch(likePost({postIdPost:post.idPost, userId:session.username}))};
+    dispatch(updatePage(true, obj.payload.posts))
   };
 
   async function borrar() {
@@ -244,13 +245,12 @@ function Post({ post, customClass, user }) {
       )}
       <div className={styles.options}>
         <button className={!session.username ? "" : ""} onClick={handleLike}>
-          {/* {post.likes.filter((user) => user === session.username).length ? (
+          {post.userLikes.filter((user) => user.user.username === session.username).length ? (
             <MdFavorite color="red" />
           ) : (
             <MdFavoriteBorder />
-          )} */}
-          <MdFavoriteBorder />
-          {post.likes} |
+          )}
+          {post.userLikes.length} |
           {/* <span>
             {post.likes[post.likes.length - 1]},{" "}
             {post.likes[post.likes.length - 2]}
