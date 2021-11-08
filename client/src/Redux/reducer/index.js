@@ -12,11 +12,13 @@ import errorsReducer from "./errors.js";
 
 import adminReducer from "./admin.js"
 
+import supportReducer from "./support.js"
 
 export default combineReducers({
   postsReducer, // Array con todos los posteos / filtrar posteos - busqueda - ordernar
   sessionReducer, // Objeto Datos del usuario logeado / login - logout - register
   usersReducer, // Array con todos los usuarios / Filtrar usuarios - busqueda - ordenar
   errorsReducer,// Contiene los errores de todos los reducers
-  adminReducer //Objeto con todos los mesajes para el admin
+  adminReducer,//Objeto con todos los mesajes para el admin
+  supportReducer // Objeto que guarda todos los mesajes de usuarios para el support 
 });
