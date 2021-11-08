@@ -1,13 +1,15 @@
 .container * {
   box-sizing: border-box;
 }
+
 .container {
   --br: 10px;
-  width: 50vw;
   margin: 1em auto;
+  max-width: 60em;
   display: grid;
-  grid-template-columns: auto minmax(10em, 20em);
+  grid-template-columns: auto minmax(20em, 20em);
 }
+
 .container .image {
   max-width: 10em;
   border-radius: var(--br);
@@ -49,6 +51,19 @@
   text-decoration: none;
   margin: 0.25em 0 0 0;
 }
+.tags {
+  margin: 0 0 1em 0;
+  display: flex;
+  gap: 0.25em;
+}
+.tag {
+  font-size: 0.85rem;
+  border-radius: 4px;
+  width: max-content;
+  background-color: var(--c-blue);
+  color: #fff;
+  padding: 0.5em 1em;
+}
 
 .right {
   column-width: 85%;
@@ -64,4 +79,13 @@
   background-color: transparent !important;
   box-shadow: none !important;
   padding: 0 !important;
+}
+
+@media screen and (max-width: 700px) {
+  .container {
+    grid-template-columns: auto;
+  }
+  .right {
+    display: none;
+  }
 }

@@ -1,6 +1,7 @@
 .navbar * {
   text-decoration: none;
   color: var(--c-dark);
+  list-style: none;
 }
 
 .navbar {
@@ -12,73 +13,181 @@
   box-shadow: 0 0.25em 0.5em #0001;
 }
 
-.navbar > nav {
+.nav {
+  width: 85%;
+  margin: 0 auto;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 4rem;
 }
 
-.nav {
+.brand {
   display: flex;
-  justify-content: space-evenly;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.25rem;
 }
-.nav li {
-  display: inline-block;
-  margin: 0 0.75em;
+.brand > img {
+  width: 0.95em;
+  margin: 0 1em 0 0;
+}
+.brand > span {
+  font-weight: 300;
+  color: #aaa;
 }
 
-.nav li .link {
+.menu {
+  display: flex;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.link {
   position: relative;
-  padding: 0.5rem 1rem;
-  text-transform: capitalize;
-  font-weight: 500;
+  padding: 0.5em 1em;
 }
 
+.link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -0.5em;
+  transform: translate(-50%, 0);
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 100%;
+  background-color: transparent;
+  transition: all 0.25s;
+}
 
-.links{
+.active::after {
+  background-color: var(--c-blue);
+  bottom: -0.25em;
+}
+
+.signup,
+.logout {
+  padding: 0.5em 1em;
+}
+
+.signup {
+  background-color: var(--c-blue);
+  color: #fff;
+  border-radius: 5em;
+}
+
+.profile__container {
+  position: relative;
+}
+
+.profile,
+.profile__menu {
+  border: none;
+  background-color: #fff;
+}
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  cursor: pointer;
+}
+.profile > span {
+  font-size: 1rem;
+  font-weight: bold;
+}
+.profile > img {
+  object-fit: cover;
+  object-position: center;
+  width: 3em;
+  height: 3em;
+  border-radius: 5em;
+}
+
+.profile__menu {
+  position: absolute;
+  top: 110%;
+  right: 0%;
+  width: 100%;
+  min-width: 10em;
+  transform: translate(0, 0);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  font-weight: 500;
+  padding: 0.25em 0.75em;
+  border-radius: 0 0 1em 1em;
+  transition: all 0.25s;
 }
-
-.brand {
-  height: 100%;
+.profile__menu .link {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-}
-
-.brand h4 {
-  margin: 0 0 0 1em;
-}
-.brand span {
-  font-weight: 500;
-  opacity: 0.5;
-}
-
-.brand img {
-  transform: rotate(0deg);
-  transition: all 1s;
-}
-.brand:hover img {
-  transform: rotate(360deg);
-}
-
-.landing {
-  color: #fff;
-  position: fixed;
+  justify-content: flex-end;
+  gap: 0.5em;
+  border: none;
   background-color: transparent;
+  text-align: right;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin: 0.25em 0 0 0;
+}
+
+.profile__menu .link:hover {
+  color: #fff;
+}
+
+.profile__menu .link::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  top: 0;
+  height: 100%;
+  transform: translate(0, 0);
+  width: 2px;
+  border-radius: 0;
+  background-color: var(--c-blue);
+}
+
+.profile__menu .link:hover::after {
+  width: 100%;
+}
+
+.show {
+  display: flex;
+  height: 10em;
+}
+.show > * {
+  opacity: 1;
+}
+
+.hide {
+  height: 0;
+  opacity: 0;
+}
+.hide .link {
+  display: none;
+}
+
+@media screen and (max-width: 650px) {
+  .menu {
+    display: none;
+  }
+}
+
+.landing * {
+  color: #fff;
+}
+.landing {
+  position: fixed;
+  background: transparent;
   box-shadow: none;
 }
-
-.landing,
-.landing .brand h4,
-.landing .brand span,
-.landing .link {
-  color: #fff;
-}
-.landing .link::after {
-  background-color: #fff;
+.landing .profile {
+  background-color: transparent;
 }

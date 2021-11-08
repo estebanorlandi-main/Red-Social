@@ -9,6 +9,7 @@ const {
   Likes,
   User_Follow,
   Support,
+  Privileges
 } = require("../db.js");
 const db = require("../db.js");
 const { Sequelize } = require("sequelize");
@@ -18,83 +19,6 @@ const saltRounds = 10;
 const myPlaintextPassword = "s0//P4$$w0rD";
 const someOtherPlaintextPassword = "not_bacon";
 
-<<<<<<< HEAD
-//fn
-const DB_findUsersEmail = async (email)=>{
-	if(email == null || email == undefined) {return null}
-	const findUserEmail = await User.findOne({where:{email}})
-	return findUserEmail
-}
-const DB_findUsersUsername = async (username)=>{
-	if(username == null || username == undefined) {return null;}
-	const findUsername = await User.findOne({where:{username}})
-	return findUsername
-}
-const DB_findUserAll = async (query)=>{
-		const findUserAll = await User.findAll({
-			attributes:["id","name","username","lastname","image","gitaccount","email"],
-			include: [Post,Comment]
-		})
-		return findUserAll
-}
-const DB_findUserCreated = async (date)=>{
-	const {username,email} = date
-	let errors = {}
-	byEmail = await User.findOne({where:{email}})
-	byUsername = await User.findOne({where:{username}})
-	if(byEmail) errors={...errors,email:"Is already in use"}
-	if(byUsername) errors={...errors,username:"Is already in use"}
-	return errors
-}
-const DB_findUserQuery = async (query)=>{
-		const findUser = await User.findOne({
-			where:{
-				[Op.or]:[
-				{
-					id: query.id
-				},
-				{
-					username: {[Op.iLike]:query.username}
-				},
-				{
-					email: {[Op.iLike]:query.email}
-				}
-				]
-			},
-			attributes:["id","name","username","lastname","image","gitaccount","email"],
-			include:[Post,Comment]
-		}).catch(e=>{})
-		return findUser
-}
-const DB_findUserParams = async (params)=>{
-		const findUser = await User.findOne({
-			where:{
-				username:params
-			},
-			attributes:["id","name","username","lastname","image","gitaccount","email"],
-			include:[Post,Comment]
-		}).catch(e=>{})
-		return findUser
-}
-const DB_UserID = async (username)=>{
-	const UserID = await User.findOne({
-			where:{
-				username
-			},
-			attributes:["id","name","username","lastname","image","gitaccount","email"],
-			include: [Post,Comment]
-		})
-	return UserID;
-}
-
-const DB_Allcomments = async (username)=>{
-	user = await DB_UserID(username)
-	const final = user.comments.map((comment)=>{
-		return comment.dataValues;
-	})
-	return final;
-}
-=======
 const likeUserPost = {
   model: Likes,
   as: "postLikes",
@@ -117,7 +41,6 @@ const followedInfo = {
   as: "following",
   attributes: ["id", "username", "image", "name", "lastname"],
 };
->>>>>>> 825849e4431c559d37b40e5952caa2fed1ffd91d
 
 const DB_UserFollow = async (date) => {
   const { userId, followerId } = date;
@@ -248,50 +171,11 @@ const DB_Commentdestroy = async (id) => {
   }
 };
 
-<<<<<<< HEAD
-const DB_Postsearch = async ({username, id}) =>{
-	try{
-		let findUserPosts;
-		if(username === undefined){
-			post_search = await Post.findOne({
-            	where:{
-                 	'idPost':id
-            	},
-        	});
-        	return post_search;
-		} else if (id === undefined){
-			let userDB = await DB_UserID(username);
-			post_search =await Post.findAll({
-            	where:{
-                	userId:userDB.id
-            	},
-        	});
-        	return post_search
-		}else {
-			return 'Post not found'
-		}
-	}catch(e){
-		throw new Error('We had a problem with the search')
-	}
-}
-
-const DB_Postdestroy = async (idPost)=> {
-	let errors = {}
-	let validateDate = await Post.findOne({where:{idPost}}).catch(e=>{
-		errors = {...errors,idPost:"Post not found"}
-	})
-	console.log(validateDate)
-	if(validateDate) {
-		validateDate.destroy()
-		return undefined
-	}
-	else return errors
-=======
 const DB_Postsearch = async ({ username, id }) => {
   try {
     if (username === undefined && id === undefined) {
       var post_search = await Post.findAll({
-        include: [{ model: User, attributes: ["image", "username"] }, Comment],
+        include: [{ model: User, attributes: ["image", "username"] }, Comment, {model:Likes, as:"userLikes", include:[{model:User,attributes:["username"]}]}],
         order: [["createdAt", "DESC"]],
       });
       return post_search;
@@ -336,7 +220,6 @@ const DB_Postdestroy = async (id) => {
 const DB_Postedit = async (id, { title, content, tag, image, likes }) => {
   // console.log(id, title, content, tag, image, likes, 'Entre a utils')
   const updatedPost = await Post.findOne({ where: { idPost: id } });
->>>>>>> 825849e4431c559d37b40e5952caa2fed1ffd91d
 
   content ? (updatedPost.content = content) : null;
   title ? (updatedPost.title = title) : null;
@@ -452,40 +335,9 @@ const DB_postCreates = async (data) => {
   }
 };
 
-<<<<<<< HEAD
-const DB_createPost = async(date)=>{
-
-	let errors = {}
-	let validateDate = await Post.create(date).catch(e=>{
-		console.log(e)
-		if(e.errors){
-			e.errors.forEach(e=> {
-				errors = {...errors,[e.path]:e.message}
-			})			
-		}
-		errors = {...errors,userId:"User not found"}
-	})
-	if(Array.isArray(validateDate))return validateDate
-	else return errors
-}
-
-const DB_updateUser = async(date,id)=>{
-	let errors = {} 
-	let validateDate = await User.update(date,{where:{id:id}}).catch(e=>{
-		console.log(e)
-		e.errors.forEach(e=> {
-			errors = {...errors,[e.path]:e.message}
-		})
-	})
-	if(Array.isArray(validateDate))return []
-	else return errors
-}
-const DB_userCreates = async(date)=>{
-=======
 const DB_userSearch = async (username, email, password) => {
   // const hashPassword =  bcrypt.hashSync(password,saltRounds)
   // console.log(hashPassword)
->>>>>>> 825849e4431c559d37b40e5952caa2fed1ffd91d
 
   try {
     if (username && username != null) {
@@ -515,7 +367,7 @@ const DB_userSearch = async (username, email, password) => {
       if (!validate) {
         return { error: "password" };
       }
-      return user;
+      return user;Sea
     }
   } catch (e) {
     return console.log("Error login", e);
@@ -540,60 +392,19 @@ const BD_searchSupport = async () => {
   }
 };
 
-const DB_findPostsAll = async ()=>{
-	const findPostsAll = await Post.findAll({})
-	return findPostsAll	
-}
-
-const DB_findPostsQuery = async (query)=>{
-	const findPosts = await Post.findAll({
-		where:{
-			[Op.or]:[
-			{
-				title: {[Op.iLike]:query.title}
-			},{
-				title: {[Op.iLike]:query.title+"%"}
-			},{
-				tag:{
-					[Op.contains]:[query.tag]
-				}
-			},{
-				content: {[Op.iLike]:"%"+query.content+"%"}
-			}
-			]
-		}
+const BD_createPrivileges = async (user,title) =>{
+	var privileges = await Privileges.create({
+		title,
+		userId:user.id,
+    username:user.username,
+		checked: true
 	})
-	return findPosts
+  // privileges.findOne({include:User.username})
+  console.log(privileges)
+	return privileges
 }
 
 module.exports = {
-<<<<<<< HEAD
-	DB_UserID,
-	DB_Allcomments,
-	DB_Commentedit,
-	DB_Commentdestroy,
-	DB_Postsearch,
-	DB_Postdestroy,
-	DB_Postedit,
-	validateUpdateUser,
-	validateUpdateUser,
-	DB_userCreates,
-	DB_findUserAll,
-	DB_findUserQuery,
-	DB_findUserParams,
-	DB_postCreates,
-	DB_userSearch,
-	DB_findUsersEmail,
-	DB_findUsersUsername,
-	DB_validatePassword,
-	DB_findUserCreated,
-	DB_createUser,
-	DB_updateUser,
-	DB_findPostsAll,
-	DB_findPostsQuery,
-	DB_createPost
-}
-=======
   DB_findUserAll,
   DB_findUserQuery,
   DB_findUserParams,
@@ -617,5 +428,5 @@ module.exports = {
   DB_findUsersUsername,
   DB_UserFollow,
   BD_searchSupport,
+  BD_createPrivileges
 };
->>>>>>> 825849e4431c559d37b40e5952caa2fed1ffd91d

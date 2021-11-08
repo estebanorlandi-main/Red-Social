@@ -4,8 +4,8 @@ import {
   GET_POSTS,
   GET_POST_FOR_ID,
   GET_POST_FOR_USERNAME,
-  POST_DELETE,
   UPDATE_PAGE,
+  CLEAR_POST,
 } from "../actions/Post";
 
 const initialState = {
@@ -49,11 +49,11 @@ export default function root(state = initialState, action) {
       };
 
     case GET_POSTS:
-    if (action.page === 0) {
+      if (action.page === 0) {
         return {
           ...state,
-          posts: action.payload.posts
-        }
+          posts: action.payload.posts,
+        };
       }
       return {
         ...state,
@@ -62,14 +62,12 @@ export default function root(state = initialState, action) {
       };
 
     case GET_POST_FOR_ID:
-      console.log(action.payload);
       return {
         ...state,
         post: action.payload,
       };
 
     case GET_POST_FOR_USERNAME:
-      console.log(action.payload);
       return {
         ...state,
         post: action.payload,
@@ -77,17 +75,20 @@ export default function root(state = initialState, action) {
 
     case UPDATE_PAGE:
       if (action.payload.bol) {
-        return ({
+        return {
           ...state,
-          page:-1,
-          posts:action.payload.post
-        })
-      }else {
-        return ({
+          page: -1,
+          posts: action.payload.post,
+        };
+      } else {
+        return {
           ...state,
-          page: state.page + 1
-        })
+          page: state.page + 1,
+        };
       }
+
+    case CLEAR_POST:
+      return { ...initialState, posts: [] };
 
     default:
       return state;

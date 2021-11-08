@@ -16,14 +16,21 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  max-width: 32em;
+  width: 100%;
+  max-width: 30em;
+  min-width: 300px;
   margin: 2em auto 0 auto;
+  padding: 1em 0;
   border-radius: 10px;
   overflow: hidden;
   background-color: var(--c-bg);
 }
 
 .avatar {
+  object-fit: cover;
+  object-position: center;
+  width: 3em;
+  height: 3em;
   background-color: var(--c-avatar-bg);
   border-radius: 100%;
 }
@@ -53,7 +60,8 @@
 }
 
 .postBody {
-  margin: 0 var(--pX) 0 var(--pX);
+  padding: 0 var(--pX) 0 var(--pX);
+  width: 100%;
 }
 
 .mainContent {
@@ -69,6 +77,7 @@
 }
 
 .text {
+  word-break: break-all;
   font-size: 1rem;
   line-height: 1.45rem;
   margin: 0.5em 0 0 0;
@@ -105,7 +114,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding: 1em var(--pX);
+  padding: 0 var(--pX) 1em var(--pX);
 }
 
 .tags > li {
@@ -153,35 +162,24 @@
 
 .newCommentContainer {
   width: 100%;
-  background-color: #fafafa;
-  padding: 0.5em var(--pX) 0 var(--pX);
+  padding: 0 var(--pX);
 }
 
-.newComment {
-  display: flex;
+.newComment > label {
   width: 100%;
-  margin: 0.5em auto 0 auto;
-  border: 1px solid #0002;
-  border-radius: 5px;
-  overflow: hidden;
+  display: flex !important;
+  flex-direction: row;
 }
-.textarea {
-  border: none;
-  width: 100%;
-  height: 2.5rem;
+
+.newComment textarea {
   resize: none;
   padding: 1em;
+  height: calc(1rem + 2em);
 }
-.newComment > button {
-  background-color: #f0f0f0;
-  padding: 0 var(--pX);
-  border: none;
-}
-.newComment > button:hover {
-  background-color: var(--c-blue);
-}
-.newComment > button:hover .icons {
-  color: #fff;
+
+.newComment button[type="submit"] {
+  max-width: 7em;
+  border-radius: 0 4px 4px 0;
 }
 
 .icons {

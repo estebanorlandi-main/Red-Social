@@ -15,6 +15,7 @@ const Tags = require("./Tags.js")
 const Support = require("./Support.js")
 const Conversation = require("./Conversation.js")
 const Message = require("./Message.js")
+const Admin = require("./Admin.js")
 
 
 
@@ -40,6 +41,7 @@ router.use("/user", Users);
 router.use("/comment", AuthControllers.isAuthenticated, Comments);
 router.use("/post", Post);
 router.use("/login", Login);
+router.use("/admin", Admin,  AuthControllers.isAuthenticated, Admin);
 // router.use("/tags", Tags)
 // router.use("/likes", Likes);
 // router.use("/support",Support);
@@ -47,7 +49,7 @@ router.use("/conversation",Conversation);
 router.use("/message",Message);
 
 router.use("/tags", AuthControllers.isAuthenticated, Tags)
-router.use("/likes",  AuthControllers.isAuthenticated, Likes);
+router.use("/likes", Likes);
 router.use("/support",  AuthControllers.isAuthenticated, Support);
 router.get('/logout', AuthControllers.logout)
 

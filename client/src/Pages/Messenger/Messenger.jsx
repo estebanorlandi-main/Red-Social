@@ -1,9 +1,8 @@
-
 import Conversation from "../../components/Conversations/Conversations.jsx";
 import Message from "../../components/Message/Message.jsx";
 import ChatOnline from "../../components/ChatOnline/ChatOnline.jsx";
-import { useContext, useEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux"
+import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 // import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { io } from "socket.io-client";
@@ -12,16 +11,15 @@ import styles from "./Messenger.module.css";
 
 export default function Messenger() {
   const user = useSelector((store) => store.sessionReducer);
-  
+
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [onlineUsers] = useState([]);
   const socket = useRef();
   const scrollRef = useRef();
-
 
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
@@ -43,7 +41,7 @@ export default function Messenger() {
   useEffect(() => {
     socket.current.emit("addUser", user.username);
     socket.current.on("getUsers", (users) => {
-      console.log(users)
+      console.log(users);
       // setOnlineUsers(
       //   user.followings.filter((f) => users.some((u) => u.userId === f))
       // );
@@ -53,8 +51,10 @@ export default function Messenger() {
   useEffect(() => {
     const getConversations = async () => {
       try {
-        const res = await axios.get("http://localhost:3001/conversation/" + user.username);
-        console.log(res.data)
+        const res = await axios.get(
+          "http://localhost:3001/conversation/" + user.username
+        );
+        console.log(res.data);
         setConversations(res.data);
       } catch (err) {
         console.log(err);
@@ -66,8 +66,10 @@ export default function Messenger() {
   useEffect(() => {
     const getMessages = async () => {
       try {
-        console.log(currentChat.id)
-        const res = await axios.get("http://localhost:3001/message/" + currentChat?.id);
+        console.log(currentChat.id);
+        const res = await axios.get(
+          "http://localhost:3001/message/" + currentChat?.id
+        );
         setMessages(res.data);
       } catch (err) {
         console.log(err);
@@ -112,7 +114,10 @@ export default function Messenger() {
       <div className={styles.messenger}>
         <div className={styles.chatMenu}>
           <div className={styles.chatMenuWrapper}>
-            <input placeholder="Search for friends" className={styles.chatMenuInput} />
+            <input
+              placeholder="Search for friends"
+              className={styles.chatMenuInput}
+            />
             {conversations.map((c) => (
               <div onClick={() => setCurrentChat(c)}>
                 <Conversation conversation={c} currentUser={user} />
@@ -138,7 +143,10 @@ export default function Messenger() {
                     onChange={(e) => setNewMessage(e.target.value)}
                     value={newMessage}
                   ></textarea>
-                  <button className={styles.chatSubmitButton} onClick={handleSubmit}>
+                  <button
+                    className={styles.chatSubmitButton}
+                    onClick={handleSubmit}
+                  >
                     Send
                   </button>
                 </div>
@@ -163,3 +171,4 @@ export default function Messenger() {
     </>
   );
 }
+

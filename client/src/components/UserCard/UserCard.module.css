@@ -1,82 +1,121 @@
 .container {
   position: fixed;
-  left: 4%;
-  top: 14%;
-  border-radius: 8px;
-  background-color: rgb(255, 255, 255);
-  height: 65%;
-  width: 20%;
-  padding: 1%;
-  overflow: hidden;
   z-index: 1;
-  box-shadow: 0 0.5em 1em #0003;
+  overflow: hidden;
+  width: 100%;
+  min-width: 320px;
+  max-width: 320px;
+  margin: 2em auto;
+  border-radius: 1em;
+  background-color: #fff;
+  padding: 1.5em;
+  box-shadow: 0 0.5em 1em #0001;
 }
 
-.bkg {
+.cover {
   position: absolute;
-  background-image: url(https://media.istockphoto.com/photos/programming-code-abstract-technology-background-of-software-developer-picture-id1224500457?b=1&k=20&m=1224500457&s=170667a&w=0&h=OOPEMFamnZo63_2t_W40mYSfU1WrFAHHZRBgNN-GSgI=);
-  height: 10vh;
-  width: 100%;
-  left: 0;
   top: 0;
-}
-
-.profile {
-  position: relative;
-  min-height: 5em;
+  left: 0;
   width: 100%;
-}
-
-.profile img {
+  max-height: 6em;
   object-fit: cover;
   object-position: center;
-  width: 7em;
-  min-width: 7em;
-  min-height: 7em;
-  margin: 0 auto;
+}
+
+.imageOffline,
+.userImage {
   display: block;
-  border: 3px solid rgb(255, 255, 255);
-  border-radius: 50%;
+  max-width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.userImage {
+  --s-image: 7.25em;
+  transform: translate(0, 0);
+  height: var(--s-image);
+  width: var(--s-image);
+  margin: 0 auto 2em auto;
+  border-radius: 100%;
+  border: 5px solid #fff;
 }
 
 .username {
-  margin: 0.75em 0;
-  font-weight: 500;
-  font-size: 16px;
-  text-align: center;
+  margin: 1em 0 0 0;
 }
 
-.container img {
-  display: block;
-  margin: auto;
-}
-
-.container span {
-  display: flex;
-  text-align: center;
-  font-weight: bold;
+.about {
   padding: 1em;
+  background-color: #f0f0f0;
+  border-radius: 0.5em;
+  margin: 1em 0 0 0;
 }
 
-.container button {
+.contact {
+  list-style: none;
+}
+
+.contact li {
+  margin: 1em 0 0 0;
+}
+.contact li a {
+  color: #555;
+  text-decoration: none;
+}
+
+.imageOffline {
+  margin: 0 auto;
+}
+
+.description {
+  margin: 1em 0 1em 0;
+  text-align: center;
+  font-size: 1.15rem;
+  color: #555;
+}
+
+.session {
+  list-style: none;
   display: flex;
-  margin-top: 4%;
-  width: 100%;
-  background-color: #4a9bbd;
-  border-radius: 4px;
-  color: white;
-  border: none;
-  font: inherit;
-  padding: 0;
-  cursor: pointer;
+  flex-direction: column;
+  gap: 1em;
 }
 
-@media screen and (max-width: 30em) {
-  .container {
-    position: relative;
-    left: 0;
-    right: 0;
-    width: 85%;
-    margin: 1em auto;
-  }
+.signup,
+.login {
+  display: block;
+  text-decoration: none;
+  padding: 1em;
+  text-align: center;
+}
+
+.signup {
+  background-color: var(--c-blue);
+  border-radius: 5em;
+  color: #fff;
+}
+
+.login {
+  color: var(--c-blue);
+}
+.login:hover {
+  color: #4b518f;
+}
+
+.primary {
+  display: flex;
+  align-items: center;
+  border: none;
+  color: #fff;
+  font-size: 1rem;
+  background-color: var(--c-blue);
+  padding: 1em 2em;
+  text-align: left;
+  width: 100%;
+  border-radius: 5em;
+  margin: 2em 0 0 0;
+}
+
+.primary span {
+  margin: 0 0 0 0.5em;
 }
