@@ -112,27 +112,31 @@ export default function Profile(props) {
           <img className={styles.image} src={profile.image || userimg} alt="" />
 
           {myProfile && editar ? (
-            <div className={styles.inputGroup}>
+            <form>
               <label>
-                <input
-                  name="name"
-                  onChange={handleChange}
-                  value={inputs.name}
-                  placeholder={session.name}
-                />
-                <span>{errors.name}</span>
+                <div className="input-group">
+                  <input
+                    name="name"
+                    onChange={handleChange}
+                    value={inputs.name}
+                    placeholder={session.name}
+                  />
+                </div>
               </label>
+              <span>{errors.name}</span>
 
               <label>
-                <input
-                  name="lastname"
-                  onChange={handleChange}
-                  value={inputs.lastname}
-                  placeholder={session.lasnName}
-                />
-                <span>{errors.lastname}</span>
+                <div className="input-group">
+                  <input
+                    name="lastname"
+                    onChange={handleChange}
+                    value={inputs.lastname}
+                    placeholder={session.lasnName}
+                  />
+                </div>
               </label>
-            </div>
+              <span>{errors.lastname}</span>
+            </form>
           ) : (
             <p className={styles.name}>
               {profile.name} {profile.lastname}
@@ -161,14 +165,16 @@ export default function Profile(props) {
         <section>
           <h3>About</h3>
           {myProfile && editar ? (
-            <>
-              <textarea
-                name="about"
-                onChange={handleChange}
-                value={inputs.about}
-                placeholder={session.about}
-              ></textarea>
-            </>
+            <label>
+              <div className="input-group">
+                <textarea
+                  name="about"
+                  onChange={handleChange}
+                  value={inputs.about}
+                  placeholder={session.about}
+                ></textarea>
+              </div>
+            </label>
           ) : (
             <p>{profile.about}</p>
           )}

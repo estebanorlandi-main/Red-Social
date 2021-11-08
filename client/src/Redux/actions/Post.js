@@ -13,6 +13,7 @@ export const GET_POSTS = "GET_POSTS";
 export const GET_POST_FOR_ID = "GET_POST_FOR_ID";
 export const GET_POST_FOR_USERNAME = "GET_POST_FOR_USERNAME";
 export const UPDATE_PAGE = "UPDATE_PAGE";
+export const CLEAR_POST = "CLEAR_POST";
 // Crear Posteo
 // return (dispatch) => axios.post('localhost:3001/post')
 //  -> title
@@ -101,6 +102,13 @@ export function updatePage(bol, post) {
   return { type: UPDATE_PAGE, payload: { bol, post } };
 }
 
+export function likePost(data){
+  return (dispatch) =>
+  axios
+  .post("http://localhost:3001/likes", data, {withCredentials:true})
+  .then(res => {console.log(res.data); return ({type: POST_LIKE, payload: res.data})})
+}
+/*
 export function likePost(idPost, username) {
   return (dispatch) =>
     axios
@@ -111,6 +119,10 @@ export function likePost(idPost, username) {
       )
       .then((res) => console.log(res.data))
       .catch((err) => console.log(err.data));
+}
+
+export function clearPosts() {
+  return { type: "CLEAR_POST", payload: [] };
 }
 
 /*

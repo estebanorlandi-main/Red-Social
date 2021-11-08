@@ -49,7 +49,7 @@ router.use("/conversation",Conversation);
 router.use("/message",Message);
 
 router.use("/tags", AuthControllers.isAuthenticated, Tags)
-router.use("/likes",  AuthControllers.isAuthenticated, Likes);
+router.use("/likes", Likes);
 router.use("/support",  AuthControllers.isAuthenticated, Support);
 router.get('/logout', AuthControllers.logout)
 

@@ -1,39 +1,37 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch} from "react-redux";
-import { Link, useHistory  } from "react-router-dom";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { createSupport } from "../../Redux/actions/Support";
 import style from "./Support.css";
 
-
-
-
-export default function Support(){
+export default function Support() {
   const dispatch = useDispatch();
   const history = useHistory();
-  const session = useSelector((state) => state.sessionReducer)
-  const [inputs, setInputs] = useState({title:"", content:"", username:""})
-  console.log(session.username)
+  const session = useSelector((state) => state.sessionReducer);
+  const [inputs, setInputs] = useState({
+    title: "",
+    content: "",
+    username: "",
+  });
 
-  const handleChange =(e)=>{
+  const handleChange = (e) => {
     setInputs({
-        ...inputs,
-        [e.target.name] : e.target.value
-    });}
+      ...inputs,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  const handleSubmit = (e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
-    inputs.username = session.username
-    dispatch(
-      createSupport(inputs)
-    )
-    alert("Message enviado")
-    setInputs({title:"", content:"", username:""})
-    history.push('/home')
-  }
+    inputs.username = session.username;
+    dispatch(createSupport(inputs));
+    setInputs({ title: "", content: "", username: "" });
+    history.push("/home");
+  };
 
-  return(
-      <div>
-        <form className={style.container} >
+  return (
+    <div>
+      <form className={style.container}>
         Support
         <label>Tile</label>
         <input
@@ -53,10 +51,10 @@ export default function Support(){
           type="text"
           cols="20"
           rows="5"
-          >
-          </textarea>
-          <input type="submit" onClick={(e) => handleSubmit(e)}/>
-        </form>
-      </div>
-  )
+        ></textarea>
+        <input type="submit" onClick={(e) => handleSubmit(e)} />
+      </form>
+    </div>
+  );
 }
+

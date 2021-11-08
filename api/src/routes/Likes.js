@@ -4,6 +4,23 @@ const fn = require("./utils.js");
 const db = require("../db.js");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const {
+  DB_UserID,
+  validateUpdatePost,
+  DB_Postsearch,
+  DB_Postdestroy,
+  DB_Postedit,
+} = require("./utils.js");
+
+const paginate = (page = 0, arr) => {
+  const postsPerPage = 15;
+  const to = page * postsPerPage + postsPerPage;
+
+  return {
+    posts: arr.slice(page * postsPerPage, to < arr.length ? to : arr),
+    totalPages: arr.length,
+  };
+};
 
 //MAIN USER
 router.get("/", async (req, res, next) => {
@@ -24,25 +41,31 @@ router.get("/", async (req, res, next) => {
 });
 //POSTS Likes/Dislike
 router.post("/", async (req, res, next) => {
-  console.log(req.body);
-  return;
   const { userId, postIdPost } = req.body;
+  let user = await db.User.findOne({where:{username:userId}})
+
+  if(!user) return res.send({errors:"el usuario no existe"})
   if (!userId || !postIdPost) return res.send({ errors: "datos falsos" });
   try {
     let findPost = await db.Likes.findOne({
-      where: { userId, postIdPost },
+      where: { userId:user.id, postIdPost },
     }).catch((e) => ({ errors: "fatal errors" }));
     if (findPost && findPost.errors) return res.send(findPost);
     if (findPost) {
-      findPost.destroy();
-      return res.send({ like: "se elimino el like" });
-    }
-    let likePost = await db.Likes.create(req.body);
-    if (likePost) return res.send({ like: "se agrego un like" });
-    else return res.send({ errors: "Post not found" }).status(200);
-  } catch (e) {
-    res.sendStatus(500);
+    await findPost.destroy();
+    const allPosts = await DB_Postsearch({});
+    const { posts, totalPages } = paginate(0, allPosts);
+    return res.send({ like: "se elimino el like", posts: posts});
   }
+  let likePost = await db.Likes.create({userId:user.id,postIdPost});
+  const allPosts = await DB_Postsearch({});
+  const { posts, totalPages } = paginate(0, allPosts);
+  if (likePost) return res.send({ like: "se agrego un like" , posts: posts});
+  else return res.send({ errors: "Post not found" }).status(200);
+} catch (e) {
+  console.log(e)
+  res.sendStatus(500);
+}
 });
 
 // //QUERY USER
