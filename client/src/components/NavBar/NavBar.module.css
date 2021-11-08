@@ -71,15 +71,6 @@
   bottom: -0.25em;
 }
 
-.landing * {
-  color: #fff;
-}
-.landing {
-  position: fixed;
-  background: transparent;
-  box-shadow: none;
-}
-
 .signup,
 .logout {
   padding: 0.5em 1em;
@@ -187,4 +178,16 @@
   .menu {
     display: none;
   }
+}
+
+.landing * {
+  color: #fff;
+}
+.landing {
+  position: fixed;
+  background: transparent;
+  box-shadow: none;
+}
+.landing .profile {
+  background-color: transparent;
 }

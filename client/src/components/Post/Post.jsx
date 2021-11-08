@@ -8,7 +8,6 @@ import {
   commentPost,
   deletePost,
   updatePost,
-  getPosts,
   updatePage,
 } from "../../Redux/actions/Post";
 
@@ -19,11 +18,12 @@ import styles from "./Post.module.css";
 //Icons
 import {
   MdFavoriteBorder,
-  MdFavorite,
   MdOutlineModeComment,
   MdShare,
   MdSend,
 } from "react-icons/md";
+
+import { BiCommentDetail } from "react-icons/bi";
 
 function Post({ post, customClass, user }) {
   const dispatch = useDispatch();
@@ -59,8 +59,27 @@ function Post({ post, customClass, user }) {
     });
     setModo(false);
   }, [post]);
-  const handleComment = (e) => {
-    setNewComment(e.target.value);
+  const handleComment = ({ target: { name, value } }) => {
+    setNewComment(value);
+    const isValid = (comment) => {
+      if (!comment.length) {
+        setError("");
+        return true;
+      }
+      if (comment.length < 3) {
+        setError("Minimo 3 letras");
+        return false;
+      }
+
+      if (comment.length > 1000) {
+        setError("Maximo 1000 letras");
+        return false;
+      }
+
+      setError("");
+      return true;
+    };
+    isValid(value);
   };
 
   const handleSubmit = (e) => {
@@ -95,21 +114,22 @@ function Post({ post, customClass, user }) {
     dispatch(likePost(post.idPost, session.username));
   };
 
-  function borrar() {
-    let hola = dispatch(deletePost(post.idPost));
-    dispatch(updatePage(true, hola.payload.posts));
+  async function borrar() {
+    let res = await dispatch(deletePost(post.idPost));
+    dispatch(updatePage(true, res.payload.posts));
   }
 
-  function editar() {
+  async function editar() {
     let obj;
     setModo((old) => !old);
+
     if (!modo) return;
 
     if (
       (post.title !== data.title && data.title) ||
       (post.content !== data.content && data.content)
     ) {
-      dispatch(
+      obj = await dispatch(
         updatePost(post.idPost, {
           ...post,
           title: data.title,
@@ -117,6 +137,7 @@ function Post({ post, customClass, user }) {
           image: data.image,
         })
       );
+
       dispatch(updatePage(true, obj.payload.posts));
     }
   }
@@ -130,19 +151,16 @@ function Post({ post, customClass, user }) {
     });
   }
 
-  function handleChange(e) {
+  function handleChange({ target: { name, value } }) {
     if (
-      e.target.value === "" &&
-      ((!data.content && e.target.name === "image") ||
-        (!data.image && e.target.name === "content") ||
-        e.target.name === "title")
+      value === "" &&
+      ((!data.content && name === "image") ||
+        (!data.image && name === "content") ||
+        name === "title")
     ) {
       return;
     }
-    setData((old) => ({
-      ...old,
-      [e.target.name]: e.target.value,
-    }));
+    setData((old) => ({ ...old, [name]: value }));
   }
 
   const tags = new Set();
@@ -273,18 +291,21 @@ function Post({ post, customClass, user }) {
         <div className={styles.newCommentContainer}>
           <span className={styles.maxLength}>{newComment.length} / 1000</span>
           <form className={styles.newComment} onSubmit={handleSubmit}>
-            <textarea
-              className={styles.textarea}
-              onChange={handleComment}
-              name="text"
-              value={newComment}
-              placeholder="New comment..."
-            />
-            <button type="submit">
-              <MdSend className={styles.icons} />
-            </button>
+            <label className={error ? "error" : ""}>
+              <div className="input-group">
+                <textarea
+                  onChange={handleComment}
+                  name="text"
+                  value={newComment}
+                  placeholder="New comment..."
+                />
+              </div>
+              <button type="submit">
+                <MdSend className={styles.icons} />
+              </button>
+            </label>
+            <span>{error}</span>
           </form>
-          {error ? <span className={styles.error}>{error}</span> : ""}
         </div>
       ) : (
         ""

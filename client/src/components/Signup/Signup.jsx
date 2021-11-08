@@ -2,14 +2,19 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Redirect } from "react-router";
 import Select from "react-select";
+import { Link } from "react-router-dom";
 
 import { singUp } from "../../Redux/actions/Session.js";
 import validate from "../../utils/validate";
+
+import { MdEmail } from "react-icons/md";
+import { FaKey, FaUserCircle } from "react-icons/fa";
 
 import style from "./Signup.module.css";
 
 function Signup(props) {
   const dispatch = useDispatch();
+  const [section, setSection] = useState(1);
 
   const [inputs, setInputs] = useState({
     username: process.env.REACT_APP_USERNAME || "",
@@ -101,86 +106,182 @@ function Signup(props) {
   };
 
   return (
-    <div>
+    <div className={style.container}>
       {!registered ? (
-        <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
-          Formulario de registro
-          <label>Username</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.username}
-            name="username"
-            type="text"
-          />
-          <div className={style.errores}>{err.username}</div>
-          <label>Password</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.password}
-            name="password"
-            type="password"
-          />
-          <div className={style.errores}>{err.password}</div>
-          <label>Name</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.name}
-            name="name"
-            type="text"
-          />
-          <div className={style.errores}>{err.name}</div>
-          <label>Last Name</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.lastname}
-            name="lastname"
-            type="text"
-          />
-          <div className={style.errores}>{err.lastname}</div>
-          <label>Email</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.email}
-            name="email"
-            type="email"
-          />
-          <div className={style.errores}>{err.email}</div>
-          <label>GitHub</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.gitaccount}
-            name="gitaccount"
-            type="text"
-          />
-          <div className={style.errores}>{err.gitaccount}</div>
-          <label>Avatar</label>
-          <input
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.image}
-            name="image"
-            type="text"
-          />
-          <div className={style.errores}>{err.image}</div>
-          <label>About</label>
-          <textarea
-            onChange={(e) => handleChange(e)}
-            className={style.input}
-            value={inputs.about}
-            name="about"
-            type="text"
-          ></textarea>
-          <div className={style.errores}>{err.about}</div>
-          <label>Tags</label>
-          <Select onChange={handleSelect} options={options} isMulti />
-          <button type="submit">Submit</button>
-        </form>
+        <>
+          <form onSubmit={(e) => handleSubmit(e)}>
+            <h1>Sign Up</h1>
+            <ul className={style.dots}>
+              {[1, 2, 3, 4].map((value, i) => (
+                <li
+                  key={value}
+                  onClick={() => setSection(value)}
+                  className={`${style.dot} ${
+                    value === section ? style.active : ""
+                  }`}
+                ></li>
+              ))}
+            </ul>
+            {/*
+            <div>
+              <button
+                type="button"
+                onClick={() => setSection((old) => (old > 1 ? --old : old))}
+              >
+                prev
+              </button>
+              <button
+                type="button"
+                onClick={() => setSection((old) => (old < 4 ? ++old : old))}
+              >
+                next
+              </button>
+            </div>
+            */}
+            <section style={{ display: section === 1 ? "block" : "none" }}>
+              <label>
+                Username
+                <div className="input-group">
+                  <FaUserCircle />
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.username}
+                    name="username"
+                    type="text"
+                    placeholder="username"
+                  />
+                </div>
+              </label>
+              <span>{err.username}</span>
+
+              <label>
+                Email
+                <div className="input-group">
+                  <MdEmail />
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.email}
+                    name="email"
+                    type="email"
+                    placeholder="email"
+                  />
+                </div>
+              </label>
+              <span>{err.email}</span>
+
+              <label>
+                Password
+                <div className="input-group">
+                  <FaKey />
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.password}
+                    name="password"
+                    type="password"
+                    placeholder="password"
+                  />
+                </div>
+              </label>
+
+              <span>{err.password}</span>
+            </section>
+            <section style={{ display: section === 2 ? "block" : "none" }}>
+              <label>
+                Name
+                <div className="input-group">
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.name}
+                    name="name"
+                    type="text"
+                    placeholder="name"
+                  />
+                </div>
+              </label>
+
+              <span>{err.name}</span>
+
+              <label>
+                Last Name
+                <div className="input-group">
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.lastname}
+                    name="lastname"
+                    type="text"
+                    placeholder="lastname"
+                  />
+                </div>
+              </label>
+              <span>{err.lastname}</span>
+            </section>
+            <section style={{ display: section === 3 ? "block" : "none" }}>
+              <label>
+                Git Account
+                <div className="input-group">
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.gitaccount}
+                    name="gitaccount"
+                    type="text"
+                    placeholder="gitaccount"
+                  />
+                </div>
+              </label>
+              <span>{err.gitaccount}</span>
+
+              <label>
+                Profile Image
+                <div className="input-group">
+                  <input
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.image}
+                    name="image"
+                    type="text"
+                    placeholder="image"
+                  />
+                </div>
+              </label>
+              <span>{err.image}</span>
+            </section>
+            <section style={{ display: section === 4 ? "block" : "none" }}>
+              <label>
+                About
+                <div className="input-group">
+                  <textarea
+                    onChange={(e) => handleChange(e)}
+                    className={style.input}
+                    value={inputs.about}
+                    name="about"
+                    type="text"
+                    placeholder="about"
+                  ></textarea>
+                </div>
+              </label>
+              <span>{err.about}</span>
+
+              <label>
+                Technologies
+                <Select onChange={handleSelect} options={options} isMulti />
+              </label>
+            </section>
+            <div className="buttonContainer">
+              <button className="btn" type="submit">
+                SignUp
+              </button>
+              <Link className="btn" to="/login">
+                LogIn
+              </Link>
+            </div>
+          </form>
+        </>
       ) : (
         <Redirect to="/home" />
       )}
