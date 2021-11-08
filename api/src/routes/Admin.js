@@ -61,7 +61,7 @@ router.post('/', async (req, res) => {
   router.post("/register", async (req, res) =>{
     try {
       const {username, password,email, title} =req.body
-      console.log(username, password,email, title)
+ 
       let errorsPassword = await DB_validatePassword(password)
       let errorsUser = await DB_findUserCreated({username:username,email:email})
       let errors = {...errorsPassword,...errorsUser}
@@ -73,7 +73,7 @@ router.post('/', async (req, res) => {
       
       const user = await DB_findUsersUsername(username)
       const privileges = await BD_createPrivileges(user, title) 
-      console.log(user.id)
+     
       const admin ={
         username:privileges.username,
         checked:privileges.checked,
