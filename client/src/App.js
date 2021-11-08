@@ -23,6 +23,10 @@ import { removeError } from "./Redux/actions/Errors";
 import { Link } from "react-router-dom";
 import { BiMessageAltDetail } from "react-icons/bi";
 
+
+// chat v.2
+import Chat from "./components/Chat/Chat"
+
 function App() {
   const dispatch = useDispatch();
 
@@ -63,6 +67,9 @@ function App() {
         <Route path="/support" component={Support} />
         <Route path="/loginAdmin" component={AdminLogin}/>
         <Route path="/supportAdmin" component={AdminSupport}/>
+
+
+        <Route exact path="/chat/test" component={Chat}/>
 
         <Route
           path="/profile/:username"

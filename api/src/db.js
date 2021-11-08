@@ -47,7 +47,9 @@ const {
   Likes,
   Message,
   Conversation,
-  Support
+  Support,
+  Msg,
+  Conver
 
 } = sequelize.models;
 
@@ -76,11 +78,6 @@ Comment.belongsTo(Post, { through: Comment_Post, onDelete: "CASCADE" });
 Post.belongsToMany(Tags, { through: "Post_Tags", onDelete: "CASCADE" });
 Tags.belongsToMany(Post, { through: "Post_Tags", onDelete: "CASCADE" });
 
-//Likes
-User.hasMany(Likes, { as: "postLikes" });
-Post.hasMany(Likes, { as: "userLikes" });
-Likes.belongsTo(User);
-Likes.belongsTo(Post);
 
 // //Conversaciones
 Conversation.belongsToMany(User, { through: "User_Conversations", onDelete: "CASCADE" });
@@ -93,12 +90,11 @@ Message.belongsTo(User);
 // Conversation.hasMany(Message, { as: "conversationMessages" })
 // Message.belongsTo(Conversation);
 
-//Likes -----> Esta linea estaba repetida :)
-/*User.hasMany(Likes,{as:"postLikes"})
-Post.hasMany(Likes,{as:"userLikes"})
-Likes.belongsTo(User)
-Likes.belongsTo(Post)
-*/
+//Likes
+User.hasMany(Likes, { as: "postLikes" });
+Post.hasMany(Likes, { as: "userLikes" });
+Likes.belongsTo(User);
+Likes.belongsTo(Post);
 
 //Follow
 
@@ -117,6 +113,15 @@ User.belongsToMany(User, {
 //Support 1 a M 'Un mensaje pertenece a un usuario'
 User.belongsToMany(Support, { through: 'Support_User', onDelete: "CASCADE" });
 Support.belongsTo(User, {through: 'Support_User', onDelete: "CASCADE" });
+
+// prueba de mensajes y conversaciones
+Msg.belongsTo(User)
+// User Conversation
+Conver.belongsToMany(User,{through:"User_Convers"})
+User.belongsToMany(Conver,{through:"User_Convers"})
+// Conversation 
+Msg.belongsTo(Conver)
+Conver.hasMany(Msg)
 
 module.exports = {
   ...sequelize.models,
