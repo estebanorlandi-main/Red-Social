@@ -45,7 +45,7 @@ function Post({ post, customClass, user }) {
   const createdAt = new Date(post.createdAt).getTime();
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
-console.log(post)
+
   useEffect(() => {
     if (firstLoad) {
       setFirstLoad(false);
@@ -113,7 +113,7 @@ console.log(post)
 
   const handleLike = async (e) => {
     let obj;
-    if (session.username) {obj =await dispatch(likePost({postIdPost:post.idPost, userId:session.username}))};
+    if (session.username) {obj = await dispatch(likePost({postIdPost:post.idPost, userId:session.username}))};
     dispatch(updatePage(true, obj.payload.posts))
   };
 
