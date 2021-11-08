@@ -15,6 +15,8 @@ import { GoSignIn } from "react-icons/go";
 import { CgProfile } from "react-icons/cg";
 import { FiLogOut } from "react-icons/fi";
 
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
+
 import newLogo from "../../images/deco.svg";
 export default function Navbar(props) {
   const history = useHistory();
@@ -40,6 +42,15 @@ export default function Navbar(props) {
 
         <div className={styles.right}>
           <ul className={styles.menu}>
+            <li>
+              <a
+                class="donate-with-crypto"
+                href="https://commerce.coinbase.com/checkout/e3e478da-798c-44e4-8147-aab0b7832214"
+              >
+                Donate <RiMoneyDollarCircleLine style={{ color: "#ff0" }} />
+              </a>
+              <script src="https://commerce.coinbase.com/v1/checkout.js?version=201807"></script>
+            </li>
             <li>
               <NavLink
                 className={styles.link}
