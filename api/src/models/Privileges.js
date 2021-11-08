@@ -21,6 +21,7 @@ module.exports = (sequelize) => {
 		username: {
 			type: DataTypes.STRING,
 			allowNull: false,
+	
 			validate: {
 			  isAlphanumeric: {
 				args: true,

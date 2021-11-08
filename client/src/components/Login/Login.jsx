@@ -95,6 +95,7 @@ export default function Login() {
           <Link className="btn" to="/signup">
             SignUp
           </Link>
+          <Link to="/loginAdmin">Login Admin</Link>
         </div>
       </form>
     </div>

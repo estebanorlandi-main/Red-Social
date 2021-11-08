@@ -10,18 +10,20 @@ const { JWT_SECRET, JWT_EXPIRE_TIME, JWT_COOKIE_EXPIRE } = process.env;
 router.post('/', async (req, res) => {
     const {email, username, password, title} = req.body;
     try{
-        if ((!username && !email) || (username === null && email === null)) {
-            res.status(400).send(`Error, you must provide an email or username`);
-          }
-          
-        if(!title) return res.status(400).send({error:'Error missing admin title'})
+      if ((!username && !email) || (username === null && email === null)) {
+        res.status(400).send(`Error, you must provide an email or username`);
+      }
+      
+      if(!title) return res.status(400).send({error:'Error missing admin title'})
+      
+      else{
         
-        else{
-          
-          let userLogin = await DB_userSearch(username, email, password);
-          if (userLogin.error) throw new Error(userLogin.error);
-          
-          const admin = await Privileges.findOne({ where:{userId:userLogin.id}});
+        let userLogin = await DB_userSearch(username, email, password);
+        if (userLogin.error) throw new Error(userLogin.error);
+        
+        console.log(userLogin.id)
+        const admin = await Privileges.findOne({ where:{userId:userLogin.id}});
+        console.log(admin)
           
           if(admin === null){
               return res.status(400).send('Error your not admin')

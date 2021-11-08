@@ -11,6 +11,9 @@ import NavBar from "./components/NavBar/NavBar.js";
 import Messenger from "./Pages/Messenger/Messenger";
 import Support from "./components/Support/Support";
 
+import AdminLogin from "./components/Admin/AdminLogin"
+import AdminSupport from "./components/Admin/AdminSupport"
+
 import Popup from "./components/Support/SupportLocalPopUp.jsx";
 // Variables CSS
 import "./App.css";
@@ -58,6 +61,8 @@ function App() {
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
         <Route path="/support" component={Support} />
+        <Route path="/loginAdmin" component={AdminLogin}/>
+        <Route path="/supportAdmin" component={AdminSupport}/>
 
         <Route
           path="/profile/:username"
