@@ -1,10 +1,17 @@
-// import axios from "axios";
-// import { ERROR } from "./Errors";
+import { GET_SUPPORT_MESSAGE } from "../actions/Support";
 
-// export function createSupport(payload) {
-//   return (dispatch) =>
-//     axios
-//       .post("http://localhost:3001/support", payload)
-//       .then((res) => dispatch({ payload: res }))
-//       .catch((err) => dispatch({ type: ERROR, payload: err }));
-// }
+const initialState = {
+    messageSupport:{}
+}
+
+export default function root(state = initialState, action){
+    switch (action.type){
+        case GET_SUPPORT_MESSAGE:
+        return{
+                ...state,
+                messageSupport :action.payload
+            }
+        default:
+            return state;
+    }
+}
