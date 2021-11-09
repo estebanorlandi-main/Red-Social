@@ -34,7 +34,7 @@ export function createPost(data) {
   return (dispatch) =>
     axios
       .post("http://localhost:3001/post", data, { withCredentials: true })
-      .then((res) => ({ type: POST_CREATE, payload: res.data }))
+      .then((res) => dispatch({ type: POST_CREATE, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 
   // return { type: POST_CREATE, payload: data };
@@ -44,7 +44,7 @@ export function deletePost(postId) {
   return (dispatch) =>
     axios
       .delete(`http://localhost:3001/post/${postId}`, { withCredentials: true })
-      .then((res) => ({ type: POST_DELETE, payload: res.data }))
+      .then((res) => dispatch({ type: POST_DELETE, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 
   // return { type: POST_DELETE, payload: postId };
@@ -56,7 +56,7 @@ export function updatePost(postId, data) {
       .put(`http://localhost:3001/post/${postId}`, data, {
         withCredentials: true,
       })
-      .then((res) => ({ type: POST_UPDATE, payload: res.data }))
+      .then((res) => dispatch({ type: POST_UPDATE, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 
   //return { type: POST_UPDATE, payload: { postId } };
@@ -102,11 +102,14 @@ export function updatePage(bol, post) {
   return { type: UPDATE_PAGE, payload: { bol, post } };
 }
 
-export function likePost(data){
+export function likePost(data) {
   return (dispatch) =>
-  axios
-  .post("http://localhost:3001/likes", data, {withCredentials:true})
-  .then(res => {console.log(res.data); return ({type: POST_LIKE, payload: res.data})})
+    axios
+      .post("http://localhost:3001/likes", data, { withCredentials: true })
+      .then((res) => {
+        console.log(res.data);
+        return { type: POST_LIKE, payload: res.data };
+      });
 }
 /*
 export function likePost(idPost, username) {
