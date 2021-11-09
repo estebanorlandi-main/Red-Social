@@ -11,8 +11,8 @@ import NavBar from "./components/NavBar/NavBar.js";
 import Messenger from "./Pages/Messenger/Messenger";
 import Support from "./components/Support/Support";
 
-import AdminLogin from "./components/Admin/AdminLogin"
-import AdminSupport from "./components/Admin/AdminSupport"
+import AdminLogin from "./components/Admin/AdminLogin";
+import AdminSupport from "./components/Admin/AdminSupport";
 
 import Popup from "./components/Support/SupportLocalPopUp.jsx";
 // Variables CSS
@@ -23,9 +23,9 @@ import { removeError } from "./Redux/actions/Errors";
 import { Link } from "react-router-dom";
 import { BiMessageAltDetail } from "react-icons/bi";
 
-
 // chat v.2
-import Chat from "./components/Chat/Chat"
+import Chat from "./components/Chat/Chat";
+import Challenge from "./Pages/Challenge/Challenge";
 
 function App() {
   const dispatch = useDispatch();
@@ -65,11 +65,11 @@ function App() {
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
         <Route path="/support" component={Support} />
-        <Route path="/loginAdmin" component={AdminLogin}/>
-        <Route path="/supportAdmin" component={AdminSupport}/>
+        <Route path="/loginAdmin" component={AdminLogin} />
+        <Route path="/supportAdmin" component={AdminSupport} />
+        <Route path="/challenge" component={Challenge} />
 
-
-        <Route exact path="/chat/test" component={Chat}/>
+        <Route exact path="/chat/test" component={Chat} />
 
         <Route
           path="/profile/:username"
