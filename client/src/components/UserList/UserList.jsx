@@ -24,7 +24,7 @@ function UserList(props) {
       ))}
     </div>
   ) : (
-    ""
+    <></>
   );
 }
 

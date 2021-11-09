@@ -1,60 +1,62 @@
 // Modelo del posteo
-const { DataTypes, Sequelize } = require('sequelize');
+const { DataTypes, Sequelize } = require("sequelize");
 // Exportamos una funcion que define el modelo
 // Luego le injectamos la conexion a sequelize.
 module.exports = (sequelize) => {
   // defino el modelo
-  sequelize.define('post',{
+  sequelize.define("post", {
     title: {
       type: DataTypes.STRING,
-      allowNull:false,
-      validate:{
-        notNull:{
-          args:true,
-          msg:"The post title must contain between 5 and 40 characters"
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "The post title must contain between 5 and 40 characters",
         },
-        len:{
-          args:[5,40],
-          msg:"The post title must contain between 5 and 40 characters"
-        }
-      }
+        len: {
+          args: [5, 40],
+          msg: "The post title must contain between 5 and 40 characters",
+        },
+      },
     },
     content: {
       type: DataTypes.TEXT,
-      allowNull:false,
-      validate:{
-        notNull:{
-          args:true,
-          msg:"The body of the post must contain between 5 and 1000 characters."
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "The body of the post must contain between 5 and 1000 characters.",
         },
-        len:{
-          args:[5,1000],
-          msg:"The body of the post must contain between 5 and 1000 characters."
-        }
-      }
+        len: {
+          args: [5, 1000],
+          msg: "The body of the post must contain between 5 and 1000 characters.",
+        },
+      },
     },
-    tag:{
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull:true
+    tag: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: true,
     },
-    idPost:{
+    idPost: {
       unique: true,
       type: DataTypes.UUID,
       defaultValue: Sequelize.UUIDV4,
-      primaryKey: true
+      primaryKey: true,
     },
-    image:{
+    image: {
       type: DataTypes.STRING,
-      validate:{
-        validateImage: function(image){
-          if(!image.match(/\.(gif|jpg|jpeg|tiff|png|svg)$/i)){
-            throw new Error("image invalide")
+      validate: {
+        validateImage: function (image) {
+          if (!image) return true;
+          if (!image.match(/\.(gif|jpg|jpeg|tiff|png|svg)$/i)) {
+            throw new Error("image invalide");
           }
-        }
-      }
+        },
+      },
     },
-    likes:{
-      type: DataTypes.INTEGER
-    }
+    likes: {
+      type: DataTypes.INTEGER,
+    },
   });
 };
+

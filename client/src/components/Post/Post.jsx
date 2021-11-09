@@ -30,6 +30,27 @@ import { BsFillPencilFill } from "react-icons/bs";
 
 import { BiCommentDetail, BiDotsVerticalRounded } from "react-icons/bi";
 
+const parseContent = (text) => {
+  const mentions = text && text.match(/@\w+/gi);
+
+  if (!mentions) return [text];
+
+  const parsed = text.split(" ").map((value) => {
+    if (mentions.includes(value)) {
+      return (
+        <Link
+          className={styles.mention}
+          to={`/profile/${value.slice(1, value.length)}`}
+        >
+          {value}
+        </Link>
+      );
+    } else return " " + value + " ";
+  });
+
+  return parsed;
+};
+
 function Post({ post, customClass, user }) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
@@ -182,6 +203,9 @@ function Post({ post, customClass, user }) {
   post.tag.filter((tag) => (!!tag ? tags.add(tag) : false));
   post.tag = Array.from(tags);
 
+  let test;
+  if (post.content) test = parseContent(post.content);
+
   return (
     <div className={styles.container + ` ${customClass}`}>
       {session.username === post.user.username ? (
@@ -278,7 +302,7 @@ function Post({ post, customClass, user }) {
               className={styles.text}
               style={seeMore ? { marginBottom: "1em" } : { marginBottom: "0" }}
             >
-              {post.content}
+              {test && test.map((value) => value)}
             </p>
             <button
               className={styles.seeMore}

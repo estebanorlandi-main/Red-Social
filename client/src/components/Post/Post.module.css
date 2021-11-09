@@ -26,6 +26,7 @@
   border-radius: 10px;
   overflow: hidden;
   background-color: var(--c-bg);
+  box-shadow: 0 1px 2px #0001;
 }
 
 .options {
@@ -243,4 +244,8 @@
 .disabled {
   color: #aaa;
   cursor: default;
+}
+
+.mention {
+  color: #59d;
 }

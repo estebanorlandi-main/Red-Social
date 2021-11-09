@@ -2,24 +2,20 @@ import { useState } from "react";
 import { Link, NavLink, useHistory, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../SearchBar/SearchBar";
-import logo from "../../images/logo.svg";
-import logoDark from "../../images/logo-dark.svg";
 import { logOut } from "../../Redux/actions/Session.js";
 import styles from "./NavBar.module.css";
 
-/*
 import { ImHome3 } from "react-icons/im";
-import { BiLogIn, BiLogOut } from "react-icons/bi";
-import { FaLaptopCode } from "react-icons/fa";
-import { GoSignIn } from "react-icons/go";
-*/
+
+import { BiSupport } from "react-icons/bi";
 
 import { CgProfile } from "react-icons/cg";
 import { FiLogOut } from "react-icons/fi";
 
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 
-import newLogo from "../../images/deco.svg";
+import logo from "../../images/deco.svg";
+
 export default function Navbar(props) {
   const history = useHistory();
   const user = useSelector((store) => store.sessionReducer);
@@ -38,47 +34,52 @@ export default function Navbar(props) {
     <header className={styles.navbar + ` ${isLanding ? styles.landing : ""}`}>
       <nav className={styles.nav}>
         <Link className={styles.brand} to="/">
-          <img src={newLogo} width="20px" alt="" />
+          <img src={logo} width="20px" alt="" />
           Code<span>Net</span>
         </Link>
 
+        <ul className={styles.menu}>
+          <li>
+            <a
+              className={styles.nav__link}
+              href="https://commerce.coinbase.com/checkout/e3e478da-798c-44e4-8147-aab0b7832214"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <RiMoneyDollarCircleLine
+                className={styles.icon}
+                style={{ color: "#ff0" }}
+              />
+            </a>
+            <script src="https://commerce.coinbase.com/v1/checkout.js?version=201807"></script>
+          </li>
+          <li>
+            <NavLink
+              className={styles.nav__link}
+              activeClassName={styles.active}
+              to="/home"
+            >
+              <ImHome3 className={styles.icon} />
+            </NavLink>
+          </li>
+
+          {/* Mostrar en cualquier pagina menos Landing page */}
+          {!isLanding && (
+            <>
+              <li>
+                <NavLink
+                  className={styles.nav__link}
+                  activeClassName={styles.active}
+                  to="/support"
+                >
+                  <BiSupport className={styles.icon} />
+                </NavLink>
+              </li>
+            </>
+          )}
+        </ul>
+
         <div className={styles.right}>
-          <ul className={styles.menu}>
-            <li>
-              <a
-                class="donate-with-crypto"
-                href="https://commerce.coinbase.com/checkout/e3e478da-798c-44e4-8147-aab0b7832214"
-              >
-                Donate <RiMoneyDollarCircleLine style={{ color: "#ff0" }} />
-              </a>
-              <script src="https://commerce.coinbase.com/v1/checkout.js?version=201807"></script>
-            </li>
-            <li>
-              <NavLink
-                className={styles.link}
-                activeClassName={styles.active}
-                to="/home"
-              >
-                Home
-              </NavLink>
-            </li>
-
-            {/* Mostrar en cualquier pagina menos Landing page */}
-            {!isLanding && (
-              <>
-                <li>
-                  <NavLink
-                    className={styles.link}
-                    activeClassName={styles.active}
-                    to="/support"
-                  >
-                    Support
-                  </NavLink>
-                </li>
-              </>
-            )}
-          </ul>
-
           {/* Mostrar en cualquier pagina menos Landing page */}
           {!isLanding ? <SearchBar /> : ""}
 
@@ -86,7 +87,8 @@ export default function Navbar(props) {
             (user.username ? (
               <div className={styles.profile__container}>
                 <button onClick={handleMenu} className={styles.profile}>
-                  <span>{user.username}</span> <img src={user.image} alt="" />
+                  {/*<span>{user.username}</span>*/}{" "}
+                  <img src={user.image} alt="" />
                 </button>
                 <div
                   className={
@@ -95,13 +97,13 @@ export default function Navbar(props) {
                   }
                 >
                   <Link
-                    className={`${styles.link}`}
+                    className={`${styles.nav__link}`}
                     to={`/profile/${user.username}`}
                   >
                     Profile <CgProfile />
                   </Link>
                   <button
-                    className={`${styles.link} ${styles.logout}`}
+                    className={`${styles.nav__link} ${styles.logout}`}
                     onClick={() => logOutR()}
                   >
                     Log Out
