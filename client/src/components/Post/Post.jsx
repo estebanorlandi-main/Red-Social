@@ -8,7 +8,7 @@ import {
   deletePost,
   updatePost,
   updatePage,
-  likePost
+  likePost,
 } from "../../Redux/actions/Post";
 
 import Comment from "../Comment/Comment";
@@ -21,10 +21,14 @@ import {
   MdOutlineModeComment,
   MdShare,
   MdSend,
-  MdFavorite
+  MdFavorite,
 } from "react-icons/md";
 
-import { BiCommentDetail } from "react-icons/bi";
+import { GoTrashcan } from "react-icons/go";
+
+import { BsFillPencilFill } from "react-icons/bs";
+
+import { BiCommentDetail, BiDotsVerticalRounded } from "react-icons/bi";
 
 function Post({ post, customClass, user }) {
   const dispatch = useDispatch();
@@ -35,6 +39,7 @@ function Post({ post, customClass, user }) {
   const [newComment, setNewComment] = useState("");
   const [error, setError] = useState("");
   const [modo, setModo] = useState(false);
+  const [options, setOptions] = useState(false);
 
   const [data, setData] = useState({
     title: post.title,
@@ -60,6 +65,7 @@ function Post({ post, customClass, user }) {
     });
     setModo(false);
   }, [post]);
+
   const handleComment = ({ target: { name, value } }) => {
     setNewComment(value);
     const isValid = (comment) => {
@@ -113,12 +119,15 @@ function Post({ post, customClass, user }) {
 
   const handleLike = async (e) => {
     let obj;
-    if (session.username) {obj = await dispatch(likePost({postIdPost:post.idPost, userId:session.username}))};
-    dispatch(updatePage(true, obj.payload.posts))
+    if (session.username) {
+      obj = await dispatch(
+        likePost({ postIdPost: post.idPost, userId: session.username })
+      );
+    }
+    dispatch(updatePage(true, obj.payload.posts));
   };
 
   async function borrar() {
-
     let res = await dispatch(deletePost(post.idPost));
     dispatch(updatePage(true, res.payload.posts));
   }
@@ -167,28 +176,45 @@ function Post({ post, customClass, user }) {
     setData((old) => ({ ...old, [name]: value }));
   }
 
+  const handleOptions = () => setOptions((old) => !old);
+
   const tags = new Set();
   post.tag.filter((tag) => (!!tag ? tags.add(tag) : false));
   post.tag = Array.from(tags);
 
   return (
     <div className={styles.container + ` ${customClass}`}>
-      <div>
-        {session.username === post.user.username ? (
-          <>
-            <button onClick={() => editar()}>editar</button>
+      {session.username === post.user.username ? (
+        <div className={styles.options}>
+          <button onClick={handleOptions} className={styles.optionsHandler}>
+            <BiDotsVerticalRounded
+              style={{ color: "#aaa", width: "2em", height: "2em" }}
+            />
+          </button>
+
+          <div
+            className={`${options ? styles.show : styles.hide} ${
+              styles.optionsMenu
+            }`}
+          >
+            <button onClick={() => editar()}>
+              <BsFillPencilFill />
+              Edit
+            </button>
             <button
+              className={styles.danger}
               onClick={() => {
                 borrar();
               }}
             >
-              borrar
+              <GoTrashcan style={{ color: "#ff5555" }} />
+              Delete
             </button>
-          </>
-        ) : (
-          ""
-        )}
-      </div>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
 
       <ul className={styles.tags}>
         {post.tag.map((tag, i) => (
@@ -269,9 +295,11 @@ function Post({ post, customClass, user }) {
       ) : (
         ""
       )}
-      <div className={styles.options}>
+      <div className={styles.actions}>
         <button className={!session.username ? "" : ""} onClick={handleLike}>
-          {post.userLikes.filter((user) => user.user.username === session.username).length ? (
+          {post.userLikes.filter(
+            (user) => user.user.username === session.username
+          ).length ? (
             <MdFavorite color="red" />
           ) : (
             <MdFavoriteBorder />
