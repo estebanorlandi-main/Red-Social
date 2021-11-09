@@ -49,7 +49,9 @@ const {
   Conversation,
   Support,
   Msg,
-  Conver
+  Conver,
+  ChallengeComment,
+  ChallengePost
 
 } = sequelize.models;
 
@@ -62,12 +64,32 @@ const {
 User.hasMany(Post, { onDelete: "CASCADE" });
 Post.belongsTo(User, { onDelete: "CASCADE" });
 
+//Relacion 1 a M - User -> ChallengePost
+User.hasMany(ChallengePost, { onDelete: "CASCADE" });
+ChallengePost.belongsTo(User, { onDelete: "CASCADE" });
+
+
 //Relacion 1 a 1 - User -> Privileges
 User.hasOne(Privileges);
 
 //Relacion 1 a M - User -> Comment
 User.belongsToMany(Comment, { through: User_Comment, onDelete: "CASCADE" });
 Comment.belongsTo(User, { through: User_Comment, onDelete: "CASCADE" });
+
+//Challenge
+//Relacion M a 1 - ChallengePost -> ChallengeComment
+
+ChallengePost.belongsToMany(ChallengeComment, { through: 'Challenge_PC', onDelete: "CASCADE" });
+ChallengeComment.belongsTo(ChallengePost, { through: 'Challenge_PC', onDelete: "CASCADE" });
+
+//Relacion M a M - ChallengePost -> Tags
+ChallengePost.belongsToMany(Tags, { through: "Challenge_PT", onDelete: "CASCADE" });
+Tags.belongsToMany(ChallengePost, { through: "Challenge_PT", onDelete: "CASCADE" });
+
+//Relacion 1 a M User -> ChallengeComment
+
+User.hasMany(ChallengeComment, { onDelete: "CASCADE" });
+ChallengeComment.belongsTo(User, { onDelete: "CASCADE" });
 
 //Post
 //Relacion M a 1 - Post -> Comment
