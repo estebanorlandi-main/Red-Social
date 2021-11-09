@@ -30,6 +30,11 @@ module.exports = (sequelize) => {
     },
     likes:{
       type: DataTypes.INTEGER
-    }
+    },
+    checked: {
+			type: Sequelize.BOOLEAN,
+			allowNull: false,
+			defaultValue: true,
+		}
   });
 };

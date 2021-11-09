@@ -392,16 +392,20 @@ const BD_searchSupport = async () => {
   }
 };
 
-const BD_createPrivileges = async (user,title) =>{
+const BD_createPrivileges = async (user) =>{
 	var privileges = await Privileges.create({
-		title,
 		userId:user.id,
     username:user.username,
-		checked: true
+		checked: true,
+    title:'Admin'
 	})
-  // privileges.findOne({include:User.username})
-  console.log(privileges)
+
 	return privileges
+}
+
+const BD_searchAdmin = async (user) =>{
+  var privileges = await Privileges.findOne({where:{username:user.username}})
+  return privileges
 }
 
 module.exports = {
@@ -428,5 +432,6 @@ module.exports = {
   DB_findUsersUsername,
   DB_UserFollow,
   BD_searchSupport,
-  BD_createPrivileges
+  BD_createPrivileges,
+  BD_searchAdmin
 };

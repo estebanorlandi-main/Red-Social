@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const {Privileges} = require("../db.js");
-const { DB_UserID,BD_createPrivileges,DB_validatePassword,DB_findUserCreated, DB_userSearch,DB_createUser, DB_findUsersUsername } = require("./utils.js");
+const { BD_createPrivileges, DB_userSearch, BD_searchAdmin} = require("./utils.js");
 const router = Router();
 const bcrypt = require("bcrypt")
 const saltRounds = 10;
@@ -21,10 +21,8 @@ router.post('/', async (req, res) => {
         let userLogin = await DB_userSearch(username, email, password);
         if (userLogin.error) throw new Error(userLogin.error);
         
-        console.log(userLogin.id)
         const admin = await Privileges.findOne({ where:{userId:userLogin.id}});
-        console.log(admin)
-          
+
           if(admin === null){
               return res.status(400).send('Error your not admin')
           
@@ -62,28 +60,26 @@ router.post('/', async (req, res) => {
   
   router.post("/register", async (req, res) =>{
     try {
-      const {username, password,email, title} =req.body
- 
-      let errorsPassword = await DB_validatePassword(password)
-      let errorsUser = await DB_findUserCreated({username:username,email:email})
-      let errors = {...errorsPassword,...errorsUser}
-      if(errors.email || errors.username || errors.password) return res.send(errors).status(400)
+      const {username, password,email} =req.body;      
+      const user = await DB_userSearch(username, email, password);
+      if(user.error) return res.send({Error:user.error}).status(400);
       
-      req.body.password = bcrypt.hashSync(password,saltRounds)
-      let validate = await DB_createUser(req.body)
-      if(validate.email || validate.name || validate.lastname) return res.send(validate).status(400)
-      
-      const user = await DB_findUsersUsername(username)
-      const privileges = await BD_createPrivileges(user, title) 
-     
-      const admin ={
-        username:privileges.username,
-        checked:privileges.checked,
-        title:privileges.title
+      const isAdmin = await BD_searchAdmin(user);
+      if(isAdmin === null){
+        const privileges = await BD_createPrivileges(user);
+        const admin ={
+          username:privileges.username,
+          checked:privileges.checked,
+        }
+  
+        res.status(200).send(admin)
+      } 
+      else{
+        res.send({Error: "Your is admin"}).status(404);
       }
-      res.status(200).send(admin)
+     
     } catch (e) {
-      res.status(404).send('Error in privileges', e);
+      res.status(404).send('Error created Admin', e);
     }
   })
   
