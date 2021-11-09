@@ -125,7 +125,29 @@ export function clearPosts() {
   return { type: "CLEAR_POST", payload: [] };
 }
 
+export function getPostForId(id) {
+  return (dispatch) =>
+    axios
+      .get(`localhost:3001/${id}`)
+      .then((res) => dispatch({ type: GET_POST_FOR_ID, payload: res.data }));
+}
+
+export function getPostForUsername(username) {
+  return (dispatch) =>
+    axios
+      .get(`localhost:3001/`, username)
+      .then((res) =>
+        dispatch({ type: GET_POST_FOR_USERNAME, payload: res.data })
+      );
+}
+
+export function updatePage(bol, post){
+  return ({type:UPDATE_PAGE, payload:{bol, post}})
+}
 /*
+export function likePost(idPost, username) {
+  return { type: POST_LIKE, payload: { idPost, username } };
+}
 export function sharePost(postId) {
   console.log(postId);
   return { type: POST_SHARE, payload: postId };

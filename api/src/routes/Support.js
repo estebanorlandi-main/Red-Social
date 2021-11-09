@@ -14,6 +14,7 @@ router.post("/", async (req, res) =>{
         postReported,
         commentReported,
         userReported} = req.body
+
         
     
         if(!postReported && !commentReported && !userReported){

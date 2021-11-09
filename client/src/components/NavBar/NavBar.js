@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, NavLink, useHistory, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../SearchBar/SearchBar";
+import logo from "../../images/logo.svg";
+import logoDark from "../../images/logo-dark.svg";
 import { logOut } from "../../Redux/actions/Session.js";
 import styles from "./NavBar.module.css";
 

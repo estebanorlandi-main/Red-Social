@@ -181,7 +181,6 @@ router.post("/follow", async (req, res, next) => {
 // DB_findUserParams
 // DB_findUserCreated
 // DB_validatePassword
-
 // DB_createUser
 // DB_updateUser
 

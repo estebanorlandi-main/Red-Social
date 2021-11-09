@@ -11,8 +11,6 @@ const {
 const Op = Sequelize.Op;
 const router = Router();
 
-// const ruta = require("archivo")
-// router.use("/", ruta)
 
 // router.use("/", );
 
