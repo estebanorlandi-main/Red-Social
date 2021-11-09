@@ -38,10 +38,10 @@ router.get('/', (req,res)=>{
 
 //Middlewares
 router.use("/user", Users);
-router.use("/comment", AuthControllers.isAuthenticated, Comments);
+router.use("/comment", Comments);
 router.use("/post", Post);
 router.use("/login", Login);
-router.use("/admin", Admin,  AuthControllers.isAuthenticated, Admin);
+router.use("/admin", Admin);
 // router.use("/tags", Tags)
 // router.use("/likes", Likes);
 // router.use("/support",Support);

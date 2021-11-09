@@ -1,4 +1,6 @@
 import axios from "axios";
+import { ERROR } from "./Errors";
+
 
 export const SIGNUP_ADMIN = "signup_admin";
 export const LOGIN_ADMIN = "login_admin";
@@ -17,9 +19,7 @@ export function loginAdmin(admin){
         axios   
             .post(`http://localhost:3001/admin/`,admin, { withCredentials: true })
             .then((res) => dispatch({type: LOGIN_ADMIN, payload:res}))
-            .catch((e) =>
-                console.log('Error in authentication admin ',e),
-                alert("Error your not admin")
+            .catch((e) =>(err) => dispatch({ type: ERROR, payload: err })
             )
 }
 

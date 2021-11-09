@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../SearchBar/SearchBar";
 import { logOut } from "../../Redux/actions/Session.js";
 import styles from "./NavBar.module.css";
+import {logOutAdmin} from "../../Redux/actions/Admin.js"
 
 /*
 import { ImHome3 } from "react-icons/im";
@@ -21,11 +22,17 @@ import newLogo from "../../images/deco.svg";
 export default function Navbar(props) {
   const history = useHistory();
   const user = useSelector((store) => store.sessionReducer);
+  const admin = useSelector((store) => store.adminReducer)
   const isLanding = useLocation().pathname === "/";
   const dispatch = useDispatch();
 
   const [showMenu, setShowMenu] = useState(false);
   const handleMenu = () => setShowMenu(!showMenu);
+
+  const logOutAdminR = () => {
+    dispatch(logOutAdmin());
+    history.push("/home");
+  };
 
   const logOutR = () => {
     dispatch(logOut());
@@ -81,7 +88,7 @@ export default function Navbar(props) {
           {!isLanding ? <SearchBar /> : ""}
 
           {!isLanding &&
-            (user.username ? (
+            (user.username || admin.admin === true? (
               <div className={styles.profile__container}>
                 <button onClick={handleMenu} className={styles.profile}>
                   <span>{user.username}</span> <img src={user.image} alt="" />
@@ -98,13 +105,19 @@ export default function Navbar(props) {
                   >
                     Profile <CgProfile />
                   </Link>
-                  <button
+                  {admin.admin === true? <button
+                    className={`${styles.link} ${styles.logout}`}
+                    onClick={() => logOutAdminR()}
+                  >
+                    Log Out
+                    <FiLogOut />
+                  </button>:<button
                     className={`${styles.link} ${styles.logout}`}
                     onClick={() => logOutR()}
                   >
                     Log Out
                     <FiLogOut />
-                  </button>
+                  </button>}
                 </div>
               </div>
             ) : (

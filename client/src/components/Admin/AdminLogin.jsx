@@ -13,14 +13,14 @@ export default function AdminLogin(){
       username: "",
       password:"",
       title:""});
-      var admin = useSelector(state => state.adminReducer.admin)
+      var admin = useSelector(state => state.adminReducer)
       
       const [error, setError] = useState({});
       // useEffect(()=>{
       //   console.log('Entra')
       //   dispatch(loginAdmin(input));
       // },)
-    
+    console.log(admin)
     const handleChange = (e)=>{
         setInput({
             ...input,
@@ -42,7 +42,7 @@ export default function AdminLogin(){
     return(
         <div>{
           
-          admin.admin ==true ? (
+          admin.admin === true ? (
             <Redirect to="/supportAdmin"/>
           ):(
             <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
