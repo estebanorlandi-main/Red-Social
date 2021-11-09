@@ -38,7 +38,7 @@ router.get("/", async (req, res, next) => {
   try {
     if (Object.keys(req.query).length != 0) return next();
     let findUsers = await fn.DB_findUserAll();
-
+    return res.send(findUsers)
     findUsers = sanitizeUser(findUsers);
 
     res.send(findUsers);

@@ -82,6 +82,9 @@ const DB_findUserAll = async (query) => {
       { model: Post, include: likePostUser },
       followersInfo,
       followedInfo,
+      { model: User, as:"send" },
+      { model: User, as:"received" },
+      { model: User, as:"Friends", attributes:["username"],exclude:"friends" }
     ],
   });
   return findUserAll;

@@ -49,8 +49,8 @@ const {
   Conversation,
   Support,
   Msg,
-  Conver
-
+  Conver,
+  Request
 } = sequelize.models;
 
 //Comentar para no floodear la base de datos con tags :*
@@ -122,6 +122,13 @@ User.belongsToMany(Conver,{through:"User_Convers"})
 // Conversation 
 Msg.belongsTo(Conver)
 Conver.hasMany(Msg)
+
+
+//Friends
+User.belongsToMany(User, { as: 'Friends', through: 'friends' });
+User.belongsToMany(User, { as: 'send', through: 'friendRequests', foreignKey: 'receivedId', onDelete: 'CASCADE'});
+User.belongsToMany(User, { as: 'received', through: 'friendRequests', foreignKey: 'sendId', onDelete: 'CASCADE'});
+
 
 module.exports = {
   ...sequelize.models,

@@ -27,7 +27,6 @@ router.get("/:userId", async (req, res) => {
         members: { [ Op.contains ]: [req.params.userId] } 
       }});
 
-    console.log(conversation)
 
     res.status(200).json(conversation);
   } catch (err) {
