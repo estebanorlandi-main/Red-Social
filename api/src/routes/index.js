@@ -13,6 +13,7 @@ const Login = require("./Login.js")
 const Likes = require("./Likes.js")
 const Tags = require("./Tags.js")
 const Support = require("./Support.js")
+const Challenge = require("./Challenge.js")
 const Conversation = require("./Conversation.js")
 const Message = require("./Message.js")
 const Prueba = require("./PRUEBA.js")
@@ -48,6 +49,8 @@ router.use("/admin", Admin,  AuthControllers.isAuthenticated, Admin);
 // router.use("/support",Support);
 router.use("/conversation",Conversation);
 router.use("/message",Message);
+
+router.use("/challenge", Challenge);
 
 router.use("/tags", AuthControllers.isAuthenticated, Tags)
 router.use("/likes", Likes);
