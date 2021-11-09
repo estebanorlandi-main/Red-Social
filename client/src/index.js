@@ -21,7 +21,6 @@ ReactDOM.render(
             size: "1em",
             style: {
               verticalAlign: "middle",
-              marginRight: ".5em",
             },
           }}
         >
