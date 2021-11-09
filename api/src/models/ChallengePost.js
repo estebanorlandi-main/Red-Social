@@ -45,6 +45,7 @@ module.exports = (sequelize) => {
     },
     likes:{
       type: DataTypes.INTEGER
-    },});
+    }
+  });
 };
 

@@ -79,6 +79,7 @@ Comment.belongsTo(User, { through: User_Comment, onDelete: "CASCADE" });
 //Challenge
 //Relacion M a 1 - ChallengePost -> ChallengeComment
 /*
+
 ChallengePost.belongsToMany(ChallengeComment, { through: 'Challenge_PC', onDelete: "CASCADE" });
 ChallengeComment.belongsTo(ChallengePost, { through: 'Challenge_PC', onDelete: "CASCADE" });
 
@@ -89,7 +90,9 @@ Tags.belongsToMany(ChallengePost, { through: "Challenge_PT", onDelete: "CASCADE"
 //Relacion 1 a M User -> ChallengeComment
 
 User.hasMany(ChallengeComment, { onDelete: "CASCADE" });
-ChallengeComment.belongsTo(User, { onDelete: "CASCADE" });*/
+ChallengeComment.belongsTo(User, { onDelete: "CASCADE" });
+
+*/
 
 //Post
 //Relacion M a 1 - Post -> Comment
