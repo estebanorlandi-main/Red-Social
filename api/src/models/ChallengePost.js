@@ -4,7 +4,7 @@ const { DataTypes, Sequelize } = require('sequelize');
 // Luego le injectamos la conexion a sequelize.
 module.exports = (sequelize) => {
   // defino el modelo
-  sequelize.define('challengePost',{
+  sequelize.define('challengepost',{
     title: {
       type: DataTypes.STRING,
       allowNull:false,
@@ -45,8 +45,7 @@ module.exports = (sequelize) => {
     },
     likes:{
       type: DataTypes.INTEGER
-    },
-  {
-    timestamps: false,
+    }
   });
 };
+

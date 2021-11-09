@@ -7,9 +7,12 @@ const { Sequelize } = require("sequelize");
 
 
 
-const DB_ChallPost = async({title, content, tag, idPost, likes})=>{
-
-
+const DB_ChallFindPost = async({title, content, tag, idPost, likes})=>{
+      var post_search = await Post.findAll({
+        include: [{ model: User, attributes: ["image", "username"] }, ChallengeComment, ],
+        order: [["createdAt", "DESC"]],
+      });
+      return post_search;
 }
 
 const DB_Challengecomments = async (username) => {
