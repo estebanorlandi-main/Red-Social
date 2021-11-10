@@ -8,28 +8,49 @@ module.exports = (sequelize) => {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "The post title must contain between 5 and 40 characters",
+        },
+        len: {
+          args: [5, 40],
+          msg: "The post title must contain between 5 and 40 characters",
+        },
+      },
     },
     content: {
       type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        notNull: {
+          args: true,
+          msg: "The body of the post must contain between 5 and 1000 characters.",
+        },
+        len: {
+          args: [5, 1000],
+          msg: "The body of the post must contain between 5 and 1000 characters.",
+        },
+      },
+    },
+    tag: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true,
     },
-    tag:{
-        type: DataTypes.ARRAY(DataTypes.JSON),
-        allowNull:true
-    },
-    idPost:{
-      allowNull: false,
+    idPost: {
       unique: true,
       type: DataTypes.UUID,
       defaultValue: Sequelize.UUIDV4,
-      primaryKey: true
-     
+      primaryKey: true,
     },
-    image:{
-      type: DataTypes.STRING
-    },
-    likes:{
-      type: DataTypes.INTEGER
+
+    imageType: { type: DataTypes.STRING, allowNull: true },
+    imageName: { type: DataTypes.STRING, allowNull: true },
+    imageData: { type: DataTypes.BLOB, allowNull: true },
+
+    likes: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     ban: {
 			type: Sequelize.BOOLEAN,
