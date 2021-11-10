@@ -9,7 +9,7 @@ const {
   Likes,
   User_Follow,
   Support,
-  Privileges
+  Privileges,
 } = require("../db.js");
 const db = require("../db.js");
 const { Sequelize } = require("sequelize");
@@ -175,7 +175,18 @@ const DB_Postsearch = async ({ username, id }) => {
   try {
     if (username === undefined && id === undefined) {
       var post_search = await Post.findAll({
-        include: [{ model: User, attributes: ["image", "username"] }, Comment, {model:Likes, as:"userLikes", include:[{model:User,attributes:["username"]}]}],
+        include: [
+          { model: User, attributes: ["image", "username"] },
+          {
+            model: Comment,
+            include: [{ model: User, attributes: ["image", "username"] }],
+          },
+          {
+            model: Likes,
+            as: "userLikes",
+            include: [{ model: User, attributes: ["username"] }],
+          },
+        ],
         order: [["createdAt", "DESC"]],
       });
       return post_search;
@@ -367,7 +378,8 @@ const DB_userSearch = async (username, email, password) => {
       if (!validate) {
         return { error: "password" };
       }
-      return user;Sea
+      return user;
+      Sea;
     }
   } catch (e) {
     return console.log("Error login", e);
@@ -392,17 +404,17 @@ const BD_searchSupport = async () => {
   }
 };
 
-const BD_createPrivileges = async (user,title) =>{
-	var privileges = await Privileges.create({
-		title,
-		userId:user.id,
-    username:user.username,
-		checked: true
-	})
+const BD_createPrivileges = async (user, title) => {
+  var privileges = await Privileges.create({
+    title,
+    userId: user.id,
+    username: user.username,
+    checked: true,
+  });
   // privileges.findOne({include:User.username})
-  console.log(privileges)
-	return privileges
-}
+  console.log(privileges);
+  return privileges;
+};
 
 module.exports = {
   DB_findUserAll,
@@ -428,5 +440,5 @@ module.exports = {
   DB_findUsersUsername,
   DB_UserFollow,
   BD_searchSupport,
-  BD_createPrivileges
+  BD_createPrivileges,
 };

@@ -62,10 +62,14 @@ export function updatePost(postId, data) {
   //return { type: POST_UPDATE, payload: { postId } };
 }
 
-export function commentPost(postId, content, username) {
+export function commentPost(postid, content, username) {
   return (dispatch) =>
     axios
-      .post(`localhost:3001/`, { postId, content, username })
+      .post(
+        `http://localhost:3001/comment`,
+        { postid, content, username },
+        { withCredentials: true }
+      )
       .then((res) => console.log(res))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 
@@ -98,8 +102,8 @@ export function getPostForUsername(username) {
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }
 
-export function updatePage(bol, post) {
-  return { type: UPDATE_PAGE, payload: { bol, post } };
+export function updatePage(page) {
+  return { type: UPDATE_PAGE, payload: page };
 }
 
 export function likePost(data) {
@@ -107,7 +111,6 @@ export function likePost(data) {
     axios
       .post("http://localhost:3001/likes", data, { withCredentials: true })
       .then((res) => {
-        console.log(res.data);
         return { type: POST_LIKE, payload: res.data };
       });
 }

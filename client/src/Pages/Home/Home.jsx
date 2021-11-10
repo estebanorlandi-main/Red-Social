@@ -9,7 +9,10 @@ import { clearPosts, getPosts, updatePage } from "../../Redux/actions/Post";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
-  const page = useSelector((state) => state.postsReducer.page);
+  const [page, totalPages] = useSelector(
+    ({ postsReducer: { page, totalPages } }) => [page, totalPages]
+  );
+
   const dispatch = useDispatch();
 
   const [createPost, setCreatePost] = useState(false);
@@ -20,22 +23,17 @@ function Home(props) {
       Math.ceil(window.innerHeight + window.scrollY) >=
       document.documentElement.scrollHeight
     )
-      dispatch(updatePage(false));
-  }, [dispatch]);
+      dispatch(updatePage(page + 1 < totalPages ? page + 1 : page));
+  }, [dispatch, page, totalPages]);
 
   useEffect(() => {
-    if (first) {
-      dispatch(getPosts(0));
-      setFirst(false);
-      return;
-    }
     if (page === -1) {
       window.scroll(0, 0);
-      dispatch(updatePage(false));
+      dispatch(updatePage(0));
       return;
     }
     dispatch(getPosts(page));
-  }, [dispatch, page, first]);
+  }, [dispatch, page, first, totalPages]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -72,9 +70,11 @@ function Home(props) {
             </li>
           ))}
 
-          <li>
-            <div className={styles.cargando}>Cargando...</div>
-          </li>
+          {totalPages > page && (
+            <li>
+              <div className={styles.cargando}>Cargando...</div>
+            </li>
+          )}
         </ul>
       </section>
 
