@@ -416,16 +416,13 @@ const BD_searchPost = async (idPost) =>{
 const BD_banUser = async (username) => {
   var user = await User.findOne({where:{username:username}});
   if(user === null) return {error:'User not exits'}
-  console.log(user.strike.length)
   if(user.strike === null){
     user.strike = ['X']
     user.save()
     return {Succes: 'The STRIKE was applied successfully'}
   } else{
-    console.log(user.strike)
     user.strike.push('X');
     user.save()
-    console.log(user.strike)
     return {Succes: 'The STRIKE was applied successfully'}
   }
 }
