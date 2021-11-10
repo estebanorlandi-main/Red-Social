@@ -1,8 +1,7 @@
 .home {
-  position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(120px, max-content));
-  width: 75vw;
+  width: 70vw;
   margin: 0 auto;
   gap: 3em;
 }
@@ -10,24 +9,21 @@
 .home li {
   list-style: none;
 }
-.home section {
-  width: 100%;
-  margin: 0 auto;
+
+.home section:first-child {
+  display: flex;
+  flex-flow: column wrap;
 }
 
-.home section:last-child {
-  text-align: right;
-}
-
-.home section:last-child > div {
-  background-color: #fff;
-  margin-top: 2em;
-  border-radius: 10px;
+.home section > div {
   padding: 1em;
+  border-radius: 10px;
+  margin-top: 2em;
+  background-color: #fff;
 }
 
 .home section {
-  margin: 1em auto;
+  margin: 0 auto;
 }
 
 .sectionPosts {
@@ -82,4 +78,37 @@
   text-align: center;
   font-size: 1.25rem;
   min-height: 7em;
+}
+
+.tags {
+  margin: 0.75em 1em;
+}
+.tag {
+  color: #59d !important;
+  font-size: 1rem !important;
+}
+
+.newPostOpen {
+  border-radius: 5em;
+  margin: 2em 0 0 0;
+  background-color: #fff;
+  padding: 0.75em 1.5em;
+  gap: 1em;
+  display: flex;
+  align-items: center;
+}
+
+.createPost {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 1em;
+  text-align: left;
+  gap: 0.5em;
+  border-radius: 5em;
+  background-color: transparent;
+  border: 1px solid #aaa;
+  font-size: 1rem;
+  color: #888;
+  height: 2.5em;
 }
