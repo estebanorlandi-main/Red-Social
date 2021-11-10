@@ -136,7 +136,7 @@ export default function NewPost() {
         username: session.username,
       });
       console.log(obj);
-      dispatch(updatePage(true, obj.payload.posts));
+      dispatch(updatePage(-1, obj.payload.posts));
     }
   }
   return (

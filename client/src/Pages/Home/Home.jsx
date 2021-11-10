@@ -14,7 +14,7 @@ function Home(props) {
 
   const [createPost, setCreatePost] = useState(false);
   const [first, setFirst] = useState(true);
-
+  console.log(page)
   const handleScroll = useCallback(() => {
     if (
       Math.ceil(window.innerHeight + window.scrollY) >=
@@ -29,9 +29,13 @@ function Home(props) {
       setFirst(false);
       return;
     }
-    if (page === -1) {
-      window.scroll(0, 0);
-      dispatch(updatePage(false));
+    if (page < 0) {
+      if (page === -1) {
+        window.scroll(0, 0);
+        dispatch(updatePage(false));
+      }else {
+        dispatch(updatePage(true));
+      }
       return;
     }
     dispatch(getPosts(page));

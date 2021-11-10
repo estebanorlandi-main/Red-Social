@@ -74,13 +74,18 @@ export default function root(state = initialState, action) {
       };
 
     case UPDATE_PAGE:
-      if (action.payload.bol) {
+      if (action.payload.bol < 0 && action.payload.post) {
         return {
           ...state,
-          page: -1,
+          page: action.payload.bol,
           posts: action.payload.post,
         };
-      } else {
+      } else if(action.payload.bol){
+        return {
+          ...state,
+          page: 0,
+        };
+      }else {
         return {
           ...state,
           page: state.page + 1,

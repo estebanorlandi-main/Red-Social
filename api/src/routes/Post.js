@@ -84,8 +84,10 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   const { title, content, image, tag, likes, username } = req.body;
+  console.log(req.body)
   try {
     let userDB = await DB_UserID(username);
+console.log(userDB)
     let createPost = await Post.create({
       image,
       likes,
@@ -94,6 +96,7 @@ router.post("/", async (req, res, next) => {
       title,
       userId: userDB.id,
     });
+    console.log(req.body)
     await userDB.addPost(createPost);
 
     const allPosts = await DB_Postsearch({});

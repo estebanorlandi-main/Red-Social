@@ -114,13 +114,13 @@ function Post({ post, customClass, user }) {
   const handleLike = async (e) => {
     let obj;
     if (session.username) {obj = await dispatch(likePost({postIdPost:post.idPost, userId:session.username}))};
-    dispatch(updatePage(true, obj.payload.posts))
+    dispatch(updatePage(-2, obj.payload.posts))
   };
 
   async function borrar() {
 
     let res = await dispatch(deletePost(post.idPost));
-    dispatch(updatePage(true, res.payload.posts));
+    dispatch(updatePage(-1, res.payload.posts));
   }
 
   async function editar() {
@@ -142,7 +142,7 @@ function Post({ post, customClass, user }) {
         })
       );
 
-      dispatch(updatePage(true, obj.payload.posts));
+      dispatch(updatePage(-1, obj.payload.posts));
     }
   }
 
