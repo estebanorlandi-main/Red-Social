@@ -60,17 +60,13 @@ const DB_UserFollow = async (date) => {
 };
 //fn
 const DB_findUsersEmail = async (email) => {
-  if (email == null || email == undefined) {
-    return null;
-  }
-  const findUserEmail = await User.findOne({ where: { email } });
+  if (email == null || email == undefined) return null;
+  const findUserEmail = await User.findOne({ where: { email } }).catch(e=>null);
   return findUserEmail;
 };
 const DB_findUsersUsername = async (username) => {
-  if (username == null || username == undefined) {
-    return null;
-  }
-  const findUsername = await User.findOne({ where: { username } });
+  if (username == null || username == undefined) return null;
+  const findUsername = await User.findOne({ where: { username } }).catch(e=>null);
   return findUsername;
 };
 const DB_findUserAll = async (query) => {
