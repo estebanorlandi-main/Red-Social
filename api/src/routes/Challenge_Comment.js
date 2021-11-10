@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const {User,
-	ChallengeComment} = require('../db.js');
+	ChallengeComment,
+	ChallengePost} = require('../db.js');
 const Challenge_utils = require('./Challengeutils.js')
 const database_Utils = require('./utils.js')
 
