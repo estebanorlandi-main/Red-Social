@@ -6,11 +6,20 @@
 }
 
 .comment {
-  background-color: #fafafa;
-  min-width: 100%;
+  position: relative;
   display: block;
   list-style: none;
-  padding: 0 var(--pX) 1em var(--pX) !important;
+  padding: 0 0 0 1em !important;
+}
+
+.comment::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 2px;
+  background-color: var(--c-blue);
 }
 
 .comment > p {
@@ -18,4 +27,25 @@
   color: #555;
   font-weight: 300;
   font-size: 0.9rem;
+}
+
+.user {
+  display: flex !important;
+  align-items: center;
+}
+
+.user img {
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 100%;
+  width: 2.5em;
+  height: 2.5em;
+  margin: 0 0 0 0;
+}
+
+.user h4 {
+  margin: 0 0 0 1em;
+  width: max-content;
+  max-width: max-content;
 }

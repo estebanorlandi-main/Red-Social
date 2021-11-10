@@ -12,6 +12,8 @@
   --c-avatar-bg: var(--c-blue);
   --c-font: var(--c-dark);
 
+  position: relative;
+
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -24,6 +26,48 @@
   border-radius: 10px;
   overflow: hidden;
   background-color: var(--c-bg);
+  box-shadow: 0 1px 2px #0001;
+}
+
+.options {
+  position: absolute;
+  top: 1em;
+  right: var(--pX);
+  align-self: flex-end;
+}
+.optionsHandler {
+  background-color: transparent;
+  border: none;
+}
+
+.optionsMenu {
+  position: absolute;
+  right: 0;
+  background-color: #fff;
+  box-shadow: 0 0.5em 1em #0001;
+  padding: 1em;
+  border-radius: 1em;
+}
+.optionsMenu > button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+
+  border: none;
+  margin: 1em 0 0 0;
+  width: 100%;
+}
+
+.danger {
+  color: #f55;
+}
+
+.hide {
+  display: none;
+}
+.show {
+  display: block;
 }
 
 .avatar {
@@ -66,7 +110,7 @@
 
 .mainContent {
   position: relative;
-  max-height: 4.5em;
+  max-height: 6rem;
   overflow-y: hidden;
   transition: all 0.25s;
   margin: 0 auto;
@@ -85,7 +129,7 @@
 
 .seeMore {
   position: absolute;
-  bottom: 0;
+  bottom: -0.15em !important;
   right: 0;
   z-index: 3;
   padding: 0.5em 0.5em 0 0.5em;
@@ -94,6 +138,7 @@
   color: var(--c-light-blue);
   font-size: 0.9rem;
   cursor: pointer;
+  width: max-content;
 }
 .seeMore > span {
   margin-right: 0.25rem;
@@ -138,14 +183,14 @@
   font-size: 0.8rem;
 }
 
-.options {
+.actions {
   display: flex;
   justify-content: space-between;
   padding: 1.25em var(--pX) 1em var(--pX);
   width: 100%;
 }
 
-.options > button {
+.actions > button {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -199,4 +244,14 @@
 .disabled {
   color: #aaa;
   cursor: default;
+}
+
+.mention {
+  color: #59d;
+}
+
+.comments {
+  width: 100%;
+  padding: 0 var(--pX);
+  background-color: #fafafa;
 }

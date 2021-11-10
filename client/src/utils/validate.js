@@ -99,6 +99,35 @@ export function validarAbout(str) {
   return "";
 }
 
+export function validarPostTitle(str) {
+  const errType = ["", "Minimo 5 caracteres", "Maximo 40 caracteres"];
+
+  if (!str.length) return errType[0];
+  if (str.length < 5) return errType[1];
+  if (str.length > 40) return errType[2];
+
+  return errType[0];
+}
+
+export function validarPostContent(str) {
+  const errType = ["", "Minimo 5 caracteres", "Maximo 1000 caracteres"];
+
+  if (!str.length) return errType[0];
+  if (str.length < 5) return errType[1];
+  if (str.length > 1000) return errType[2];
+
+  return errType[0];
+}
+
+export function validarPostComment(str) {
+  const errType = ["", "Minimo 5 caracteres", "Maximo 1000 caracteres"];
+  if (!str.length) return errType[0];
+  if (str.length < 5) return errType[1];
+  if (str.length > 1000) return errType[2];
+
+  return errType[0];
+}
+
 // 1. nombre del input y valor
 // 2. objeto con todos los nombres y valores
 // si el input no se encuentra devuelve 'field not found' en el valor del input
@@ -107,6 +136,12 @@ export default function validate(input, value) {
 
   if (typeof input === "object") {
     for (var p in input) {
+      //Posts
+
+      if (p === "title") errors[p] = validarPostTitle(input[p]);
+      if (p === "content") errors[p] = validarPostContent(input[p]);
+
+      //Users
       if (p === "username") errors[p] = validarUsername(input[p]);
       if (p === "password") errors[p] = validarPassword(input[p]);
       if (p === "name") errors[p] = validarNombreyApellido(input[p]);
@@ -114,11 +149,18 @@ export default function validate(input, value) {
       if (p === "email") errors[p] = validarEmail(input[p]);
       if (p === "gitaccount") errors[p] = validarGithub(input[p]);
       if (p === "image") errors[p] = validarImagen(input[p]);
-      if (p === "About") errors[p] = validarAbout(input[p]);
+      if (p === "about") errors[p] = validarAbout(input[p]);
+      if (p === "comment") errors[p] = validarPostComment(input[p]);
     }
     return errors;
   }
 
+  //Posts
+  if (input === "title") return validarPostTitle(value);
+  if (input === "content") return validarPostContent(value);
+  if (input === "comment") return validarPostComment(value);
+
+  //Users
   if (input === "username") return validarUsername(value);
   if (input === "password") return validarPassword(value);
   if (input === "name") return validarNombreyApellido(value);

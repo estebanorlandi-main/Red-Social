@@ -5,7 +5,8 @@ export const LOG_IN = "LOG_IN";
 export const LOG_OUT = "LOG_OUT";
 export const SIGN_UP = "SIGN_UP";
 export const UPDATE_USER = "UPDATE_USER";
-
+export const VALIDATE_EMAIL = "VALIDATE_EMAIL"
+export const VALIDATE_USERNAME = "VALIDATE_USERNAME"
 // - Modelo -
 // username
 // name
@@ -53,4 +54,19 @@ export function logOut() {
       .get(`http://localhost:3001/logout`, { withCredentials: true })
       .then((res) => dispatch({ type: LOG_OUT, res }))
       .catch((err) => dispatch({ type: ERROR, payload: err }));
+}
+
+export function validateEmail(email) {
+  return (dispatch) =>
+    axios
+      .get(`http://localhost:3001/user/validate/email/${email}`)
+      .then((res)=> dispatch({type: VALIDATE_EMAIL, payload: res}))
+      .catch((e)=> console.log(e))
+}
+export function validateUsername(username) {
+  return (dispatch) =>
+    axios
+      .get(`http://localhost:3001/user/validate/username/${username}`)
+      .then((res)=> dispatch({type: VALIDATE_USERNAME, payload: res}))
+      .catch((e)=> console.log(e))
 }

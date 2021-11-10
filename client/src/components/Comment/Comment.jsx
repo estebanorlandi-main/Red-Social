@@ -4,10 +4,11 @@ import styles from "./Comment.module.css";
 function Comment({ comment }) {
   return (
     <li className={styles.comment}>
-      <Link to={`/profile/${comment.user.username}`}>
+      <Link className={styles.user} to={`/profile/${comment.user.username}`}>
+        <img className={styles.userImage} src={comment.user.image} alt="" />
         <h4>{comment.user.username}</h4>
       </Link>
-      <p>{comment.text}</p>
+      <p>{comment.content}</p>
     </li>
   );
 }

@@ -1,6 +1,7 @@
 import {
   POST_LIKE,
   POST_COMMENT,
+  POST_CREATE,
   GET_POSTS,
   GET_POST_FOR_ID,
   GET_POST_FOR_USERNAME,
@@ -17,6 +18,13 @@ const initialState = {
 
 export default function root(state = initialState, action) {
   switch (action.type) {
+    case POST_CREATE:
+      return {
+        ...state,
+        posts: action.payload.posts,
+        totalPages: action.payload.totalPages,
+      };
+
     case POST_LIKE:
       return {
         ...state,
@@ -74,19 +82,10 @@ export default function root(state = initialState, action) {
       };
 
     case UPDATE_PAGE:
-      if (action.payload.bol) {
-        return {
-          ...state,
-          page: -1,
-          posts: action.payload.post,
-        };
-      } else {
-        return {
-          ...state,
-          page: state.page + 1,
-        };
-      }
-
+      return {
+        ...state,
+        page: action.payload,
+      };
     case CLEAR_POST:
       return { ...initialState, posts: [] };
 

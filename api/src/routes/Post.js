@@ -11,8 +11,9 @@ const {
 const Op = Sequelize.Op;
 const router = Router();
 
-// const ruta = require("archivo")
-// router.use("/", ruta)
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // router.use("/", );
 
@@ -20,38 +21,45 @@ const paginate = (page = 0, arr) => {
   const postsPerPage = 15;
   const to = page * postsPerPage + postsPerPage;
 
+  let posts = arr
+    .slice(page * postsPerPage, to < arr.length ? to : arr.length)
+    .map((post) => {
+      if (post.imageData) {
+        const image = post.imageData.toString("base64");
+        post["imageData"] = image;
+      }
+      return post;
+    });
+
+  const totalPages = Math.floor(arr.length / postsPerPage);
+
   return {
-    posts: arr.slice(page * postsPerPage, to < arr.length ? to : arr),
-    totalPages: arr.length,
+    posts,
+    totalPages,
   };
 };
 
 //Devuelve post de una categoria o si no todos los post
 router.get("/", async (req, res) => {
-
   // const posts = await Post.findAll({order: [['createdAt', 'DESC']]})
   // return res.send(posts)
 
   const { tag, page } = req.query;
   const allPosts = await DB_Postsearch({});
 
-  if (tag) {
-    let postCategoria = allPosts.filter((e) =>
-      e.tag
-        .map((postTag) => postTag && postTag.toLowerCase())
-        .includes(tag.toLowerCase())
-    );
+  if (!tag) return res.status(200).send(paginate(page, allPosts));
 
-    if (!postCategoria.length)
-      res.status(404).send("There is no post with that tag");
+  let postCategoria = allPosts.filter((e) =>
+    e.tag
+      .map((postTag) => postTag && postTag.toLowerCase())
+      .includes(tag.toLowerCase())
+  );
 
-    const { posts, totalPages } = paginate(page, postCategoria);
+  if (!postCategoria.length)
+    res.status(404).send("There is no post with that tag");
 
-    res.status(200).send({ posts, totalPages });
-  } else {
-    const { posts, totalPages } = paginate(page, allPosts);
-    res.status(200).send({ posts, totalPages });
-  }
+  let { posts, totalPages } = paginate(page, postCategoria);
+  res.status(200).send({ posts, totalPages });
 });
 
 //Trae todos los posteos que hizo un usuario
@@ -84,31 +92,42 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
-  const { title, content, image, tag, likes, username } = req.body;
+router.post("/", upload.single("image"), async (req, res) => {
+  let { title, content, tag, username } = req.body;
+
   try {
     let userDB = await DB_UserID(username);
+
+    if (typeof tag === "string" && tag.length) tag = tag.split(",");
+
+    let image = {};
+    if (req.file) {
+      image["imageType"] = req.file.mimetype;
+      image["imageName"] = req.file.originalname;
+      image["imageData"] = req.file.buffer;
+    }
+
     let createPost = await Post.create({
-      image,
-      likes,
+      ...image,
       content,
-      tag,
+      tag: tag || [],
       title,
       userId: userDB.id,
     });
+
     await userDB.addPost(createPost);
 
     const allPosts = await DB_Postsearch({});
-    const { posts, totalPages } = paginate(0, allPosts);
-    res.status(200).send({ posts, totalPages });
+
+    res.status(200).send(paginate(0, allPosts));
   } catch (e) {
+    console.log(e);
     res.status(404).send({ success: false, error: "Cant create post" });
   }
 });
 
 //Eliminacion de un Post
 router.delete("/:id", async (req, res) => {
-
   try {
     const { id } = req.params;
     const deletePost = await DB_Postdestroy(id);

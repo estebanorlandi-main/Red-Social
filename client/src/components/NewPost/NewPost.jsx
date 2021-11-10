@@ -3,6 +3,7 @@ import { useState } from "react";
 import { createPost, updatePage } from "../../Redux/actions/Post.js";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
+import validate from "../../utils/validate";
 
 export default function NewPost() {
   const dispatch = useDispatch();
@@ -10,19 +11,15 @@ export default function NewPost() {
   const [data, setData] = useState({
     title: "",
     content: "",
-    image: "",
+    image: null,
     tag: [],
     likes: 0,
     username: session.username,
   });
 
   const [errores, setErrores] = useState({
-    title: { indice: 0, err: ["", "Campo Obligatorio"] },
-    content: {
-      indice: 0,
-      err: ["", "Por lo menos un content o imagen", "Maximo 1000 Caracteres"],
-    },
-    image: { indice: 0, err: ["", "Por lo menos un content o imagen"] },
+    title: "",
+    content: "",
   });
 
   const options = [
@@ -47,129 +44,73 @@ export default function NewPost() {
     }));
   }*/
 
-  function existe(str, str2, str3) {
-    var textos = [str, str2, str3];
-    let arr = textos.map((texto) => {
-      if (!data[texto].length) {
-        setErrores((old) => ({
-          ...old,
-          [texto]: { ...old[texto], indice: 1 },
-        }));
-        return false;
-      } else {
-        setErrores((old) => ({
-          ...old,
-          [texto]: { ...old[texto], indice: 0 },
-        }));
-        return true;
-      }
-    });
-    return arr;
-  }
-
-  function verificar() {
-    var arr = existe("title", "content", "image");
-    if (arr[0] === true && (arr[1] === true || arr[2] === true)) {
-      setErrores({
-        title: { indice: 0, err: ["", "Campo Obligatorio"] },
-        content: {
-          indice: 0,
-          err: [
-            "",
-            "Por lo menos un content o imagen",
-            "Maximo 1000 Caracteres",
-          ],
-        },
-        image: { indice: 0, err: ["", "Por lo menos un content o imagen"] },
-      });
-      return true;
-    } else if (arr[1] === true || arr[2] === true) {
-      setErrores({
-        title: { indice: 1, err: ["", "Campo Obligatorio"] },
-        content: { indice: 0, err: ["", "Por lo menos un content o imagen"] },
-        image: { indice: 0, err: ["", "Por lo menos un content o imagen"] },
-      });
-    }
-  }
-
-  function handleChange(e) {
-    if (e.target.name === "content" && data.content.length === 1000) {
-      if (e.target.value.length > 1000) {
-        setErrores((old) => ({
-          ...old,
-          content: {
-            ...old.content,
-            indice: 2,
-          },
-        }));
-        return;
-      }
-      setErrores((old) => ({
-        ...old,
-        content: {
-          ...old.content,
-          indice: 0,
-        },
-      }));
-    }
-    setData((old) => ({
-      ...old,
-      [e.target.name]: e.target.value,
-    }));
+  function handleChange({ target: { name, value } }) {
+    setData((old) => ({ ...old, [name]: value }));
+    setErrores((old) => ({ ...old, [name]: validate(name, value) }));
   }
 
   const handleSelect = (e) => {
     setData((old) => ({ ...old, tag: e.map((option) => option.value) }));
   };
 
-  async function handleSubmit(e) {
+  const handleImage = ({ target: { name, files } }) => {
+    setData((old) => ({ ...old, [name]: files[0] }));
+  };
+
+  function handleSubmit(e) {
     e.preventDefault();
-    if (verificar()) {
-      console.log(data);
-      let obj = await dispatch(createPost(data));
+
+    if (!Object.values(errores).filter((error) => error).length) {
+      const formData = new FormData();
+
+      formData.append("title", data.title);
+      formData.append("content", data.content);
+      formData.append("image", data.image);
+      formData.append("tag", data.tag);
+      formData.append("username", data.username);
+
+      dispatch(createPost(formData));
+
       setData({
         title: "",
         content: "",
-        image: "",
+        image: null,
         tag: [],
         likes: 0,
         username: session.username,
       });
-      console.log(obj);
-      dispatch(updatePage(true, obj.payload.posts));
+      //console.log(obj);
+      //dispatch(updatePage(true, obj.payload.posts));
     }
   }
+
   return (
-    <form
-      className={style.container}
-      onSubmit={(e) => handleSubmit(e)}
-      onChange={(e) => handleChange(e)}
-    >
+    <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
       <h3>{data.username}</h3>
 
       <label className={style.wrapper}>
         Title
         <input
           value={data.title}
+          onChange={handleChange}
           name="title"
           type="text"
           placeholder="Title"
+          autoComplete="off"
         />
-        <span className={style.error}>
-          {errores.title.err[errores.title.indice]}
-        </span>
+        <span className={style.error}>{errores.title}</span>
       </label>
       <label className={style.wrapper}>
         Content {data.content.length}/1000
         <textarea
           className={style.textarea}
           value={data.content}
+          onChange={handleChange}
           name="content"
           type="text"
+          autoComplete="off"
         />
-        <span className={style.error}>
-          {errores.content.err[errores.content.indice]}
-        </span>
+        <span className={style.error}>{errores.content}</span>
       </label>
       {/*<label>
         image
@@ -179,14 +120,12 @@ export default function NewPost() {
       <label className={style.wrapper}>
         Image
         <input
-          value={data.image}
+          onChange={handleImage}
           name="image"
-          type="text"
+          type="file"
           placeholder="Image"
         />
-        <span className={style.error}>
-          {errores.image.err[errores.image.indice]}
-        </span>
+        <span className={style.error}>{errores.image}</span>
       </label>
 
       <label className={style.wrapper}>

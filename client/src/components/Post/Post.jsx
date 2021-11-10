@@ -8,7 +8,7 @@ import {
   deletePost,
   updatePost,
   updatePage,
-  likePost
+  likePost,
 } from "../../Redux/actions/Post";
 
 import Comment from "../Comment/Comment";
@@ -21,20 +21,53 @@ import {
   MdOutlineModeComment,
   MdShare,
   MdSend,
-  MdFavorite
+  MdFavorite,
 } from "react-icons/md";
 
-import { BiCommentDetail } from "react-icons/bi";
+import { GoTrashcan } from "react-icons/go";
+
+import { BsFillPencilFill } from "react-icons/bs";
+
+import { BiCommentDetail, BiDotsVerticalRounded } from "react-icons/bi";
+import validate from "../../utils/validate";
+
+const parseContent = (text) => {
+  const mentions = text && text.match(/@\w+/gi);
+
+  if (!mentions) return [text];
+
+  const parsed = text.split(" ").map((value) => {
+    if (mentions.includes(value)) {
+      return (
+        <Link
+          className={styles.mention}
+          to={`/profile/${value.slice(1, value.length)}`}
+        >
+          {value}
+        </Link>
+      );
+    } else return " " + value + " ";
+  });
+
+  return parsed;
+};
 
 function Post({ post, customClass, user }) {
   const dispatch = useDispatch();
+
+  const page = useSelector(({ postsReducer: { page } }) => page);
   const session = useSelector((state) => state.sessionReducer || {});
 
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
+
   const [newComment, setNewComment] = useState("");
-  const [error, setError] = useState("");
-  const [modo, setModo] = useState(false);
+
+  const [commentError, setCommentError] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const [editErrors, setEditErrors] = useState({});
+
+  const [options, setOptions] = useState(false);
 
   const [data, setData] = useState({
     title: post.title,
@@ -42,7 +75,7 @@ function Post({ post, customClass, user }) {
     image: post.image,
   });
 
-  const createdAt = new Date(post.createdAt).getTime();
+  const createdAt = new Date(post.updatedAt).getTime();
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
 
@@ -58,102 +91,38 @@ function Post({ post, customClass, user }) {
       content: post.content,
       image: post.image,
     });
-    setModo(false);
   }, [post]);
+
   const handleComment = ({ target: { name, value } }) => {
     setNewComment(value);
-    const isValid = (comment) => {
-      if (!comment.length) {
-        setError("");
-        return true;
-      }
-      if (comment.length < 3) {
-        setError("Minimo 3 letras");
-        return false;
-      }
-
-      if (comment.length > 1000) {
-        setError("Maximo 1000 letras");
-        return false;
-      }
-
-      setError("");
-      return true;
-    };
-    isValid(value);
+    setCommentError(validate(name, value));
   };
 
-  const handleSubmit = (e) => {
+  const submitComment = (e) => {
     e.preventDefault();
-
-    const isValid = (comment) => {
-      if (comment.length < 3) {
-        setError("Minimo 3 letras");
-        return false;
-      }
-
-      if (comment.length > 1000) {
-        setError("Maximo 1000 letras");
-        return false;
-      }
-
-      setError("");
-      return true;
-    };
-
-    if (isValid(newComment))
-      dispatch(
-        commentPost(post.idPost, newComment, {
-          username: session.username,
-          avatar:
-            "https://robohash.org/reiciendisquisnemo.png?size=50x50&set=set1",
-        })
-      );
+    if (commentError) return;
+    dispatch(commentPost(post.idPost, newComment, session.username));
   };
 
-  const handleLike = async (e) => {
-    let obj;
-    if (session.username) {obj = await dispatch(likePost({postIdPost:post.idPost, userId:session.username}))};
-    dispatch(updatePage(true, obj.payload.posts))
-  };
-
-  async function borrar() {
-
-    let res = await dispatch(deletePost(post.idPost));
-    dispatch(updatePage(true, res.payload.posts));
-  }
-
-  async function editar() {
-    let obj;
-    setModo((old) => !old);
-
-    if (!modo) return;
-
-    if (
-      (post.title !== data.title && data.title) ||
-      (post.content !== data.content && data.content)
-    ) {
-      obj = await dispatch(
-        updatePost(post.idPost, {
-          ...post,
-          title: data.title,
-          content: data.content,
-          image: data.image,
-        })
-      );
-
-      dispatch(updatePage(true, obj.payload.posts));
-    }
-  }
-
-  function cancel() {
-    setModo((old) => !old);
+  const handleDelete = () => dispatch(deletePost(post.idPost));
+  const handleEditMode = (mode) => {
     setData({
       title: post.title,
       content: post.content,
       image: post.image,
     });
-  }
+    setEditMode(mode);
+  };
+
+  const handleLike = async (e) => {
+    let obj;
+    if (session.username) {
+      obj = await dispatch(
+        likePost({ postIdPost: post.idPost, userId: session.username })
+      );
+    }
+    dispatch(updatePage(true, obj.payload.posts));
+  };
 
   function handleChange({ target: { name, value } }) {
     if (
@@ -167,47 +136,67 @@ function Post({ post, customClass, user }) {
     setData((old) => ({ ...old, [name]: value }));
   }
 
+  const handleOptions = () => setOptions((old) => !old);
+
   const tags = new Set();
   post.tag.filter((tag) => (!!tag ? tags.add(tag) : false));
   post.tag = Array.from(tags);
 
+  let test;
+  if (post.content) test = parseContent(post.content);
+
   return (
     <div className={styles.container + ` ${customClass}`}>
-      <div>
-        {session.username === post.user.username ? (
-          <>
-            <button onClick={() => editar()}>editar</button>
+      {session.username === post.user.username ? (
+        <div className={styles.options}>
+          <button onClick={handleOptions} className={styles.optionsHandler}>
+            <BiDotsVerticalRounded
+              style={{ color: "#aaa", width: "2em", height: "2em" }}
+            />
+          </button>
+
+          {editMode ? (
+            <li>
+              <button
+                onClick={() => {
+                  handleEditMode(false);
+                }}
+              >
+                cancel
+              </button>
+            </li>
+          ) : (
+            ""
+          )}
+
+          <div
+            className={`${options ? styles.show : styles.hide} ${
+              styles.optionsMenu
+            }`}
+          >
+            <button onClick={() => handleEditMode(true)}>
+              <BsFillPencilFill />
+              Edit
+            </button>
             <button
+              className={styles.danger}
               onClick={() => {
-                borrar();
+                handleDelete();
               }}
             >
-              borrar
+              <GoTrashcan style={{ color: "#ff5555" }} />
+              Delete
             </button>
-          </>
-        ) : (
-          ""
-        )}
-      </div>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
 
       <ul className={styles.tags}>
         {post.tag.map((tag, i) => (
           <li key={i}>{tag}</li>
         ))}
-
-        {modo ? (
-          <li>
-            <button
-              onClick={() => {
-                cancel();
-              }}
-            >
-              cancel
-            </button>
-          </li>
-        ) : (
-          ""
-        )}
       </ul>
 
       <Link
@@ -225,7 +214,7 @@ function Post({ post, customClass, user }) {
         </div>
       </Link>
       <div className={styles.postBody}>
-        {modo ? (
+        {editMode ? (
           <input
             value={data.title}
             name="title"
@@ -235,7 +224,7 @@ function Post({ post, customClass, user }) {
           <h3>{post.title}</h3>
         )}
 
-        {modo ? (
+        {editMode ? (
           <div>
             <textarea
               value={data.content}
@@ -252,7 +241,7 @@ function Post({ post, customClass, user }) {
               className={styles.text}
               style={seeMore ? { marginBottom: "1em" } : { marginBottom: "0" }}
             >
-              {post.content}
+              {test && test.map((value) => value)}
             </p>
             <button
               className={styles.seeMore}
@@ -264,14 +253,20 @@ function Post({ post, customClass, user }) {
           </div>
         )}
       </div>
-      {post.image ? (
-        <img className={styles.postImage} src={post.image} alt="Not found" />
+      {post.imageData ? (
+        <img
+          className={styles.postImage}
+          src={`data:${post.imageType};base64, ${post.imageData}`}
+          alt={post.imageName}
+        />
       ) : (
         ""
       )}
-      <div className={styles.options}>
+      <div className={styles.actions}>
         <button className={!session.username ? "" : ""} onClick={handleLike}>
-          {post.userLikes.filter((user) => user.user.username === session.username).length ? (
+          {post.userLikes.filter(
+            (user) => user.user.username === session.username
+          ).length ? (
             <MdFavorite color="red" />
           ) : (
             <MdFavoriteBorder />
@@ -293,12 +288,13 @@ function Post({ post, customClass, user }) {
       {session.username ? (
         <div className={styles.newCommentContainer}>
           <span className={styles.maxLength}>{newComment.length} / 1000</span>
-          <form className={styles.newComment} onSubmit={handleSubmit}>
-            <label className={error ? "error" : ""}>
+          <form className={styles.newComment} onSubmit={submitComment}>
+            <label className={commentError ? "error" : ""}>
               <div className="input-group">
                 <textarea
                   onChange={handleComment}
-                  name="text"
+                  name="comment"
+                  type="text"
                   value={newComment}
                   placeholder="New comment..."
                 />
@@ -307,7 +303,7 @@ function Post({ post, customClass, user }) {
                 <MdSend className={styles.icons} />
               </button>
             </label>
-            <span>{error}</span>
+            <span>{commentError}</span>
           </form>
         </div>
       ) : (
@@ -315,7 +311,11 @@ function Post({ post, customClass, user }) {
       )}
 
       {post.comments && post.comments.length ? (
-        <Comment comment={post.comments[post.comments.length - 1]} />
+        <ul className={styles.comments}>
+          {post.comments.map((comment) => (
+            <Comment comment={comment} />
+          ))}
+        </ul>
       ) : (
         ""
       )}

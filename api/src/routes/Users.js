@@ -174,6 +174,19 @@ router.post("/follow", async (req, res, next) => {
     res.sendStatus(500);
   }
 });
+//VALIDATE EMAIL
+router.get("/validate/email/:email", async(req,res,next)=>{
+  const email = await fn.DB_findUsersEmail(req.params.email)
+  if(email) return res.send({success:false, email:"Email in use"})
+  else return res.send({success:true, email:"Email ok"})
+})
+router.get("/validate/username/:username", async(req,res,next)=>{
+  const username = await  fn.DB_findUsersUsername(req.params.username)
+  if(username) return res.send({success:false, username:"Username in use"})
+  else return res.send({success:true, username:"Username ok"})
+})
+
+
 
 // FUNCIONES USADAS
 // DB_findUserAll
@@ -181,7 +194,6 @@ router.post("/follow", async (req, res, next) => {
 // DB_findUserParams
 // DB_findUserCreated
 // DB_validatePassword
-
 // DB_createUser
 // DB_updateUser
 
