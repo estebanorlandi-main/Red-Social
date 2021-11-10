@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const {User,
 	ChallengeComment,
-	ChallengePost} = require('../db.js');
+	Challengepost} = require('../db.js');
 const Challenge_utils = require('./Challengeutils.js')
 const database_Utils = require('./utils.js')
 
@@ -19,12 +19,12 @@ router.post('/', async (req, res)=>{
 	try {
 		const {code, description, username, postid} = req.body
 		const UserAssociation = await database_Utils.DB_UserID(username)
-		const PostAssociation = await database_Utils.DB_Postsearch({'id' : postid})
-		const comment = await Comment.create({description, code, 
+		const PostAssociation = await Challenge_utils.DB_ChallFindPost({'id' : postid})
+		const comment = await ChallengeComment.create({description, code, 
 			'userId':UserAssociation.id, 'postId': postid}
 			)
-		UserAssociation.addComment(comment)
-		PostAssociation.addComment(comment)
+		UserAssociation.addChallengeComment(comment)
+		PostAssociation.addChallengeComment(comment)
 		return res.status(202).send(comment)
 	} catch(e) {
 		return res.status(404).send('Invalid username for request')
@@ -38,7 +38,7 @@ router.put('/:id', async (req, res)=>{
 	try{
 		const {id} = req.params
 		const {contentData} = req.body
-		const Comment = await database_Utils.DB_ChallCommentedit(id, contentData)
+		const Comment = await Challenge_utils.DB_ChallCommentedit(id, contentData)
 		return res.status(202).send('Edited Succesfully')
 	}catch(e){
 		return res.status(404).send('Invalid comment ID')
@@ -49,7 +49,7 @@ router.put('/:id', async (req, res)=>{
 router.delete('/:id', async (req, res)=>{
 	try {
 		const {id} = req.params
-		const Comment = await database_Utils.DB_ChallCommentdestroy(id)
+		const Comment = await Challenge_utils.DB_ChallCommentdestroy(id)
 		return res.status(200).send('Erased Succesfully')
 	}catch(e){
 		return res.status(404).send('Invalid Comment ID')
