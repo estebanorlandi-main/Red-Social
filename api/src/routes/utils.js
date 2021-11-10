@@ -410,17 +410,7 @@ const BD_createPrivileges = async (user) =>{
 	return privileges
 }
 
-const BD_createPrivileges = async (user, title) => {
-  var privileges = await Privileges.create({
-    title,
-    userId: user.id,
-    username: user.username,
-    checked: true,
-  });
-  // privileges.findOne({include:User.username})
-  console.log(privileges);
-  return privileges;
-};
+
 
 
 const BD_searchAdmin = async (user) =>{
