@@ -12,7 +12,7 @@ const {
   Privileges,
 } = require("../db.js");
 const db = require("../db.js");
-const { Sequelize } = require("sequelize");
+const { Sequelize, where } = require("sequelize");
 const Op = Sequelize.Op;
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -375,7 +375,6 @@ const DB_userSearch = async (username, email, password) => {
         return { error: "password" };
       }
       return user;
-      Sea;
     }
   } catch (e) {
     return console.log("Error login", e);
@@ -400,6 +399,17 @@ const BD_searchSupport = async () => {
   }
 };
 
+const BD_createPrivileges = async (user) =>{
+	var privileges = await Privileges.create({
+		userId:user.id,
+    username:user.username,
+		checked: true,
+    title:'Admin'
+	})
+
+	return privileges
+}
+
 const BD_createPrivileges = async (user, title) => {
   var privileges = await Privileges.create({
     title,
@@ -411,6 +421,33 @@ const BD_createPrivileges = async (user, title) => {
   console.log(privileges);
   return privileges;
 };
+
+
+const BD_searchAdmin = async (user) =>{
+  var privileges = await Privileges.findOne({where:{username:user.username}})
+  return privileges
+}
+
+const BD_searchPost = async (idPost) =>{
+  var post = await Post.findOne({where:{idPost:idPost}})
+  return post
+}
+
+const BD_banUser = async (username) => {
+  var user = await User.findOne({where:{username:username}});
+  if(user === null) return {error:'User not exits'}
+  if(user.strike === null){
+    user.strike = ['X']
+    user.save()
+    return {Succes: 'The STRIKE was applied successfully'}
+  } else{
+    user.strike.push('X');
+    user.save()
+    return {Succes: 'The STRIKE was applied successfully'}
+  }
+}
+
+
 
 module.exports = {
   DB_findUserAll,
@@ -437,4 +474,9 @@ module.exports = {
   DB_UserFollow,
   BD_searchSupport,
   BD_createPrivileges,
+  BD_searchAdmin,
+  BD_searchPost,
+  BD_banUser
+
+
 };

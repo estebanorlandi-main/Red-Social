@@ -9,6 +9,7 @@ export default function root(state = initialState, action) {
   switch (action.type) {
     case LOG_IN:
       cookie.set("codenet_user", action.payload.data.user, { path: "/" });
+      console.log(cookie)
       return cookie.get("codenet_user");
 
     case SIGN_UP:

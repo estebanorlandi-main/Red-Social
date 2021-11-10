@@ -8,7 +8,12 @@ module.exports = (sequelize) => {
     content: {
       type: DataTypes.STRING,
       allowNull: false,
-    }
+    },
+    ban: {
+			type: Sequelize.BOOLEAN,
+			allowNull: false,
+			defaultValue: false,
+		}
   },{
     timestamps: false,
   });

@@ -20,13 +20,14 @@ export default function Support() {
       [e.target.name]: e.target.value,
     });
   };
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     inputs.username = session.username;
     dispatch(createSupport(inputs));
     setInputs({ title: "", content: "", username: "" });
-    history.push("/home");
+    alert('Message send')
+    //history.push("/home");
   };
 
   return (
