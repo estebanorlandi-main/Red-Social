@@ -115,6 +115,7 @@ module.exports = (sequelize) => {
       strike:{
         type: DataTypes.ARRAY(DataTypes.JSON),
         allowNull:true,
+        
     }
     },
     {
