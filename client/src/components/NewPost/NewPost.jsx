@@ -11,7 +11,7 @@ export default function NewPost() {
   const [data, setData] = useState({
     title: "",
     content: "",
-    image: "",
+    image: null,
     tag: [],
     likes: 0,
     username: session.username,
@@ -20,7 +20,6 @@ export default function NewPost() {
   const [errores, setErrores] = useState({
     title: "",
     content: "",
-    image: "",
   });
 
   const options = [
@@ -54,35 +53,46 @@ export default function NewPost() {
     setData((old) => ({ ...old, tag: e.map((option) => option.value) }));
   };
 
-  async function handleSubmit(e) {
+  const handleImage = ({ target: { name, files } }) => {
+    setData((old) => ({ ...old, [name]: files[0] }));
+  };
+
+  function handleSubmit(e) {
     e.preventDefault();
+
     if (!Object.values(errores).filter((error) => error).length) {
-      console.log(data);
-      let obj = await dispatch(createPost(data));
+      const formData = new FormData();
+
+      formData.append("title", data.title);
+      formData.append("content", data.content);
+      formData.append("image", data.image);
+      formData.append("tag", data.tag);
+      formData.append("username", data.username);
+
+      dispatch(createPost(formData));
+
       setData({
         title: "",
         content: "",
-        image: "",
+        image: null,
         tag: [],
         likes: 0,
         username: session.username,
       });
-      console.log(obj);
-      dispatch(updatePage(true, obj.payload.posts));
+      //console.log(obj);
+      //dispatch(updatePage(true, obj.payload.posts));
     }
   }
+
   return (
-    <form
-      className={style.container}
-      onSubmit={(e) => handleSubmit(e)}
-      onChange={(e) => handleChange(e)}
-    >
+    <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
       <h3>{data.username}</h3>
 
       <label className={style.wrapper}>
         Title
         <input
           value={data.title}
+          onChange={handleChange}
           name="title"
           type="text"
           placeholder="Title"
@@ -95,6 +105,7 @@ export default function NewPost() {
         <textarea
           className={style.textarea}
           value={data.content}
+          onChange={handleChange}
           name="content"
           type="text"
           autoComplete="off"
@@ -109,9 +120,9 @@ export default function NewPost() {
       <label className={style.wrapper}>
         Image
         <input
-          value={data.image}
+          onChange={handleImage}
           name="image"
-          type="text"
+          type="file"
           placeholder="Image"
         />
         <span className={style.error}>{errores.image}</span>

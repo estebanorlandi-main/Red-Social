@@ -43,20 +43,14 @@ module.exports = (sequelize) => {
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
     },
-    image: {
-      type: DataTypes.STRING,
-      validate: {
-        validateImage: function (image) {
-          if (!image) return true;
-          if (!image.match(/\.(gif|jpg|jpeg|tiff|png|svg)$/i)) {
-            throw new Error("image invalide");
-          }
-        },
-      },
-    },
+
+    imageType: { type: DataTypes.STRING, allowNull: true },
+    imageName: { type: DataTypes.STRING, allowNull: true },
+    imageData: { type: DataTypes.BLOB, allowNull: true },
+
     likes: {
       type: DataTypes.INTEGER,
+      allowNull: true,
     },
   });
 };
-
