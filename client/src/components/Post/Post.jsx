@@ -312,6 +312,7 @@ function Post({ post, customClass, user }) {
 
       {post.comments && post.comments.length ? (
         <ul className={styles.comments}>
+          <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
           {post.comments.map((comment) => (
             <Comment comment={comment} />
           ))}

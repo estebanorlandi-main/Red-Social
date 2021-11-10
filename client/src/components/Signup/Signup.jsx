@@ -4,7 +4,7 @@ import { Redirect } from "react-router";
 import Select from "react-select";
 import { Link } from "react-router-dom";
 
-import { singUp } from "../../Redux/actions/Session.js";
+import { singUp, validateEmail, validateUsername } from "../../Redux/actions/Session.js";
 import validate from "../../utils/validate";
 
 import { MdEmail } from "react-icons/md";
@@ -19,24 +19,24 @@ function Signup(props) {
   const [inputs, setInputs] = useState({
     username: process.env.REACT_APP_USERNAME || "",
     password: process.env.REACT_APP_PASSWORD || "",
-    name: process.env.REACT_APP_NAME || "",
-    lastname: process.env.REACT_APP_LAST_NAME || "",
-    image: process.env.REACT_APP_AVATAR || "",
+    // name: process.env.REACT_APP_NAME || "",
+    // lastname: process.env.REACT_APP_LAST_NAME || "",
+    // image: process.env.REACT_APP_AVATAR || "",
     email: process.env.REACT_APP_EMAIL || "",
-    gitaccount: process.env.REACT_APP_GITHUB || "",
-    about: process.env.REACT_APP_ABOUT || "",
-    tags: [],
+    // gitaccount: process.env.REACT_APP_GITHUB || "",
+    // about: process.env.REACT_APP_ABOUT || "",
+    // tags: [],
   });
 
   const [err, setErr] = useState({
     username: "",
     password: "",
-    name: "",
-    lastname: "",
+    // name: "",
+    // lastname: "",
     email: "",
-    gitaccount: "",
-    image: "",
-    about: "",
+    // gitaccount: "",
+    // image: "",
+    // about: "",
   });
 
   const [registered, setRegistered] = useState(false);
@@ -60,6 +60,21 @@ function Signup(props) {
     setErr((old) => ({ ...old, [name]: validate(name, value) }));
   };
 
+  const handleBlur = async ({ target: { name, value } })=>{
+    if(name == "username" && value){
+      let username = await dispatch(validateUsername(value))
+      if(!username.payload.data.success){
+        setErr((old)=>({...old, [name]:username.payload.data.username}))
+      }
+    }
+    if(name == "email" && value){
+      let email = await dispatch(validateEmail(value))
+      if(!email.payload.data.success){
+        setErr((old)=>({...old,[name]:email.payload.data.email}))
+      }
+    }
+  }
+
   const handleSelect = (e) => {
     setInputs((old) => ({ ...old, tags: e.map((option) => option.value) }));
   };
@@ -75,28 +90,28 @@ function Signup(props) {
       if (obj.image === "")
         obj.image = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
 
-      obj.gitaccount = `https://github.com/${obj.gitaccount}`;
+      // obj.gitaccount = `https://github.com/${obj.gitaccount}`;
 
       dispatch(singUp(obj));
 
       setInputs({
         username: "",
         password: "",
-        name: "",
-        lastname: "",
+        // name: "",
+        // lastname: "",
         email: "",
-        gitaccount: "",
-        about: "",
-        tags: "",
+        // gitaccount: "",
+        // about: "",
+        // tags: "",
       });
 
       setErr((old) => ({
         username: "",
         password: "",
-        name: "",
-        lastname: "",
+        // name: "",
+        // lastname: "",
         email: "",
-        gitaccount: "",
+        // gitaccount: "",
       }));
 
       setRegistered(true);
@@ -104,14 +119,15 @@ function Signup(props) {
       setErr((old) => errors);
     }
   };
-
+  console.log(err)
   return (
     <div className={style.container}>
       {!registered ? (
         <>
           <form onSubmit={(e) => handleSubmit(e)}>
             <h1>Sign Up</h1>
-            <ul className={style.dots}>
+
+            {/*<ul className={style.dots}>
               {[1, 2, 3, 4].map((value, i) => (
                 <li
                   key={value}
@@ -121,7 +137,8 @@ function Signup(props) {
                   }`}
                 ></li>
               ))}
-            </ul>
+            </ul>*/}
+
             {/*
             <div>
               <button
@@ -145,6 +162,7 @@ function Signup(props) {
                   <FaUserCircle />
                   <input
                     onChange={(e) => handleChange(e)}
+                    onBlur={(e)=> handleBlur(e)}
                     className={style.input}
                     value={inputs.username}
                     name="username"
@@ -161,6 +179,7 @@ function Signup(props) {
                   <MdEmail />
                   <input
                     onChange={(e) => handleChange(e)}
+                    onBlur={(e)=> handleBlur(e)}
                     className={style.input}
                     value={inputs.email}
                     name="email"
@@ -188,7 +207,7 @@ function Signup(props) {
 
               <span>{err.password}</span>
             </section>
-            <section style={{ display: section === 2 ? "block" : "none" }}>
+            {/*<section style={{ display: section === 2 ? "block" : "none" }}>
               <label>
                 Name
                 <div className="input-group">
@@ -271,9 +290,9 @@ function Signup(props) {
                 Technologies
                 <Select onChange={handleSelect} options={options} isMulti />
               </label>
-            </section>
+            </section>*/}
             <div className="buttonContainer">
-              <button className="btn" type="submit">
+              <button className="btn" type="submit" disabled={err.username || err.email || err.password}>
                 SignUp
               </button>
               <Link className="btn" to="/login">
