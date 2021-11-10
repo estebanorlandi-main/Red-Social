@@ -12,14 +12,12 @@ export default function AdminLogin(){
     const [input, setInput] = useState({
       username: "",
       password:"",
-      title:""});
-      var admin = useSelector(state => state.adminReducer)
+    });
+    
+    var admin = useSelector(state => state.adminReducer)
       
-      const [error, setError] = useState({});
-      // useEffect(()=>{
-      //   console.log('Entra')
-      //   dispatch(loginAdmin(input));
-      // },)
+    const [error, setError] = useState({});
+    
     console.log(admin)
     const handleChange = (e)=>{
         setInput({
@@ -30,6 +28,7 @@ export default function AdminLogin(){
     
     const handleSubmit=(e)=>{
         e.preventDefault();
+        console.log(input)
         const errors = validate(input);
         if (Object.values(errors).filter((error) => error).length) {
             alert("Usuario o contrasena no validas");
@@ -55,15 +54,7 @@ export default function AdminLogin(){
               onChange={(e) => handleChange(e)}
             />
           </div>
-          <div className={style.label}>
-            <label>Title</label>
-            <input
-              type="text"
-              value={input.title}
-              name="title"
-              onChange={(e) => handleChange(e)}
-            />
-          </div>
+
           <div className={style.label}>
             <label>Password</label>
             <input

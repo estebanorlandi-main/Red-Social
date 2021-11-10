@@ -9,10 +9,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    checked: {
+    ban: {
 			type: Sequelize.BOOLEAN,
 			allowNull: false,
-			defaultValue: true,
+			defaultValue: false,
 		}
   },{
     timestamps: false,

@@ -31,10 +31,10 @@ module.exports = (sequelize) => {
     likes:{
       type: DataTypes.INTEGER
     },
-    checked: {
+    ban: {
 			type: Sequelize.BOOLEAN,
 			allowNull: false,
-			defaultValue: true,
+			defaultValue: false,
 		}
   });
 };
