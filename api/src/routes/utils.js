@@ -9,7 +9,7 @@ const {
   Likes,
   User_Follow,
   Support,
-  Privileges
+  Privileges,
 } = require("../db.js");
 const db = require("../db.js");
 const { Sequelize } = require("sequelize");
@@ -60,17 +60,13 @@ const DB_UserFollow = async (date) => {
 };
 //fn
 const DB_findUsersEmail = async (email) => {
-  if (email == null || email == undefined) {
-    return null;
-  }
-  const findUserEmail = await User.findOne({ where: { email } });
+  if (email == null || email == undefined) return null;
+  const findUserEmail = await User.findOne({ where: { email } }).catch(e=>null);
   return findUserEmail;
 };
 const DB_findUsersUsername = async (username) => {
-  if (username == null || username == undefined) {
-    return null;
-  }
-  const findUsername = await User.findOne({ where: { username } });
+  if (username == null || username == undefined) return null;
+  const findUsername = await User.findOne({ where: { username } }).catch(e=>null);
   return findUsername;
 };
 const DB_findUserAll = async (query) => {
@@ -175,7 +171,18 @@ const DB_Postsearch = async ({ username, id }) => {
   try {
     if (username === undefined && id === undefined) {
       var post_search = await Post.findAll({
-        include: [{ model: User, attributes: ["image", "username"] }, Comment, {model:Likes, as:"userLikes", include:[{model:User,attributes:["username"]}]}],
+        include: [
+          { model: User, attributes: ["image", "username"] },
+          {
+            model: Comment,
+            include: [{ model: User, attributes: ["image", "username"] }],
+          },
+          {
+            model: Likes,
+            as: "userLikes",
+            include: [{ model: User, attributes: ["username"] }],
+          },
+        ],
         order: [["createdAt", "DESC"]],
       });
       return post_search;
@@ -367,7 +374,8 @@ const DB_userSearch = async (username, email, password) => {
       if (!validate) {
         return { error: "password" };
       }
-      return user;Sea
+      return user;
+      Sea;
     }
   } catch (e) {
     return console.log("Error login", e);
@@ -392,17 +400,17 @@ const BD_searchSupport = async () => {
   }
 };
 
-const BD_createPrivileges = async (user,title) =>{
-	var privileges = await Privileges.create({
-		title,
-		userId:user.id,
-    username:user.username,
-		checked: true
-	})
+const BD_createPrivileges = async (user, title) => {
+  var privileges = await Privileges.create({
+    title,
+    userId: user.id,
+    username: user.username,
+    checked: true,
+  });
   // privileges.findOne({include:User.username})
-  console.log(privileges)
-	return privileges
-}
+  console.log(privileges);
+  return privileges;
+};
 
 module.exports = {
   DB_findUserAll,
@@ -428,5 +436,5 @@ module.exports = {
   DB_findUsersUsername,
   DB_UserFollow,
   BD_searchSupport,
-  BD_createPrivileges
+  BD_createPrivileges,
 };
