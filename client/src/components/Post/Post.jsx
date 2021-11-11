@@ -66,11 +66,10 @@ function Post({ post, customClass, user }) {
   const [commentError, setCommentError] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editErrors, setEditErrors] = useState({});
-  const [like, setLike] = useState({});
 
   const [options, setOptions] = useState(false);
 
-  const [data, setData] = useState({
+  const [edit, setEdit] = useState({
     title: post.title,
     content: post.content,
     image: post.image,
@@ -87,7 +86,7 @@ function Post({ post, customClass, user }) {
   }, [firstLoad, setFirstLoad]);
 
   useEffect(() => {
-    setData({
+    setEdit({
       title: post.title,
       content: post.content,
       image: post.image,
@@ -106,8 +105,9 @@ function Post({ post, customClass, user }) {
   };
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
+
   const handleEditMode = (mode) => {
-    setData({
+    setEdit({
       title: post.title,
       content: post.content,
       image: post.image,
@@ -124,14 +124,16 @@ function Post({ post, customClass, user }) {
   function handleChange({ target: { name, value } }) {
     if (
       value === "" &&
-      ((!data.content && name === "image") ||
-        (!data.image && name === "content") ||
+      ((!edit.content && name === "image") ||
+        (!edit.image && name === "content") ||
         name === "title")
     ) {
       return;
     }
-    setData((old) => ({ ...old, [name]: value }));
+    setEdit((old) => ({ ...old, [name]: value }));
   }
+
+  const submitEdit = (e) => dispatch(updatePost(post.idPost, edit));
 
   const handleOptions = () => setOptions((old) => !old);
 
@@ -213,7 +215,7 @@ function Post({ post, customClass, user }) {
       <div className={styles.postBody}>
         {editMode ? (
           <input
-            value={data.title}
+            value={edit.title}
             name="title"
             onChange={(e) => handleChange(e)}
           />
@@ -224,10 +226,11 @@ function Post({ post, customClass, user }) {
         {editMode ? (
           <div>
             <textarea
-              value={data.content}
+              value={edit.content}
               name="content"
               onChange={(e) => handleChange(e)}
             />
+            <button onClick={submitEdit}>Submit</button>
           </div>
         ) : (
           <div

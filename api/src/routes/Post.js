@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { Sequelize, Model } = require("sequelize");
-const { User, Post } = require("../db.js");
+const { User, Post, Comment, Likes } = require("../db.js");
 const {
   DB_UserID,
   validateUpdatePost,
@@ -18,18 +18,18 @@ const upload = multer({ storage });
 // router.use("/", );
 
 const modifiedPost = async (idPost) => {
-  return await db.Post.findOne({
+  return await Post.findOne({
     where: { idPost },
     include: [
-      { model: db.User, attributes: ["image", "username"] },
+      { model: User, attributes: ["image", "username"] },
       {
-        model: db.Comment,
-        include: [{ model: db.User, attributes: ["image", "username"] }],
+        model: Comment,
+        include: [{ model: User, attributes: ["image", "username"] }],
       },
       {
-        model: db.Likes,
+        model: Likes,
         as: "userLikes",
-        include: [{ model: db.User, attributes: ["username"] }],
+        include: [{ model: User, attributes: ["username"] }],
       },
     ],
   });
@@ -166,6 +166,7 @@ router.put("/:id", async (req, res) => {
     const post = await modifiedPost(id);
     res.status(200).send({ post, success: true });
   } catch (e) {
+    console.log(e);
     res.status(404).send({ success: false, error: "Cant apply changes" });
   }
 });

@@ -3,6 +3,7 @@ import {
   POST_COMMENT,
   POST_CREATE,
   POST_DELETE,
+  POST_UPDATE,
   GET_POSTS,
   GET_POST_FOR_ID,
   GET_POST_FOR_USERNAME,
@@ -27,6 +28,22 @@ export default function root(state = initialState, action) {
       };
 
     case POST_LIKE:
+      if (action.payload.post) {
+        return {
+          ...state,
+          posts: state.posts.map((post) => {
+            if (post.idPost === action.payload.post.idPost) {
+              post = action.payload.post;
+            }
+            return post;
+          }),
+        };
+      }
+      return {
+        ...state,
+      };
+
+    case POST_UPDATE:
       if (action.payload.post) {
         return {
           ...state,
