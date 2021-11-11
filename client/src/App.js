@@ -15,6 +15,8 @@ import AdminLogin from "./components/Admin/AdminLogin";
 import AdminSupport from "./components/Admin/AdminSupport";
 
 import Popup from "./components/Support/SupportLocalPopUp.jsx";
+
+import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx"
 // Variables CSS
 import "./App.css";
 import UserCard from "./components/UserCard/UserCard";
@@ -70,7 +72,7 @@ function App() {
         <Route path="/challenge" component={Challenge} />
 
         <Route exact path="/chat/test" component={Chat} />
-
+        <Route exact path="/auth/reset-password" component={ForgetPassword} />
         <Route
           path="/profile/:username"
           render={({

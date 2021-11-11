@@ -7,6 +7,7 @@ export const SIGN_UP = "SIGN_UP";
 export const UPDATE_USER = "UPDATE_USER";
 export const VALIDATE_EMAIL = "VALIDATE_EMAIL"
 export const VALIDATE_USERNAME = "VALIDATE_USERNAME"
+export const UPDATE_PASSWORD="UPDATE_PASSWORD"
 // - Modelo -
 // username
 // name
@@ -69,4 +70,11 @@ export function validateUsername(username) {
       .get(`http://localhost:3001/user/validate/username/${username}`)
       .then((res)=> dispatch({type: VALIDATE_USERNAME, payload: res}))
       .catch((e)=> console.log(e))
+}
+
+export function updatePassword(password, query){
+  return (dispatch)=>
+    axios
+      .post(`http://localhost:3001/validate/password/generated${query}`, password)
+      .then((res)=> dispatch({type: UPDATE_PASSWORD, payload:res}))
 }
