@@ -4,7 +4,8 @@ import { ERROR } from "./Errors";
 
 export const SIGNUP_ADMIN = "signup_admin";
 export const LOGIN_ADMIN = "login_admin";
-export const LOGOUT_ADMIN = "logOut_admin"
+export const LOGOUT_ADMIN = "logOut_admin";
+
 
 export function sidnupAdmin(admin){
     return (dispatch)=>
@@ -26,3 +27,4 @@ export function loginAdmin(admin){
 export function logOutAdmin(){
     return { type: LOGOUT_ADMIN, payload: {} };
 }
+

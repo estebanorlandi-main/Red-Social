@@ -14,6 +14,7 @@ export const GET_POST_FOR_ID = "GET_POST_FOR_ID";
 export const GET_POST_FOR_USERNAME = "GET_POST_FOR_USERNAME";
 export const UPDATE_PAGE = "UPDATE_PAGE";
 export const CLEAR_POST = "CLEAR_POST";
+export const BANPOST_ADMIN =  "banPost_admin";
 // Crear Posteo
 // return (dispatch) => axios.post('localhost:3001/post')
 //  -> title
@@ -114,6 +115,15 @@ export function likePost(data) {
           payload: res.data,
         });
       });
+}
+
+export function banPost(idPost){
+  return (dispatch) => 
+      axios
+          .post(`http://localhost:3001/admin/banPost`, idPost,{ withCredentials: true } )
+          .then(res => dispatch({type: BANPOST_ADMIN, payload:res}) )
+          .catch((e) =>(err) => dispatch({ type: ERROR, payload: err })
+          )
 }
 /*
 export function likePost(idPost, username) {

@@ -28,7 +28,6 @@ export default function AdminLogin(){
     
     const handleSubmit=(e)=>{
         e.preventDefault();
-        console.log(input)
         const errors = validate(input);
         if (Object.values(errors).filter((error) => error).length) {
             alert("Usuario o contrasena no validas");
@@ -37,12 +36,12 @@ export default function AdminLogin(){
             dispatch(loginAdmin(input));
         }        
       }
-   
+    
     return(
         <div>{
           
           admin.admin === true ? (
-            <Redirect to="/supportAdmin"/>
+            <Redirect to="/homeAdmin"/>
           ):(
             <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
           <div className={style.label}>

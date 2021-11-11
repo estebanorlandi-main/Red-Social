@@ -63,14 +63,12 @@ router.post('/login', async (req, res) => {
         const admin ={
           username:privileges.username,
           checked:privileges.checked,
-        }
-  
+        } 
         res.status(200).send(admin)
       } 
       else{
         res.send({Error: "Your is admin"}).status(404);
       }
-     
     } catch (e) {
       console.log('Error created Admin',e)
       res.status(404).send({Error:'Error created Admin'});
@@ -87,7 +85,7 @@ router.post('/login', async (req, res) => {
       }else{
         post.ban = true
         post.save()
-        res.status(200).send({succes:"The BAN was applied successfully"})
+        res.status(200).send({succes:"The BAN was applied successfully", post})
       }
     }catch(e){
       console.log('Error, BAN could not be applied',e)
