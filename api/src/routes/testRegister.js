@@ -76,7 +76,6 @@ router.post("/forgot/password",async (req,res,next)=>{
   }
 })
 
-// http://localhost:3001/validate/password/reset?email=tagelo6093@erpipo.com&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNhbnRpOTg3IiwiaWF0IjoxNjM2NjM4MDUxLCJleHAiOjE2MzY3MjQ0NTF9.nCWqlUMrXwPaiEM_gl0-oiqRNPYRuSTyKjcCFjxvjdo
 router.get("/password/reset",async(req,res,next)=>{
   try {
     const {email,token} = req.query
