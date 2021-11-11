@@ -1,15 +1,19 @@
 .container {
-  position: fixed;
-  z-index: 1;
+  position: relative;
   overflow: hidden;
-  width: 100%;
-  min-width: 320px;
-  max-width: 320px;
   margin: 2em auto;
+  max-width: 17em;
   border-radius: 1em;
   background-color: #fff;
   padding: 1.5em;
   box-shadow: 0 1px 2px #0001;
+}
+
+.imageOffline,
+.userImage,
+.cover {
+  object-fit: cover;
+  object-position: center;
 }
 
 .cover {
@@ -18,16 +22,12 @@
   left: 0;
   width: 100%;
   max-height: 6em;
-  object-fit: cover;
-  object-position: center;
 }
 
 .imageOffline,
 .userImage {
   display: block;
-  max-width: 100%;
-  object-fit: cover;
-  object-position: center;
+  max-width: 10em;
 }
 
 .userImage {

@@ -187,7 +187,11 @@
   position: fixed;
   background: transparent;
   box-shadow: none;
+  border: none;
 }
 .landing .profile {
   background-color: transparent;
+}
+.landing .right {
+  display: none;
 }

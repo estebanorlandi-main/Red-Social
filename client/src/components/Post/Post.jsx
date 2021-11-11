@@ -69,7 +69,7 @@ function Post({ post, customClass, user }) {
 
   const [options, setOptions] = useState(false);
 
-  const [data, setData] = useState({
+  const [edit, setEdit] = useState({
     title: post.title,
     content: post.content,
     image: post.image,
@@ -86,7 +86,7 @@ function Post({ post, customClass, user }) {
   }, [firstLoad, setFirstLoad]);
 
   useEffect(() => {
-    setData({
+    setEdit({
       title: post.title,
       content: post.content,
       image: post.image,
@@ -105,8 +105,9 @@ function Post({ post, customClass, user }) {
   };
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
+
   const handleEditMode = (mode) => {
-    setData({
+    setEdit({
       title: post.title,
       content: post.content,
       image: post.image,
@@ -114,27 +115,25 @@ function Post({ post, customClass, user }) {
     setEditMode(mode);
   };
 
-  const handleLike = async (e) => {
-    let obj;
+  const handleLike = (e) => {
     if (session.username) {
-      obj = await dispatch(
-        likePost({ postIdPost: post.idPost, userId: session.username })
-      );
+      dispatch(likePost({ postIdPost: post.idPost, userId: session.username }));
     }
-    dispatch(updatePage(true, obj.payload.posts));
   };
 
   function handleChange({ target: { name, value } }) {
     if (
       value === "" &&
-      ((!data.content && name === "image") ||
-        (!data.image && name === "content") ||
+      ((!edit.content && name === "image") ||
+        (!edit.image && name === "content") ||
         name === "title")
     ) {
       return;
     }
-    setData((old) => ({ ...old, [name]: value }));
+    setEdit((old) => ({ ...old, [name]: value }));
   }
+
+  const submitEdit = (e) => dispatch(updatePost(post.idPost, edit));
 
   const handleOptions = () => setOptions((old) => !old);
 
@@ -216,7 +215,7 @@ function Post({ post, customClass, user }) {
       <div className={styles.postBody}>
         {editMode ? (
           <input
-            value={data.title}
+            value={edit.title}
             name="title"
             onChange={(e) => handleChange(e)}
           />
@@ -227,10 +226,11 @@ function Post({ post, customClass, user }) {
         {editMode ? (
           <div>
             <textarea
-              value={data.content}
+              value={edit.content}
               name="content"
               onChange={(e) => handleChange(e)}
             />
+            <button onClick={submitEdit}>Submit</button>
           </div>
         ) : (
           <div
@@ -265,7 +265,7 @@ function Post({ post, customClass, user }) {
       <div className={styles.actions}>
         <button className={!session.username ? "" : ""} onClick={handleLike}>
           {post.userLikes.filter(
-            (user) => user.user.username === session.username
+            (like) => like.user.username === session.username
           ).length ? (
             <MdFavorite color="red" />
           ) : (
@@ -312,9 +312,10 @@ function Post({ post, customClass, user }) {
 
       {post.comments && post.comments.length ? (
         <ul className={styles.comments}>
-          {post.comments.map((comment) => (
-            <Comment comment={comment} />
-          ))}
+          <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
+          {post.comments.map((comment, i) =>
+            i < 3 ? <Comment key={i} comment={comment} /> : <></>
+          )}
         </ul>
       ) : (
         ""

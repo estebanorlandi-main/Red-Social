@@ -3,11 +3,30 @@ const {
   User,
   Post,
   Comment,
+  Likes,
   User_Comment,
   Comment_Post,
   Post_User,
 } = require("../db.js");
 const database_Utils = require("./utils.js");
+
+const modifiedPost = async (idPost) => {
+  return await Post.findOne({
+    where: { idPost },
+    include: [
+      { model: User, attributes: ["image", "username"] },
+      {
+        model: Comment,
+        include: [{ model: User, attributes: ["image", "username"] }],
+      },
+      {
+        model: Likes,
+        as: "userLikes",
+        include: [{ model: User, attributes: ["username"] }],
+      },
+    ],
+  });
+};
 
 router.get("/:username", async (req, res) => {
   try {
@@ -23,6 +42,8 @@ router.post("/", async (req, res) => {
   try {
     const { content, username, postid } = req.body;
 
+    console.log(content, username, postid);
+
     const UserAssociation = await database_Utils.DB_UserID(username);
     const PostAssociation = await database_Utils.DB_Postsearch({ id: postid });
 
@@ -35,7 +56,8 @@ router.post("/", async (req, res) => {
     await UserAssociation.addComment(comment);
     await PostAssociation.addComment(comment);
 
-    return res.status(202).send(comment);
+    const post = await modifiedPost(postid);
+    return res.status(202).send({ post });
   } catch (e) {
     return res.status(404).send("Invalid username for request");
   }
@@ -58,8 +80,8 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const Comment = await database_Utils.DB_Commentdestroy(id);
-    return res.status(200).send("Erased Succesfully");
+    await database_Utils.DB_Commentdestroy(id);
+    return res.status(200).send({ posts: Post.findAll({}) });
   } catch (e) {
     return res.status(404).send("Invalid Comment ID");
   }
