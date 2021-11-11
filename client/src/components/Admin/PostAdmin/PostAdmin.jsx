@@ -105,6 +105,7 @@ function PostAdmin({ post, customClass, user, admin }) {
     dispatch(commentPost(post.idPost, newComment, session.username));
   };
 
+  console.log(data)
   const handleDelete = () => dispatch(deletePost(post.idPost));
   const handleEditMode = (mode) => {
     setData({
