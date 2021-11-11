@@ -13,6 +13,7 @@ import Support from "./components/Support/Support";
 
 import AdminLogin from "./components/Admin/AdminLogin";
 import AdminSupport from "./components/Admin/AdminSupport";
+import HomeAdmin from "./Pages/HomeAdmin/HomeAdmin.jsx"
 
 import Popup from "./components/Support/SupportLocalPopUp.jsx";
 // Variables CSS
@@ -68,6 +69,7 @@ function App() {
         <Route path="/loginAdmin" component={AdminLogin} />
         <Route path="/supportAdmin" component={AdminSupport} />
         <Route path="/challenge" component={Challenge} />
+        <Route path="/homeAdmin" component={HomeAdmin}/>
 
         <Route exact path="/chat/test" component={Chat} />
 

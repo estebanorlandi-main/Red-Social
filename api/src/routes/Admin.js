@@ -85,7 +85,7 @@ router.post('/login', async (req, res) => {
       }else{
         post.ban = true
         post.save()
-        res.status(200).send({succes:"The BAN was applied successfully"})
+        res.status(200).send({succes:"The BAN was applied successfully", post})
       }
     }catch(e){
       console.log('Error, BAN could not be applied',e)

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import image from "../../images/userCard.png";
+import image from "../../../images/userCard.png";
 
 import {
   commentPost,
@@ -9,11 +9,12 @@ import {
   updatePost,
   updatePage,
   likePost,
-} from "../../Redux/actions/Post";
+  banPost
+} from "../../../Redux/actions/Post";
 
-import Comment from "../Comment/Comment";
+import Comment from "../../Comment/Comment";
 
-import styles from "./Post.module.css";
+import styles from "./PostAdmin.module.css";
 
 //Icons
 import {
@@ -29,7 +30,7 @@ import { GoTrashcan } from "react-icons/go";
 import { BsFillPencilFill } from "react-icons/bs";
 
 import { BiCommentDetail, BiDotsVerticalRounded } from "react-icons/bi";
-import validate from "../../utils/validate";
+import validate from "../../../utils/validate";
 
 const parseContent = (text) => {
   const mentions = text && text.match(/@\w+/gi);
@@ -52,11 +53,11 @@ const parseContent = (text) => {
   return parsed;
 };
 
-function Post({ post, customClass, user, admin }) {
+function PostAdmin({ post, customClass, user, admin }) {
   const dispatch = useDispatch();
 
   const page = useSelector(({ postsReducer: { page } }) => page);
-  const session = useSelector((state) => state.sessionReducer || {});
+  const session = useSelector((state) => state.adminReducer.user || {});
 
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
@@ -323,4 +324,4 @@ function Post({ post, customClass, user, admin }) {
   );
 }
 
-export default Post;
+export default PostAdmin;
