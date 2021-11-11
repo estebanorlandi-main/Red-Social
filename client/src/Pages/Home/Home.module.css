@@ -1,6 +1,6 @@
 .home {
   display: grid;
-  grid-template-columns: repeat(3, minmax(120px, max-content));
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
   width: 70vw;
   margin: 0 auto;
   gap: 3em;
@@ -20,6 +20,7 @@
   border-radius: 10px;
   margin-top: 2em;
   background-color: #fff;
+  width: 100%;
 }
 
 .home section {

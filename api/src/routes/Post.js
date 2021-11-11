@@ -17,6 +17,24 @@ const upload = multer({ storage });
 
 // router.use("/", );
 
+const modifiedPost = async (idPost) => {
+  return await db.Post.findOne({
+    where: { idPost },
+    include: [
+      { model: db.User, attributes: ["image", "username"] },
+      {
+        model: db.Comment,
+        include: [{ model: db.User, attributes: ["image", "username"] }],
+      },
+      {
+        model: db.Likes,
+        as: "userLikes",
+        include: [{ model: db.User, attributes: ["username"] }],
+      },
+    ],
+  });
+};
+
 const paginate = (page = 0, arr) => {
   const postsPerPage = 15;
   const to = page * postsPerPage + postsPerPage;
@@ -31,7 +49,7 @@ const paginate = (page = 0, arr) => {
       return post;
     });
 
-  const totalPages = Math.floor(arr.length / postsPerPage);
+  const totalPages = Math.ceil(arr.length / postsPerPage);
 
   return {
     posts,
@@ -143,11 +161,10 @@ router.delete("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const updatePost = await DB_Postedit(id, req.body);
+    await DB_Postedit(id, req.body);
 
-    const allPosts = await DB_Postsearch({});
-    const { posts, totalPages } = paginate(0, allPosts);
-    res.status(200).send({ posts, totalPages, success: true });
+    const post = await modifiedPost(id);
+    res.status(200).send({ post, success: true });
   } catch (e) {
     res.status(404).send({ success: false, error: "Cant apply changes" });
   }

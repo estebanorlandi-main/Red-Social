@@ -46,8 +46,6 @@ export function deletePost(postId) {
       .delete(`http://localhost:3001/post/${postId}`, { withCredentials: true })
       .then((res) => dispatch({ type: POST_DELETE, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
-
-  // return { type: POST_DELETE, payload: postId };
 }
 
 export function updatePost(postId, data) {
@@ -70,7 +68,7 @@ export function commentPost(postid, content, username) {
         { postid, content, username },
         { withCredentials: true }
       )
-      .then((res) => console.log(res))
+      .then((res) => dispatch({ type: POST_COMMENT, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 
   //return { type: POST_COMMENT, payload: { idPost, text, user } };
@@ -111,7 +109,10 @@ export function likePost(data) {
     axios
       .post("http://localhost:3001/likes", data, { withCredentials: true })
       .then((res) => {
-        return { type: POST_LIKE, payload: res.data };
+        dispatch({
+          type: POST_LIKE,
+          payload: res.data,
+        });
       });
 }
 /*

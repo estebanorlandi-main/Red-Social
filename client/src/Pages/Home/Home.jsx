@@ -48,6 +48,9 @@ function Home(props) {
     };
   }, [handleScroll]);
 
+  console.log(posts.length);
+
+  /*
   useEffect(() => {
     const getConversations = async () => {
       try {
@@ -62,6 +65,7 @@ function Home(props) {
     };
     getConversations();
   }, [session.username]);
+  */
 
   return (
     <div className={styles.home + ` ${createPost ? styles.noScroll : ""} `}>

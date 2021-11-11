@@ -66,6 +66,7 @@ function Post({ post, customClass, user }) {
   const [commentError, setCommentError] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editErrors, setEditErrors] = useState({});
+  const [like, setLike] = useState({});
 
   const [options, setOptions] = useState(false);
 
@@ -114,14 +115,10 @@ function Post({ post, customClass, user }) {
     setEditMode(mode);
   };
 
-  const handleLike = async (e) => {
-    let obj;
+  const handleLike = (e) => {
     if (session.username) {
-      obj = await dispatch(
-        likePost({ postIdPost: post.idPost, userId: session.username })
-      );
+      dispatch(likePost({ postIdPost: post.idPost, userId: session.username }));
     }
-    dispatch(updatePage(true, obj.payload.posts));
   };
 
   function handleChange({ target: { name, value } }) {
@@ -265,7 +262,7 @@ function Post({ post, customClass, user }) {
       <div className={styles.actions}>
         <button className={!session.username ? "" : ""} onClick={handleLike}>
           {post.userLikes.filter(
-            (user) => user.user.username === session.username
+            (like) => like.user.username === session.username
           ).length ? (
             <MdFavorite color="red" />
           ) : (
@@ -313,9 +310,9 @@ function Post({ post, customClass, user }) {
       {post.comments && post.comments.length ? (
         <ul className={styles.comments}>
           <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
-          {post.comments.map((comment) => (
-            <Comment comment={comment} />
-          ))}
+          {post.comments.map((comment, i) =>
+            i < 3 ? <Comment key={i} comment={comment} /> : <></>
+          )}
         </ul>
       ) : (
         ""
