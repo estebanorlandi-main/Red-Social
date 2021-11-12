@@ -9,6 +9,8 @@ import axios from "axios";
 import styles from "./Challenge.module.css";
 import Select from "react-select";
 import "./Challenge.css";
+import Post from "../../components/Post/Post";
+import "./Popup.css";
 
 export default function Challenge(props) {
   // Game
@@ -90,7 +92,6 @@ export default function Challenge(props) {
         </div>
       ) : (
         <div className={styles.container}>
-          <div>Create a function that adds two numbers in Python</div>
           {testCases.map((testCase, i) => {
             return (
               <div key={i}>
@@ -98,23 +99,26 @@ export default function Challenge(props) {
               </div>
             );
           })}
-          <CodeMirror
-            className={styles.CodeMirror}
-            options={{
-              theme: "dracula",
-              mode: "xml",
-              keyMap: "sublime",
-              autoCloseTags: true,
-              autoCloseBrackets: true,
-            }}
-            value={code}
-            height="200px"
-            width="800px"
-            onChange={(editor, viewUpdate) => {
-              setCode(editor.getValue());
-              console.log(code);
+          <Post
+            post={{
+              ban: false,
+              comments: [],
+              content: "Create a function that adds two numbers in JavaScript",
+              createdAt: "2021-11-12T02:01:30.509Z",
+              idPost: "3f02296d-4855-43a8-94e8-54a81f627b91",
+              imageData: null,
+              imageName: null,
+              imageType: null,
+              likes: null,
+              tag: [null],
+              title: "Challenge #1",
+              updatedAt: "2021-11-12T02:01:31.313Z",
+              user: { image: null, username: "jcapes29" },
+              userId: "293fe521-68ce-4383-9ca6-1ca925eb7b3b",
+              userLikes: [],
             }}
           />
+
           <button className={styles.button} onClick={submitCode}>
             Submit
           </button>
@@ -127,6 +131,40 @@ export default function Challenge(props) {
           >
             AXIOS
           </button>
+          {/* Pop Up */}
+          <p>
+            <a href="#popup">Abrir Popup</a>
+          </p>
+          <div id="popup" class="overlay">
+            <div id="popupBody">
+              <h2>Create a function that adds two numbers in JavaScript</h2>
+              <CodeMirror
+                className={styles.CodeMirror}
+                options={{
+                  theme: "dracula",
+                  mode: "javascript",
+                  keyMap: "sublime",
+                  autoCloseTags: true,
+                  autoCloseBrackets: true,
+                }}
+                value={code}
+                height="90%"
+                width="100%"
+                onChange={(editor, viewUpdate) => {
+                  setCode(editor.getValue());
+                  console.log(code);
+                }}
+              />
+              <a id="cerrar" href="#">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/macos-close.png" />
+              </a>
+              <div class="popupContent">
+                <img src="https://img.icons8.com/color/48/000000/fail.png" />
+                <img src="https://img.icons8.com/color/48/000000/pass.png" />
+                <img src="https://img.icons8.com/color/48/000000/pass.png" />
+              </div>
+            </div>
+          </div>
         </div>
       )}
       <Select

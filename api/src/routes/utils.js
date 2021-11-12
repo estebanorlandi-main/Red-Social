@@ -61,12 +61,16 @@ const DB_UserFollow = async (date) => {
 //fn
 const DB_findUsersEmail = async (email) => {
   if (email == null || email == undefined) return null;
-  const findUserEmail = await User.findOne({ where: { email } }).catch(e=>null);
+  const findUserEmail = await User.findOne({ where: { email } }).catch(
+    (e) => null
+  );
   return findUserEmail;
 };
 const DB_findUsersUsername = async (username) => {
   if (username == null || username == undefined) return null;
-  const findUsername = await User.findOne({ where: { username } }).catch(e=>null);
+  const findUsername = await User.findOne({ where: { username } }).catch(
+    (e) => null
+  );
   return findUsername;
 };
 const DB_findUserAll = async (query) => {
@@ -399,64 +403,67 @@ const BD_searchSupport = async () => {
   }
 };
 
-const BD_createPrivileges = async (user) =>{
-	var privileges = await Privileges.create({
-		userId:user.id,
-    username:user.username,
-		checked: true,
-    title:'Admin'
-	})
+const BD_createPrivileges = async (user) => {
+  var privileges = await Privileges.create({
+    userId: user.id,
+    username: user.username,
+    checked: true,
+    title: "Admin",
+  });
 
-	return privileges
-}
+  return privileges;
+};
 
+const BD_searchAdmin = async (user) => {
+  var privileges = await Privileges.findOne({
+    where: { username: user.username },
+  });
+  return privileges;
+};
 
-
-
-const BD_searchAdmin = async (user) =>{
-  var privileges = await Privileges.findOne({where:{username:user.username}});
-  return privileges
-}
-
-const BD_searchPost = async (idPost) =>{
-  var post = await Post.findOne({where:{idPost:idPost}});
-  return post
-}
+const BD_searchPost = async (idPost) => {
+  var post = await Post.findOne({ where: { idPost: idPost } });
+  return post;
+};
 
 const BD_banUser = async (username) => {
-  var user = await User.findOne({where:{username:username}});
-  if(user === null) return {error:'User not exits'}
-  if(user.strike === null){
-    user.strike = ['X'];
+  var user = await User.findOne({ where: { username: username } });
+  if (user === null) return { error: "User not exits" };
+  if (user.strike === null) {
+    user.strike = ["X"];
     var dayBan = new Date(Date.now() + 168 * 3600 * 1000);
     user.dayBan = dayBan;
     user.save();
-    return {Succes: 'The STRIKE was applied successfully', Strike:user.strike.length}
-  } else{
-    if(user.strike.length === 1){
-      user.strike = ['X','X'];
+    return {
+      Succes: "The STRIKE was applied successfully",
+      Strike: user.strike.length,
+    };
+  } else {
+    if (user.strike.length === 1) {
+      user.strike = ["X", "X"];
       var dayBan = new Date(Date.now() + 168 * 3600 * 1000);
       user.save();
-    }else{
-      if(user.strike.length === 2){
-        user.strike = ['X','X','X'];
+    } else {
+      if (user.strike.length === 2) {
+        user.strike = ["X", "X", "X"];
         user.save();
       }
     }
-    return {Succes: 'The STRIKE was applied successfully', Strike:user.strike.length}
+    return {
+      Succes: "The STRIKE was applied successfully",
+      Strike: user.strike.length,
+    };
   }
-}
+};
 
 const BD_loginBan = async (username) => {
-  const user = await User.findOne({ where:{username: username}})
+  const user = await User.findOne({ where: { username: username } });
 
-  if(user.strike?.length === 3){
-    return {error: 'You are temporarily suspended'};
+  if (user.strike?.length === 3) {
+    return { error: "You are temporarily suspended" };
   }
-  return {}
-}
-
-
+  return {};
+};
 
 module.exports = {
   DB_findUserAll,
@@ -486,7 +493,5 @@ module.exports = {
   BD_searchAdmin,
   BD_searchPost,
   BD_banUser,
-  BD_loginBan
-
-
+  BD_loginBan,
 };
