@@ -71,8 +71,6 @@ export default function ProfileAdmin(props) {
   const handleSubmit = () => {
     const errs = validate(inputs);
     if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
-    console.log(profile.username, inputs);
-
     dispatch(updateUser(profile.username, inputs));
     setEditar(false);
   };
@@ -82,7 +80,7 @@ export default function ProfileAdmin(props) {
 
   const handleBanUser = (e) => {
       e.preventDefault();
-      console.log(e.target.value)
+
       dispatch(banUserAdmin(e.target.value))
       alert('They have applied successfully')
   }

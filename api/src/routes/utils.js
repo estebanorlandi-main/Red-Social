@@ -419,7 +419,6 @@ const BD_searchAdmin = async (user) =>{
 }
 
 const BD_searchPost = async (idPost) =>{
-  console.log(idPost)
   var post = await Post.findOne({where:{idPost:idPost}})
   return post
 }
@@ -441,14 +440,13 @@ const BD_banUser = async (username) => {
         user.save()
       }
     }
-    console.log(user.strike)
     return {Succes: 'The STRIKE was applied successfully', Strike:user.strike.length}
   }
 }
 
 const BD_loginBan = async (username) => {
   const user = await User.findOne({ where:{username: username}})
-  console.log(user.strike.length)
+
   if(user.strike.length === 3){
     return {error: 'You are temporarily suspended'}
   }
