@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
-import userimg from "../../images/userCard.svg";
+import userimg from "../../../images/userCard.png";
 import { useDispatch, useSelector } from "react-redux";
-import { removeProfile } from "../../Redux/actions/Users";
+import { removeProfile,getUser } from "../../../Redux/actions/Users";
 
-import Post from "../../components/Post/Post";
+import PostAdmin from "../../../components/Admin/PostAdmin/PostAdmin";
 
-import { getUser } from "../../Redux/actions/Users";
-import { updateUser } from "../../Redux/actions/Session";
-import validate from "../../utils/validate";
-import styles from "./Profile.module.css";
+// import { getUser } from "../../Redux/actions/Users";
+import { updateUser } from "../../../Redux/actions/Session";
+import validate from "../../../utils/validate";
+import styles from "./stylesProfile.css";
 import Select from "react-select";
 import { BsFillPencilFill } from "react-icons/bs";
+import { banUserAdmin } from "../../../Redux/actions/Users";
 
 const selectStyles = {
   control: (styles) => ({ ...styles, width: "100%" }),
@@ -31,13 +32,14 @@ const options = [
   { value: "postgresql", label: "PostgreSQL" },
 ];
 
-export default function Profile(props) {
+export default function ProfileAdmin(props) {
   const dispatch = useDispatch();
   const [editar, setEditar] = useState(false);
 
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
-
+  const profileAdmin = useSelector((state) => state)
+  
   const myProfile = session.username === profile.username;
 
   useEffect(() => {
@@ -69,8 +71,6 @@ export default function Profile(props) {
   const handleSubmit = () => {
     const errs = validate(inputs);
     if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
-    console.log(profile.username, inputs);
-
     dispatch(updateUser(profile.username, inputs));
     setEditar(false);
   };
@@ -78,7 +78,24 @@ export default function Profile(props) {
   let git = profile.gitaccount && profile.gitaccount.split("/");
   git = git && git[git.length - 1];
 
-  console.log(profile)
+  const handleBanUser = (e) => {
+      e.preventDefault();
+
+      dispatch(banUserAdmin(e.target.value))
+      alert('They have applied successfully')
+  }
+
+  var day = new Date();
+
+  var dayBan = new Date(Date.now() + 168 * 3600 * 1000)
+
+  day > dayBan ? console.log(true) : console.log(false)
+  console.log(dayBan);
+  console.log(day);
+ 
+
+
+//  console.log('profile',profile)
   return profile ? (
     <div>
     {profile.strike?.length === 3? (<div><img src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png"/></div>) :
@@ -113,7 +130,12 @@ export default function Profile(props) {
           )}
 
           <img className={styles.image} src={profile.image || userimg} alt="" />
-
+            <button 
+                value={profile.username}
+                name="banUser"
+                onClick={(e) => handleBanUser(e)}
+            >
+            Ban User</button>
           {myProfile && editar ? (
             <form>
               <label>
@@ -185,7 +207,7 @@ export default function Profile(props) {
         <section className={styles.posts}>
           {profile.posts
             ? profile.posts.map((post) => (
-                <Post
+                <PostAdmin
                   customClass={styles.post}
                   post={{ ...post, user: profile }}
                 />
@@ -199,7 +221,7 @@ export default function Profile(props) {
         </section>
       </div>
     </main>
-  }</div>
+    }</div>
   ) : (
     ""
   );
