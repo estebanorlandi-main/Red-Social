@@ -89,7 +89,7 @@ export default function ProfileAdmin(props) {
 
   var dayBan = new Date(Date.now() + 168 * 3600 * 1000)
 
-  day > dayBan ? console.log(true) : console.log(false)
+
 
 
   return profile ? (
