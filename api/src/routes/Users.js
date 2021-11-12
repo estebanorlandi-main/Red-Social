@@ -17,6 +17,7 @@ const sanitizeUser = (data) => {
       about: user.about,
       tags: user.tags,
       posts: user.posts,
+      strike: user.strike
     }));
   }
 
@@ -30,6 +31,7 @@ const sanitizeUser = (data) => {
     about: data.about,
     tags: data.tags,
     posts: data.posts,
+    strike: data.strike
   };
 };
 
@@ -40,7 +42,6 @@ router.get("/", async (req, res, next) => {
     let findUsers = await fn.DB_findUserAll();
 
     findUsers = sanitizeUser(findUsers);
-
     res.send(findUsers);
   } catch (e) {
     console.log(e);
@@ -55,7 +56,6 @@ router.get("/", async (req, res, next) => {
       let findUser = await fn.DB_findUserQuery(req.query);
 
       findUser = sanitizeUser(findUser);
-
       if (findUser != null) return res.send(findUser);
       res.send({ errors: "User not found" }).status(200);
     }

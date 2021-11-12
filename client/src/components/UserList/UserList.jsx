@@ -1,7 +1,7 @@
 import { Link, useHistory } from "react-router-dom";
 import styles from "./UserList.module.css";
 
-import image from "../../images/userCard.png";
+import image from "../../images/userCard.svg";
 
 function UserList(props) {
   const history = useHistory();

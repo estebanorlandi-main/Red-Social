@@ -4,6 +4,7 @@ import { createPost, updatePage } from "../../Redux/actions/Post.js";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import validate from "../../utils/validate";
+import ImageUpload from "../ImageUpload/ImageUpload";
 
 export default function NewPost() {
   const dispatch = useDispatch();
@@ -84,49 +85,50 @@ export default function NewPost() {
     }
   }
 
+  console.log(data.image);
+
   return (
     <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
-      <h3>{data.username}</h3>
-
       <label className={style.wrapper}>
         Title
-        <input
-          value={data.title}
-          onChange={handleChange}
-          name="title"
-          type="text"
-          placeholder="Title"
-          autoComplete="off"
-        />
-        <span className={style.error}>{errores.title}</span>
+        <div className="input-group">
+          <input
+            value={data.title}
+            onChange={handleChange}
+            name="title"
+            type="text"
+            placeholder="Title"
+            autoComplete="off"
+          />
+        </div>
+        <span>{errores.title}</span>
       </label>
       <label className={style.wrapper}>
         Content {data.content.length}/1000
         <textarea
-          className={style.textarea}
           value={data.content}
           onChange={handleChange}
           name="content"
           type="text"
           autoComplete="off"
+          placeholder="Your message"
         />
-        <span className={style.error}>{errores.content}</span>
+        <span>{errores.content}</span>
       </label>
-      {/*<label>
-        image
-         <br/>
-        {img.mostrar ? <img className={style.img} src={img.url} alt="Esa Imagen no es valida"/> : ""}
-      </label>*/}
-      <label className={style.wrapper}>
-        Image
-        <input
-          onChange={handleImage}
-          name="image"
-          type="file"
-          placeholder="Image"
+
+      {data.image ? (
+        <img
+          className={style.uploadImage}
+          src={URL.createObjectURL(data.image)}
+          alt=""
         />
-        <span className={style.error}>{errores.image}</span>
-      </label>
+      ) : (
+        ""
+      )}
+
+      {data.image && data.image.name}
+
+      <ImageUpload onChange={handleImage} />
 
       <label className={style.wrapper}>
         Tags
