@@ -7,12 +7,16 @@
   --hue-blue: 198;
 
   --c-light-blue: hsl(198, 45%, 65%);
-  --c-blue: hsl(198, 40%, 49%);
+  /*--c-blue: hsl(198, 40%, 49%);*/
+
+  --c-blue: #5af;
+  --bs-blue: 0 5px 10px #5af5;
+
   --c-red: #c94f4f;
   --c-mix: #7f69a3;
   --c-enfasis: #a04972;
 
-  background-color: #f3f2ef;
+  background-color: #f5f5f5;
   min-height: 100vh;
 }
 

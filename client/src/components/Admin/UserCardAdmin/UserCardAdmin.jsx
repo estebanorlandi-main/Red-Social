@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import styles from "./UserAdminStyles.css";
 import person from "../../../images/personWithPC.png";
-import userimg from "../../../images/userCard.png";
+import userimg from "../../../images/userCard.svg";
 
 import { GoMarkGithub } from "react-icons/go";
 import { GrMail } from "react-icons/gr";
@@ -12,7 +12,7 @@ import { FaPlus } from "react-icons/fa";
 
 export default function UserCardAdmin({ showPostForm }) {
   const user = useSelector((state) => state.adminReducer.user);
- 
+
   let git = user.gitaccount && user.gitaccount.split("/");
   git = git && git[git.length - 1];
 

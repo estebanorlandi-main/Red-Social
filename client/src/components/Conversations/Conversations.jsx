@@ -1,14 +1,15 @@
-
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styles from "./Conversations.module.css";
-import avatar from "../../images/userCard.png"
+import avatar from "../../images/userCard.svg";
 
 export default function Conversation({ conversation, currentUser }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const friendId = conversation.members.find((m) => m !== currentUser.username);
+    const friendId = conversation.members.find(
+      (m) => m !== currentUser.username
+    );
 
     const getUser = async () => {
       try {
@@ -25,11 +26,7 @@ export default function Conversation({ conversation, currentUser }) {
     <div className={styles.conversation}>
       <img
         className={styles.conversationImg}
-        src={
-          user?.image
-            ? user.image
-            : avatar
-        }
+        src={user?.image ? user.image : avatar}
         alt=""
       />
       <span className={styles.conversationName}>{user?.username}</span>

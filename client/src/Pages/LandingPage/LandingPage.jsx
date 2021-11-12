@@ -2,20 +2,23 @@ import React from "react";
 
 import { HiArrowNarrowRight } from "react-icons/hi";
 
-import { BackWords, Section, Headline, JoinNow } from "./LandingElements";
+import { Section, Headline, JoinNow } from "./LandingElements";
+
+import image from "./PostExample.png";
 
 export default function LandingPage() {
   return (
     <main style={{ background: "#fff" }}>
-      <BackWords>CONNECT LEARN TALK</BackWords>
       <Section>
-        <div>
-          <Headline>Stay connected && Keep learning</Headline>
-        </div>
+        <Headline>
+          Join the best <br /> developer social <br /> network!
+        </Headline>
 
         <JoinNow to="/signup">
           Join now! <HiArrowNarrowRight style={{ color: "#fff" }} />
         </JoinNow>
+
+        <img src={image} alt="" />
       </Section>
     </main>
   );

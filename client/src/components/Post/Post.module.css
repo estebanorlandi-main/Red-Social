@@ -24,6 +24,7 @@
   margin: 2em auto 0 auto;
   padding: 1em 0;
   border-radius: 10px;
+  gap: 1em;
   overflow: hidden;
   background-color: var(--c-bg);
   box-shadow: 0 1px 2px #0001;
@@ -79,25 +80,7 @@
 }
 
 .userContainer {
-  position: relative;
-  color: var(--c-font);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   margin: 0.5em 0 var(--pX) var(--pX);
-}
-
-.userContainer > div {
-  display: flex;
-  flex-direction: column;
-  margin: 0 0 0 1em;
-}
-.userContainer .username {
-  font-weight: bold;
-}
-.userContainer .github {
-  margin-top: 0.25em;
-  font-size: 0.9rem;
 }
 
 .postBody {
@@ -162,9 +145,11 @@
 .tags > li {
   list-style: none;
   padding: 0.25em 1em;
-  font-size: 0.85rem;
+  font-size: 1rem;
+  font-weight: bold;
   color: #fff;
   background-color: var(--c-blue);
+  box-shadow: var(--bs-blue);
   border-radius: 4px;
 }
 
@@ -214,27 +199,34 @@
 }
 
 .newComment > label {
-  width: 100%;
   display: flex !important;
   flex-direction: row;
 }
 
-.newComment textarea {
+.newComment input {
   resize: none;
   padding: 1em;
   height: calc(1rem + 2em);
 }
 
+.inline {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .newComment button[type="submit"] {
   max-width: 7em;
-  border-radius: 0 4px 4px 0;
+  border-radius: 5em;
+  margin: 0.5em 0 0.5em auto;
+  padding: 1em;
+  box-shadow: var(--bs-blue);
 }
 
 .maxLength {
   font-size: 0.8rem;
   color: #888;
-  width: 90%;
-  margin: 0 auto;
   text-align: right;
 }
 

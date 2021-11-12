@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import image from "../../images/userCard.png";
+import UserCard from "../UserCard/UserCard";
 
 import {
   commentPost,
@@ -60,9 +60,12 @@ function Post({ post, customClass, user, socket, admin }) {
 
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
-  const [liked, setLiked] = useState(post.userLikes.filter(
-      (like) => like.user.username === session.username
-    ).length ? true : false)
+  const [liked, setLiked] = useState(
+    post.userLikes.filter((like) => like.user.username === session.username)
+      .length
+      ? true
+      : false
+  );
 
   const [newComment, setNewComment] = useState("");
 
@@ -83,14 +86,14 @@ function Post({ post, customClass, user, socket, admin }) {
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
 
   useEffect(() => {
-    if(liked){
+    if (liked) {
       socket.emit("sendNotification", {
         senderName: user,
         receiverName: post.user.username,
-        type: 1
+        type: 1,
       });
     }
-  }, [liked])
+  }, [liked]);
 
   useEffect(() => {
     if (firstLoad) {
@@ -118,7 +121,7 @@ function Post({ post, customClass, user, socket, admin }) {
     socket.emit("sendNotification", {
       senderName: user,
       receiverName: post.user.username,
-      type: 2
+      type: 2,
     });
   };
 
@@ -135,9 +138,9 @@ function Post({ post, customClass, user, socket, admin }) {
 
   const handleLike = (e) => {
     if (session.username) {
-      dispatch(likePost({ postIdPost: post.idPost, userId: session.username}));
+      dispatch(likePost({ postIdPost: post.idPost, userId: session.username }));
 
-      liked ? setLiked(false) : setLiked(true)
+      liked ? setLiked(false) : setLiked(true);
     }
   };
 
@@ -170,7 +173,7 @@ function Post({ post, customClass, user, socket, admin }) {
         <div className={styles.options}>
           <button onClick={handleOptions} className={styles.optionsHandler}>
             <BiDotsVerticalRounded
-              style={{ color: "#aaa", width: "2em", height: "2em" }}
+              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
             />
           </button>
 
@@ -222,15 +225,12 @@ function Post({ post, customClass, user, socket, admin }) {
         className={styles.userContainer}
         to={`/profile/${post.user.username}`}
       >
-        <img
-          className={styles.avatar}
-          src={post.user.image || image}
-          alt="avatar"
+        <UserCard
+          toRight
+          showImage
+          showName
+          other={`Posted ${TimeSpan}hr ago`}
         />
-        <div>
-          <span className={styles.username}>{post.user.username}</span>
-          <span className={styles.github}>Posted {TimeSpan}hr</span>
-        </div>
       </Link>
       <div className={styles.postBody}>
         {editMode ? (
@@ -308,11 +308,14 @@ function Post({ post, customClass, user, socket, admin }) {
 
       {session.username ? (
         <div className={styles.newCommentContainer}>
-          <span className={styles.maxLength}>{newComment.length} / 1000</span>
+          <div className={styles.inline}>
+            <span className={styles.maxLength}>{newComment.length} / 1000</span>
+            <span>{commentError}</span>
+          </div>
           <form className={styles.newComment} onSubmit={submitComment}>
             <label className={commentError ? "error" : ""}>
               <div className="input-group">
-                <textarea
+                <input
                   onChange={handleComment}
                   name="comment"
                   type="text"
@@ -320,11 +323,17 @@ function Post({ post, customClass, user, socket, admin }) {
                   placeholder="New comment..."
                 />
               </div>
-              <button type="submit">
-                <MdSend className={styles.icons} />
-              </button>
             </label>
-            <span>{commentError}</span>
+            {newComment.length && !commentError ? (
+              <button type="submit">
+                <MdSend
+                  className={styles.icons}
+                  style={{ margin: "0", color: "#fff" }}
+                />
+              </button>
+            ) : (
+              <></>
+            )}
           </form>
         </div>
       ) : (

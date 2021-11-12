@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import image from "../../images/userCard.png";
+import image from "../../images/userCard.svg";
 import styles from "./Comment.module.css";
 
 function Comment({ comment }) {

@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../SearchBar/SearchBar";
 import { logOut } from "../../Redux/actions/Session.js";
 import styles from "./NavBar.module.css";
-import image from "../../images/userCard.png";
 import { logOutAdmin } from "../../Redux/actions/Admin.js";
 
 import { ImHome3 } from "react-icons/im";
@@ -18,6 +17,7 @@ import { MdNotifications } from "react-icons/md";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 
 import logo from "../../images/deco.svg";
+import UserCard from "../UserCard/UserCard";
 
 export default function Navbar(props) {
   const [notifications, setNotifications] = useState([]);
@@ -146,13 +146,12 @@ export default function Navbar(props) {
         <div className={styles.right}>
           {/* Mostrar en cualquier pagina menos Landing page */}
 
-          {!isLanding ? <SearchBar /> : ""}
+          {/*!isLanding ? <SearchBar /> : ""*/}
           {!isLanding &&
             (user.username || admin.admin === true ? (
               <div className={styles.profile__container}>
                 <button onClick={handleMenu} className={styles.profile}>
-                  <span>{user.username}</span>
-                  <img src={user.image || image} alt="" />
+                  <UserCard toLeft showName showImage />
                 </button>
                 <div
                   className={
@@ -169,7 +168,7 @@ export default function Navbar(props) {
 
                   {admin.admin === true ? (
                     <button
-                      className={`${styles.link} ${styles.logout}`}
+                      className={`${styles.profile__link} ${styles.logout}`}
                       onClick={() => logOutAdminR()}
                     >
                       Log Out

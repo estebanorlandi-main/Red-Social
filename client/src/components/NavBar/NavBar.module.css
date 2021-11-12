@@ -10,11 +10,10 @@
   width: 100%;
   z-index: 10;
   top: 0;
-  border-bottom: 1px solid #0002;
 }
 
 .nav {
-  width: 85%;
+  width: 80vw;
   margin: 0 auto;
 
   display: flex;
@@ -27,7 +26,7 @@
   display: flex;
   align-items: center;
   font-weight: 600;
-  font-size: 1.25rem;
+  font-size: 1.25em !important;
 }
 .brand > img {
   width: 0.95em;
@@ -59,6 +58,7 @@
   justify-content: center;
   height: 3em;
   width: 3em;
+  font-size: 1em !important;
   transform: translateY(0);
   transition: all 0.25s ease;
 }
@@ -99,6 +99,7 @@
 
 .signup {
   background-color: var(--c-blue);
+  box-shadow: 0 0.25em 1em var(--c-blue);
   color: #fff;
   border-radius: 5em;
 }
@@ -111,23 +112,6 @@
 .profile__menu {
   border: none;
   background-color: #fff;
-}
-.profile {
-  display: flex;
-  align-items: center;
-  gap: 1em;
-  cursor: pointer;
-}
-.profile > span {
-  font-size: 1rem;
-  font-weight: bold;
-}
-.profile > img {
-  object-fit: cover;
-  object-position: center;
-  width: 3em;
-  height: 3em;
-  border-radius: 5em;
 }
 
 .profile__menu {
@@ -143,7 +127,8 @@
   border-radius: 0 0 1em 1em;
   transition: all 0.25s;
 }
-.profile__menu .link {
+
+.profile__link {
   position: relative;
   z-index: 2;
   display: flex;
@@ -158,11 +143,11 @@
   margin: 0.25em 0 0 0;
 }
 
-.profile__menu .link:hover {
+.profile__link:hover {
   color: #fff;
 }
 
-.profile__menu .link::after {
+.profile__link::after {
   content: "";
   position: absolute;
   z-index: -1;
@@ -175,7 +160,7 @@
   background-color: var(--c-blue);
 }
 
-.profile__menu .link:hover::after {
+.profile__link:hover::after {
   width: 100%;
 }
 
@@ -198,7 +183,7 @@
 /* Notifications */
 .counter {
   width: 16px;
-  height:16px;
+  height: 16px;
   background-color: red;
   color: white;
   border-radius: 50%;
@@ -255,7 +240,6 @@
 .active,
 .active * {
   transform: none;
-  color: #5af;
   cursor: default;
 }
 
