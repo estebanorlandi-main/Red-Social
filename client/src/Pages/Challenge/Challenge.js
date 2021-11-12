@@ -100,6 +100,15 @@ export default function Challenge(props) {
           <button className={styles.button} onClick={submitCode}>
             Submit
           </button>
+          <button
+            onClick={() =>
+              axios
+                .get("http://localhost:3001/challenge/post")
+                .then((res) => console.log(res))
+            }
+          >
+            AXIOS
+          </button>
         </div>
       )}
       <Select
