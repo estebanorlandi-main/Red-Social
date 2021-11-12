@@ -9,7 +9,7 @@ router.get("/:username", async (req, res) => {
     const comments = await Challenge_utils.DB_Challengecomments(username);
     return res.status(202).send(comments);
   } catch (e) {
-    return res.status(404).send("This user has no Comments");
+    return res.status(404).send(e);
   }
 });
 
@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
   try {
     const { code, description, username, postid } = req.body;
     const UserAssociation = await database_Utils.DB_UserID(username);
-    // const PostAssociation = await Challenge_utils.DB_ChallFindPost({'id' : postid})
+    const PostAssociation = await Challenge_utils.DB_ChallFindPost({'id' : postid})
     const comment = await ChallengeComment.create({
       description,
       code,
@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
       postId: postid,
     });
     UserAssociation.addChallengeComment(comment);
-    // PostAssociation.addChallengeComment(comment);
+    PostAssociation.addChallengeComment(comment);
     return res.status(202).send(comment);
   } catch (e) {
     return res.status(404).send("Invalid username for request");
