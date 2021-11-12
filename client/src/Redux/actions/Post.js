@@ -14,6 +14,7 @@ export const GET_POST_FOR_ID = "GET_POST_FOR_ID";
 export const GET_POST_FOR_USERNAME = "GET_POST_FOR_USERNAME";
 export const UPDATE_PAGE = "UPDATE_PAGE";
 export const CLEAR_POST = "CLEAR_POST";
+export const SET_TAGS = "SET_TAGS"
 // Crear Posteo
 // return (dispatch) => axios.post('localhost:3001/post')
 //  -> title
@@ -74,11 +75,11 @@ export function commentPost(postid, content, username) {
   //return { type: POST_COMMENT, payload: { idPost, text, user } };
 }
 
-export function getPosts(page) {
+export function getPosts(page, tag, orden) {
   return (dispatch) =>
     axios
-      .get(`http://localhost:3001/post?page=${page}`)
-      .then((res) => dispatch({ type: GET_POSTS, payload: res.data }))
+      .get(`http://localhost:3001/post?page=${page}&tag=${tag}&orden=${orden}`,)
+      .then((res) => {console.log(res.data.tags);dispatch({ type: GET_POSTS, payload: res.data })})
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }
 
@@ -111,6 +112,18 @@ export function likePost(data) {
       .then((res) => {
         dispatch({
           type: POST_LIKE,
+          payload: res.data,
+        });
+      });
+}
+
+export function uploadTags(){
+  return (dispatch) =>
+    axios
+      .get("http://localhost:3001/tags", { withCredentials: true })
+      .then((res) => {
+        dispatch({
+          type: SET_TAGS,
           payload: res.data,
         });
       });

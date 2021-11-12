@@ -5,24 +5,31 @@ import NewPost from "../../components/NewPost/NewPost";
 //import UserCard from "../../components/UserCard/UserCard";
 
 import { Link } from "react-router-dom";
-
+import Select from "react-select";
 import styles from "./Home.module.css";
-import { clearPosts, getPosts, updatePage } from "../../Redux/actions/Post";
+import { clearPosts, getPosts, updatePage, uploadTags } from "../../Redux/actions/Post";
 import axios from "axios";
 import { FaPlus } from "react-icons/fa";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
+  const allTags = useSelector((state) => state.postsReducer.tags);
   const session = useSelector((state) => state.sessionReducer);
   const [page, totalPages] = useSelector(
     ({ postsReducer: { page, totalPages } }) => [page, totalPages]
   );
-
   const dispatch = useDispatch();
-
+  const [orden, setOrden] = useState("cronologico")
   const [createPost, setCreatePost] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [first, setFirst] = useState(true);
+  const [tags, setTags] = useState([])
+  const options = [
+    { value: "cronologico", label: "Cronologico" },
+    { value: "userLikes", label: "Likes" },
+    { value: "comments", label: "Comentarios" },
+    { value: "combinados", label: "Inicial"}
+  ];
 
   const handleScroll = useCallback(() => {
     if (
@@ -32,15 +39,23 @@ function Home(props) {
       dispatch(updatePage(page + 1 < totalPages ? page + 1 : page));
   }, [dispatch, page, totalPages]);
 
+console.log()
   useEffect(() => {
     if (page === -1) {
       window.scroll(0, 0);
       dispatch(updatePage(0));
       return;
     }
-    dispatch(getPosts(page));
-  }, [dispatch, page, first, totalPages]);
+    dispatch(getPosts(page,tags, orden));
+  }, [dispatch, page, first, totalPages, orden]);
 
+  useEffect(() => {
+    if (first) {
+      dispatch(uploadTags())
+      setFirst(false)
+    }
+  })
+  console.log(allTags)
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
@@ -48,7 +63,13 @@ function Home(props) {
     };
   }, [handleScroll]);
 
-  console.log(posts.length);
+  const handleSelect = (e) => {
+    console.log(e)
+    setOrden(e.value);
+  };
+  const handleSelect2 = (e) => {
+    setTags(e.map((option) => option.value));
+  };
 
   /*
   useEffect(() => {
@@ -114,6 +135,12 @@ function Home(props) {
                 Create Post
               </button>
             </div>
+          </li>
+          <li>
+            <Select onChange={handleSelect} options={options} />
+          </li>
+          <li>
+            <Select onChange={handleSelect2} options={allTags} isMulti/>
           </li>
           {posts.map((post, i) => (
             <li key={i}>

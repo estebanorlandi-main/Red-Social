@@ -9,6 +9,7 @@ import {
   GET_POST_FOR_USERNAME,
   UPDATE_PAGE,
   CLEAR_POST,
+  SET_TAGS,
 } from "../actions/Post";
 
 const initialState = {
@@ -16,6 +17,7 @@ const initialState = {
   post: {},
   page: 0,
   totalPages: 0,
+  tags:[]
 };
 
 export default function root(state = initialState, action) {
@@ -108,6 +110,8 @@ export default function root(state = initialState, action) {
     case CLEAR_POST:
       return { ...initialState, posts: [] };
 
+    case SET_TAGS:
+      return {...state, tags:action.payload}
     default:
       return state;
   }

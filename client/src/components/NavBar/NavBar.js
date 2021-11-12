@@ -116,8 +116,7 @@ export default function Navbar(props) {
                   >
                     Log Out
                     <FiLogOut />
-                  </button>:<button
-
+                  </button>:
                   <button
                     className={`${styles.nav__link} ${styles.logout}`}
                     onClick={() => logOutR()}
