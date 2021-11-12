@@ -4,6 +4,7 @@ import { createPost, updatePage } from "../../Redux/actions/Post.js";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import validate from "../../utils/validate";
+import ImageUpload from "../ImageUpload/ImageUpload";
 
 export default function NewPost() {
   const dispatch = useDispatch();
@@ -126,15 +127,8 @@ export default function NewPost() {
       )}
 
       {data.image && data.image.name}
-      <label className="input-image">
-        Image upload
-        <input
-          onChange={handleImage}
-          name="image"
-          type="file"
-          placeholder="Image"
-        />
-      </label>
+
+      <ImageUpload onChange={handleImage} />
 
       <label className={style.wrapper}>
         Tags
