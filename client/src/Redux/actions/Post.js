@@ -47,8 +47,6 @@ export function deletePost(postId) {
       .delete(`http://localhost:3001/post/${postId}`, { withCredentials: true })
       .then((res) => dispatch({ type: POST_DELETE, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
-
-  // return { type: POST_DELETE, payload: postId };
 }
 
 export function updatePost(postId, data) {
@@ -71,7 +69,7 @@ export function commentPost(postid, content, username) {
         { postid, content, username },
         { withCredentials: true }
       )
-      .then((res) => console.log(res))
+      .then((res) => dispatch({ type: POST_COMMENT, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 
   //return { type: POST_COMMENT, payload: { idPost, text, user } };
@@ -112,7 +110,10 @@ export function likePost(data) {
     axios
       .post("http://localhost:3001/likes", data, { withCredentials: true })
       .then((res) => {
-        return { type: POST_LIKE, payload: res.data };
+        dispatch({
+          type: POST_LIKE,
+          payload: res.data,
+        });
       });
 }
 
@@ -136,18 +137,15 @@ export function likePost(idPost, username) {
       .then((res) => console.log(res.data))
       .catch((err) => console.log(err.data));
 }
-
 export function clearPosts() {
   return { type: "CLEAR_POST", payload: [] };
 }
-
 export function getPostForId(id) {
   return (dispatch) =>
     axios
       .get(`localhost:3001/${id}`)
       .then((res) => dispatch({ type: GET_POST_FOR_ID, payload: res.data }));
 }
-
 export function getPostForUsername(username) {
   return (dispatch) =>
     axios
@@ -156,7 +154,6 @@ export function getPostForUsername(username) {
         dispatch({ type: GET_POST_FOR_USERNAME, payload: res.data })
       );
 }
-
 export function updatePage(bol, post){
   return ({type:UPDATE_PAGE, payload:{bol, post}})
 }

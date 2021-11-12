@@ -18,6 +18,8 @@ import HomeAdmin from "./components/Admin/HomeAdmin/HomeAdmin"
 import ProfileAdmin from "./components/Admin/ProfileAdmin/ProfileAdmin"
 
 import Popup from "./components/Support/SupportLocalPopUp.jsx";
+
+import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx"
 // Variables CSS
 import "./App.css";
 import UserCard from "./components/UserCard/UserCard";
@@ -82,7 +84,7 @@ function App() {
           />
 
         <Route exact path="/chat/test" component={Chat} />
-
+        <Route exact path="/auth/reset-password" component={ForgetPassword} />
         <Route
           path="/profile/:username"
           render={({

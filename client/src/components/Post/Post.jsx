@@ -52,7 +52,7 @@ const parseContent = (text) => {
   return parsed;
 };
 
-function Post({ post, customClass, user, admin }) {
+function Post({ post, customClass, user, socket, admin }) {
   const dispatch = useDispatch();
 
   const page = useSelector(({ postsReducer: { page } }) => page);
@@ -60,6 +60,9 @@ function Post({ post, customClass, user, admin }) {
 
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
+  const [liked, setLiked] = useState(post.userLikes.filter(
+      (like) => like.user.username === session.username
+    ).length ? true : false)
 
   const [newComment, setNewComment] = useState("");
 
@@ -69,7 +72,7 @@ function Post({ post, customClass, user, admin }) {
 
   const [options, setOptions] = useState(false);
 
-  const [data, setData] = useState({
+  const [edit, setEdit] = useState({
     title: post.title,
     content: post.content,
     image: post.image,
@@ -80,13 +83,23 @@ function Post({ post, customClass, user, admin }) {
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
 
   useEffect(() => {
+    if(liked){
+      socket.emit("sendNotification", {
+        senderName: user,
+        receiverName: post.user.username,
+        type: 1
+      });
+    }
+  }, [liked])
+
+  useEffect(() => {
     if (firstLoad) {
       setFirstLoad(false);
     }
   }, [firstLoad, setFirstLoad]);
 
   useEffect(() => {
-    setData({
+    setEdit({
       title: post.title,
       content: post.content,
       image: post.image,
@@ -102,11 +115,17 @@ function Post({ post, customClass, user, admin }) {
     e.preventDefault();
     if (commentError) return;
     dispatch(commentPost(post.idPost, newComment, session.username));
+    socket.emit("sendNotification", {
+      senderName: user,
+      receiverName: post.user.username,
+      type: 2
+    });
   };
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
+
   const handleEditMode = (mode) => {
-    setData({
+    setEdit({
       title: post.title,
       content: post.content,
       image: post.image,
@@ -114,27 +133,27 @@ function Post({ post, customClass, user, admin }) {
     setEditMode(mode);
   };
 
-  const handleLike = async (e) => {
-    let obj;
+  const handleLike = (e) => {
     if (session.username) {
-      obj = await dispatch(
-        likePost({ postIdPost: post.idPost, userId: session.username })
-      );
+      dispatch(likePost({ postIdPost: post.idPost, userId: session.username}));
+
+      liked ? setLiked(false) : setLiked(true)
     }
-    dispatch(updatePage(true, obj.payload.posts));
   };
 
   function handleChange({ target: { name, value } }) {
     if (
       value === "" &&
-      ((!data.content && name === "image") ||
-        (!data.image && name === "content") ||
+      ((!edit.content && name === "image") ||
+        (!edit.image && name === "content") ||
         name === "title")
     ) {
       return;
     }
-    setData((old) => ({ ...old, [name]: value }));
+    setEdit((old) => ({ ...old, [name]: value }));
   }
+
+  const submitEdit = (e) => dispatch(updatePost(post.idPost, edit));
 
   const handleOptions = () => setOptions((old) => !old);
 
@@ -216,7 +235,7 @@ function Post({ post, customClass, user, admin }) {
       <div className={styles.postBody}>
         {editMode ? (
           <input
-            value={data.title}
+            value={edit.title}
             name="title"
             onChange={(e) => handleChange(e)}
           />
@@ -227,10 +246,11 @@ function Post({ post, customClass, user, admin }) {
         {editMode ? (
           <div>
             <textarea
-              value={data.content}
+              value={edit.content}
               name="content"
               onChange={(e) => handleChange(e)}
             />
+            <button onClick={submitEdit}>Submit</button>
           </div>
         ) : (
           <div
@@ -265,7 +285,7 @@ function Post({ post, customClass, user, admin }) {
       <div className={styles.actions}>
         <button className={!session.username ? "" : ""} onClick={handleLike}>
           {post.userLikes.filter(
-            (user) => user.user.username === session.username
+            (like) => like.user.username === session.username
           ).length ? (
             <MdFavorite color="red" />
           ) : (
@@ -312,9 +332,10 @@ function Post({ post, customClass, user, admin }) {
 
       {post.comments && post.comments.length ? (
         <ul className={styles.comments}>
-          {post.comments.map((comment) => (
-            <Comment comment={comment} />
-          ))}
+          <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
+          {post.comments.map((comment, i) =>
+            i < 3 ? <Comment key={i} comment={comment} /> : <></>
+          )}
         </ul>
       ) : (
         ""

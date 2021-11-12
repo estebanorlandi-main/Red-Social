@@ -147,3 +147,11 @@ a {
 .message > span {
   margin: 0 0 0 1em;
 }
+
+.avatar {
+  object-fit: cover;
+  object-position: center;
+  width: 3em;
+  height: 3em;
+  border-radius: 100%;
+}
