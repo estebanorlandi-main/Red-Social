@@ -5,7 +5,7 @@ const { DataTypes, Sequelize } = require("sequelize");
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define(
-    "challengePost",
+    "ChallengePost",
     {
       title: {
         type: DataTypes.STRING,
@@ -48,13 +48,8 @@ module.exports = (sequelize) => {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-
       likes: {
         type: DataTypes.INTEGER,
       },
-    },
-    {
-      timestamps: false,
-    }
-  );
+    });
 };
