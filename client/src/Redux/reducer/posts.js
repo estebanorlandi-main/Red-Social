@@ -9,6 +9,7 @@ import {
   GET_POST_FOR_USERNAME,
   UPDATE_PAGE,
   CLEAR_POST,
+  BANPOST_ADMIN
 } from "../actions/Post";
 
 const initialState = {
@@ -108,6 +109,11 @@ export default function root(state = initialState, action) {
     case CLEAR_POST:
       return { ...initialState, posts: [] };
 
+    case BANPOST_ADMIN:
+      return{
+        ...state,
+        posts: [...state.posts, ...action.payload.post]
+      }
     default:
       return state;
   }

@@ -148,6 +148,11 @@ User.belongsToMany(Conver,{through:"User_Convers"})
 Msg.belongsTo(Conver)
 Conver.hasMany(Msg)
 
+//Friends
+User.belongsToMany(User, { as: 'Friends', through: 'friends' });
+User.belongsToMany(User, { as: 'send', through: 'friendRequests', foreignKey: 'receivedId', onDelete: 'CASCADE'});
+User.belongsToMany(User, { as: 'received', through: 'friendRequests', foreignKey: 'sendId', onDelete: 'CASCADE'});
+
 module.exports = {
   ...sequelize.models,
   conn: sequelize,

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import image from "../../images/userCard.png";
+import image from "../../../images/userCard.png";
 
 import {
   commentPost,
@@ -9,11 +9,12 @@ import {
   updatePost,
   updatePage,
   likePost,
-} from "../../Redux/actions/Post";
+  banPost
+} from "../../../Redux/actions/Post";
 
-import Comment from "../Comment/Comment";
+import Comment from "../../Comment/Comment";
 
-import styles from "./Post.module.css";
+import styles from "./PostAdmin.module.css";
 
 //Icons
 import {
@@ -29,7 +30,7 @@ import { GoTrashcan } from "react-icons/go";
 import { BsFillPencilFill } from "react-icons/bs";
 
 import { BiCommentDetail, BiDotsVerticalRounded } from "react-icons/bi";
-import validate from "../../utils/validate";
+import validate from "../../../utils/validate";
 
 const parseContent = (text) => {
   const mentions = text && text.match(/@\w+/gi);
@@ -52,17 +53,14 @@ const parseContent = (text) => {
   return parsed;
 };
 
-function Post({ post, customClass, user, socket, admin }) {
+function PostAdmin({ post, customClass, user, admin }) {
   const dispatch = useDispatch();
 
   const page = useSelector(({ postsReducer: { page } }) => page);
-  const session = useSelector((state) => state.sessionReducer || {});
+  const session = useSelector((state) => state.adminReducer.user || {});
 
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
-  const [liked, setLiked] = useState(post.userLikes.filter(
-      (like) => like.user.username === session.username
-    ).length ? true : false)
 
   const [newComment, setNewComment] = useState("");
 
@@ -72,7 +70,7 @@ function Post({ post, customClass, user, socket, admin }) {
 
   const [options, setOptions] = useState(false);
 
-  const [edit, setEdit] = useState({
+  const [data, setData] = useState({
     title: post.title,
     content: post.content,
     image: post.image,
@@ -83,23 +81,13 @@ function Post({ post, customClass, user, socket, admin }) {
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
 
   useEffect(() => {
-    if(liked){
-      socket.emit("sendNotification", {
-        senderName: user,
-        receiverName: post.user.username,
-        type: 1
-      });
-    }
-  }, [liked])
-
-  useEffect(() => {
     if (firstLoad) {
       setFirstLoad(false);
     }
   }, [firstLoad, setFirstLoad]);
 
   useEffect(() => {
-    setEdit({
+    setData({
       title: post.title,
       content: post.content,
       image: post.image,
@@ -115,17 +103,12 @@ function Post({ post, customClass, user, socket, admin }) {
     e.preventDefault();
     if (commentError) return;
     dispatch(commentPost(post.idPost, newComment, session.username));
-    socket.emit("sendNotification", {
-      senderName: user,
-      receiverName: post.user.username,
-      type: 2
-    });
   };
 
+  console.log(data)
   const handleDelete = () => dispatch(deletePost(post.idPost));
-
   const handleEditMode = (mode) => {
-    setEdit({
+    setData({
       title: post.title,
       content: post.content,
       image: post.image,
@@ -133,27 +116,27 @@ function Post({ post, customClass, user, socket, admin }) {
     setEditMode(mode);
   };
 
-  const handleLike = (e) => {
+  const handleLike = async (e) => {
+    let obj;
     if (session.username) {
-      dispatch(likePost({ postIdPost: post.idPost, userId: session.username}));
-
-      liked ? setLiked(false) : setLiked(true)
+      obj = await dispatch(
+        likePost({ postIdPost: post.idPost, userId: session.username })
+      );
     }
+    dispatch(updatePage(true, obj.payload.posts));
   };
 
   function handleChange({ target: { name, value } }) {
     if (
       value === "" &&
-      ((!edit.content && name === "image") ||
-        (!edit.image && name === "content") ||
+      ((!data.content && name === "image") ||
+        (!data.image && name === "content") ||
         name === "title")
     ) {
       return;
     }
-    setEdit((old) => ({ ...old, [name]: value }));
+    setData((old) => ({ ...old, [name]: value }));
   }
-
-  const submitEdit = (e) => dispatch(updatePost(post.idPost, edit));
 
   const handleOptions = () => setOptions((old) => !old);
 
@@ -235,7 +218,7 @@ function Post({ post, customClass, user, socket, admin }) {
       <div className={styles.postBody}>
         {editMode ? (
           <input
-            value={edit.title}
+            value={data.title}
             name="title"
             onChange={(e) => handleChange(e)}
           />
@@ -246,11 +229,10 @@ function Post({ post, customClass, user, socket, admin }) {
         {editMode ? (
           <div>
             <textarea
-              value={edit.content}
+              value={data.content}
               name="content"
               onChange={(e) => handleChange(e)}
             />
-            <button onClick={submitEdit}>Submit</button>
           </div>
         ) : (
           <div
@@ -285,18 +267,17 @@ function Post({ post, customClass, user, socket, admin }) {
       <div className={styles.actions}>
         <button className={!session.username ? "" : ""} onClick={handleLike}>
           {post.userLikes.filter(
-            (like) => like.user.username === session.username
+            (user) => user.user.username === session.username
           ).length ? (
-            <MdFavorite className={styles.icons} color="#f55" />
+            <MdFavorite color="red" />
           ) : (
-            <MdFavoriteBorder className={styles.icons} />
+            <MdFavoriteBorder />
           )}
-          {post.userLikes.length}
-          <span className={styles.users}>
-            {post.userLikes.length
-              ? "| " + post.userLikes[post.userLikes.length - 1].user.username
-              : ""}
-          </span>
+          {post.userLikes.length} |
+          {/* <span>
+            {post.likes[post.likes.length - 1]},{" "}
+            {post.likes[post.likes.length - 2]}
+          </span> */}
         </button>
         <button>
           <MdOutlineModeComment /> {post.comments && post.comments.length}
@@ -333,10 +314,9 @@ function Post({ post, customClass, user, socket, admin }) {
 
       {post.comments && post.comments.length ? (
         <ul className={styles.comments}>
-          <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
-          {post.comments.map((comment, i) =>
-            i < 3 ? <Comment key={i} comment={comment} /> : <></>
-          )}
+          {post.comments.map((comment) => (
+            <Comment comment={comment} />
+          ))}
         </ul>
       ) : (
         ""
@@ -345,4 +325,4 @@ function Post({ post, customClass, user, socket, admin }) {
   );
 }
 
-export default Post;
+export default PostAdmin;
