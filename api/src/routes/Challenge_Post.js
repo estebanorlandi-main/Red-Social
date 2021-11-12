@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const {User,
 	ChallengeComment,
-	Challengepost} = require('../db.js');
+	ChallengePost} = require('../db.js');
 const Challenge_utils = require('./Challengeutils.js')
 const database_Utils = require('./utils.js')
 
@@ -49,14 +49,14 @@ router.post('/', async (req, res)=>{
 	const { title, content, tag, likes, username } = req.body;
 	try {
     let userDB = await database_Utils.DB_UserID(username);
-    let createPost = await Challengepost.create({
+    let createPost = await ChallengePost.create({
       likes,
       content,
       tag,
       title,
       userId: userDB.id,
     });
-    await userDB.addChallengepost(createPost);
+    await userDB.addChallengePost(createPost);
 
     const allPosts = await Challenge_utils.DB_ChallPostsearch({});
     const { posts, totalPages } = paginate(0, allPosts);

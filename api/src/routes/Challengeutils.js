@@ -1,14 +1,14 @@
 const db = require("../db.js");
 const {
   User,
-  Challengepost,
+  ChallengePost,
   ChallengeComment} = require("../db.js");
 const { Sequelize } = require("sequelize");
 const { DB_UserID } = require("./utils.js")
 
 
 const DB_ChallFindPost = async({title, content, tag, idPost, likes})=>{
-      var post_search = await Challengepost.findOne({ where : {'id':idPost},
+      var post_search = await ChallengePost.findOne({ where : {'id':idPost},
         include: [{ model: User, attributes: ["image", "username"] }, ChallengeComment, ],
         order: [["createdAt", "DESC"]],
       });
@@ -19,14 +19,14 @@ const DB_ChallFindPost = async({title, content, tag, idPost, likes})=>{
 const DB_ChallengePostsearch = async ({ username, id }) => {
   try {
     if (username === undefined && id === undefined) {
-      var post_search = await Challengepost.findAll({
+      var post_search = await ChallengePost.findAll({
         include: [{ model: User, attributes: ["image", "username"] }, Comment, {model:Likes, as:"userLikes", include:[{model:User,attributes:["username"]}]}],
         order: [["createdAt", "DESC"]],
       });
       return post_search;
     }
     if (username === undefined && id) {
-      var post_search = await Challengepost.findOne({
+      var post_search = await ChallengePost.findOne({
         where: {
           idPost: id,
         },
@@ -36,7 +36,7 @@ const DB_ChallengePostsearch = async ({ username, id }) => {
       return post_search;
     } else if (id === undefined && username) {
       let userDB = await DB_UserID(username);
-      var post_search = await Challengepost.findAll({
+      var post_search = await ChallengePost.findAll({
         where: {
           userId: userDB.id,
         },
@@ -54,7 +54,7 @@ const DB_ChallengePostsearch = async ({ username, id }) => {
 
 const DB_ChallPostdestroy = async (id) => {
   try {
-    const erasePost = await Challengepost.findOne({ where: { idPost: id } });
+    const erasePost = await ChallengePost.findOne({ where: { idPost: id } });
     await erasePost.destroy();
     return "Deleted Succesfully";
   } catch (e) {
@@ -64,7 +64,7 @@ const DB_ChallPostdestroy = async (id) => {
 
 const DB_ChallPostedit = async (id, { title, content, tag, image, likes }) => {
   // console.log(id, title, content, tag, image, likes, 'Entre a utils')
-  const updatedPost = await Challengepost.findOne({ where: { idPost: id } });
+  const updatedPost = await ChallengePost.findOne({ where: { idPost: id } });
 
   content ? (updatedPost.content = content) : null;
   title ? (updatedPost.title = title) : null;
