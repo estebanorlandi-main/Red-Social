@@ -80,6 +80,8 @@ export default function Profile(props) {
 
   console.log(profile)
   return profile ? (
+    <div>
+    {profile.strike?.length === 3? (<div><img src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png"/></div>) :
     <main className={styles.container}>
       <div className={styles.left}>
         <section>
@@ -197,6 +199,7 @@ export default function Profile(props) {
         </section>
       </div>
     </main>
+  }</div>
   ) : (
     ""
   );

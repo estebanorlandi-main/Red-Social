@@ -38,8 +38,8 @@ export default function ProfileAdmin(props) {
 
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
-  const profileAdmin = useSelector((state) => state.usersReducer)
-
+  const profileAdmin = useSelector((state) => state)
+  
   const myProfile = session.username === profile.username;
 
   useEffect(() => {
@@ -84,8 +84,21 @@ export default function ProfileAdmin(props) {
       dispatch(banUserAdmin(e.target.value))
       alert('They have applied successfully')
   }
-  console.log('profile',profileAdmin)
+
+  var day = new Date();
+
+  var dayBan = new Date(Date.now() + 168 * 3600 * 1000)
+
+  day > dayBan ? console.log(true) : console.log(false)
+  console.log(dayBan);
+  console.log(day);
+ 
+
+
+//  console.log('profile',profile)
   return profile ? (
+    <div>
+    {profile.strike?.length === 3? (<div><img src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png"/></div>) :
     <main className={styles.container}>
       <div className={styles.left}>
         <section>
@@ -208,6 +221,7 @@ export default function ProfileAdmin(props) {
         </section>
       </div>
     </main>
+    }</div>
   ) : (
     ""
   );
