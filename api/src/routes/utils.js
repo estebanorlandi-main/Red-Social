@@ -428,13 +428,14 @@ const BD_banUser = async (username) => {
   if(user === null) return {error:'User not exits'}
   if(user.strike === null){
     user.strike = ['X'];
-    var dayBan = new Date(Date.now() + 24 * 3600 * 1000);
+    var dayBan = new Date(Date.now() + 168 * 3600 * 1000);
     user.dayBan = dayBan;
     user.save();
     return {Succes: 'The STRIKE was applied successfully', Strike:user.strike.length}
   } else{
     if(user.strike.length === 1){
       user.strike = ['X','X'];
+      var dayBan = new Date(Date.now() + 168 * 3600 * 1000);
       user.save();
     }else{
       if(user.strike.length === 2){
