@@ -119,7 +119,7 @@ export function likePost(data) {
 export function banPost(idPost){
   return (dispatch) => 
       axios
-          .post(`http://localhost:3001/admin/banPost`, idPost,{ withCredentials: true } )
+          .post(`http://localhost:3001/admin/banPost`, {idPost},{ withCredentials: true } )
           .then(res => dispatch({type: BANPOST_ADMIN, payload:res}) )
           .catch((e) =>(err) => dispatch({ type: ERROR, payload: err })
           )

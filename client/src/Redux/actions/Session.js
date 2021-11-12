@@ -36,6 +36,7 @@ export function logIn(user) {
       .post(`http://localhost:3001/login`, user, { withCredentials: true })
       .then((res) => dispatch({ type: LOG_IN, payload: res }))
       .catch((err) => dispatch({ type: ERROR, payload: err }));
+
 }
 
 export function updateUser(username, user) {

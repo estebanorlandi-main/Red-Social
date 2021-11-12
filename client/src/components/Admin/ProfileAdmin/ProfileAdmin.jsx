@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
-import userimg from "../../images/userCard.png";
+import userimg from "../../../images/userCard.png";
 import { useDispatch, useSelector } from "react-redux";
-import { removeProfile } from "../../Redux/actions/Users";
+import { removeProfile,getUser } from "../../../Redux/actions/Users";
 
-import Post from "../../components/Post/Post";
+import PostAdmin from "../../../components/Admin/PostAdmin/PostAdmin";
 
-import { getUser } from "../../Redux/actions/Users";
-import { updateUser } from "../../Redux/actions/Session";
-import validate from "../../utils/validate";
-import styles from "./Profile.module.css";
+// import { getUser } from "../../Redux/actions/Users";
+import { updateUser } from "../../../Redux/actions/Session";
+import validate from "../../../utils/validate";
+import styles from "./stylesProfile.css";
 import Select from "react-select";
 import { BsFillPencilFill } from "react-icons/bs";
+import { banUserAdmin } from "../../../Redux/actions/Users";
 
 const selectStyles = {
   control: (styles) => ({ ...styles, width: "100%" }),
@@ -31,12 +32,13 @@ const options = [
   { value: "postgresql", label: "PostgreSQL" },
 ];
 
-export default function Profile(props) {
+export default function ProfileAdmin(props) {
   const dispatch = useDispatch();
   const [editar, setEditar] = useState(false);
 
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
+  const profileAdmin = useSelector((state) => state.usersReducer)
 
   const myProfile = session.username === profile.username;
 
@@ -78,7 +80,13 @@ export default function Profile(props) {
   let git = profile.gitaccount && profile.gitaccount.split("/");
   git = git && git[git.length - 1];
 
-  console.log(profile)
+  const handleBanUser = (e) => {
+      e.preventDefault();
+      console.log(e.target.value)
+      dispatch(banUserAdmin(e.target.value))
+      alert('They have applied successfully')
+  }
+  console.log('profile',profileAdmin)
   return profile ? (
     <main className={styles.container}>
       <div className={styles.left}>
@@ -111,7 +119,12 @@ export default function Profile(props) {
           )}
 
           <img className={styles.image} src={profile.image || userimg} alt="" />
-
+            <button 
+                value={profile.username}
+                name="banUser"
+                onClick={(e) => handleBanUser(e)}
+            >
+            Ban User</button>
           {myProfile && editar ? (
             <form>
               <label>
@@ -183,7 +196,7 @@ export default function Profile(props) {
         <section className={styles.posts}>
           {profile.posts
             ? profile.posts.map((post) => (
-                <Post
+                <PostAdmin
                   customClass={styles.post}
                   post={{ ...post, user: profile }}
                 />

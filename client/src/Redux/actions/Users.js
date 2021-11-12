@@ -5,7 +5,8 @@ export const SEARCH_USER = "SEARCH_USER";
 export const GET_USER = "GET_USER";
 export const REMOVE_PROFILE = "REMOVE_PROFILE";
 export const GET_USERS = "GET_USERS"
-export const NEW_MSG = "NEW_MSG"
+export const NEW_MSG = "NEW_MSG";
+export const BAN_USER_ADMIN = "ban_user_admin";
 
 export function searchUser(q) {
   return (dispatch) =>
@@ -41,4 +42,12 @@ export function newMsg(payload) {
       .post("http://localhost:3001/test/c/m/new", payload)
       .then((res) => dispatch({type:NEW_MSG, payload: res }))
       .catch((e)=> console.log(e))
+}
+
+export function banUserAdmin(username) {
+  return (dispatch) =>
+    axios
+      .post(`http://localhost:3001/admin/banUser`, {username}, { withCredentials: true })
+      .then( res => dispatch({type:BAN_USER_ADMIN, payload: res}))
+      .catch((e) =>(err) => dispatch({ type: ERROR, payload: err }))
 }

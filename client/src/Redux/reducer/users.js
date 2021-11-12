@@ -1,4 +1,4 @@
-import { SEARCH_USER, GET_USER, REMOVE_PROFILE, GET_USERS,NEW_MSG } from "../actions/Users";
+import { SEARCH_USER, GET_USER, REMOVE_PROFILE, GET_USERS,NEW_MSG,BAN_USER_ADMIN } from "../actions/Users";
 
 const initialState = {
   users: [],
@@ -38,6 +38,11 @@ export default function root(state = initialState, action) {
         ...state,
         profile: {},
       };
+
+    case BAN_USER_ADMIN:
+      return{
+        ...state
+      }
 
     default:
       return state;
