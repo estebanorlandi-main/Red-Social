@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Post from "../../components/Post/Post";
-import PostAdmin from "../../components/Admin/PostAdmin/PostAdmin";
-import NewPost from "../../components/NewPost/NewPost";
-import UserCardAdmin from "../../components/Admin/UserCardAdmin/UserCardAdmin";
+import Post from "../../Post/Post";
+import PostAdmin from "../PostAdmin/PostAdmin";
+import NewPost from "../../NewPost/NewPost";
+import UserCardAdmin from "../UserCardAdmin/UserCardAdmin";
 
 import styles from "./stalesAdmin.css";
-import { clearPosts, getPosts, updatePage } from "../../Redux/actions/Post";
+import { clearPosts, getPosts, updatePage } from "../../../Redux/actions/Post";
 import { FaLeaf } from "react-icons/fa";
 
 function HomeAdmin(props) {
