@@ -90,12 +90,8 @@ export default function ProfileAdmin(props) {
   var dayBan = new Date(Date.now() + 168 * 3600 * 1000)
 
   day > dayBan ? console.log(true) : console.log(false)
-  console.log(dayBan);
-  console.log(day);
- 
 
 
-//  console.log('profile',profile)
   return profile ? (
     <div>
     {profile.strike?.length === 3? (<div><img src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png"/></div>) :

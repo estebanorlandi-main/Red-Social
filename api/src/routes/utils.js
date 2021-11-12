@@ -449,7 +449,7 @@ const BD_banUser = async (username) => {
 const BD_loginBan = async (username) => {
   const user = await User.findOne({ where:{username: username}})
 
-  if(user.strike.length === 3){
+  if(user.strike?.length === 3){
     return {error: 'You are temporarily suspended'};
   }
   return {}
