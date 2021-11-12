@@ -10,6 +10,7 @@ import {
   UPDATE_PAGE,
   CLEAR_POST,
   SET_TAGS,
+  BANPOST_ADMIN,
 } from "../actions/Post";
 
 const initialState = {
@@ -113,6 +114,11 @@ export default function root(state = initialState, action) {
 
     case SET_TAGS:
       return {...state, tags:action.payload}
+    case BANPOST_ADMIN:
+      return{
+        ...state,
+        posts: [...state.posts, ...action.payload.post]
+      }
     default:
       return state;
   }

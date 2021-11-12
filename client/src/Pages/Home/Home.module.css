@@ -1,7 +1,6 @@
 .home {
   display: grid;
-  grid-template-columns: repeat(3, minmax(120px, 1fr));
-  width: 70vw;
+  grid-template-columns: auto 2fr auto;
   margin: 0 auto;
   gap: 3em;
 }
@@ -17,18 +16,11 @@
 
 .home section > div {
   padding: 1em;
-  border-radius: 10px;
-  margin-top: 2em;
   background-color: #fff;
   width: 100%;
 }
 
-.home section {
-  margin: 0 auto;
-}
-
 .sectionPosts {
-  max-width: max-content;
   margin: 0 auto;
 }
 
@@ -74,7 +66,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
   background-color: var(--c-light);
   text-align: center;
   font-size: 1.25rem;
@@ -85,7 +76,7 @@
   margin: 0.75em 1em;
 }
 .tag {
-  color: #59d !important;
+  color: var(--c-blue) !important;
   font-size: 1rem !important;
 }
 
@@ -93,8 +84,7 @@
   border-radius: 5em;
   margin: 2em 0 0 0;
   background-color: #fff;
-  padding: 0.75em 1.5em;
-  gap: 1em;
+  padding: 0.25em 0.5em;
   display: flex;
   align-items: center;
 }

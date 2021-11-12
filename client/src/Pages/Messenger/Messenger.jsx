@@ -2,15 +2,18 @@ import Conversation from "../../components/Conversations/Conversations.jsx";
 import Message from "../../components/Message/Message.jsx";
 import ChatOnline from "../../components/ChatOnline/ChatOnline.jsx";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-// import { AuthContext } from "../../context/AuthContext";
+import { useDispatch, useSelector } from "react-redux";
+import { socketConnection } from "../../Redux/actions/Users";
+
 import axios from "axios";
-import { io } from "socket.io-client";
 
 import styles from "./Messenger.module.css";
 
 export default function Messenger() {
   const user = useSelector((store) => store.sessionReducer);
+  const socket = useSelector((state) => state.usersReducer.socket)
+
+  const dispatch = useDispatch();
 
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -18,18 +21,24 @@ export default function Messenger() {
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers] = useState([]);
-  const socket = useRef();
   const scrollRef = useRef();
 
   useEffect(() => {
-    socket.current = io("ws://localhost:8900");
-    socket.current.on("getMessage", (data) => {
-      setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
+    if(!Object.keys(socket).length){
+      dispatch(socketConnection(user.username));
+    } 
+  }, [])
+
+  useEffect(() => {
+    if(Object.keys(socket).length){
+      socket.on("getMessage", (data) => {
+        setArrivalMessage({
+          sender: data.senderId,
+          text: data.text,
+          createdAt: Date.now(),
+        });
       });
-    });
+    } 
   }, []);
 
   useEffect(() => {
@@ -39,13 +48,14 @@ export default function Messenger() {
   }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
-    socket.current.emit("addUser", user.username);
-    socket.current.on("getUsers", (users) => {
-      console.log(users);
-      // setOnlineUsers(
-      //   user.followings.filter((f) => users.some((u) => u.userId === f))
-      // );
-    });
+    if(Object.keys(socket).length){
+      socket.on("getUsers", (users) => {
+        console.log(users);
+        // setOnlineUsers(
+        //   user.followings.filter((f) => users.some((u) => u.userId === f))
+        // );
+      });
+    } 
   }, [user]);
 
   useEffect(() => {
@@ -90,7 +100,7 @@ export default function Messenger() {
       (member) => member !== user.username
     );
 
-    socket.current.emit("sendMessage", {
+    socket.emit("sendMessage", {
       senderId: user.username,
       receiverId,
       text: newMessage,

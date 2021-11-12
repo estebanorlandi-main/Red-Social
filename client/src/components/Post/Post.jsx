@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import image from "../../images/userCard.png";
 import Select from "react-select";
-
+import UserCard from "../UserCard/UserCard";
 import {
   commentPost,
   deletePost,
@@ -53,7 +53,7 @@ const parseContent = (text) => {
   return parsed;
 };
 
-function Post({ post, customClass, user }) {
+function Post({ post, customClass, user, socket, admin }) {
   const dispatch = useDispatch();
 
   const page = useSelector(({ postsReducer: { page } }) => page);
@@ -61,6 +61,12 @@ function Post({ post, customClass, user }) {
   const allTags = useSelector((state) => state.postsReducer.tags);
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
+  const [liked, setLiked] = useState(
+    post.userLikes.filter((like) => like.user.username === session.username)
+      .length
+      ? true
+      : false
+  );
 
   const [newComment, setNewComment] = useState("");
 
@@ -81,6 +87,16 @@ function Post({ post, customClass, user }) {
   const createdAt = new Date(post.updatedAt).getTime();
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
+
+  useEffect(() => {
+    if (liked) {
+      socket.emit("sendNotification", {
+        senderName: user,
+        receiverName: post.user.username,
+        type: 1,
+      });
+    }
+  }, [liked]);
 
   useEffect(() => {
     if (firstLoad) {
@@ -106,6 +122,11 @@ function Post({ post, customClass, user }) {
     e.preventDefault();
     if (commentError) return;
     dispatch(commentPost(post.idPost, newComment, session.username));
+    socket.emit("sendNotification", {
+      senderName: user,
+      receiverName: post.user.username,
+      type: 2,
+    });
   };
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
@@ -123,6 +144,8 @@ function Post({ post, customClass, user }) {
   const handleLike = (e) => {
     if (session.username) {
       dispatch(likePost({ postIdPost: post.idPost, userId: session.username }));
+
+      liked ? setLiked(false) : setLiked(true);
     }
   };
 
@@ -158,7 +181,7 @@ function Post({ post, customClass, user }) {
         <div className={styles.options}>
           <button onClick={handleOptions} className={styles.optionsHandler}>
             <BiDotsVerticalRounded
-              style={{ color: "#aaa", width: "2em", height: "2em" }}
+              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
             />
           </button>
 
@@ -214,15 +237,12 @@ function Post({ post, customClass, user }) {
         className={styles.userContainer}
         to={`/profile/${post.user.username}`}
       >
-        <img
-          className={styles.avatar}
-          src={post.user.image || image}
-          alt="avatar"
+        <UserCard
+          toRight
+          showImage
+          showName
+          other={`Posted ${TimeSpan}hr ago`}
         />
-        <div>
-          <span className={styles.username}>{post.user.username}</span>
-          <span className={styles.github}>Posted {TimeSpan}hr</span>
-        </div>
       </Link>
       <div className={styles.postBody}>
         {editMode ? (
@@ -279,15 +299,16 @@ function Post({ post, customClass, user }) {
           {post.userLikes.filter(
             (like) => like.user.username === session.username
           ).length ? (
-            <MdFavorite color="red" />
+            <MdFavorite className={styles.icons} color="#f55" />
           ) : (
-            <MdFavoriteBorder />
+            <MdFavoriteBorder className={styles.icons} />
           )}
-          {post.userLikes.length} |
-          {/* <span>
-            {post.likes[post.likes.length - 1]},{" "}
-            {post.likes[post.likes.length - 2]}
-          </span> */}
+          {post.userLikes.length}
+          <span className={styles.users}>
+            {post.userLikes.length
+              ? "| " + post.userLikes[post.userLikes.length - 1].user.username
+              : ""}
+          </span>
         </button>
         <button>
           <MdOutlineModeComment /> {post.comments && post.comments.length}
@@ -299,11 +320,14 @@ function Post({ post, customClass, user }) {
 
       {session.username ? (
         <div className={styles.newCommentContainer}>
-          <span className={styles.maxLength}>{newComment.length} / 1000</span>
+          <div className={styles.inline}>
+            <span className={styles.maxLength}>{newComment.length} / 1000</span>
+            <span>{commentError}</span>
+          </div>
           <form className={styles.newComment} onSubmit={submitComment}>
             <label className={commentError ? "error" : ""}>
               <div className="input-group">
-                <textarea
+                <input
                   onChange={handleComment}
                   name="comment"
                   type="text"
@@ -311,11 +335,17 @@ function Post({ post, customClass, user }) {
                   placeholder="New comment..."
                 />
               </div>
-              <button type="submit">
-                <MdSend className={styles.icons} />
-              </button>
             </label>
-            <span>{commentError}</span>
+            {newComment.length && !commentError ? (
+              <button type="submit">
+                <MdSend
+                  className={styles.icons}
+                  style={{ margin: "0", color: "#fff" }}
+                />
+              </button>
+            ) : (
+              <></>
+            )}
           </form>
         </div>
       ) : (

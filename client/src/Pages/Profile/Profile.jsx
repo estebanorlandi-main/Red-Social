@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import userimg from "../../images/userCard.png";
+import userimg from "../../images/userCard.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { removeProfile } from "../../Redux/actions/Users";
 
@@ -68,7 +68,10 @@ export default function Profile(props) {
   let git = profile.gitaccount && profile.gitaccount.split("/");
   git = git && git[git.length - 1];
 
+  console.log(profile)
   return profile ? (
+    <div>
+    {profile.strike?.length === 3? (<div><img src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png"/></div>) :
     <main className={styles.container}>
       <div className={styles.left}>
         <section>
@@ -186,6 +189,7 @@ export default function Profile(props) {
         </section>
       </div>
     </main>
+  }</div>
   ) : (
     ""
   );

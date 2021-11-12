@@ -15,6 +15,7 @@ export const GET_POST_FOR_USERNAME = "GET_POST_FOR_USERNAME";
 export const UPDATE_PAGE = "UPDATE_PAGE";
 export const CLEAR_POST = "CLEAR_POST";
 export const SET_TAGS = "SET_TAGS"
+export const BANPOST_ADMIN =  "banPost_admin";
 // Crear Posteo
 // return (dispatch) => axios.post('localhost:3001/post')
 //  -> title
@@ -129,6 +130,13 @@ export function uploadTags(){
         });
       });
 }
+export function banPost(idPost){
+  return (dispatch) =>
+      axios
+          .post(`http://localhost:3001/admin/banPost`, {idPost},{ withCredentials: true } )
+          .then(res => dispatch({type: BANPOST_ADMIN, payload:res}) )
+          .catch((e) =>(err) => dispatch({ type: ERROR, payload: err }))
+        }
 /*
 export function likePost(idPost, username) {
   return (dispatch) =>
@@ -141,18 +149,15 @@ export function likePost(idPost, username) {
       .then((res) => console.log(res.data))
       .catch((err) => console.log(err.data));
 }
-
 export function clearPosts() {
   return { type: "CLEAR_POST", payload: [] };
 }
-
 export function getPostForId(id) {
   return (dispatch) =>
     axios
       .get(`localhost:3001/${id}`)
       .then((res) => dispatch({ type: GET_POST_FOR_ID, payload: res.data }));
 }
-
 export function getPostForUsername(username) {
   return (dispatch) =>
     axios
@@ -161,7 +166,6 @@ export function getPostForUsername(username) {
         dispatch({ type: GET_POST_FOR_USERNAME, payload: res.data })
       );
 }
-
 export function updatePage(bol, post){
   return ({type:UPDATE_PAGE, payload:{bol, post}})
 }
