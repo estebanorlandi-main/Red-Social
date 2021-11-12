@@ -44,9 +44,11 @@ function App() {
   return (
     <div className="App">
       {errors && errors.length ? (
-        <ul>
+        <ul className="errors">
           {errors.map((error) => (
-            <li onClick={() => handleDelete(error.id)}>{error.message}</li>
+            <li className="error" onClick={() => handleDelete(error.id)}>
+              {error.message}
+            </li>
           ))}
         </ul>
       ) : (
