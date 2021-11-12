@@ -39,17 +39,25 @@ const DB_ChallPostedit = async (id, { title, content, tag, image }) => {
 };
 
 const DB_Challengecomments = async (username) => {
-  const UserID = await User.findOne({
-    where: {
-      username,
-    },
-  });
-  const final = ChallengeComment.findAll({});
-  // UserID.ChallengeComment.map((comment) => {
-  //   return comment.dataValues;
-  // });
-
-  return final;
+  try{
+    const UserID = await User.findOne({
+      where: {
+        username,
+      },
+    });
+    const final = ChallengeComment.findAll({
+      attributes: ["code", "description", "id"],
+      include: [{model: User, attributes: ["image", "username"]}],
+      })
+    // UserID.ChallengeComment.map((comment) => {
+    //   return comment.dataValues;
+    // });
+  
+    return final;
+  }catch(e){
+    console.log(e)
+    return e
+  }
 };
 
 const DB_ChallCommentedit = async (id, content_data) => {
