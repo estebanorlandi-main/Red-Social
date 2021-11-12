@@ -39,12 +39,17 @@ io.on("connection", (socket) => {
   });
 
   //send about a notification
-  socket.on("sendNotification", ({ senderName, receiverName, type }) => {
+  socket.on("sendNotification", ({ senderName, receiverName, id, userImage, type }) => {
     const receiver = getUser(receiverName);
-    io.to(receiver?.socketId).emit("getNotification", {
-      senderName,
-      type,
-    });
+
+    // if(senderName !== receiverName){
+      io.to(receiver?.socketId).emit("getNotification", {
+        senderName,
+        id,
+        userImage,
+        type
+      });
+    // }
   });
 
   //when disconnect

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, NavLink, useHistory, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../SearchBar/SearchBar";
+import Notification from "../Notification/Notification";
 import { logOut } from "../../Redux/actions/Session.js";
 import styles from "./NavBar.module.css";
 import { logOutAdmin } from "../../Redux/actions/Admin.js";
@@ -34,7 +35,20 @@ export default function Navbar(props) {
   useEffect(() => {
     if (Object.keys(socket).length) {
       socket.on("getNotification", (data) => {
-        setNotifications((prev) => [...prev, data]);
+        
+        if(data.type === 1){
+            setNotifications((prev) => {
+              if(!prev.find(notif => notif.senderName === data.senderName && notif.id === data.id)){
+                return [data, ...prev];
+              } else{
+                return [...prev];
+              }
+              
+            });
+        
+        } else{
+          setNotifications((prev) => [data, ...prev]);
+        }
       });
     }
   }, [socket]);
@@ -52,22 +66,7 @@ export default function Navbar(props) {
     history.push("/home");
   };
 
-  const displayNotification = ({ senderName, type }) => {
-    let action;
 
-    if (type === 1) {
-      action = "liked";
-    } else if (type === 2) {
-      action = "commented";
-    } else {
-      action = "shared";
-    }
-    return (
-      <span
-        className={styles.notification}
-      >{`${senderName} ${action} your post.`}</span>
-    );
-  };
 
   const handleRead = () => {
     setNotifications([]);
@@ -135,7 +134,13 @@ export default function Navbar(props) {
               </li>
               {open && (
                 <div className={styles.notifications}>
-                  {notifications.map((n) => displayNotification(n))}
+                  {notifications.map((notification, i) => (
+                  
+                  <li key={i}>
+                  <Notification notification={notification} />
+                  </li>
+                  
+                  ))}
                   <button onClick={handleRead}>Mark as read</button>
                 </div>
               )}
