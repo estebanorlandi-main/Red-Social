@@ -137,18 +137,15 @@ export function likePost(idPost, username) {
       .then((res) => console.log(res.data))
       .catch((err) => console.log(err.data));
 }
-
 export function clearPosts() {
   return { type: "CLEAR_POST", payload: [] };
 }
-
 export function getPostForId(id) {
   return (dispatch) =>
     axios
       .get(`localhost:3001/${id}`)
       .then((res) => dispatch({ type: GET_POST_FOR_ID, payload: res.data }));
 }
-
 export function getPostForUsername(username) {
   return (dispatch) =>
     axios
@@ -157,7 +154,6 @@ export function getPostForUsername(username) {
         dispatch({ type: GET_POST_FOR_USERNAME, payload: res.data })
       );
 }
-
 export function updatePage(bol, post){
   return ({type:UPDATE_PAGE, payload:{bol, post}})
 }

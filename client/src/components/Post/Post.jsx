@@ -52,7 +52,7 @@ const parseContent = (text) => {
   return parsed;
 };
 
-function Post({ post, customClass, user, admin }) {
+function Post({ post, customClass, user, socket, admin }) {
   const dispatch = useDispatch();
 
   const page = useSelector(({ postsReducer: { page } }) => page);
@@ -60,6 +60,9 @@ function Post({ post, customClass, user, admin }) {
 
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
+  const [liked, setLiked] = useState(post.userLikes.filter(
+      (like) => like.user.username === session.username
+    ).length ? true : false)
 
   const [newComment, setNewComment] = useState("");
 
@@ -78,6 +81,16 @@ function Post({ post, customClass, user, admin }) {
   const createdAt = new Date(post.updatedAt).getTime();
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
+
+  useEffect(() => {
+    if(liked){
+      socket.emit("sendNotification", {
+        senderName: user,
+        receiverName: post.user.username,
+        type: 1
+      });
+    }
+  }, [liked])
 
   useEffect(() => {
     if (firstLoad) {
@@ -102,6 +115,11 @@ function Post({ post, customClass, user, admin }) {
     e.preventDefault();
     if (commentError) return;
     dispatch(commentPost(post.idPost, newComment, session.username));
+    socket.emit("sendNotification", {
+      senderName: user,
+      receiverName: post.user.username,
+      type: 2
+    });
   };
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
@@ -117,7 +135,9 @@ function Post({ post, customClass, user, admin }) {
 
   const handleLike = (e) => {
     if (session.username) {
-      dispatch(likePost({ postIdPost: post.idPost, userId: session.username }));
+      dispatch(likePost({ postIdPost: post.idPost, userId: session.username}));
+
+      liked ? setLiked(false) : setLiked(true)
     }
   };
 
