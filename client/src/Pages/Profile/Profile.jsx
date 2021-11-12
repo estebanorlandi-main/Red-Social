@@ -17,19 +17,6 @@ const selectStyles = {
 };
 
 // cambiar a estado traido de la DB
-const options = [
-  { value: "js", label: "JavaScript" },
-  { value: "python", label: "Python" },
-  { value: "c++", label: "C++" },
-  { value: "php", label: "PHP" },
-  { value: "java", label: "Java" },
-  { value: "c", label: "C" },
-  { value: "go", label: "Go" },
-  { value: "kotlin", label: "Kotiln" },
-  { value: "sql", label: "SQL" },
-  { value: "mongodb", label: "MongoDB" },
-  { value: "postgresql", label: "PostgreSQL" },
-];
 
 export default function Profile(props) {
   const dispatch = useDispatch();
@@ -37,6 +24,9 @@ export default function Profile(props) {
 
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
+  const allTags = useSelector((state) => state.postsReducer.tags);
+
+  const [options, setOptions] = useState(allTags.map(tag => {return ({value: tag.label, label: tag.label})}))//El select no funciona sin un array de objetos con value y label
 
   const myProfile = session.username === profile.username;
 

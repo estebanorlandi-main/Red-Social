@@ -24,13 +24,14 @@ function Home(props) {
   const [conversations, setConversations] = useState([]);
   const [first, setFirst] = useState(true);
   const [tags, setTags] = useState([])
+  const [tagsOptions, setTagsOptions] = useState([])//El select no funciona sin un array de objetos con value y label
   const options = [
     { value: "cronologico", label: "Cronologico" },
     { value: "userLikes", label: "Likes" },
     { value: "comments", label: "Comentarios" },
     { value: "combinados", label: "Inicial"}
   ];
-
+  console.log(tagsOptions, allTags)
   const handleScroll = useCallback(() => {
     if (
       Math.ceil(window.innerHeight + window.scrollY) >=
@@ -39,7 +40,6 @@ function Home(props) {
       dispatch(updatePage(page + 1 < totalPages ? page + 1 : page));
   }, [dispatch, page, totalPages]);
 
-console.log()
   useEffect(() => {
     if (page === -1) {
       window.scroll(0, 0);
@@ -54,8 +54,8 @@ console.log()
       dispatch(uploadTags())
       setFirst(false)
     }
-  })
-  console.log(allTags)
+    setTagsOptions(allTags.map((tag) => {return ({value: tag.label, label: tag.label})}))
+  }, [allTags])
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
@@ -68,6 +68,7 @@ console.log()
     setOrden(e.value);
   };
   const handleSelect2 = (e) => {
+    console.log(e)
     setTags(e.map((option) => option.value));
   };
 
@@ -140,7 +141,7 @@ console.log()
             <Select onChange={handleSelect} options={options} />
           </li>
           <li>
-            <Select onChange={handleSelect2} options={allTags} isMulti/>
+            <Select onChange={handleSelect2} options={tagsOptions} isMulti/>
           </li>
           {posts.map((post, i) => (
             <li key={i}>

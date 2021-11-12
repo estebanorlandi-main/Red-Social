@@ -50,6 +50,7 @@ export function deletePost(postId) {
 }
 
 export function updatePost(postId, data) {
+  console.log(data)
   return (dispatch) =>
     axios
       .put(`http://localhost:3001/post/${postId}`, data, {

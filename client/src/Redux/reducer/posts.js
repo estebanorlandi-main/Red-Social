@@ -51,6 +51,7 @@ export default function root(state = initialState, action) {
           ...state,
           posts: state.posts.map((post) => {
             if (post.idPost === action.payload.post.idPost) {
+              console.log(action.payload.post)
               post = action.payload.post;
             }
             return post;

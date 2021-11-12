@@ -8,6 +8,7 @@ import validate from "../../utils/validate";
 export default function NewPost() {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
+  const allTags = useSelector((state) => state.postsReducer.tags);
   const [data, setData] = useState({
     title: "",
     content: "",
@@ -21,20 +22,7 @@ export default function NewPost() {
     title: "",
     content: "",
   });
-
-  const options = [
-    { value: "js", label: "JavaScript" },
-    { value: "python", label: "Python" },
-    { value: "cpp", label: "C++" },
-    { value: "php", label: "PHP" },
-    { value: "java", label: "Java" },
-    { value: "c", label: "C" },
-    { value: "go", label: "Go" },
-    { value: "kotlin", label: "Kotiln" },
-    { value: "sql", label: "SQL" },
-    { value: "mongodb", label: "MongoDB" },
-    { value: "postgresql", label: "PostgreSQL" },
-  ];
+  const [options, setOptions] = useState(allTags.map(tag => {return ({value: tag.label, label: tag.label})}))//El select no funciona sin un array de objetos con value y label
 
   /*function separarTags(str) {
     var arr = str.split(",");
