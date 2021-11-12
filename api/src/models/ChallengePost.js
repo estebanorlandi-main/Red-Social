@@ -21,6 +21,7 @@ module.exports = (sequelize) => {
           },
         },
       },
+
       content: {
         type: DataTypes.TEXT,
         allowNull: false,
@@ -35,16 +36,19 @@ module.exports = (sequelize) => {
           },
         },
       },
+
       tag: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: true,
       },
+
       idPost: {
         unique: true,
         type: DataTypes.UUID,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
+
       likes: {
         type: DataTypes.INTEGER,
       },

@@ -6,7 +6,7 @@ export default function AdminSupport(){
     const dispatch = useDispatch();
     const message = useSelector((state) => state.supportReducer.messageSupport)
     const [flags, setFlags] = useState(false)
-    
+    const user = useSelector((state) => state)
    
     useEffect(()=>{
         console.log('flags')
@@ -20,6 +20,7 @@ export default function AdminSupport(){
         setFlags(true)
         console.log(flags)
     }
+    console.log(user)
     console.log(message)
     return(
         <div>
