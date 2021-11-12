@@ -93,7 +93,6 @@ export default function ProfileAdmin(props) {
   console.log(dayBan);
   console.log(day);
 
-  //  console.log('profile',profile)
   return profile ? (
     <div>
       {profile.strike?.length === 3 ? (
