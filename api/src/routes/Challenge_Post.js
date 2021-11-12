@@ -22,26 +22,30 @@ const paginate = (page = 0, arr) => {
 
 //Devuelve post de una categoria o si no todos los post
 router.get("/", async (req, res) => {
-
-  const { tag, page } = req.query;
-  const allPosts = await Challenge_utils.DB_ChallPostsearch({});
-
-  if (tag) {
-    let postCategoria = allPosts.filter((e) =>
-      e.tag
-        .map((postTag) => postTag && postTag.toLowerCase())
-        .includes(tag.toLowerCase())
-    );
-
-    if (!postCategoria.length)
-      res.status(404).send("There is no post with that tag");
-
-    const { posts, totalPages } = paginate(page, postCategoria);
-
-    res.status(200).send({ posts, totalPages });
-  } else {
-    const { posts, totalPages } = paginate(page, allPosts);
-    res.status(200).send({ posts, totalPages });
+  try{
+    const { tag, page } = req.query;
+    const allPosts = await Challenge_utils.DB_ChallengePostsearch({});
+  
+    if (tag) {
+      let postCategoria = allPosts.filter((e) =>
+        e.tag
+          .map((postTag) => postTag && postTag.toLowerCase())
+          .includes(tag.toLowerCase())
+      );
+  
+      if (!postCategoria.length)
+        res.status(404).send("There is no post with that tag");
+  
+      const { posts, totalPages } = paginate(page, postCategoria);
+  
+      res.status(200).send({ posts, totalPages });
+    } else {
+      const { posts, totalPages } = paginate(page, allPosts);
+      res.status(200).send({ posts, totalPages });
+    }
+  }catch(e){
+    console.log(e)
+    res.send('Error')
   }
 });
 
