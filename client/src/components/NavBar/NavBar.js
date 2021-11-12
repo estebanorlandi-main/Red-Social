@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, NavLink, useHistory, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../SearchBar/SearchBar";
@@ -12,17 +12,32 @@ import { BiSupport } from "react-icons/bi";
 
 import { CgProfile } from "react-icons/cg";
 import { FiLogOut } from "react-icons/fi";
+import { MdNotifications } from "react-icons/md";
+
 
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 
 import logo from "../../images/deco.svg";
 
 export default function Navbar(props) {
+  const [notifications, setNotifications] = useState([]);
+  const [open, setOpen] = useState(false);
+
   const history = useHistory();
   const user = useSelector((store) => store.sessionReducer);
-  const admin = useSelector((store) => store.adminReducer)
+  const admin = useSelector((store) => store.adminReducer);
+  const socket = useSelector( (state) => state.usersReducer.socket);
+
   const isLanding = useLocation().pathname === "/";
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if(Object.keys(socket).length){
+      socket.on("getNotification", (data) => {
+        setNotifications((prev) => [...prev, data]);
+      });
+    }
+  }, [socket]);
 
   const [showMenu, setShowMenu] = useState(false);
   const handleMenu = () => setShowMenu(!showMenu);
@@ -36,6 +51,34 @@ export default function Navbar(props) {
     dispatch(logOut());
     history.push("/home");
   };
+
+  const displayNotification = ({ senderName, type }) => {
+    let action;
+
+    if (type === 1) {
+      action = "liked";
+    } else if (type === 2) {
+      action = "commented";
+    } else {
+      action = "shared";
+    }
+    return (
+      <span className={styles.notification}>{`${senderName} ${action} your post.`}</span>
+    );
+  };
+
+  const handleRead = () => {
+    setNotifications([]);
+    setOpen(false);
+  };
+
+  const handleClick = () => {
+    setOpen(!open)
+
+    if(!open){
+      // setNotifications([]);
+    }
+  }
 
   return (
     <header className={styles.navbar + ` ${isLanding ? styles.landing : ""}`}>
@@ -82,6 +125,21 @@ export default function Navbar(props) {
                   <BiSupport className={styles.icon} />
                 </NavLink>
               </li>
+              <li onClick={() => handleClick()} style={{cursor:'pointer'}}>
+              <MdNotifications className={styles.icon} />
+              {
+                notifications.length > 0 &&
+                <div className={styles.counter}>{notifications.length}</div>
+               }
+               </li>
+               {open && (
+                  <div className={styles.notifications}>
+                    {notifications.map((n) => displayNotification(n))}
+                    <button onClick={handleRead}>
+                      Mark as read
+                    </button>
+                  </div>
+                )} 
             </>
           )}
         </ul>

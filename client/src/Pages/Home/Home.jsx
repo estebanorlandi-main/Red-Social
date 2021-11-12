@@ -2,11 +2,14 @@ import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Post from "../../components/Post/Post";
 import NewPost from "../../components/NewPost/NewPost";
+import { io, Socket } from "socket.io-client";
 //import UserCard from "../../components/UserCard/UserCard";
 
 import { Link } from "react-router-dom";
 
 import styles from "./Home.module.css";
+
+import { socketConnection } from "../../Redux/actions/Users";
 import { clearPosts, getPosts, updatePage } from "../../Redux/actions/Post";
 import axios from "axios";
 import { FaPlus } from "react-icons/fa";
@@ -14,6 +17,9 @@ import { FaPlus } from "react-icons/fa";
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
   const session = useSelector((state) => state.sessionReducer);
+
+  const socket = useSelector( (state) => state.usersReducer.socket)
+  console.log(socket)
   const [page, totalPages] = useSelector(
     ({ postsReducer: { page, totalPages } }) => [page, totalPages]
   );
@@ -23,6 +29,17 @@ function Home(props) {
   const [createPost, setCreatePost] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [first, setFirst] = useState(true);
+
+  useEffect(() => {
+    dispatch(socketConnection(session.username));
+
+  }, []);
+
+  // useEffect(() => {
+  //   if(Object.keys(socket).length){
+  //     socket.emit("addUser", session.username);
+  //   } 
+  // }, [socket, session.username]);
 
   const handleScroll = useCallback(() => {
     if (
@@ -117,7 +134,7 @@ function Home(props) {
           </li>
           {posts.map((post, i) => (
             <li key={i}>
-              <Post post={post} />
+              <Post post={post} socket={socket} user={session.username}/>
             </li>
           ))}
 
