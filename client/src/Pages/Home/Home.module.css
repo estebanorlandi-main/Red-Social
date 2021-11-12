@@ -1,7 +1,6 @@
 .home {
   display: grid;
-  grid-template-columns: repeat(3, minmax(120px, 1fr));
-  width: 70vw;
+  grid-template-columns: repeat(3, minmax(320px, 1fr));
   margin: 0 auto;
   gap: 3em;
 }

@@ -84,48 +84,56 @@ export default function NewPost() {
     }
   }
 
+  console.log(data.image);
+
   return (
     <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
-      <h3>{data.username}</h3>
-
       <label className={style.wrapper}>
         Title
-        <input
-          value={data.title}
-          onChange={handleChange}
-          name="title"
-          type="text"
-          placeholder="Title"
-          autoComplete="off"
-        />
-        <span className={style.error}>{errores.title}</span>
+        <div className="input-group">
+          <input
+            value={data.title}
+            onChange={handleChange}
+            name="title"
+            type="text"
+            placeholder="Title"
+            autoComplete="off"
+          />
+        </div>
+        <span>{errores.title}</span>
       </label>
       <label className={style.wrapper}>
         Content {data.content.length}/1000
         <textarea
-          className={style.textarea}
           value={data.content}
           onChange={handleChange}
           name="content"
           type="text"
           autoComplete="off"
+          placeholder="Your message"
         />
-        <span className={style.error}>{errores.content}</span>
+        <span>{errores.content}</span>
       </label>
-      {/*<label>
-        image
-         <br/>
-        {img.mostrar ? <img className={style.img} src={img.url} alt="Esa Imagen no es valida"/> : ""}
-      </label>*/}
-      <label className={style.wrapper}>
-        Image
+
+      {data.image ? (
+        <img
+          className={style.uploadImage}
+          src={URL.createObjectURL(data.image)}
+          alt=""
+        />
+      ) : (
+        ""
+      )}
+
+      {data.image && data.image.name}
+      <label className="input-image">
+        Image upload
         <input
           onChange={handleImage}
           name="image"
           type="file"
           placeholder="Image"
         />
-        <span className={style.error}>{errores.image}</span>
       </label>
 
       <label className={style.wrapper}>

@@ -58,11 +58,31 @@
   justify-content: center;
   height: 3em;
   width: 3em;
-  border-radius: 100%;
+  transform: translateY(0);
   transition: all 0.25s ease;
 }
 
 .nav__link:hover {
+  transition: all 0.25s;
+  transform: translateY(-7px);
+}
+.nav__link::after {
+  display: none;
+  content: "";
+  position: absolute;
+  bottom: -1em;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 100%;
+  background-color: transparent;
+  transition: all 0.25s;
+}
+
+.nav__link:hover::after {
+  display: block;
+  bottom: -0.5em;
   background-color: var(--c-blue);
 }
 
@@ -181,7 +201,7 @@
 }
 
 .landing * {
-  color: #fff;
+  color: #1e1e1e;
 }
 .landing {
   position: fixed;
@@ -193,5 +213,19 @@
   background-color: transparent;
 }
 .landing .right {
+  display: none;
+}
+
+.active,
+.active * {
+  transform: none;
+  color: #5af;
+  cursor: default;
+}
+
+.active:hover {
+  transform: none;
+}
+.active:hover::after {
   display: none;
 }

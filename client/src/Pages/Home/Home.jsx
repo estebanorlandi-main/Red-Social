@@ -6,6 +6,7 @@ import NewPost from "../../components/NewPost/NewPost";
 
 import { Link } from "react-router-dom";
 
+import image from "../../images/userCard.png";
 import styles from "./Home.module.css";
 import { clearPosts, getPosts, updatePage } from "../../Redux/actions/Post";
 import axios from "axios";
@@ -106,7 +107,8 @@ function Home(props) {
             )}
 
             <div className={styles.newPostOpen}>
-              <img className="avatar" src={session.image} alt="" />
+              <img className="avatar" src={session.image || image} alt="" />
+              {session.username || ""}
               <button
                 className={styles.createPost}
                 onClick={() => setCreatePost(true)}

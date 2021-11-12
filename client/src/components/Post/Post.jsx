@@ -267,15 +267,16 @@ function Post({ post, customClass, user }) {
           {post.userLikes.filter(
             (like) => like.user.username === session.username
           ).length ? (
-            <MdFavorite color="red" />
+            <MdFavorite className={styles.icons} color="#f55" />
           ) : (
-            <MdFavoriteBorder />
+            <MdFavoriteBorder className={styles.icons} />
           )}
-          {post.userLikes.length} |
-          {/* <span>
-            {post.likes[post.likes.length - 1]},{" "}
-            {post.likes[post.likes.length - 2]}
-          </span> */}
+          {post.userLikes.length}
+          <span className={styles.users}>
+            {post.userLikes.length
+              ? "| " + post.userLikes[post.userLikes.length - 1].user.username
+              : ""}
+          </span>
         </button>
         <button>
           <MdOutlineModeComment /> {post.comments && post.comments.length}

@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../SearchBar/SearchBar";
 import { logOut } from "../../Redux/actions/Session.js";
 import styles from "./NavBar.module.css";
+import image from "../../images/userCard.png";
 
 import { ImHome3 } from "react-icons/im";
 
@@ -81,14 +82,14 @@ export default function Navbar(props) {
 
         <div className={styles.right}>
           {/* Mostrar en cualquier pagina menos Landing page */}
-          {!isLanding ? <SearchBar /> : ""}
 
+          {!isLanding ? <SearchBar /> : ""}
           {!isLanding &&
             (user.username ? (
               <div className={styles.profile__container}>
                 <button onClick={handleMenu} className={styles.profile}>
-                  {/*<span>{user.username}</span>*/}{" "}
-                  <img src={user.image} alt="" />
+                  <span>{user.username}</span>
+                  <img src={user.image || image} alt="" />
                 </button>
                 <div
                   className={
@@ -97,13 +98,13 @@ export default function Navbar(props) {
                   }
                 >
                   <Link
-                    className={`${styles.nav__link}`}
+                    className={`${styles.profile__link}`}
                     to={`/profile/${user.username}`}
                   >
                     Profile <CgProfile />
                   </Link>
                   <button
-                    className={`${styles.nav__link} ${styles.logout}`}
+                    className={`${styles.profile__link} ${styles.logout}`}
                     onClick={() => logOutR()}
                   >
                     Log Out
