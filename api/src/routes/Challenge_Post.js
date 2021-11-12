@@ -1,39 +1,97 @@
 const router = require('express').Router();
 const {User,
 	ChallengeComment,
-	ChallengePost} = require('../db.js');
+	Challengepost} = require('../db.js');
 const Challenge_utils = require('./Challengeutils.js')
 const database_Utils = require('./utils.js')
 
-router.get('/', async (req,res)=>{
-	try{
-		console.log('hola')
-	}catch(e){
-		console.log(e)
-	}
-})
+
+const paginate = (page = 0, arr) => {
+  const postsPerPage = 15;
+  const to = page * postsPerPage + postsPerPage;
+
+  return {
+    posts: arr.slice(page * postsPerPage, to < arr.length ? to : arr),
+    totalPages: arr.length,
+  };
+};
+
+
+
+
+
+//Devuelve post de una categoria o si no todos los post
+router.get("/", async (req, res) => {
+
+  const { tag, page } = req.query;
+  const allPosts = await Challenge_utils.DB_ChallPostsearch({});
+
+  if (tag) {
+    let postCategoria = allPosts.filter((e) =>
+      e.tag
+        .map((postTag) => postTag && postTag.toLowerCase())
+        .includes(tag.toLowerCase())
+    );
+
+    if (!postCategoria.length)
+      res.status(404).send("There is no post with that tag");
+
+    const { posts, totalPages } = paginate(page, postCategoria);
+
+    res.status(200).send({ posts, totalPages });
+  } else {
+    const { posts, totalPages } = paginate(page, allPosts);
+    res.status(200).send({ posts, totalPages });
+  }
+});
 
 router.post('/', async (req, res)=>{
 	const { title, content, tag, likes, username } = req.body;
 	try {
     let userDB = await database_Utils.DB_UserID(username);
-    let createPost = await ChallengePost.create({
+    let createPost = await Challengepost.create({
       likes,
       content,
       tag,
       title,
       userId: userDB.id,
     });
-    await userDB.addChallengePost(createPost);
+    await userDB.addChallengepost(createPost);
 
-    const allPosts = await database_Utils.DB_Postsearch({});
+    const allPosts = await Challenge_utils.DB_ChallPostsearch({});
     const { posts, totalPages } = paginate(0, allPosts);
     res.status(200).send({ posts, totalPages });
   } catch (e) {
-    console.log(e);
-    res.status(404).send({ success: false, error: "Cant create post" });
+    res.status(404).send({ success: false, error: e });
   }
 })
+
+//Eliminacion de un Post
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletePost = await Challenge_utils.DB_ChallPostdestroy(id);
+    const allPosts = await Challenge_utils.DB_ChallPostsearch({});
+    const { posts, totalPages } = paginate(0, allPosts);
+    res.status(200).send({ posts, totalPages, success: true });
+  } catch (e) {
+    res.status(404).send({ success: false, error: "Cant delete post" });
+  }
+});
+
+//Edicion de post
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatePost = await Challenge_utils.DB_ChallPostedit(id, req.body);
+
+    const allPosts = await Challenge_utils.DB_ChallPostsearch({});
+    const { posts, totalPages } = paginate(0, allPosts);
+    res.status(200).send({ posts, totalPages, success: true });
+  } catch (e) {
+    res.status(404).send({ success: false, error: "Cant apply changes" });
+  }
+});
 
 
 
