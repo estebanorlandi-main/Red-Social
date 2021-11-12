@@ -37,10 +37,28 @@ export default function Challenge(props) {
   const [testCases, setTestCases] = useState([]);
   const [inputs, setInputs] = useState([]);
 
+  // const submitCode = () => {
+  //   axios
+  //     .get("http://localhost:3001/challenge/comment/atalesam", {
+  //       code,
+  //       username: "atalesam",
+  //       postid: 1,
+  //       description: "asd",
+  //     })
+  //     .then(({ data }) => setTestCases([data.passOrFail]))
+  //     .catch((e) => console.log(e));
+  // };
+
   const submitCode = () => {
     axios
-      .post("http://localhost:3001/python", { code })
-      .then(({ data }) => setTestCases([data.passOrFail]));
+      .get("http://localhost:3001/challenge/comment/atalesam", {
+        code,
+        username: "atalesam",
+        postid: 1,
+        description: "asd",
+      })
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
   };
 
   const handleSelect = (e) => {
@@ -84,7 +102,7 @@ export default function Challenge(props) {
             className={styles.CodeMirror}
             options={{
               theme: "dracula",
-              mode: "javascript",
+              mode: "xml",
               keyMap: "sublime",
               autoCloseTags: true,
               autoCloseBrackets: true,
