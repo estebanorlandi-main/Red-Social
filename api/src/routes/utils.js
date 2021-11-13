@@ -171,6 +171,9 @@ const DB_Postsearch = async ({ username, id }) => {
   try {
     if (username === undefined && id === undefined) {
       var post_search = await Post.findAll({
+        where: {
+          ban:false
+        },
         include: [
           { model: User, attributes: ["image", "username"] },
           {
@@ -191,6 +194,7 @@ const DB_Postsearch = async ({ username, id }) => {
       var post_search = await Post.findOne({
         where: {
           idPost: id,
+          ban:false
         },
         include: [{ model: User, attributes: ["image", "username"] }, Comment],
         order: [["createdAt", "DESC"]],
@@ -201,6 +205,7 @@ const DB_Postsearch = async ({ username, id }) => {
       var post_search = await Post.findAll({
         where: {
           userId: userDB.id,
+          ban: false
         },
         include: [{ model: User, attributes: ["image", "username"] }, Comment],
         order: [["createdAt", "DESC"]],
@@ -449,10 +454,16 @@ const BD_banUser = async (username) => {
 
 const BD_loginBan = async (username) => {
   const user = await User.findOne({ where:{username: username}})
-
+  const day = new Date()
   if(user.strike?.length === 3){
     return {error: 'You are temporarily suspended'};
   }
+  if(user.dayBan !== null){
+    if(day <user.dayBan){
+    return {};
+    }
+  }
+  user.dayBan = null
   return {}
 }
 
