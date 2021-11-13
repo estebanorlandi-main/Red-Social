@@ -6,7 +6,7 @@ import { removeProfile } from "../../Redux/actions/Users";
 import Post from "../../components/Post/Post";
 
 import { getUser } from "../../Redux/actions/Users";
-import { updateUser } from "../../Redux/actions/Session";
+import { conversation, updateUser } from "../../Redux/actions/Session";
 import validate from "../../utils/validate";
 import styles from "./Profile.module.css";
 import Select from "react-select";
@@ -75,131 +75,148 @@ export default function Profile(props) {
     setEditar(false);
   };
 
+  const sendMessage = () => {
+    if (session.username && profile.username !== session.username) {
+      dispatch(conversation(session.username, profile.username));
+    }
+  };
+
   let git = profile.gitaccount && profile.gitaccount.split("/");
   git = git && git[git.length - 1];
 
-  console.log(profile)
+  console.log(profile);
   return profile ? (
     <div>
-    {profile.strike?.length === 3? (<div><img src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png"/></div>) :
-    <main className={styles.container}>
-      <div className={styles.left}>
-        <section>
-          <div className={styles.tags}>
-            {profile.tags &&
-              profile.tags
-                .filter((tag) => tag)
-                .map((tag, i) => (
-                  <span key={i} className={styles.tag}>
-                    {tag}
-                  </span>
-                ))}
-          </div>
-          {myProfile && editar ? (
-            <button onClick={handleSubmit}>Change</button>
-          ) : (
-            ""
-          )}
-          {myProfile ? (
-            <button
-              className={styles.edit}
-              onClick={() => setEditar((old) => !old)}
-            >
-              <BsFillPencilFill style={{ color: "#C94F4F" }} />
-              Edit
-            </button>
-          ) : (
-            ""
-          )}
-
-          <img className={styles.image} src={profile.image || userimg} alt="" />
-
-          {myProfile && editar ? (
-            <form>
-              <label>
-                <div className="input-group">
-                  <input
-                    name="name"
-                    onChange={handleChange}
-                    value={inputs.name}
-                    placeholder={session.name}
-                  />
-                </div>
-              </label>
-              <span>{errors.name}</span>
-
-              <label>
-                <div className="input-group">
-                  <input
-                    name="lastname"
-                    onChange={handleChange}
-                    value={inputs.lastname}
-                    placeholder={session.lasnName}
-                  />
-                </div>
-              </label>
-              <span>{errors.lastname}</span>
-            </form>
-          ) : (
-            <p className={styles.name}>
-              {profile.name} {profile.lastname}
-            </p>
-          )}
-
-          <p className={styles.email}>{profile.email}</p>
-
-          <a className={styles.github} href={profile.gitaccount}>
-            {git}
-          </a>
-
-          {myProfile && editar ? (
-            <Select
-              onChange={handleSelect}
-              className={styles.select_container}
-              options={options}
-              styles={selectStyles}
-              isMulti
-            />
-          ) : (
-            ""
-          )}
-        </section>
-
-        <section>
-          <h3>About</h3>
-          {myProfile && editar ? (
-            <label>
-              <div className="input-group">
-                <textarea
-                  name="about"
-                  onChange={handleChange}
-                  value={inputs.about}
-                  placeholder={session.about}
-                ></textarea>
+      {profile.strike?.length === 3 ? (
+        <div>
+          <img src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png" />
+        </div>
+      ) : (
+        <main className={styles.container}>
+          <div className={styles.left}>
+            <section>
+              <div className={styles.tags}>
+                {profile.tags &&
+                  profile.tags
+                    .filter((tag) => tag)
+                    .map((tag, i) => (
+                      <span key={i} className={styles.tag}>
+                        {tag}
+                      </span>
+                    ))}
               </div>
-            </label>
-          ) : (
-            <p>{profile.about}</p>
-          )}
-        </section>
-        <section className={styles.posts}>
-          {profile.posts
-            ? profile.posts.map((post) => (
-                <Post
-                  customClass={styles.post}
-                  post={{ ...post, user: profile }}
+              {myProfile && editar ? (
+                <button onClick={handleSubmit}>Change</button>
+              ) : (
+                ""
+              )}
+              {myProfile ? (
+                <button
+                  className={styles.edit}
+                  onClick={() => setEditar((old) => !old)}
+                >
+                  <BsFillPencilFill style={{ color: "#C94F4F" }} />
+                  Edit
+                </button>
+              ) : (
+                ""
+              )}
+
+              <img
+                className={styles.image}
+                src={profile.image || userimg}
+                alt=""
+              />
+
+              {myProfile && editar ? (
+                <form>
+                  <label>
+                    <div className="input-group">
+                      <input
+                        name="name"
+                        onChange={handleChange}
+                        value={inputs.name}
+                        placeholder={session.name}
+                      />
+                    </div>
+                  </label>
+                  <span>{errors.name}</span>
+
+                  <label>
+                    <div className="input-group">
+                      <input
+                        name="lastname"
+                        onChange={handleChange}
+                        value={inputs.lastname}
+                        placeholder={session.lasnName}
+                      />
+                    </div>
+                  </label>
+                  <span>{errors.lastname}</span>
+                </form>
+              ) : (
+                <p className={styles.name}>
+                  {profile.name} {profile.lastname}
+                </p>
+              )}
+
+              <p className={styles.email}>{profile.email}</p>
+
+              <a className={styles.github} href={profile.gitaccount}>
+                {git}
+              </a>
+
+              <button onClick={sendMessage}>Send Message</button>
+
+              {myProfile && editar ? (
+                <Select
+                  onChange={handleSelect}
+                  className={styles.select_container}
+                  options={options}
+                  styles={selectStyles}
+                  isMulti
                 />
-              ))
-            : ""}
-        </section>
-      </div>
-      <div className={styles.right}>
-        <section>
-          <h3>Recomendaciones?</h3>
-        </section>
-      </div>
-    </main>
-  }</div>
+              ) : (
+                ""
+              )}
+            </section>
+
+            <section>
+              <h3>About</h3>
+              {myProfile && editar ? (
+                <label>
+                  <div className="input-group">
+                    <textarea
+                      name="about"
+                      onChange={handleChange}
+                      value={inputs.about}
+                      placeholder={session.about}
+                    ></textarea>
+                  </div>
+                </label>
+              ) : (
+                <p>{profile.about}</p>
+              )}
+            </section>
+            <section className={styles.posts}>
+              {profile.posts
+                ? profile.posts.map((post) => (
+                    <Post
+                      customClass={styles.post}
+                      post={{ ...post, user: profile }}
+                    />
+                  ))
+                : ""}
+            </section>
+          </div>
+          <div className={styles.right}>
+            <section>
+              <h3>Recomendaciones?</h3>
+            </section>
+          </div>
+        </main>
+      )}
+    </div>
   ) : (
     ""
   );

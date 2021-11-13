@@ -121,7 +121,11 @@ function Home(props) {
             )}
 
             <div className={styles.newPostOpen}>
-              <UserCard toRight showImage />
+              <UserCard
+                toRight
+                showImage
+                user={{ user: session.username, image: session.image }}
+              />
               <button
                 className={styles.createPost}
                 onClick={() => setCreatePost(true)}

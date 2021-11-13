@@ -10,10 +10,9 @@ export default function UserCard({
   showImage,
   toLeft,
   toRight,
+  user,
   other,
 }) {
-  const user = useSelector((state) => state.sessionReducer);
-
   const ImgElement = (
     <img
       className={user.image ? "" : styles.noImage}

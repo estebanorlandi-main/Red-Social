@@ -35,18 +35,20 @@ export default function Navbar(props) {
   useEffect(() => {
     if (Object.keys(socket).length) {
       socket.on("getNotification", (data) => {
-        
-        if(data.type === 1){
-            setNotifications((prev) => {
-              if(!prev.find(notif => notif.senderName === data.senderName && notif.id === data.id)){
-                return [data, ...prev];
-              } else{
-                return [...prev];
-              }
-              
-            });
-        
-        } else{
+        if (data.type === 1) {
+          setNotifications((prev) => {
+            if (
+              !prev.find(
+                (notif) =>
+                  notif.senderName === data.senderName && notif.id === data.id
+              )
+            ) {
+              return [data, ...prev];
+            } else {
+              return [...prev];
+            }
+          });
+        } else {
           setNotifications((prev) => [data, ...prev]);
         }
       });
@@ -66,14 +68,12 @@ export default function Navbar(props) {
     history.push("/home");
   };
 
-
-
   const handleRead = () => {
     setNotifications([]);
     setOpen(false);
   };
 
-  const handleClick = () => {
+  const handleClick = (e) => {
     setOpen(!open);
 
     if (!open) {
@@ -126,24 +126,20 @@ export default function Navbar(props) {
                   <BiSupport className={styles.icon} />
                 </NavLink>
               </li>
-              <li onClick={() => handleClick()} style={{ cursor: "pointer" }}>
-                <MdNotifications className={styles.icon} />
-                {notifications.length > 0 && (
-                  <div className={styles.counter}>{notifications.length}</div>
-                )}
+              <li>
+                <button onClick={handleClick} className={styles.nav__link}>
+                  <MdNotifications className={styles.icon} />
+                  {notifications.length > 0 && (
+                    <div className={styles.counter}>{notifications.length}</div>
+                  )}
+                  {open && (
+                    <div className={styles.notifications}>
+                      {notifications.map((n) => displayNotification(n))}
+                      <button onClick={handleRead}>Mark as read</button>
+                    </div>
+                  )}
+                </button>
               </li>
-              {open && (
-                <div className={styles.notifications}>
-                  {notifications.map((notification, i) => (
-                  
-                  <li key={i}>
-                  <Notification notification={notification} />
-                  </li>
-                  
-                  ))}
-                  <button onClick={handleRead}>Mark as read</button>
-                </div>
-              )}
             </>
           )}
         </ul>
@@ -156,7 +152,12 @@ export default function Navbar(props) {
             (user.username || admin.admin === true ? (
               <div className={styles.profile__container}>
                 <button onClick={handleMenu} className={styles.profile}>
-                  <UserCard toLeft showName showImage />
+                  <UserCard
+                    toLeft
+                    showName
+                    showImage
+                    user={{ username: user.username, image: user.image }}
+                  />
                 </button>
                 <div
                   className={

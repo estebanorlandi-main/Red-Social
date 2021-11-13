@@ -232,6 +232,7 @@ function Post({ post, customClass, user, socket, admin }) {
           toRight
           showImage
           showName
+          user={{ username: post.user.username }}
           other={`Posted ${TimeSpan}hr ago`}
         />
       </Link>
