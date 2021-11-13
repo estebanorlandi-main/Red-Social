@@ -92,7 +92,7 @@ function Post({ post, customClass, user, socket, admin }) {
         userImage: session.image,
         receiverName: post.user.username,
         id: post.idPost,
-        type: 1
+        type: 1,
       });
     }
   }, [liked]);
@@ -209,7 +209,7 @@ function Post({ post, customClass, user, socket, admin }) {
                 handleDelete();
               }}
             >
-              <GoTrashcan style={{ color: "#ff5555" }} />
+              <GoTrashcan style={{ color: "#fff" }} />
               Delete
             </button>
           </div>
@@ -238,23 +238,33 @@ function Post({ post, customClass, user, socket, admin }) {
       </Link>
       <div className={styles.postBody}>
         {editMode ? (
-          <input
-            value={edit.title}
-            name="title"
-            onChange={(e) => handleChange(e)}
-          />
+          <label>
+            <div className="input-group">
+              <input
+                value={edit.title}
+                name="title"
+                onChange={(e) => handleChange(e)}
+              />
+            </div>
+          </label>
         ) : (
           <h3>{post.title}</h3>
         )}
 
         {editMode ? (
           <div>
-            <textarea
-              value={edit.content}
-              name="content"
-              onChange={(e) => handleChange(e)}
-            />
-            <button onClick={submitEdit}>Submit</button>
+            <label>
+              <div className="input-group">
+                <textarea
+                  value={edit.content}
+                  name="content"
+                  onChange={(e) => handleChange(e)}
+                />
+              </div>
+            </label>
+            <button className={styles.submitEdit} onClick={submitEdit}>
+              Submit
+            </button>
           </div>
         ) : (
           <div

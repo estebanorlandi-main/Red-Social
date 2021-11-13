@@ -44,24 +44,33 @@
 .optionsMenu {
   position: absolute;
   right: 0;
+  top: 2rem;
   background-color: #fff;
-  box-shadow: 0 0.5em 1em #0001;
+  border: 1px solid #f0f0f0;
   padding: 1em;
-  border-radius: 1em;
+  border-radius: 0;
 }
-.optionsMenu > button {
+.optionsMenu button {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
   background-color: transparent;
-
+  padding: 0.5em 1em;
+  font-size: 0.9rem;
   border: none;
-  margin: 1em 0 0 0;
+  margin: 0.5em 0 0 0;
   width: 100%;
 }
 
+.optionsMenu svg {
+  width: 1rem;
+  height: 1rem;
+}
+
 .danger {
-  color: #f55;
+  background-color: #f55 !important;
+  color: #fff;
 }
 
 .hide {
@@ -88,6 +97,12 @@
   width: 100%;
 }
 
+.postBody label,
+.postBody button {
+  display: block;
+  margin: 1rem 0 0 0 !important;
+}
+
 .mainContent {
   position: relative;
   max-height: 6rem;
@@ -103,8 +118,8 @@
 .text {
   word-break: break-all;
   font-size: 1rem;
-  line-height: 1.45rem;
-  margin: 0.5em 0 0 0;
+  line-height: 1rem;
+  padding: 0.5em 0 0 0;
 }
 
 .seeMore {
@@ -115,16 +130,19 @@
   padding: 0.5em 0.5em 0 0.5em;
   border: none;
   background-color: var(--c-lightPost);
-  color: var(--c-light-blue);
+  color: var(--c-blue);
   font-size: 0.9rem;
   cursor: pointer;
   width: max-content;
+  transition: all 0.25s;
 }
+
 .seeMore > span {
   margin-right: 0.25rem;
 }
+
 .seeMore:hover {
-  color: var(--c-enfasis);
+  color: var(--c-hard-blue);
 }
 
 .postImage {
@@ -245,4 +263,22 @@
 }
 .users {
   color: #888;
+}
+
+.submitEdit {
+  border: none;
+  padding: 0.75em;
+  border-radius: 5em;
+  text-align: center;
+  color: var(--c-blue);
+  font-weight: 500;
+  font-size: 1rem;
+  background-color: transparent;
+  border: 2px solid var(--c-blue);
+  transition: all 0.25s;
+}
+
+.submitEdit:hover {
+  background-color: var(--c-blue);
+  color: #fff;
 }
