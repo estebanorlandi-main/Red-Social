@@ -146,7 +146,7 @@ function Home(props) {
           <ul>
             {conversations.map(({ members }) => (
               <li>
-                <p>{members[0]}</p> <p>{members[1]}</p>
+                <p>{members.filter((member) => member !== session.username)}</p>
               </li>
             ))}
           </ul>

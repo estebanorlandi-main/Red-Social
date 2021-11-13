@@ -11,6 +11,7 @@ import validate from "../../utils/validate";
 import styles from "./Profile.module.css";
 import Select from "react-select";
 import { BsFillPencilFill } from "react-icons/bs";
+import Tags from "../../components/Tags/Tags";
 
 const selectStyles = {
   control: (styles) => ({ ...styles, width: "100%" }),
@@ -47,10 +48,10 @@ export default function Profile(props) {
   }, [dispatch, props.username]);
 
   useEffect(() => {
-    if(!Object.keys(socket).length){
+    if (!Object.keys(socket).length) {
       dispatch(socketConnection(session.username));
-    } 
-  }, [])
+    }
+  }, []);
 
   const [inputs, setInputs] = useState({
     name: session.name || "",
@@ -103,14 +104,7 @@ export default function Profile(props) {
           <div className={styles.left}>
             <section>
               <div className={styles.tags}>
-                {profile.tags &&
-                  profile.tags
-                    .filter((tag) => tag)
-                    .map((tag, i) => (
-                      <span key={i} className={styles.tag}>
-                        {tag}
-                      </span>
-                    ))}
+                <Tags tags={profile.tags} />
               </div>
               {myProfile && editar ? (
                 <button onClick={handleSubmit}>Change</button>
