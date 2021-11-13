@@ -5,7 +5,7 @@ import { removeProfile } from "../../Redux/actions/Users";
 
 import Post from "../../components/Post/Post";
 
-import { getUser } from "../../Redux/actions/Users";
+import { getUser, socketConnection } from "../../Redux/actions/Users";
 import { conversation, updateUser } from "../../Redux/actions/Session";
 import validate from "../../utils/validate";
 import styles from "./Profile.module.css";
@@ -37,6 +37,7 @@ export default function Profile(props) {
 
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
+  const socket = useSelector((state) => state.usersReducer.socket);
 
   const myProfile = session.username === profile.username;
 
@@ -44,6 +45,12 @@ export default function Profile(props) {
     dispatch(getUser(props.username));
     return () => dispatch(removeProfile());
   }, [dispatch, props.username]);
+
+  useEffect(() => {
+    if(!Object.keys(socket).length){
+      dispatch(socketConnection(session.username));
+    } 
+  }, [])
 
   const [inputs, setInputs] = useState({
     name: session.name || "",
@@ -204,6 +211,7 @@ export default function Profile(props) {
                     <Post
                       customClass={styles.post}
                       post={{ ...post, user: profile }}
+                      socket={socket}
                     />
                   ))
                 : ""}

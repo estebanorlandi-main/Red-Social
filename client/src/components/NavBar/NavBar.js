@@ -132,6 +132,16 @@ export default function Navbar(props) {
                   {notifications.length > 0 && (
                     <div className={styles.counter}>{notifications.length}</div>
                   )}
+                  {open && (
+                    <div className={styles.notifications}>
+                      {notifications.map((notification, i) => (
+                        <li key={i}>
+                          <Notification notification={notification} />
+                        </li>
+                      ))}
+                      <button onClick={handleRead}>Mark as read</button>
+                    </div>
+                  )}
                 </button>
                 {open && (
                   <div className={styles.notifications}>

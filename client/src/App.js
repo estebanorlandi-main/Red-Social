@@ -8,18 +8,20 @@ import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import NavBar from "./components/NavBar/NavBar.js";
 
+import Tag from "./components/Tag/Tag.jsx";
+
 import Messenger from "./Pages/Messenger/Messenger";
 import Support from "./components/Support/Support";
 
 //Admin
 import AdminLogin from "./components/Admin/AdminLogin";
 import AdminSupport from "./components/Admin/AdminSupport";
-import HomeAdmin from "./components/Admin/HomeAdmin/HomeAdmin"
-import ProfileAdmin from "./components/Admin/ProfileAdmin/ProfileAdmin"
+import HomeAdmin from "./components/Admin/HomeAdmin/HomeAdmin";
+import ProfileAdmin from "./components/Admin/ProfileAdmin/ProfileAdmin";
 
 import Popup from "./components/Support/SupportLocalPopUp.jsx";
 
-import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx"
+import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx";
 // Variables CSS
 import "./App.css";
 import UserCard from "./components/UserCard/UserCard";
@@ -75,15 +77,15 @@ function App() {
         <Route path="/loginAdmin" component={AdminLogin} />
         <Route path="/supportAdmin" component={AdminSupport} />
         <Route path="/challenge" component={Challenge} />
-        <Route path="/homeAdmin" component={HomeAdmin}/>
-        <Route 
-          path="/profileAdmin/:username" 
+        <Route path="/homeAdmin" component={HomeAdmin} />
+        <Route
+          path="/profileAdmin/:username"
           render={({
-            match:{
-              params: {username},
+            match: {
+              params: { username },
             },
-          }) => <ProfileAdmin username={username}/>}
-          />
+          }) => <ProfileAdmin username={username} />}
+        />
 
         <Route exact path="/chat/test" component={Chat} />
         <Route exact path="/auth/reset-password" component={ForgetPassword} />

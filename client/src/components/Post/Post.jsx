@@ -52,7 +52,7 @@ const parseContent = (text) => {
   return parsed;
 };
 
-function Post({ post, customClass, user, socket, admin }) {
+function Post({ post, customClass, socket, admin }) {
   const dispatch = useDispatch();
 
   const page = useSelector(({ postsReducer: { page } }) => page);
@@ -88,7 +88,7 @@ function Post({ post, customClass, user, socket, admin }) {
   useEffect(() => {
     if (liked) {
       socket.emit("sendNotification", {
-        senderName: user,
+        senderName: session.username,
         userImage: session.image,
         receiverName: post.user.username,
         id: post.idPost,
@@ -121,7 +121,7 @@ function Post({ post, customClass, user, socket, admin }) {
     if (commentError) return;
     dispatch(commentPost(post.idPost, newComment, session.username));
     socket.emit("sendNotification", {
-      senderName: user,
+      senderName: session.username,
       userImage: session.image,
       receiverName: post.user.username,
       type: 2,
