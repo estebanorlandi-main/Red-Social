@@ -1,0 +1,12 @@
+.notification {
+    padding: 5px;
+    font-size: 14px;
+    height: 44px;
+    max-width: max-content;
+    display: flex;
+    align-items: center;
+  }
+
+  .img{
+    width: 24px;
+  }

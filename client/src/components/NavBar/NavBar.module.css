@@ -200,7 +200,8 @@
 
 .notifications {
   position: absolute;
-  top: 50px;
+  width: max-content;
+  top: 60px;
   right: 0;
   background-color: white;
   color: black;
@@ -210,10 +211,6 @@
   padding: 10px;
 }
 
-.notification {
-  padding: 5px;
-  font-size: 14px;
-}
 
 @media screen and (max-width: 650px) {
   .menu {
