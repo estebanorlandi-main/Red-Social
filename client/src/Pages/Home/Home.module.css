@@ -1,27 +1,19 @@
 .home {
   display: grid;
-  grid-template-columns: auto 2fr auto;
+  grid-template-columns: auto 45vw auto;
+  gap: 8rem;
   margin: 0 auto;
-  gap: 3em;
+  width: 100vw;
 }
 
 .home li {
   list-style: none;
 }
 
-.home section:first-child {
-  display: flex;
-  flex-flow: column wrap;
-}
-
-.home section > div {
-  padding: 1em;
+.right,
+.left {
+  padding: 1rem;
   background-color: #fff;
-  width: 100%;
-}
-
-.sectionPosts {
-  margin: 0 auto;
 }
 
 .noScroll {
@@ -66,18 +58,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--c-light);
+  margin: 1em 0 0 0;
   text-align: center;
   font-size: 1.25rem;
   min-height: 7em;
 }
 
 .tags {
-  margin: 0.75em 1em;
+  margin: 1rem 0.5rem;
+}
+.tags li:not(:first-child) {
+  margin: 0.75rem 0 0 0;
 }
 .tag {
-  color: var(--c-blue) !important;
-  font-size: 1rem !important;
+  color: var(--c-blue);
+  font-size: 1rem;
 }
 
 .newPostOpen {
@@ -108,4 +103,34 @@
 .createPost:hover {
   outline: 2px solid var(--c-blue);
   color: var(--c-blue);
+}
+
+@media screen and (max-width: 1100px) {
+  .home {
+    grid-template-columns: 60vw auto;
+    gap: 5rem;
+  }
+  .center {
+    margin: 0 0 0 5rem;
+  }
+  .left {
+    display: none;
+  }
+}
+@media screen and (max-width: 800px) {
+  .home {
+    width: 75vw;
+    grid-template-columns: auto;
+    gap: 0;
+  }
+  .center {
+    margin: 0 auto;
+    width: 100%;
+  }
+  .left {
+    display: none;
+  }
+  .right {
+    display: none;
+  }
 }

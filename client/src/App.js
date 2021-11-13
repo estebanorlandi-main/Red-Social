@@ -8,8 +8,6 @@ import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import NavBar from "./components/NavBar/NavBar.js";
 
-import Tag from "./components/Tag/Tag.jsx";
-
 import Messenger from "./Pages/Messenger/Messenger";
 import Support from "./components/Support/Support";
 
@@ -40,8 +38,9 @@ function App() {
   const isLanding = useLocation().pathname === "/";
 
   const errors = useSelector((state) => state.errorsReducer);
+  const session = useSelector((state) => !!state.sessionReducer.username);
 
-  const handleDelete = (id) => dispatch(removeError());
+  const handleDelete = (id) => dispatch(removeError(id));
 
   return (
     <div className="App">
@@ -57,7 +56,7 @@ function App() {
         ""
       )}
 
-      {!isLanding && (
+      {!isLanding && session && (
         <Link className="message" to="/messenger">
           <BiMessageAltDetail
             style={{ margin: "0", width: "1.5em", height: "1.5em" }}

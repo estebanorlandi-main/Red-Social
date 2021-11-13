@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import UserCard from "../UserCard/UserCard";
+import Tags from "../Tags/Tags";
 
 import {
   commentPost,
@@ -218,11 +219,7 @@ function Post({ post, customClass, socket, admin }) {
         ""
       )}
 
-      <ul className={styles.tags}>
-        {post.tag.map((tag, i) => (
-          <li key={i}>{tag}</li>
-        ))}
-      </ul>
+      <Tags tags={post.tag} />
 
       <Link
         className={styles.userContainer}
@@ -298,25 +295,16 @@ function Post({ post, customClass, socket, admin }) {
       )}
       <div className={styles.actions}>
         <button className={!session.username ? "" : ""} onClick={handleLike}>
-          {post.userLikes.filter(
-            (like) => like.user.username === session.username
-          ).length ? (
+          {liked ? (
             <MdFavorite className={styles.icons} color="#f55" />
           ) : (
             <MdFavoriteBorder className={styles.icons} />
           )}
           {post.userLikes.length}
-          <span className={styles.users}>
-            {post.userLikes.length
-              ? "| " + post.userLikes[post.userLikes.length - 1].user.username
-              : ""}
-          </span>
         </button>
+
         <button>
           <MdOutlineModeComment /> {post.comments && post.comments.length}
-        </button>
-        <button>
-          <MdShare /> Share
         </button>
       </div>
 
