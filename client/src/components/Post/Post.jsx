@@ -66,12 +66,14 @@ function Post({ post, customClass, socket, admin }) {
       ? true
       : false
   );
-
+  const [ currentPost, setCurrentPost ] = useState(null)
+  
   const [newComment, setNewComment] = useState("");
 
   const [commentError, setCommentError] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editErrors, setEditErrors] = useState({});
+  const [reload, setReload] = useState(false)
 
   const [options, setOptions] = useState(false);
 
@@ -85,6 +87,25 @@ function Post({ post, customClass, socket, admin }) {
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
 
+  // useEffect(() => {
+  //   if(currentPost){
+  //     post = currentPost
+
+  //     // console.log(post)
+  //     setReload((prev) => !prev)
+  //   }
+  // }, [currentPost])
+
+  useEffect(() => {
+    if(Object.keys(socket).length){
+      socket.on("getPost", (data) => {
+        if(post.idPost === data.idPost){
+            setCurrentPost(data)
+        }
+      });
+    } 
+  }, [socket]);
+  
   useEffect(() => {
     if (liked) {
       socket.emit("sendNotification", {
@@ -119,7 +140,7 @@ function Post({ post, customClass, socket, admin }) {
   const submitComment = (e) => {
     e.preventDefault();
     if (commentError) return;
-    dispatch(commentPost(post.idPost, newComment, session.username));
+    dispatch(commentPost(post.idPost, newComment, session.username, socket));
     socket.emit("sendNotification", {
       senderName: session.username,
       userImage: session.image,
@@ -141,7 +162,7 @@ function Post({ post, customClass, socket, admin }) {
 
   const handleLike = (e) => {
     if (session.username) {
-      dispatch(likePost({ postIdPost: post.idPost, userId: session.username }));
+      dispatch(likePost({ postIdPost: post.idPost, userId: session.username }, socket));
 
       liked ? setLiked(false) : setLiked(true);
     }
@@ -169,6 +190,9 @@ function Post({ post, customClass, socket, admin }) {
 
   let test;
   if (post.content) test = parseContent(post.content);
+
+  
+  console.log(currentPost)
 
   return (
     <div className={styles.container + ` ${customClass}`}>
@@ -295,15 +319,20 @@ function Post({ post, customClass, socket, admin }) {
           ) : (
             <MdFavoriteBorder className={styles.icons} />
           )}
-          {post.userLikes.length}
+          { currentPost ? currentPost.userLikes.length: post.userLikes.length }
           <span className={styles.users}>
-            {post.userLikes.length
+            { currentPost ?
+            currentPost.userLikes.length
+            ? "| " + currentPost.userLikes[currentPost.userLikes.length - 1].user.username
+            : ""
+            :
+            post.userLikes.length
               ? "| " + post.userLikes[post.userLikes.length - 1].user.username
               : ""}
           </span>
         </button>
         <button>
-          <MdOutlineModeComment /> {post.comments && post.comments.length}
+          <MdOutlineModeComment /> {currentPost ? currentPost.comments && currentPost.comments.length : post.comments && post.comments.length}
         </button>
         <button>
           <MdShare /> Share
@@ -344,7 +373,19 @@ function Post({ post, customClass, socket, admin }) {
         ""
       )}
 
-      {post.comments && post.comments.length ? (
+      { currentPost ?
+      currentPost.comments && currentPost.comments.length ? (
+        <ul className={styles.comments}>
+          <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
+          {currentPost.comments.map((comment, i) =>
+            i < 3 ? <Comment key={i} comment={comment} /> : <></>
+          )}
+        </ul>
+      ) : (
+        ""
+      )
+      :
+      post.comments && post.comments.length ? (
         <ul className={styles.comments}>
           <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
           {post.comments.map((comment, i) =>
