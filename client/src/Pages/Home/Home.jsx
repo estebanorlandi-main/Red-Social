@@ -18,7 +18,7 @@ function Home(props) {
   const session = useSelector((state) => state.sessionReducer);
 
   const socket = useSelector((state) => state.usersReducer.socket);
-  console.log(socket);
+  // console.log(socket);
   const [page, totalPages] = useSelector(
     ({ postsReducer: { page, totalPages } }) => [page, totalPages]
   );
@@ -136,7 +136,7 @@ function Home(props) {
           </li>
           {posts.map((post, i) => (
             <li key={i}>
-              <Post post={post} socket={socket} user={session.username} />
+              <Post post={post} socket={socket} />
             </li>
           ))}
 
