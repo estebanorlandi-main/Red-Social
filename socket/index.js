@@ -38,6 +38,13 @@ io.on("connection", (socket) => {
     });
   });
 
+   //send and get message
+   socket.on("reloadPostInfo", (post) => {
+    console.log(post);
+
+    io.emit("getPost", post.post);
+  });
+
   //send about a notification
   socket.on("sendNotification", ({ senderName, receiverName, id, userImage, type }) => {
     const receiver = getUser(receiverName);
