@@ -63,6 +63,7 @@ export default function NewPost() {
     if (!Object.values(errores).filter((error) => error).length) {
       const formData = new FormData();
 
+      if(session.dayBan === null){
       formData.append("title", data.title);
       formData.append("content", data.content);
       formData.append("image", data.image);
@@ -70,7 +71,9 @@ export default function NewPost() {
       formData.append("username", data.username);
 
       dispatch(createPost(formData));
-
+      }else{
+        alert('You are banned, therefore you cannot post anything')
+      }
       setData({
         title: "",
         content: "",
@@ -83,7 +86,7 @@ export default function NewPost() {
       //dispatch(updatePage(true, obj.payload.posts));
     }
   }
-
+  console.log(session.dayBan)
   return (
     <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
       <h3>{data.username}</h3>

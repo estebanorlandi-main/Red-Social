@@ -200,8 +200,6 @@ function PostAdmin({ post, customClass, user, admin }) {
         ""
       )}
       
-      {post.ban === false?
-      <div>
         <ul className={styles.tags}>
         {post.tag.map((tag, i) => (
           <li key={i}>{tag}</li>
@@ -331,8 +329,6 @@ function PostAdmin({ post, customClass, user, admin }) {
         ""
       )} 
       </div>
-      : ''}
-    </div>
   );
 }
 

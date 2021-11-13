@@ -17,7 +17,8 @@ const sanitizeUser = (data) => {
       about: user.about,
       tags: user.tags,
       posts: user.posts,
-      strike: user.strike
+      strike: user.strike,
+      dayBan:user.dayBan
     }));
   }
 
@@ -31,7 +32,8 @@ const sanitizeUser = (data) => {
     about: data.about,
     tags: data.tags,
     posts: data.posts,
-    strike: data.strike
+    strike: data.strike,
+    dayBan:data.dayBan
   };
 };
 
