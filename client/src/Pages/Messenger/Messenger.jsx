@@ -76,7 +76,7 @@ export default function Messenger() {
   useEffect(() => {
     const getMessages = async () => {
       try {
-        console.log(currentChat.id);
+        //console.log(currentChat.id);
         const res = await axios.get(
           "http://localhost:3001/message/" + currentChat?.id
         );
