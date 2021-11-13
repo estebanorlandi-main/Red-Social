@@ -211,11 +211,22 @@
   padding: 10px;
 }
 
-
 @media screen and (max-width: 650px) {
   .menu {
     display: none;
   }
+}
+
+.markRead {
+  background-color: #89b2ff;
+  color: #fff;
+  margin: 0 0 1em 0;
+  border: none;
+  padding: 0.5em;
+  transition: all 0.25s;
+}
+.markRead:hover {
+  background-color: var(--c-blue);
 }
 
 .landing * {

@@ -6,11 +6,12 @@ import styles from "./UserCard.module.css";
 import image from "../../images/userCard.svg";
 
 export default function UserCard({
+  user,
   showName,
   showImage,
   toLeft,
   toRight,
-  user,
+  small,
   other,
 }) {
   const ImgElement = (
@@ -22,7 +23,7 @@ export default function UserCard({
   );
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${small ? styles.small : ""}`}>
       {toRight && showImage && ImgElement}
       <div className={styles.column}>
         {showName && <span className={styles.username}>{user.username}</span>}
