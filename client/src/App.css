@@ -6,13 +6,16 @@
 
   --hue-blue: 198;
 
-  --c-light-blue: hsl(198, 45%, 65%);
-  --c-blue: hsl(198, 40%, 49%);
+  --c-soft-blue: hsl(226deg, 100%, 95%);
+  --c-blue: hsl(226deg, 100%, 70%);
+  --c-hard-blue: hsl(226deg, 100%, 50%);
+  --bs-blue: 0 0.25rem 0.25rem hsla(226deg, 100%, 50%, 25%);
+
   --c-red: #c94f4f;
   --c-mix: #7f69a3;
   --c-enfasis: #a04972;
 
-  background-color: #f3f2ef;
+  background-color: #f5f5f5;
   min-height: 100vh;
 }
 
@@ -51,6 +54,7 @@ form > h1 {
 label {
   margin: 1em 0 0 0;
   font-size: 0.9rem;
+  width: 100%;
 }
 
 label input,
@@ -89,7 +93,7 @@ button[type="submit"] {
   font-size: 0.9rem;
   width: 100%;
   border: 1px solid #ccc;
-  background-color: #fff !important;
+  background-color: #fff;
   padding: 0 0 0 1em;
   border-radius: 4px;
   overflow: hidden;
@@ -120,28 +124,25 @@ button {
 a {
   color: #1e1e1e;
   text-decoration: none;
-  font-size: 0.9rem !important;
+  font-size: 0.9rem;
 }
 
 .message {
   display: flex;
   align-items: center;
   justify-items: center;
-  width: 10em;
+  width: max-content;
   height: 3em;
-  border-radius: 1em 1em 0 0;
+  border-radius: 0.25rem 0.25rem 0 0;
   position: fixed;
   bottom: 0;
-  right: 7em;
+  right: 1rem;
   z-index: 999;
   background-color: #fff;
-  padding: 1em;
-  box-shadow: 0 0 0.5em #0002;
+  padding: 1rem 4rem;
   transition: all 0.5s ease;
-}
-
-.message:hover {
-  box-shadow: 0 0.5em 0.75em #0005;
+  border: 2px solid var(--c-blue);
+  border-bottom: none;
 }
 
 .message > span {
@@ -154,4 +155,8 @@ a {
   width: 3em;
   height: 3em;
   border-radius: 100%;
+}
+
+.errors {
+  position: absolute;
 }

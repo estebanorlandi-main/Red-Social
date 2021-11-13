@@ -33,6 +33,21 @@
   padding: 1em;
 }
 
-.textarea {
+.container {
   resize: none;
+  border: none !important;
+}
+
+.uploadImage {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  max-height: 10rem;
+}
+
+.flex {
+  width: 100%;
+  display: flex;
+  gap: 1em;
+  align-items: center;
 }

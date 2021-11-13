@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Post from "../../components/Post/Post";
 import NewPost from "../../components/NewPost/NewPost";
 import { io, Socket } from "socket.io-client";
-//import UserCard from "../../components/UserCard/UserCard";
+import UserCard from "../../components/UserCard/UserCard";
 
 import { Link } from "react-router-dom";
 
@@ -12,14 +12,13 @@ import styles from "./Home.module.css";
 import { socketConnection } from "../../Redux/actions/Users";
 import { clearPosts, getPosts, updatePage } from "../../Redux/actions/Post";
 import axios from "axios";
-import { FaPlus } from "react-icons/fa";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
   const session = useSelector((state) => state.sessionReducer);
 
-  const socket = useSelector( (state) => state.usersReducer.socket)
-  console.log(socket)
+  const socket = useSelector((state) => state.usersReducer.socket);
+  // console.log(socket);
   const [page, totalPages] = useSelector(
     ({ postsReducer: { page, totalPages } }) => [page, totalPages]
   );
@@ -32,13 +31,12 @@ function Home(props) {
 
   useEffect(() => {
     dispatch(socketConnection(session.username));
-
   }, []);
 
   // useEffect(() => {
   //   if(Object.keys(socket).length){
   //     socket.emit("addUser", session.username);
-  //   } 
+  //   }
   // }, [socket, session.username]);
 
   const handleScroll = useCallback(() => {
@@ -67,28 +65,23 @@ function Home(props) {
 
   console.log(posts.length);
 
-  /*
   useEffect(() => {
     const getConversations = async () => {
       try {
         const res = await axios.get(
           "http://localhost:3001/conversation/" + session.username
         );
-        console.log(res.data);
         setConversations(res.data);
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     };
     getConversations();
   }, [session.username]);
-  */
 
   return (
     <div className={styles.home + ` ${createPost ? styles.noScroll : ""} `}>
-      <section>
+      <section className={styles.left}>
         <div className={styles.filters}>
-          <h3>Tags</h3>
+          <h3>My tags</h3>
           <ul className={styles.tags}>
             {session.tags && session.tags.length ? (
               session.tags.map((tag, i) => (
@@ -105,52 +98,57 @@ function Home(props) {
         </div>
       </section>
 
-      <section className={styles.sectionPosts}>
-        <ul>
-          <li>
-            {createPost ? (
-              <div
-                className={styles.newPost}
-                id="close"
-                onClick={(e) =>
-                  e.target.id === "close" ? setCreatePost((old) => false) : ""
-                }
-              >
-                <NewPost />
-              </div>
-            ) : (
-              ""
-            )}
+      <section className={styles.center}>
+        {createPost ? (
+          <div
+            className={styles.newPost}
+            id="close"
+            onClick={(e) =>
+              e.target.id === "close" ? setCreatePost((old) => false) : ""
+            }
+          >
+            <NewPost />
+          </div>
+        ) : (
+          ""
+        )}
 
-            <div className={styles.newPostOpen}>
-              <img className="avatar" src={session.image} alt="" />
-              <button
-                className={styles.createPost}
-                onClick={() => setCreatePost(true)}
-              >
-                Create Post
-              </button>
-            </div>
-          </li>
+        <div className={styles.newPostOpen}>
+          <UserCard
+            toRight
+            showImage
+            user={{ user: session.username, image: session.image }}
+          />
+          <button
+            className={styles.createPost}
+            onClick={() => setCreatePost(true)}
+          >
+            Create Post
+          </button>
+        </div>
+
+        <ul>
           {posts.map((post, i) => (
             <li key={i}>
-              <Post post={post} socket={socket} user={session.username}/>
+              <Post post={post} socket={socket} />
             </li>
           ))}
-
-          {totalPages > page && (
-            <li>
-              <div className={styles.cargando}>Cargando...</div>
-            </li>
-          )}
         </ul>
+
+        {totalPages > page && (
+          <div className={styles.cargando}>Cargando...</div>
+        )}
       </section>
 
-      <section>
+      <section className={styles.right}>
         <div>
-          <h3>Friends</h3>
+          <h3>Friends.</h3>
           <ul>
-            <li></li>
+            {conversations.map(({ members }) => (
+              <li>
+                <p>{members.filter((member) => member !== session.username)}</p>
+              </li>
+            ))}
           </ul>
         </div>
       </section>

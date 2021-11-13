@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import image from "../../images/userCard.png";
+import UserCard from "../UserCard/UserCard";
+import Tags from "../Tags/Tags";
 
 import {
   commentPost,
@@ -52,7 +53,7 @@ const parseContent = (text) => {
   return parsed;
 };
 
-function Post({ post, customClass, user, socket, admin }) {
+function Post({ post, customClass, socket, admin }) {
   const dispatch = useDispatch();
 
   const page = useSelector(({ postsReducer: { page } }) => page);
@@ -60,15 +61,20 @@ function Post({ post, customClass, user, socket, admin }) {
 
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
-  const [liked, setLiked] = useState(post.userLikes.filter(
-      (like) => like.user.username === session.username
-    ).length ? true : false)
+  const [liked, setLiked] = useState(
+    post.userLikes.filter((like) => like.user.username === session.username)
+      .length
+      ? true
+      : false
+  );
+  const [currentPost, setCurrentPost] = useState(null);
 
   const [newComment, setNewComment] = useState("");
 
   const [commentError, setCommentError] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editErrors, setEditErrors] = useState({});
+  const [reload, setReload] = useState(false);
 
   const [options, setOptions] = useState(false);
 
@@ -82,15 +88,36 @@ function Post({ post, customClass, user, socket, admin }) {
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
 
+  // useEffect(() => {
+  //   if(currentPost){
+  //     post = currentPost
+
+  //     // console.log(post)
+  //     setReload((prev) => !prev)
+  //   }
+  // }, [currentPost])
+
   useEffect(() => {
-    if(liked){
-      socket.emit("sendNotification", {
-        senderName: user,
-        receiverName: post.user.username,
-        type: 1
+    if (Object.keys(socket).length) {
+      socket.on("getPost", (data) => {
+        if (post.idPost === data.idPost) {
+          setCurrentPost(data);
+        }
       });
     }
-  }, [liked])
+  }, [socket]);
+
+  useEffect(() => {
+    if (liked) {
+      socket.emit("sendNotification", {
+        senderName: session.username,
+        userImage: session.image,
+        receiverName: post.user.username,
+        id: post.idPost,
+        type: 1,
+      });
+    }
+  }, [liked]);
 
   useEffect(() => {
     if (firstLoad) {
@@ -114,11 +141,12 @@ function Post({ post, customClass, user, socket, admin }) {
   const submitComment = (e) => {
     e.preventDefault();
     if (commentError) return;
-    dispatch(commentPost(post.idPost, newComment, session.username));
+    dispatch(commentPost(post.idPost, newComment, session.username, socket));
     socket.emit("sendNotification", {
-      senderName: user,
+      senderName: session.username,
+      userImage: session.image,
       receiverName: post.user.username,
-      type: 2
+      type: 2,
     });
   };
 
@@ -135,9 +163,11 @@ function Post({ post, customClass, user, socket, admin }) {
 
   const handleLike = (e) => {
     if (session.username) {
-      dispatch(likePost({ postIdPost: post.idPost, userId: session.username}));
+      dispatch(
+        likePost({ postIdPost: post.idPost, userId: session.username }, socket)
+      );
 
-      liked ? setLiked(false) : setLiked(true)
+      liked ? setLiked(false) : setLiked(true);
     }
   };
 
@@ -164,13 +194,15 @@ function Post({ post, customClass, user, socket, admin }) {
   let test;
   if (post.content) test = parseContent(post.content);
 
+  console.log(currentPost);
+
   return (
     <div className={styles.container + ` ${customClass}`}>
       {session.username === post.user.username ? (
         <div className={styles.options}>
           <button onClick={handleOptions} className={styles.optionsHandler}>
             <BiDotsVerticalRounded
-              style={{ color: "#aaa", width: "2em", height: "2em" }}
+              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
             />
           </button>
 
@@ -203,7 +235,7 @@ function Post({ post, customClass, user, socket, admin }) {
                 handleDelete();
               }}
             >
-              <GoTrashcan style={{ color: "#ff5555" }} />
+              <GoTrashcan style={{ color: "#fff" }} />
               Delete
             </button>
           </div>
@@ -212,45 +244,49 @@ function Post({ post, customClass, user, socket, admin }) {
         ""
       )}
 
-      <ul className={styles.tags}>
-        {post.tag.map((tag, i) => (
-          <li key={i}>{tag}</li>
-        ))}
-      </ul>
+      <Tags tags={post.tag} />
 
       <Link
         className={styles.userContainer}
         to={`/profile/${post.user.username}`}
       >
-        <img
-          className={styles.avatar}
-          src={post.user.image || image}
-          alt="avatar"
+        <UserCard
+          toRight
+          showImage
+          showName
+          user={{ username: post.user.username }}
+          other={`Posted ${TimeSpan}hr ago`}
         />
-        <div>
-          <span className={styles.username}>{post.user.username}</span>
-          <span className={styles.github}>Posted {TimeSpan}hr</span>
-        </div>
       </Link>
       <div className={styles.postBody}>
         {editMode ? (
-          <input
-            value={edit.title}
-            name="title"
-            onChange={(e) => handleChange(e)}
-          />
+          <label>
+            <div className="input-group">
+              <input
+                value={edit.title}
+                name="title"
+                onChange={(e) => handleChange(e)}
+              />
+            </div>
+          </label>
         ) : (
           <h3>{post.title}</h3>
         )}
 
         {editMode ? (
           <div>
-            <textarea
-              value={edit.content}
-              name="content"
-              onChange={(e) => handleChange(e)}
-            />
-            <button onClick={submitEdit}>Submit</button>
+            <label>
+              <div className="input-group">
+                <textarea
+                  value={edit.content}
+                  name="content"
+                  onChange={(e) => handleChange(e)}
+                />
+              </div>
+            </label>
+            <button className={styles.submitEdit} onClick={submitEdit}>
+              Submit
+            </button>
           </div>
         ) : (
           <div
@@ -284,34 +320,32 @@ function Post({ post, customClass, user, socket, admin }) {
       )}
       <div className={styles.actions}>
         <button className={!session.username ? "" : ""} onClick={handleLike}>
-          {post.userLikes.filter(
-            (like) => like.user.username === session.username
-          ).length ? (
-            <MdFavorite color="red" />
+          {liked ? (
+            <MdFavorite className={styles.icons} color="#f55" />
           ) : (
-            <MdFavoriteBorder />
+            <MdFavoriteBorder className={styles.icons} />
           )}
-          {post.userLikes.length} |
-          {/* <span>
-            {post.likes[post.likes.length - 1]},{" "}
-            {post.likes[post.likes.length - 2]}
-          </span> */}
+          {post.userLikes.length}
         </button>
+
         <button>
-          <MdOutlineModeComment /> {post.comments && post.comments.length}
-        </button>
-        <button>
-          <MdShare /> Share
+          <MdOutlineModeComment />{" "}
+          {currentPost
+            ? currentPost.comments && currentPost.comments.length
+            : post.comments && post.comments.length}
         </button>
       </div>
 
       {session.username ? (
         <div className={styles.newCommentContainer}>
-          <span className={styles.maxLength}>{newComment.length} / 1000</span>
+          <div className={styles.inline}>
+            <span className={styles.maxLength}>{newComment.length} / 1000</span>
+            <span>{commentError}</span>
+          </div>
           <form className={styles.newComment} onSubmit={submitComment}>
             <label className={commentError ? "error" : ""}>
               <div className="input-group">
-                <textarea
+                <input
                   onChange={handleComment}
                   name="comment"
                   type="text"
@@ -319,18 +353,35 @@ function Post({ post, customClass, user, socket, admin }) {
                   placeholder="New comment..."
                 />
               </div>
-              <button type="submit">
-                <MdSend className={styles.icons} />
-              </button>
             </label>
-            <span>{commentError}</span>
+            {newComment.length && !commentError ? (
+              <button type="submit">
+                <MdSend
+                  className={styles.icons}
+                  style={{ margin: "0", color: "#fff" }}
+                />
+              </button>
+            ) : (
+              <></>
+            )}
           </form>
         </div>
       ) : (
         ""
       )}
 
-      {post.comments && post.comments.length ? (
+      {currentPost ? (
+        currentPost.comments && currentPost.comments.length ? (
+          <ul className={styles.comments}>
+            <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
+            {currentPost.comments.map((comment, i) =>
+              i < 3 ? <Comment key={i} comment={comment} /> : <></>
+            )}
+          </ul>
+        ) : (
+          ""
+        )
+      ) : post.comments && post.comments.length ? (
         <ul className={styles.comments}>
           <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
           {post.comments.map((comment, i) =>

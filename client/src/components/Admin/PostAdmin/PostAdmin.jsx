@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import image from "../../../images/userCard.png";
+import image from "../../../images/userCard.svg";
 
 import {
   commentPost,
@@ -9,7 +9,7 @@ import {
   updatePost,
   updatePage,
   likePost,
-  banPost
+  banPost,
 } from "../../../Redux/actions/Post";
 
 import Comment from "../../Comment/Comment";
@@ -104,7 +104,6 @@ function PostAdmin({ post, customClass, user, admin }) {
     if (commentError) return;
     dispatch(commentPost(post.idPost, newComment, session.username));
   };
-
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
   const handleEditMode = (mode) => {

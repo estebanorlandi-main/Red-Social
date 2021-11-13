@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { Link, NavLink, useHistory, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../SearchBar/SearchBar";
+import Notification from "../Notification/Notification";
 import { logOut } from "../../Redux/actions/Session.js";
 import styles from "./NavBar.module.css";
-import {logOutAdmin} from "../../Redux/actions/Admin.js"
+import { logOutAdmin } from "../../Redux/actions/Admin.js";
 
 import { ImHome3 } from "react-icons/im";
 
@@ -14,10 +15,10 @@ import { CgProfile } from "react-icons/cg";
 import { FiLogOut } from "react-icons/fi";
 import { MdNotifications } from "react-icons/md";
 
-
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 
 import logo from "../../images/deco.svg";
+import UserCard from "../UserCard/UserCard";
 
 export default function Navbar(props) {
   const [notifications, setNotifications] = useState([]);
@@ -26,15 +27,30 @@ export default function Navbar(props) {
   const history = useHistory();
   const user = useSelector((store) => store.sessionReducer);
   const admin = useSelector((store) => store.adminReducer);
-  const socket = useSelector( (state) => state.usersReducer.socket);
+  const socket = useSelector((state) => state.usersReducer.socket);
 
   const isLanding = useLocation().pathname === "/";
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if(Object.keys(socket).length){
+    if (Object.keys(socket).length) {
       socket.on("getNotification", (data) => {
-        setNotifications((prev) => [...prev, data]);
+        if (data.type === 1) {
+          setNotifications((prev) => {
+            if (
+              !prev.find(
+                (notif) =>
+                  notif.senderName === data.senderName && notif.id === data.id
+              )
+            ) {
+              return [data, ...prev];
+            } else {
+              return [...prev];
+            }
+          });
+        } else {
+          setNotifications((prev) => [data, ...prev]);
+        }
       });
     }
   }, [socket]);
@@ -52,33 +68,18 @@ export default function Navbar(props) {
     history.push("/home");
   };
 
-  const displayNotification = ({ senderName, type }) => {
-    let action;
-
-    if (type === 1) {
-      action = "liked";
-    } else if (type === 2) {
-      action = "commented";
-    } else {
-      action = "shared";
-    }
-    return (
-      <span className={styles.notification}>{`${senderName} ${action} your post.`}</span>
-    );
-  };
-
   const handleRead = () => {
     setNotifications([]);
     setOpen(false);
   };
 
-  const handleClick = () => {
-    setOpen(!open)
+  const handleClick = (e) => {
+    setOpen(!open);
 
-    if(!open){
+    if (!open) {
       // setNotifications([]);
     }
-  }
+  };
 
   return (
     <header className={styles.navbar + ` ${isLanding ? styles.landing : ""}`}>
@@ -125,35 +126,54 @@ export default function Navbar(props) {
                   <BiSupport className={styles.icon} />
                 </NavLink>
               </li>
-              <li onClick={() => handleClick()} style={{cursor:'pointer'}}>
-              <MdNotifications className={styles.icon} />
-              {
-                notifications.length > 0 &&
-                <div className={styles.counter}>{notifications.length}</div>
-               }
-               </li>
-               {open && (
+              <li>
+                <button onClick={handleClick} className={styles.nav__link}>
+                  <MdNotifications className={styles.icon} />
+                  {notifications.length > 0 && (
+                    <div className={styles.counter}>{notifications.length}</div>
+                  )}
+                  {open && (
+                    <div className={styles.notifications}>
+                      {notifications.map((notification, i) => (
+                        <li key={i}>
+                          <Notification notification={notification} />
+                        </li>
+                      ))}
+                      <button onClick={handleRead}>Mark as read</button>
+                    </div>
+                  )}
+                </button>
+                {open && (
                   <div className={styles.notifications}>
-                    {notifications.map((n) => displayNotification(n))}
-                    <button onClick={handleRead}>
+                    <button className={styles.markRead} onClick={handleRead}>
                       Mark as read
                     </button>
+                    {notifications.map((notification, i) => (
+                      <li key={i}>
+                        <Notification notification={notification} />
+                      </li>
+                    ))}
                   </div>
-                )} 
+                )}
+              </li>
             </>
           )}
         </ul>
 
         <div className={styles.right}>
           {/* Mostrar en cualquier pagina menos Landing page */}
-          {!isLanding ? <SearchBar /> : ""}
 
+          {/*!isLanding ? <SearchBar /> : ""*/}
           {!isLanding &&
-            (user.username || admin.admin === true? (
+            (user.username || admin.admin === true ? (
               <div className={styles.profile__container}>
                 <button onClick={handleMenu} className={styles.profile}>
-                  {/*<span>{user.username}</span>*/}{" "}
-                  <img src={user.image} alt="" />
+                  <UserCard
+                    toLeft
+                    showName
+                    showImage
+                    user={{ username: user.username, image: user.image }}
+                  />
                 </button>
                 <div
                   className={
@@ -162,27 +182,29 @@ export default function Navbar(props) {
                   }
                 >
                   <Link
-                    className={`${styles.nav__link}`}
+                    className={`${styles.profile__link}`}
                     to={`/profile/${user.username}`}
                   >
                     Profile <CgProfile />
                   </Link>
 
-                  {admin.admin === true? <button
-                    className={`${styles.link} ${styles.logout}`}
-                    onClick={() => logOutAdminR()}
-                  >
-                    Log Out
-                    <FiLogOut />
-                  </button>  :
-                  
-                  <button
-                    className={`${styles.nav__link} ${styles.logout}`}
-                    onClick={() => logOutR()}
-                  >
-                    Log Out
-                    <FiLogOut />
-                  </button>}
+                  {admin.admin === true ? (
+                    <button
+                      className={`${styles.profile__link} ${styles.logout}`}
+                      onClick={() => logOutAdminR()}
+                    >
+                      Log Out
+                      <FiLogOut />
+                    </button>
+                  ) : (
+                    <button
+                      className={`${styles.profile__link} ${styles.logout}`}
+                      onClick={() => logOutR()}
+                    >
+                      Log Out
+                      <FiLogOut />
+                    </button>
+                  )}
                 </div>
               </div>
             ) : (

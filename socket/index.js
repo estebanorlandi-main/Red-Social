@@ -38,13 +38,25 @@ io.on("connection", (socket) => {
     });
   });
 
+   //send and get message
+   socket.on("reloadPostInfo", (post) => {
+    console.log(post);
+
+    io.emit("getPost", post.post);
+  });
+
   //send about a notification
-  socket.on("sendNotification", ({ senderName, receiverName, type }) => {
+  socket.on("sendNotification", ({ senderName, receiverName, id, userImage, type }) => {
     const receiver = getUser(receiverName);
-    io.to(receiver?.socketId).emit("getNotification", {
-      senderName,
-      type,
-    });
+
+    // if(senderName !== receiverName){
+      io.to(receiver?.socketId).emit("getNotification", {
+        senderName,
+        id,
+        userImage,
+        type
+      });
+    // }
   });
 
   //when disconnect
