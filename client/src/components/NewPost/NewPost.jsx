@@ -54,7 +54,13 @@ export default function NewPost() {
     setData((old) => ({ ...old, tag: e.map((option) => option.value) }));
   };
 
-  const handleImage = ({ target: { name, files } }) => {
+  const handleImage = (e) => {
+    if (!e) return setData((old) => ({ ...old, image: null }));
+
+    const {
+      target: { name, files },
+    } = e;
+
     setData((old) => ({ ...old, [name]: files[0] }));
   };
 
@@ -103,6 +109,7 @@ export default function NewPost() {
         </div>
         <span>{errores.title}</span>
       </label>
+
       <label className={style.wrapper}>
         Content {data.content.length}/1000
         <textarea
@@ -116,23 +123,16 @@ export default function NewPost() {
         <span>{errores.content}</span>
       </label>
 
-      {data.image ? (
-        <img
-          className={style.uploadImage}
-          src={URL.createObjectURL(data.image)}
-          alt=""
-        />
-      ) : (
-        ""
-      )}
-
-      {data.image && data.image.name}
-
       <ImageUpload onChange={handleImage} />
 
       <label className={style.wrapper}>
         Tags
-        <Select onChange={handleSelect} options={options} isMulti />
+        <Select
+          menuPlacement={"top"}
+          onChange={handleSelect}
+          options={options}
+          isMulti
+        />
         <span className={style.error}></span>
       </label>
 

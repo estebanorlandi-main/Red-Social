@@ -88,22 +88,6 @@ button[type="submit"] {
   background-color: var(--c-blue);
 }
 
-.input-image {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #aaa;
-  border-radius: 5em;
-  color: #888;
-  width: 3em;
-  height: 3em;
-}
-
-input[type="file"] {
-  display: none;
-}
-
 .input-group {
   display: flex;
   align-items: center;
