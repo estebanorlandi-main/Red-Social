@@ -89,8 +89,10 @@ function Post({ post, customClass, user, socket, admin }) {
     if (liked) {
       socket.emit("sendNotification", {
         senderName: user,
+        userImage: session.image,
         receiverName: post.user.username,
-        type: 1,
+        id: post.idPost,
+        type: 1
       });
     }
   }, [liked]);
@@ -120,6 +122,7 @@ function Post({ post, customClass, user, socket, admin }) {
     dispatch(commentPost(post.idPost, newComment, session.username));
     socket.emit("sendNotification", {
       senderName: user,
+      userImage: session.image,
       receiverName: post.user.username,
       type: 2,
     });
