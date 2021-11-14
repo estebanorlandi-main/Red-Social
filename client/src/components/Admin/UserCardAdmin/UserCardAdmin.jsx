@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import styles from "./UserAdminStyles.css";
-import person from "../../../images/personWithPC.png";
 import userimg from "../../../images/userCard.svg";
 
 import { GoMarkGithub } from "react-icons/go";
@@ -59,12 +58,6 @@ export default function UserCardAdmin({ showPostForm }) {
         </>
       ) : (
         <div>
-          <img
-            className={styles.imageOffline}
-            src={person}
-            alt="Person chating in computer"
-          />
-
           <p className={styles.description}>
             Find, connect and share with people with the same passion as you!
           </p>

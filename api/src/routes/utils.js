@@ -185,6 +185,9 @@ const DB_Postsearch = async ({ username, id }) => {
   try {
     if (username === undefined && id === undefined) {
       var post_search = await Post.findAll({
+        where: {
+          ban:false
+        },
         include: [
           { model: User, attributes: ["image", "username"] },
           {
@@ -205,6 +208,7 @@ const DB_Postsearch = async ({ username, id }) => {
       var post_search = await Post.findOne({
         where: {
           idPost: id,
+          ban:false
         },
         include: [{ model: User, attributes: ["image", "username"] }, Comment],
         order: [["createdAt", "DESC"]],
@@ -215,6 +219,7 @@ const DB_Postsearch = async ({ username, id }) => {
       var post_search = await Post.findAll({
         where: {
           userId: userDB.id,
+          ban: false
         },
         include: [{ model: User, attributes: ["image", "username"] }, Comment],
         order: [["createdAt", "DESC"]],
@@ -442,13 +447,14 @@ const BD_banUser = async (username) => {
   if(user === null) return {error:'User not exits'}
   if(user.strike === null){
     user.strike = ['X'];
-    var dayBan = new Date(Date.now() + 24 * 3600 * 1000);
+    var dayBan = new Date(Date.now() + 168 * 3600 * 1000);
     user.dayBan = dayBan;
     user.save();
     return {Succes: 'The STRIKE was applied successfully', Strike:user.strike.length}
   } else{
     if(user.strike.length === 1){
       user.strike = ['X','X'];
+      var dayBan = new Date(Date.now() + 168 * 3600 * 1000);
       user.save();
     }else{
       if(user.strike.length === 2){
@@ -462,10 +468,16 @@ const BD_banUser = async (username) => {
 
 const BD_loginBan = async (username) => {
   const user = await User.findOne({ where:{username: username}})
-
-  if(user.strike.length === 3){
+  const day = new Date()
+  if(user.strike?.length === 3){
     return {error: 'You are temporarily suspended'};
   }
+  if(user.dayBan !== null){
+    if(day <user.dayBan){
+    return {};
+    }
+  }
+  user.dayBan = null
   return {}
 }
 
