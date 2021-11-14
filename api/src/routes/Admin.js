@@ -96,7 +96,6 @@ router.post('/login', async (req, res) => {
   router.post('/banUser', async (req, res) => {
     try{
       const {username} = req.body;
-      console.log(username)
       const user = await fn.BD_banUser(username);
       user.error ? 
         res.status(404).send(user.error) :
@@ -107,5 +106,12 @@ router.post('/login', async (req, res) => {
     }
   })
 
+  router.post("/banComment", async (req, res) =>{
+    try{
+      const {comment} = req.body;
+    }catch(e){
+
+    }
+  })
   module.exports = router;
   
