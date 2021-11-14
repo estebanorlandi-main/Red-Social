@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import userimg from "../../../images/userCard.png";
+import userimg from "../../../images/userCard.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { removeProfile,getUser } from "../../../Redux/actions/Users";
 

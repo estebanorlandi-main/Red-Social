@@ -13,7 +13,11 @@ module.exports = (sequelize) => {
       },
       text: {
         type: DataTypes.STRING,
-      },  
+      },
+      unread: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
+      }  
   },{
     timestamps: true,
   });

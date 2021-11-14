@@ -1,10 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSelector } from 'react-redux';
 import styles from "./Conversations.module.css";
 import avatar from "../../images/userCard.svg";
 
 export default function Conversation({ conversation, currentUser }) {
+  const socket = useSelector((state) => state.usersReducer.socket)
+
   const [user, setUser] = useState(null);
+  const [untrackMessages, setUntrackMessages] = useState([])
+  console.log(untrackMessages)
 
   useEffect(() => {
     const friendId = conversation.members.find(
@@ -21,6 +26,20 @@ export default function Conversation({ conversation, currentUser }) {
     };
     getUser();
   }, [currentUser, conversation]);
+
+  useEffect(() => {
+    if(Object.keys(socket).length){
+      socket.on("getUntrackMessage", (data) => {
+
+        console.log(data.untrack)
+        console.log(data.conversationId)
+
+        if(conversation.id === data.conversationId){
+          setUntrackMessages(data.untrack)
+        }
+      });
+    } 
+  }, []);
 
   return (
     <div className={styles.conversation}>

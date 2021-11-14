@@ -18,10 +18,14 @@ export default function Messenger() {
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [untrackMessages, setUntrackMessages] = useState({})
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers] = useState([]);
   const scrollRef = useRef();
+
+  // console.log(currentChat)
+  console.log(untrackMessages)
 
   useEffect(() => {
     if(!Object.keys(socket).length){
@@ -32,11 +36,43 @@ export default function Messenger() {
   useEffect(() => {
     if(Object.keys(socket).length){
       socket.on("getMessage", (data) => {
+
+        console.log(data)
         setArrivalMessage({
           sender: data.senderId,
           text: data.text,
           createdAt: Date.now(),
         });
+      });
+    } 
+  }, []);
+
+  useEffect(() => {
+    if(Object.keys(socket).length){
+      socket.on("getUntrackMessage", (data) => {
+
+        // console.log(data.untrack)
+        // console.log(data.conversationId)
+        
+        const index =  untrackMessages?.findIndex((obj) =>
+        obj.conversationId === data.conversationId
+        )
+
+        if(index !== -1){
+          let aux = untrackMessages
+          aux[index] = data
+
+          setUntrackMessages(aux);
+
+        } else{
+          setUntrackMessages((prev) => [
+            ...prev,
+            {
+              conversationId: data.conversationId, 
+              untrack: data.untrack
+            }
+          ])
+        }
       });
     } 
   }, []);
@@ -81,12 +117,49 @@ export default function Messenger() {
           "http://localhost:3001/message/" + currentChat?.id
         );
         setMessages(res.data);
+
       } catch (err) {
         console.log(err);
       }
     };
     getMessages();
   }, [currentChat]);
+
+
+  useEffect(() => {
+    const readMessages = async () => {
+      try {
+        //console.log(currentChat.id);  
+
+        const read = await axios.get(
+          `http://localhost:3001/message/read/${currentChat?.id}/${user.username}`
+        );
+
+        const untrack = await axios.get(
+          `http://localhost:3001/message/untrack/${currentChat?.id}/${user.username}`
+        );
+         
+          if(untrack.data){
+            const receiver = currentChat?.members.find(
+              (m) => m !== user.username
+            );
+            
+            socket.emit("untrackMessage", {
+              receiverId: receiver,
+              data: untrack.data,
+              conversationId: currentChat?.id
+            });
+
+          }
+        
+
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    readMessages();
+  }, [messages]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
