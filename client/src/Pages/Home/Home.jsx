@@ -12,13 +12,15 @@ import styles from "./Home.module.css";
 import { socketConnection } from "../../Redux/actions/Users";
 import { clearPosts, getPosts, updatePage } from "../../Redux/actions/Post";
 import axios from "axios";
+import Loader from "../../components/Loader/Loader";
+import { BiChevronUp } from "react-icons/bi";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
   const session = useSelector((state) => state.sessionReducer);
 
   const socket = useSelector((state) => state.usersReducer.socket);
-  // console.log(socket);
+
   const [page, totalPages] = useSelector(
     ({ postsReducer: { page, totalPages } }) => [page, totalPages]
   );
@@ -26,8 +28,8 @@ function Home(props) {
   const dispatch = useDispatch();
 
   const [createPost, setCreatePost] = useState(false);
+  const [newPosts, setNewPosts] = useState(true);
   const [conversations, setConversations] = useState([]);
-  const [first, setFirst] = useState(true);
 
   useEffect(() => {
     dispatch(socketConnection(session.username));
@@ -54,7 +56,7 @@ function Home(props) {
       return;
     }
     dispatch(getPosts(page));
-  }, [dispatch, page, first, totalPages]);
+  }, [dispatch, page, totalPages]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -62,8 +64,6 @@ function Home(props) {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [handleScroll]);
-
-  console.log(posts.length);
 
   useEffect(() => {
     const getConversations = async () => {
@@ -76,6 +76,18 @@ function Home(props) {
     };
     getConversations();
   }, [session.username]);
+
+  useEffect(() => {
+    let newPosts = setTimeout(() => setNewPosts(true), 60000);
+    return () => clearTimeout(newPosts);
+  });
+
+  const handleCharge = (e) => {
+    window.scrollTo(0, 0);
+    dispatch(updatePage(0));
+    dispatch(getPosts(page));
+    setNewPosts(false);
+  };
 
   return (
     <div className={styles.home + ` ${createPost ? styles.noScroll : ""} `}>
@@ -99,6 +111,11 @@ function Home(props) {
       </section>
 
       <section className={styles.center}>
+        {newPosts && (
+          <button className={styles.newPosts} onClick={handleCharge}>
+            Check new posts <BiChevronUp className={styles.icon} />
+          </button>
+        )}
         {createPost ? (
           <div
             className={styles.newPost}
@@ -135,9 +152,7 @@ function Home(props) {
           ))}
         </ul>
 
-        {totalPages > page && (
-          <div className={styles.cargando}>Cargando...</div>
-        )}
+        {page < totalPages - 1 && <Loader />}
       </section>
 
       <section className={styles.right}>
