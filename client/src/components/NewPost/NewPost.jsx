@@ -97,14 +97,13 @@ export default function NewPost() {
   return (
     <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
       <label className={style.wrapper}>
-        Title
         <div className="input-group">
           <input
             value={data.title}
             onChange={handleChange}
             name="title"
             type="text"
-            placeholder="Title"
+            placeholder="Post title"
             autoComplete="off"
           />
         </div>
@@ -112,7 +111,6 @@ export default function NewPost() {
       </label>
 
       <label className={style.wrapper}>
-        Content {data.content.length}/1000
         <textarea
           value={data.content}
           onChange={handleChange}
@@ -127,11 +125,11 @@ export default function NewPost() {
       <ImageUpload onChange={handleImage} />
 
       <label className={style.wrapper}>
-        Tags
         <Select
-          menuPlacement={"top"}
           onChange={handleSelect}
           options={options}
+          menuPlacement="top"
+          placeholder="Tags"
           isMulti
         />
         <span className={style.error}></span>
