@@ -18,10 +18,13 @@ import AdminSupport from "./components/Admin/AdminSupport";
 import HomeAdmin from "./components/Admin/HomeAdmin/HomeAdmin";
 import ProfileAdmin from "./components/Admin/ProfileAdmin/ProfileAdmin";
 
+import NewRegister from "./components/NewRegister/NewRegister.jsx";
+
 import Popup from "./components/Support/SupportLocalPopUp.jsx";
 import PrivateRoute from "./components/TypeRoutes/PrivateRoute";
 
 import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx";
+import ResetPassword from "./components/ResetPassword/ResetPassword.jsx";
 // Variables CSS
 import "./App.css";
 import UserCard from "./components/UserCard/UserCard";
@@ -76,6 +79,7 @@ function App() {
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
         <Route path="/loginAdmin" component={AdminLogin} />
+        <Route path="/n/signup" component={NewRegister} />
 
         {/* Profile */}
         <Route
@@ -102,6 +106,21 @@ function App() {
         <PrivateRoute path="/homeAdmin" component={HomeAdmin} />
         <PrivateRoute
           path="/profileAdmin/:username"
+          render={({ match: { params: username } }) => (
+            <ProfileAdmin username={username} />
+          )}
+        />
+
+        <Route
+          exact
+          path="/accounts/password/reset/"
+          component={ResetPassword}
+        />
+
+        <Route exact path="/auth/reset-password" component={ForgetPassword} />
+
+        <Route
+          path="/profile/:username"
           render={({
             match: {
               params: { username },

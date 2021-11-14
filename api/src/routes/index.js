@@ -18,7 +18,7 @@ const Conversation = require("./Conversation.js")
 const Message = require("./Message.js")
 const Prueba = require("./PRUEBA.js")
 const Admin = require("./Admin.js")
-const Test = require("./testRegister.js")
+const Register = require("./newRegister.js")
 const Friends = require("./Friends.js")
 
 
@@ -58,6 +58,6 @@ router.use("/likes", Likes);
 router.use("/support",  AuthControllers.isAuthenticated, Support);
 router.get('/logout', AuthControllers.logout)
 
-router.use("/validate", Test)
+router.use("/auth", Register)
 router.use("/friends", Friends)
 module.exports = router;

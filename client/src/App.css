@@ -81,6 +81,11 @@ form span {
   font-size: 1rem;
 }
 
+.btn:disabled{
+  background-color: #ccc;
+  cursor: no-drop;
+}
+
 button[type="submit"] {
   border-radius: 5em;
   border: none;
