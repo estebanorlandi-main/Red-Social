@@ -113,8 +113,12 @@ module.exports = (sequelize) => {
       strike:{
         type: DataTypes.ARRAY(DataTypes.JSON),
         allowNull:true,
-        
-    }
+      },
+      dayBan:{
+        type: DataTypes.DATE,
+        allowNull: true,
+      }
+    
     },
     {
       timestamps: false,

@@ -23,8 +23,7 @@ const Friends = require("./Friends.js")
 
 
 
-// const ruta = require("archivo")
-// router.use("/", ruta)
+
 router.get('/', (req,res)=>{
 	res.status(202).send({
 		"Post":` GET -> /post - /post?q=username - /post/:id

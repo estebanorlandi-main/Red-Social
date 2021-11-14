@@ -428,12 +428,12 @@ const BD_createPrivileges = async (user) =>{
 
 
 const BD_searchAdmin = async (user) =>{
-  var privileges = await Privileges.findOne({where:{username:user.username}})
+  var privileges = await Privileges.findOne({where:{username:user.username}});
   return privileges
 }
 
 const BD_searchPost = async (idPost) =>{
-  var post = await Post.findOne({where:{idPost:idPost}})
+  var post = await Post.findOne({where:{idPost:idPost}});
   return post
 }
 
@@ -441,14 +441,32 @@ const BD_banUser = async (username) => {
   var user = await User.findOne({where:{username:username}});
   if(user === null) return {error:'User not exits'}
   if(user.strike === null){
-    user.strike = ['X']
-    user.save()
-    return {Succes: 'The STRIKE was applied successfully'}
+    user.strike = ['X'];
+    var dayBan = new Date(Date.now() + 24 * 3600 * 1000);
+    user.dayBan = dayBan;
+    user.save();
+    return {Succes: 'The STRIKE was applied successfully', Strike:user.strike.length}
   } else{
-    user.strike.push('X');
-    user.save()
-    return {Succes: 'The STRIKE was applied successfully'}
+    if(user.strike.length === 1){
+      user.strike = ['X','X'];
+      user.save();
+    }else{
+      if(user.strike.length === 2){
+        user.strike = ['X','X','X'];
+        user.save();
+      }
+    }
+    return {Succes: 'The STRIKE was applied successfully', Strike:user.strike.length}
   }
+}
+
+const BD_loginBan = async (username) => {
+  const user = await User.findOne({ where:{username: username}})
+
+  if(user.strike.length === 3){
+    return {error: 'You are temporarily suspended'};
+  }
+  return {}
 }
 
 
@@ -481,5 +499,8 @@ module.exports = {
   BD_createPrivileges,
   BD_searchAdmin,
   BD_searchPost,
-  BD_banUser
+  BD_banUser,
+  BD_loginBan
+
+
 };

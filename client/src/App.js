@@ -11,9 +11,11 @@ import NavBar from "./components/NavBar/NavBar.js";
 import Messenger from "./Pages/Messenger/Messenger";
 import Support from "./components/Support/Support";
 
+//Admin
 import AdminLogin from "./components/Admin/AdminLogin";
 import AdminSupport from "./components/Admin/AdminSupport";
-import HomeAdmin from "./Pages/HomeAdmin/HomeAdmin.jsx"
+import HomeAdmin from "./components/Admin/HomeAdmin/HomeAdmin"
+import ProfileAdmin from "./components/Admin/ProfileAdmin/ProfileAdmin"
 
 import NewRegister from "./components/NewRegister/NewRegister.jsx"
 
@@ -45,9 +47,11 @@ function App() {
   return (
     <div className="App">
       {errors && errors.length ? (
-        <ul>
+        <ul className="errors">
           {errors.map((error) => (
-            <li onClick={() => handleDelete(error.id)}>{error.message}</li>
+            <li className="error" onClick={() => handleDelete(error.id)}>
+              {error.message}
+            </li>
           ))}
         </ul>
       ) : (
@@ -75,6 +79,14 @@ function App() {
         <Route path="/supportAdmin" component={AdminSupport} />
         <Route path="/challenge" component={Challenge} />
         <Route path="/homeAdmin" component={HomeAdmin}/>
+        <Route 
+          path="/profileAdmin/:username" 
+          render={({
+            match:{
+              params: {username},
+            },
+          }) => <ProfileAdmin username={username}/>}
+          />
         <Route path ="/n/signup" component={NewRegister} />
 
         <Route exact path="/chat/test" component={Chat} />
