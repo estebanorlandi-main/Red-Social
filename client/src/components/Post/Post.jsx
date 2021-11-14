@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import UserCard from "../UserCard/UserCard";
 import Tags from "../Tags/Tags";
 
@@ -40,12 +40,13 @@ const parseContent = (text) => {
   const parsed = text.split(" ").map((value) => {
     if (mentions.includes(value)) {
       return (
-        <Link
+        <NavLink
+          activeClassName={styles.active}
           className={styles.mention}
           to={`/profile/${value.slice(1, value.length)}`}
         >
           {value}
-        </Link>
+        </NavLink>
       );
     } else return " " + value + " ";
   });
@@ -246,7 +247,8 @@ function Post({ post, customClass, socket, admin }) {
 
       <Tags tags={post.tag} />
 
-      <Link
+      <NavLink
+        activeClassName={styles.active}
         className={styles.userContainer}
         to={`/profile/${post.user.username}`}
       >
@@ -257,7 +259,7 @@ function Post({ post, customClass, socket, admin }) {
           user={{ username: post.user.username }}
           other={`Posted ${TimeSpan}hr ago`}
         />
-      </Link>
+      </NavLink>
       <div className={styles.postBody}>
         {editMode ? (
           <label>
@@ -319,7 +321,7 @@ function Post({ post, customClass, socket, admin }) {
         ""
       )}
       <div className={styles.actions}>
-        <button className={!session.username ? "" : ""} onClick={handleLike}>
+        <button className={styles.favorite} onClick={handleLike}>
           {liked ? (
             <MdFavorite className={styles.icons} color="#f55" />
           ) : (
@@ -329,7 +331,7 @@ function Post({ post, customClass, socket, admin }) {
         </button>
 
         <button>
-          <MdOutlineModeComment />{" "}
+          <MdOutlineModeComment className={styles.icons} />
           {currentPost
             ? currentPost.comments && currentPost.comments.length
             : post.comments && post.comments.length}
