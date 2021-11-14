@@ -93,7 +93,6 @@ export default function Profile(props) {
   let git = profile.gitaccount && profile.gitaccount.split("/");
   git = git && git[git.length - 1];
 
-  console.log(profile);
   return profile ? (
     <div>
       {profile.strike?.length === 3 ? (
@@ -113,10 +112,13 @@ export default function Profile(props) {
                 ""
               )}
               {myProfile ? (
-                <Link to={`/settings`} className={styles.edit}>
+                <button
+                  onClick={() => setEditar(!editar)}
+                  className={styles.edit}
+                >
                   <BsFillPencilFill style={{ color: "#C94F4F" }} />
                   Edit
-                </Link>
+                </button>
               ) : (
                 ""
               )}
