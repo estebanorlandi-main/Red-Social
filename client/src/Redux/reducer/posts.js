@@ -32,9 +32,21 @@ export default function root(state = initialState, action) {
 
     case POST_LIKE:
       if (action.payload.post) {
+        
+        // let postSocket;
+
+        // action.socket.on("getPost", (data) => {
+        //   postSocket = data
+        //   console.log(postSocket)
+          
+        // });
+        
+        // console.log( postSocket)
+        
+
         return {
           ...state,
-          posts: state.posts.map((post) => {
+          posts: state.posts.map( (post) => {
             if (post.idPost === action.payload.post.idPost) {
               post = action.payload.post;
             }

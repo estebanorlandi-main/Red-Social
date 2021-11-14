@@ -63,7 +63,7 @@ export function updatePost(postId, data) {
   //return { type: POST_UPDATE, payload: { postId } };
 }
 
-export function commentPost(postid, content, username) {
+export function commentPost(postid, content, username, socket) {
   return (dispatch) =>
     axios
       .post(
@@ -71,7 +71,14 @@ export function commentPost(postid, content, username) {
         { postid, content, username },
         { withCredentials: true }
       )
-      .then((res) => dispatch({ type: POST_COMMENT, payload: res.data }))
+      .then((res) => {
+        socket.emit("reloadPostInfo", res.data);
+
+        dispatch({ 
+          type: POST_COMMENT, 
+          payload: res.data 
+        })
+      })
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 
   //return { type: POST_COMMENT, payload: { idPost, text, user } };
@@ -107,14 +114,16 @@ export function updatePage(page) {
   return { type: UPDATE_PAGE, payload: page };
 }
 
-export function likePost(data) {
+export function likePost(data, socket) {
   return (dispatch) =>
     axios
       .post("http://localhost:3001/likes", data, { withCredentials: true })
       .then((res) => {
+        socket.emit("reloadPostInfo", res.data);
+        
         dispatch({
           type: POST_LIKE,
-          payload: res.data,
+          payload: res.data
         });
       });
 }

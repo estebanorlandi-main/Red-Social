@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, NavLink, useHistory, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import SearchBar from "../SearchBar/SearchBar";
+import Notification from "../Notification/Notification";
 import { logOut } from "../../Redux/actions/Session.js";
 import styles from "./NavBar.module.css";
 import { logOutAdmin } from "../../Redux/actions/Admin.js";
@@ -34,7 +35,22 @@ export default function Navbar(props) {
   useEffect(() => {
     if (Object.keys(socket).length) {
       socket.on("getNotification", (data) => {
-        setNotifications((prev) => [...prev, data]);
+        if (data.type === 1) {
+          setNotifications((prev) => {
+            if (
+              !prev.find(
+                (notif) =>
+                  notif.senderName === data.senderName && notif.id === data.id
+              )
+            ) {
+              return [data, ...prev];
+            } else {
+              return [...prev];
+            }
+          });
+        } else {
+          setNotifications((prev) => [data, ...prev]);
+        }
       });
     }
   }, [socket]);
@@ -52,29 +68,12 @@ export default function Navbar(props) {
     history.push("/home");
   };
 
-  const displayNotification = ({ senderName, type }) => {
-    let action;
-
-    if (type === 1) {
-      action = "liked";
-    } else if (type === 2) {
-      action = "commented";
-    } else {
-      action = "shared";
-    }
-    return (
-      <span
-        className={styles.notification}
-      >{`${senderName} ${action} your post.`}</span>
-    );
-  };
-
   const handleRead = () => {
     setNotifications([]);
     setOpen(false);
   };
 
-  const handleClick = () => {
+  const handleClick = (e) => {
     setOpen(!open);
 
     if (!open) {
@@ -127,18 +126,36 @@ export default function Navbar(props) {
                   <BiSupport className={styles.icon} />
                 </NavLink>
               </li>
-              <li onClick={() => handleClick()} style={{ cursor: "pointer" }}>
-                <MdNotifications className={styles.icon} />
-                {notifications.length > 0 && (
-                  <div className={styles.counter}>{notifications.length}</div>
+              <li>
+                <button onClick={handleClick} className={styles.nav__link}>
+                  <MdNotifications className={styles.icon} />
+                  {notifications.length > 0 && (
+                    <div className={styles.counter}>{notifications.length}</div>
+                  )}
+                  {open && (
+                    <div className={styles.notifications}>
+                      {notifications.map((notification, i) => (
+                        <li key={i}>
+                          <Notification notification={notification} />
+                        </li>
+                      ))}
+                      <button onClick={handleRead}>Mark as read</button>
+                    </div>
+                  )}
+                </button>
+                {open && (
+                  <div className={styles.notifications}>
+                    <button className={styles.markRead} onClick={handleRead}>
+                      Mark as read
+                    </button>
+                    {notifications.map((notification, i) => (
+                      <li key={i}>
+                        <Notification notification={notification} />
+                      </li>
+                    ))}
+                  </div>
                 )}
               </li>
-              {open && (
-                <div className={styles.notifications}>
-                  {notifications.map((n) => displayNotification(n))}
-                  <button onClick={handleRead}>Mark as read</button>
-                </div>
-              )}
             </>
           )}
         </ul>
@@ -151,7 +168,12 @@ export default function Navbar(props) {
             (user.username || admin.admin === true ? (
               <div className={styles.profile__container}>
                 <button onClick={handleMenu} className={styles.profile}>
-                  <UserCard toLeft showName showImage />
+                  <UserCard
+                    toLeft
+                    showName
+                    showImage
+                    user={{ username: user.username, image: user.image }}
+                  />
                 </button>
                 <div
                   className={

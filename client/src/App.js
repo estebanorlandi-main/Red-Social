@@ -14,12 +14,16 @@ import Support from "./components/Support/Support";
 //Admin
 import AdminLogin from "./components/Admin/AdminLogin";
 import AdminSupport from "./components/Admin/AdminSupport";
-import HomeAdmin from "./components/Admin/HomeAdmin/HomeAdmin"
-import ProfileAdmin from "./components/Admin/ProfileAdmin/ProfileAdmin"
+import HomeAdmin from "./components/Admin/HomeAdmin/HomeAdmin";
+import ProfileAdmin from "./components/Admin/ProfileAdmin/ProfileAdmin";
+
+import NewRegister from "./components/NewRegister/NewRegister.jsx"
 
 import Popup from "./components/Support/SupportLocalPopUp.jsx";
 
+
 import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx"
+import ResetPassword from "./components/ResetPassword/ResetPassword.jsx"
 // Variables CSS
 import "./App.css";
 import UserCard from "./components/UserCard/UserCard";
@@ -38,8 +42,9 @@ function App() {
   const isLanding = useLocation().pathname === "/";
 
   const errors = useSelector((state) => state.errorsReducer);
+  const session = useSelector((state) => !!state.sessionReducer.username);
 
-  const handleDelete = (id) => dispatch(removeError());
+  const handleDelete = (id) => dispatch(removeError(id));
 
   return (
     <div className="App">
@@ -55,7 +60,7 @@ function App() {
         ""
       )}
 
-      {!isLanding && (
+      {!isLanding && session && (
         <Link className="message" to="/messenger">
           <BiMessageAltDetail
             style={{ margin: "0", width: "1.5em", height: "1.5em" }}
@@ -75,17 +80,20 @@ function App() {
         <Route path="/loginAdmin" component={AdminLogin} />
         <Route path="/supportAdmin" component={AdminSupport} />
         <Route path="/challenge" component={Challenge} />
-        <Route path="/homeAdmin" component={HomeAdmin}/>
-        <Route 
-          path="/profileAdmin/:username" 
+        <Route path="/homeAdmin" component={HomeAdmin} />
+        <Route
+          path="/profileAdmin/:username"
           render={({
-            match:{
-              params: {username},
+            match: {
+              params: { username },
             },
+
           }) => <ProfileAdmin username={username}/>}
           />
+        <Route path ="/n/signup" component={NewRegister} />
 
         <Route exact path="/chat/test" component={Chat} />
+        <Route exact path="/accounts/password/reset/" component={ResetPassword} />
         <Route exact path="/auth/reset-password" component={ForgetPassword} />
         <Route
           path="/profile/:username"

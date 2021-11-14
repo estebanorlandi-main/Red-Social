@@ -141,7 +141,21 @@ const DB_UserID = async (username) => {
   });
   return UserID;
 };
-
+const DB_findUserEmailOrUsername = async(data)=>{
+  const findUser = await User.findOne({
+    where: {
+      [Op.or]: [
+        {
+          username: data,
+        },
+        {
+          email: data,
+        },
+      ]
+    }
+  })
+  return findUser
+}
 const DB_Allcomments = async (username) => {
   user = await DB_UserID(username);
   const final = user.comments.map((comment) => {
@@ -171,6 +185,9 @@ const DB_Postsearch = async ({ username, id }) => {
   try {
     if (username === undefined && id === undefined) {
       var post_search = await Post.findAll({
+        where: {
+          ban:false
+        },
         include: [
           { model: User, attributes: ["image", "username"] },
           {
@@ -191,6 +208,7 @@ const DB_Postsearch = async ({ username, id }) => {
       var post_search = await Post.findOne({
         where: {
           idPost: id,
+          ban:false
         },
         include: [{ model: User, attributes: ["image", "username"] }, Comment],
         order: [["createdAt", "DESC"]],
@@ -201,6 +219,7 @@ const DB_Postsearch = async ({ username, id }) => {
       var post_search = await Post.findAll({
         where: {
           userId: userDB.id,
+          ban: false
         },
         include: [{ model: User, attributes: ["image", "username"] }, Comment],
         order: [["createdAt", "DESC"]],
@@ -449,16 +468,23 @@ const BD_banUser = async (username) => {
 
 const BD_loginBan = async (username) => {
   const user = await User.findOne({ where:{username: username}})
-
+  const day = new Date()
   if(user.strike?.length === 3){
     return {error: 'You are temporarily suspended'};
   }
+  if(user.dayBan !== null){
+    if(day <user.dayBan){
+    return {};
+    }
+  }
+  user.dayBan = null
   return {}
 }
 
 
 
 module.exports = {
+  DB_findUserEmailOrUsername,
   DB_findUserAll,
   DB_findUserQuery,
   DB_findUserParams,
