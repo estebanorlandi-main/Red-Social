@@ -28,6 +28,14 @@ export const Section = styled.section`
     right: -5em;
     bottom: -5em;
   }
+
+  @media screen and (max-width: 600px) {
+    padding: 0;
+
+    & > img {
+      width: 15em;
+    }
+  }
 `;
 
 export const Headline = styled.h1`
@@ -35,6 +43,11 @@ export const Headline = styled.h1`
   font-size: 3em;
   font-weight: 600;
   animation: 1s ${toDown};
+
+  @media screen and (max-width: 600px) {
+    margin: 0 auto;
+    text-align: center;
+  }
 `;
 
 export const JoinNow = styled(Link)`
@@ -61,5 +74,10 @@ export const JoinNow = styled(Link)`
   }
   &:hover svg {
     transform: translate(50%, 0);
+  }
+
+  @media screen and (max-width: 600px) {
+    margin: 0 auto;
+    text-align: center;
   }
 `;
