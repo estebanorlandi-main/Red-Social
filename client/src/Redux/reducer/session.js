@@ -1,4 +1,4 @@
-import { SIGN_UP, LOG_IN, LOG_OUT, UPDATE_USER, VALIDATE_EMAIL, VALIDATE_USERNAME, UPDATE_PASSWORD } from "../actions/Session";
+import { SIGN_UP, LOG_IN, LOG_OUT, UPDATE_USER, VALIDATE_EMAIL, VALIDATE_USERNAME, UPDATE_PASSWORD, NEW_REGISTER, VALIDATE_ACCOUNT, SEND_RESET_PASSWORD, SEARCH_TOKEN } from "../actions/Session";
 
 import Cookie from "universal-cookie";
 const cookie = new Cookie();
@@ -35,6 +35,22 @@ export default function root(state = initialState, action) {
         ...state
       }
     case UPDATE_PASSWORD:
+      return {
+        ...state
+      }
+    case NEW_REGISTER:
+      return {
+        ...state
+      }
+    case VALIDATE_ACCOUNT:
+      return{
+        ...state
+      }
+    case SEND_RESET_PASSWORD:
+      return {
+        ...state
+      }
+    case SEARCH_TOKEN:
       return {
         ...state
       }

@@ -17,9 +17,13 @@ import AdminSupport from "./components/Admin/AdminSupport";
 import HomeAdmin from "./components/Admin/HomeAdmin/HomeAdmin";
 import ProfileAdmin from "./components/Admin/ProfileAdmin/ProfileAdmin";
 
+import NewRegister from "./components/NewRegister/NewRegister.jsx"
+
 import Popup from "./components/Support/SupportLocalPopUp.jsx";
 
-import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx";
+
+import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx"
+import ResetPassword from "./components/ResetPassword/ResetPassword.jsx"
 // Variables CSS
 import "./App.css";
 import UserCard from "./components/UserCard/UserCard";
@@ -83,10 +87,13 @@ function App() {
             match: {
               params: { username },
             },
-          }) => <ProfileAdmin username={username} />}
-        />
+
+          }) => <ProfileAdmin username={username}/>}
+          />
+        <Route path ="/n/signup" component={NewRegister} />
 
         <Route exact path="/chat/test" component={Chat} />
+        <Route exact path="/accounts/password/reset/" component={ResetPassword} />
         <Route exact path="/auth/reset-password" component={ForgetPassword} />
         <Route
           path="/profile/:username"
