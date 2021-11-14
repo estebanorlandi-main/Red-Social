@@ -10,6 +10,7 @@ import NavBar from "./components/NavBar/NavBar.js";
 
 import Messenger from "./Pages/Messenger/Messenger";
 import Support from "./components/Support/Support";
+import Settings from "./Pages/Settings/Settings";
 
 //Admin
 import AdminLogin from "./components/Admin/AdminLogin";
@@ -18,6 +19,7 @@ import HomeAdmin from "./components/Admin/HomeAdmin/HomeAdmin";
 import ProfileAdmin from "./components/Admin/ProfileAdmin/ProfileAdmin";
 
 import Popup from "./components/Support/SupportLocalPopUp.jsx";
+import PrivateRoute from "./components/TypeRoutes/PrivateRoute";
 
 import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx";
 // Variables CSS
@@ -68,26 +70,14 @@ function App() {
       <NavBar />
 
       <Switch>
+        {/* Public */}
         <Route exact path="/" component={LandingPage} />
         <Route path="/home" component={Home} />
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
-        <Route path="/support" component={Support} />
         <Route path="/loginAdmin" component={AdminLogin} />
-        <Route path="/supportAdmin" component={AdminSupport} />
-        <Route path="/challenge" component={Challenge} />
-        <Route path="/homeAdmin" component={HomeAdmin} />
-        <Route
-          path="/profileAdmin/:username"
-          render={({
-            match: {
-              params: { username },
-            },
-          }) => <ProfileAdmin username={username} />}
-        />
 
-        <Route exact path="/chat/test" component={Chat} />
-        <Route exact path="/auth/reset-password" component={ForgetPassword} />
+        {/* Profile */}
         <Route
           path="/profile/:username"
           render={({
@@ -97,20 +87,29 @@ function App() {
           }) => <Profile username={username} />}
         />
 
-        <Route exact path="/messenger" component={Messenger} />
-        <Route
-          path="/test"
-          render={() => {
-            return <Popup />;
-          }}
+        {/* Private */}
+        <PrivateRoute path="/settings" component={Settings} />
+        <PrivateRoute exact path="/messenger" component={Messenger} />
+        <PrivateRoute exact path="/chat/test" component={Chat} />
+        <PrivateRoute
+          exact
+          path="/auth/reset-password"
+          component={ForgetPassword}
+        />
+        <PrivateRoute path="/support" component={Support} />
+        <PrivateRoute path="/supportAdmin" component={AdminSupport} />
+        <PrivateRoute path="/challenge" component={Challenge} />
+        <PrivateRoute path="/homeAdmin" component={HomeAdmin} />
+        <PrivateRoute
+          path="/profileAdmin/:username"
+          render={({
+            match: {
+              params: { username },
+            },
+          }) => <ProfileAdmin username={username} />}
         />
 
-        <Route
-          path="/algo"
-          render={() => {
-            return <UserCard />;
-          }}
-        />
+        <Route path="/" component={Home} />
       </Switch>
     </div>
   );

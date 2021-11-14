@@ -1,43 +1,44 @@
-import { SIGN_UP, LOG_IN, LOG_OUT, UPDATE_USER, VALIDATE_EMAIL, VALIDATE_USERNAME, UPDATE_PASSWORD } from "../actions/Session";
+import {
+  SIGN_UP,
+  LOG_IN,
+  LOG_OUT,
+  UPDATE_USER,
+  VALIDATE_EMAIL,
+  VALIDATE_USERNAME,
+  UPDATE_PASSWORD,
+} from "../actions/Session";
 
-import Cookie from "universal-cookie";
-const cookie = new Cookie();
+import { saveLocal, getLocal, removeLocal } from "../../utils/storage";
 
-const initialState = cookie.get("codenet_user") || {};
+const initialState = getLocal("codenet_user");
 
 export default function root(state = initialState, action) {
   switch (action.type) {
     case LOG_IN:
-      cookie.set("codenet_user", action.payload.data.user, { path: "/" });
-      console.log(cookie)
-      return cookie.get("codenet_user");
+      return saveLocal("codenet_user", action.payload.data.user);
 
     case SIGN_UP:
-      cookie.set("codenet_user", action.payload.data.user, { path: "/" });
-      return cookie.get("codenet_user");
+      return saveLocal("codenet_user", action.payload.data.user);
 
     case LOG_OUT:
-      cookie.remove("codenet");
-      cookie.remove("codenet_user");
-      return {};
+      return removeLocal("codenet_user");
 
     case UPDATE_USER:
-      cookie.set("codenet_user", action.payload.data.user, { path: "/" });
-      return cookie.get("codenet_user");
+      return saveLocal("codenet_user", action.payload.data.user);
 
     case VALIDATE_EMAIL:
       return {
-        ...state
+        ...state,
       };
 
     case VALIDATE_USERNAME:
       return {
-        ...state
-      }
+        ...state,
+      };
     case UPDATE_PASSWORD:
       return {
-        ...state
-      }
+        ...state,
+      };
 
     default:
       return state;

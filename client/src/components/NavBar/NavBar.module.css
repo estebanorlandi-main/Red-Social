@@ -112,6 +112,8 @@
   background-color: var(--c-blue);
   box-shadow: 0 0.25em 1em var(--c-blue);
   color: #fff;
+  min-width: max-content;
+  padding: 0.5rem 1rem;
   border-radius: 5em;
 }
 
@@ -273,7 +275,7 @@
   border-bottom: 2px solid var(--c-blue);
 }
 
-.active,
+.active:not(.signup),
 .active * {
   transform: none;
   cursor: default;

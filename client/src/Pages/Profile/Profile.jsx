@@ -12,6 +12,7 @@ import styles from "./Profile.module.css";
 import Select from "react-select";
 import { BsFillPencilFill } from "react-icons/bs";
 import Tags from "../../components/Tags/Tags";
+import { Link } from "react-router-dom";
 
 const selectStyles = {
   control: (styles) => ({ ...styles, width: "100%" }),
@@ -112,13 +113,10 @@ export default function Profile(props) {
                 ""
               )}
               {myProfile ? (
-                <button
-                  className={styles.edit}
-                  onClick={() => setEditar((old) => !old)}
-                >
+                <Link to={`/settings`} className={styles.edit}>
                   <BsFillPencilFill style={{ color: "#C94F4F" }} />
                   Edit
-                </button>
+                </Link>
               ) : (
                 ""
               )}
