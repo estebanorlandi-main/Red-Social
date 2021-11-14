@@ -141,7 +141,21 @@ const DB_UserID = async (username) => {
   });
   return UserID;
 };
-
+const DB_findUserEmailOrUsername = async(data)=>{
+  const findUser = await User.findOne({
+    where: {
+      [Op.or]: [
+        {
+          username: data,
+        },
+        {
+          email: data,
+        },
+      ]
+    }
+  })
+  return findUser
+}
 const DB_Allcomments = async (username) => {
   user = await DB_UserID(username);
   const final = user.comments.map((comment) => {
@@ -440,6 +454,7 @@ const BD_banUser = async (username) => {
 
 
 module.exports = {
+  DB_findUserEmailOrUsername,
   DB_findUserAll,
   DB_findUserQuery,
   DB_findUserParams,
@@ -467,6 +482,4 @@ module.exports = {
   BD_searchAdmin,
   BD_searchPost,
   BD_banUser
-
-
 };

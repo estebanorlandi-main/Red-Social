@@ -15,9 +15,12 @@ import AdminLogin from "./components/Admin/AdminLogin";
 import AdminSupport from "./components/Admin/AdminSupport";
 import HomeAdmin from "./Pages/HomeAdmin/HomeAdmin.jsx"
 
+import NewRegister from "./components/NewRegister/NewRegister.jsx"
+
 import Popup from "./components/Support/SupportLocalPopUp.jsx";
 
 import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx"
+import ResetPassword from "./components/ResetPassword/ResetPassword.jsx"
 // Variables CSS
 import "./App.css";
 import UserCard from "./components/UserCard/UserCard";
@@ -72,8 +75,10 @@ function App() {
         <Route path="/supportAdmin" component={AdminSupport} />
         <Route path="/challenge" component={Challenge} />
         <Route path="/homeAdmin" component={HomeAdmin}/>
+        <Route path ="/n/signup" component={NewRegister} />
 
         <Route exact path="/chat/test" component={Chat} />
+        <Route exact path="/accounts/password/reset/" component={ResetPassword} />
         <Route exact path="/auth/reset-password" component={ForgetPassword} />
         <Route
           path="/profile/:username"
