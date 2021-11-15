@@ -15,7 +15,6 @@ function Settings(props) {
   const [section, setSection] = useState(sections[0]);
 
   const handleSection = ({ target }) => {
-    console.log(target);
     setSection(target.getAttribute("showsection"));
   };
 

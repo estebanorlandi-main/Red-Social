@@ -1,4 +1,4 @@
-import { Route, Switch, useLocation } from "react-router-dom";
+import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import Home from "./Pages/Home/Home";
@@ -20,7 +20,6 @@ import ProfileAdmin from "./components/Admin/ProfileAdmin/ProfileAdmin";
 
 import NewRegister from "./components/NewRegister/NewRegister.jsx";
 
-import Popup from "./components/Support/SupportLocalPopUp.jsx";
 import PrivateRoute from "./components/TypeRoutes/PrivateRoute";
 
 import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx";
@@ -34,7 +33,6 @@ import { Link } from "react-router-dom";
 import { BiMessageAltDetail } from "react-icons/bi";
 
 // chat v.2
-import Chat from "./components/Chat/Chat";
 import Challenge from "./Pages/Challenge/Challenge";
 
 function App() {
@@ -73,13 +71,19 @@ function App() {
       <NavBar />
 
       <Switch>
-        {/* Public */}
         <Route exact path="/" component={LandingPage} />
         <Route path="/home" component={Home} />
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
         <Route path="/loginAdmin" component={AdminLogin} />
         <Route path="/n/signup" component={NewRegister} />
+
+        <Route
+          exact
+          path="/accounts/password/reset/"
+          component={ResetPassword}
+        />
+        <Route exact path="/auth/reset-password" component={ForgetPassword} />
 
         {/* Profile */}
         <Route
@@ -91,15 +95,8 @@ function App() {
           }) => <Profile username={username} />}
         />
 
-        {/* Private */}
         <PrivateRoute path="/settings" component={Settings} />
         <PrivateRoute exact path="/messenger" component={Messenger} />
-        <PrivateRoute exact path="/chat/test" component={Chat} />
-        <PrivateRoute
-          exact
-          path="/auth/reset-password"
-          component={ForgetPassword}
-        />
         <PrivateRoute path="/support" component={Support} />
         <PrivateRoute path="/supportAdmin" component={AdminSupport} />
         <PrivateRoute path="/challenge" component={Challenge} />
@@ -111,24 +108,7 @@ function App() {
           )}
         />
 
-        <Route
-          exact
-          path="/accounts/password/reset/"
-          component={ResetPassword}
-        />
-
-        <Route exact path="/auth/reset-password" component={ForgetPassword} />
-
-        <Route
-          path="/profile/:username"
-          render={({
-            match: {
-              params: { username },
-            },
-          }) => <ProfileAdmin username={username} />}
-        />
-
-        <Route path="/" component={Home} />
+        <Route path="/" render={() => <Redirect to="/home" />} />
       </Switch>
     </div>
   );

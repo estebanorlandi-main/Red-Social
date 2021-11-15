@@ -85,9 +85,11 @@ function Post({ post, customClass, socket, admin }) {
     title: post.title,
     content: post.content,
     image: post.image,
-    tag: post.tags
+    tag: post.tags,
   });
-  const [optionsTags, setOptionsTags] = useState(allTags.map((tag) =>({value: tag.label, label: tag.label})))//El select no funciona sin un array de objetos con value y label
+  const [optionsTags, setOptionsTags] = useState(
+    allTags.map((tag) => ({ value: tag.label, label: tag.label }))
+  ); //El select no funciona sin un array de objetos con value y label
 
   const createdAt = new Date(post.updatedAt).getTime();
   const now = new Date().getTime();
@@ -135,7 +137,7 @@ function Post({ post, customClass, socket, admin }) {
       title: post.title,
       content: post.content,
       image: post.image,
-      tags: post.tags
+      tags: post.tags,
     });
   }, [post]);
 
@@ -163,7 +165,7 @@ function Post({ post, customClass, socket, admin }) {
       title: post.title,
       content: post.content,
       image: post.image,
-      tag: post.tag
+      tag: post.tag,
     });
     setEditMode(mode);
   };
@@ -189,9 +191,9 @@ function Post({ post, customClass, socket, admin }) {
     }
     setEdit((old) => ({ ...old, [name]: value }));
   }
-  function handleSelect(e){
-    console.log(e, post.tag)
-    setEdit((old) => ({...old, tag:e.map(tag => tag.value)}))
+  function handleSelect(e) {
+    console.log(e, post.tag);
+    setEdit((old) => ({ ...old, tag: e.map((tag) => tag.value) }));
   }
   const submitEdit = (e) => dispatch(updatePost(post.idPost, edit));
 
@@ -253,15 +255,6 @@ function Post({ post, customClass, socket, admin }) {
       ) : (
         ""
       )}
-      {editMode ?
-        <Select onChange={handleSelect} defaultValue={post.tag.map(tag=>({label:tag, value:tag}))} options={optionsTags} isMulti />
-        :
-        <ul className={styles.tags}>
-          {post.tag.map((tag, i) => (
-            <li key={i}>{tag}</li>
-          ))}
-        </ul>
-      }
 
       <Tags tags={post.tag} />
 

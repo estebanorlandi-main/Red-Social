@@ -1,18 +1,20 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { socketConnection } from "../../Redux/actions/Users";
+import { getPosts, updatePage, uploadTags } from "../../Redux/actions/Post";
+import { Link } from "react-router-dom";
+
+import axios from "axios";
+
 import Post from "../../components/Post/Post";
 import NewPost from "../../components/NewPost/NewPost";
-import { io, Socket } from "socket.io-client";
 import UserCard from "../../components/UserCard/UserCard";
-
-import { Link } from "react-router-dom";
-import Select from "react-select";
-import styles from "./Home.module.css";
-import { clearPosts, getPosts, updatePage, uploadTags } from "../../Redux/actions/Post";
-import axios from "axios";
-import { socketConnection } from "../../Redux/actions/Users";
 import Loader from "../../components/Loader/Loader";
+
 import { BiChevronUp } from "react-icons/bi";
+
+import styles from "./Home.module.css";
+
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
   const allTags = useSelector((state) => state.postsReducer.tags);
@@ -24,20 +26,19 @@ function Home(props) {
     ({ postsReducer: { page, totalPages } }) => [page, totalPages]
   );
   const dispatch = useDispatch();
-  const [orden, setOrden] = useState("cronologico")
+  const [orden, setOrden] = useState("cronologico");
   const [createPost, setCreatePost] = useState(false);
   const [newPosts, setNewPosts] = useState(true);
   const [conversations, setConversations] = useState([]);
   const [first, setFirst] = useState(true);
-  const [tags, setTags] = useState([])
-  const [tagsOptions, setTagsOptions] = useState([])//El select no funciona sin un array de objetos con value y label
+  const [tags, setTags] = useState([]);
+  const [tagsOptions, setTagsOptions] = useState([]); //El select no funciona sin un array de objetos con value y label
   const options = [
     { value: "cronologico", label: "Cronologico" },
     { value: "userLikes", label: "Likes" },
     { value: "comments", label: "Comentarios" },
-    { value: "combinados", label: "Inicial"}
+    { value: "combinados", label: "Inicial" },
   ];
-  console.log(tagsOptions, allTags)
   useEffect(() => {
     dispatch(socketConnection(session.username));
   }, []);
@@ -61,16 +62,20 @@ function Home(props) {
       dispatch(updatePage(0));
       return;
     }
-    dispatch(getPosts(page,tags, orden));
+    dispatch(getPosts(page, tags, orden));
   }, [dispatch, page, first, totalPages, orden]);
 
   useEffect(() => {
     if (first) {
-      dispatch(uploadTags())
-      setFirst(false)
+      dispatch(uploadTags());
+      setFirst(false);
     }
-    setTagsOptions(allTags.map((tag) => {return ({value: tag.label, label: tag.label})}))
-  }, [allTags])
+    setTagsOptions(
+      allTags.map((tag) => {
+        return { value: tag.label, label: tag.label };
+      })
+    );
+  }, [allTags]);
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
@@ -78,14 +83,20 @@ function Home(props) {
     };
   }, [handleScroll]);
 
+  /*
   const handleSelect = (e) => {
-    console.log(e)
     setOrden(e.value);
   };
   const handleSelect2 = (e) => {
-    console.log(e)
     setTags(e.map((option) => option.value));
   };
+  <li>
+    <Select onChange={handleSelect} options={options} />
+  </li>
+  <li>
+    <Select onChange={handleSelect2} options={tagsOptions} isMulti />
+  </li>
+  */
 
   useEffect(() => {
     const getConversations = async () => {
@@ -166,22 +177,7 @@ function Home(props) {
           </button>
         </div>
 
-            <div className={styles.newPostOpen}>
-              <UserCard toRight showImage />
-              <button
-                className={styles.createPost}
-                onClick={() => setCreatePost(true)}
-              >
-                Create Post
-              </button>
-            </div>
-          <ul>
-          <li>
-            <Select onChange={handleSelect} options={options} />
-          </li>
-          <li>
-            <Select onChange={handleSelect2} options={tagsOptions} isMulti/>
-          </li>
+        <ul>
           {posts.map((post, i) => (
             <li key={i}>
               <Post post={post} socket={socket} />

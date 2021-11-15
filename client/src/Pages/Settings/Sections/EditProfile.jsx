@@ -1,27 +1,45 @@
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Select from "react-select";
 import ImageUpload from "../../../components/ImageUpload/ImageUpload";
 
 import styles from "./EditProfile.module.css";
-import { useState } from "react";
 import { updateUser } from "../../../Redux/actions/Session";
 
 function EditProfile(props) {
+  const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer);
+  const allTags = useSelector((state) => state.postsReducer.tags);
 
   const [inputs, setInputs] = useState({
+    name: "",
+    lastname: "",
+    about: "",
     tags: session.tags,
   });
 
-  const [errors, setErrors] = useState({});
+  const [options, setOptions] = useState(
+    allTags.map((tag) => ({ value: tag.label, label: tag.label }))
+  );
+
+  const [errors, setErrors] = useState({
+    name: "",
+    lastname: "",
+    gitaccount: "",
+    about: "",
+  });
 
   const handleTags = (options) => {
     setInputs((old) => ({ ...old, tags: options.map((tag) => tag.value) }));
   };
 
+  const handleChange = ({ target: { name, value } }) => {
+    setInputs((old) => ({ ...old, [name]: value }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (Object.values(errors).every()) updateUser(session.username, inputs);
+    dispatch(updateUser(session.username, inputs));
   };
 
   return (
@@ -34,38 +52,59 @@ function EditProfile(props) {
         <label>
           Nombre
           <div className="input-group">
-            <input placeholder={session.name} />
+            <input
+              name="name"
+              onChange={handleChange}
+              placeholder={session.name || "Name"}
+            />
           </div>
         </label>
 
         <label>
           Apellido
           <div className="input-group">
-            <input placeholder={session.lastname} />
+            <input
+              name="lastname"
+              onChange={handleChange}
+              placeholder={session.lastname || "Last Name"}
+            />
           </div>
         </label>
       </div>
 
       <label>
+        GitHub
+        <div className="input-group">
+          <input
+            name="gitaccount"
+            onChange={handleChange}
+            placeholder={session.gitaccount || "GitHub Account"}
+          />
+        </div>
+      </label>
+
+      <label>
         About
         <div className="input-group">
-          <textarea placeholder={session.about} />
+          <textarea
+            name="about"
+            onChange={handleChange}
+            placeholder={session.about || "About"}
+          />
         </div>
       </label>
 
       <label>
         Tags
         <Select
-          value={inputs.tags.map((tag) => ({
-            label: tag,
-            value: tag,
-          }))}
+          options={options}
           name="tags"
           onChange={handleTags}
           placeholder="Tags"
           isMulti
         />
       </label>
+      <button type="submit">Change</button>
     </form>
   );
 }
