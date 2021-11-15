@@ -32,6 +32,8 @@ io.on("connection", (socket) => {
   //send and get message
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
     const user = getUser(receiverId);
+    console.log(text)
+    
     io.to(user?.socketId).emit("getMessage", {
       senderId,
       text,
@@ -41,7 +43,7 @@ io.on("connection", (socket) => {
   //send and get untrackmessages
   socket.on("untrackMessage", ({ receiverId, data, conversationId }) => {
     const user = getUser(receiverId);
-    console.log(user)
+    // console.log(data)
     
     io.to(user?.socketId).emit("getUntrackMessage", {
       untrack: data,

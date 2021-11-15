@@ -4,6 +4,7 @@ import ChatOnline from "../../components/ChatOnline/ChatOnline.jsx";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { socketConnection } from "../../Redux/actions/Users";
+import { setUntrackMessages } from "../../Redux/actions/Message.js";
 
 import axios from "axios";
 
@@ -25,7 +26,7 @@ export default function Messenger() {
   const scrollRef = useRef();
 
   // console.log(currentChat)
-  console.log(untrackMessages)
+  // console.log(untrackMessages)
 
   useEffect(() => {
     if(!Object.keys(socket).length){
@@ -37,7 +38,8 @@ export default function Messenger() {
     if(Object.keys(socket).length){
       socket.on("getMessage", (data) => {
 
-        console.log(data)
+        // console.log(data)
+
         setArrivalMessage({
           sender: data.senderId,
           text: data.text,
@@ -51,28 +53,30 @@ export default function Messenger() {
     if(Object.keys(socket).length){
       socket.on("getUntrackMessage", (data) => {
 
-        // console.log(data.untrack)
-        // console.log(data.conversationId)
+        console.log(data.untrack)
+        console.log(data.conversationId)
+
+        // dispatch(setUntrackMessages(data));
         
-        const index =  untrackMessages?.findIndex((obj) =>
-        obj.conversationId === data.conversationId
-        )
+        // const index =  untrackMessages?.findIndex((obj) =>
+        // obj.conversationId === data.conversationId
+        // )
 
-        if(index !== -1){
-          let aux = untrackMessages
-          aux[index] = data
+        // if(index && index !== -1){
+        //   let aux = untrackMessages
+        //   aux[index] = data
 
-          setUntrackMessages(aux);
+        //   setUntrackMessages(aux);
 
-        } else{
-          setUntrackMessages((prev) => [
-            ...prev,
-            {
-              conversationId: data.conversationId, 
-              untrack: data.untrack
-            }
-          ])
-        }
+        // } else{
+        //   setUntrackMessages((prev) => [
+        //     ...prev,
+        //     {
+        //       conversationId: data.conversationId, 
+        //       untrack: data.untrack
+        //     }
+        //   ])
+        // }
       });
     } 
   }, []);
@@ -86,7 +90,8 @@ export default function Messenger() {
   useEffect(() => {
     if(Object.keys(socket).length){
       socket.on("getUsers", (users) => {
-        console.log(users);
+        // console.log(users);
+
         // setOnlineUsers(
         //   user.followings.filter((f) => users.some((u) => u.userId === f))
         // );
@@ -100,7 +105,7 @@ export default function Messenger() {
         const res = await axios.get(
           "http://localhost:3001/conversation/" + user.username
         );
-        console.log(res.data);
+        // console.log(res.data);
         setConversations(res.data);
       } catch (err) {
         console.log(err);
