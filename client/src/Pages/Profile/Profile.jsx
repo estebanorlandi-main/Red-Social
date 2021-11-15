@@ -12,6 +12,7 @@ import styles from "./Profile.module.css";
 import Select from "react-select";
 import { BsFillPencilFill } from "react-icons/bs";
 import Tags from "../../components/Tags/Tags";
+import { Link } from "react-router-dom";
 
 const selectStyles = {
   control: (styles) => ({ ...styles, width: "100%" }),
@@ -84,7 +85,6 @@ export default function Profile(props) {
   let git = profile.gitaccount && profile.gitaccount.split("/");
   git = git && git[git.length - 1];
 
-  console.log(profile);
   return profile ? (
     <div>
       {profile.strike?.length === 3 ? (
@@ -105,8 +105,8 @@ export default function Profile(props) {
               )}
               {myProfile ? (
                 <button
+                  onClick={() => setEditar(!editar)}
                   className={styles.edit}
-                  onClick={() => setEditar((old) => !old)}
                 >
                   <BsFillPencilFill style={{ color: "#C94F4F" }} />
                   Edit
