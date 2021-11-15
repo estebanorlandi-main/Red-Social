@@ -5,7 +5,6 @@ import { removeProfile, getUser } from "../../../Redux/actions/Users";
 
 import PostAdmin from "../../../components/Admin/PostAdmin/PostAdmin";
 
-// import { getUser } from "../../Redux/actions/Users";
 import { updateUser } from "../../../Redux/actions/Session";
 import validate from "../../../utils/validate";
 import styles from "./stylesProfile.css";
@@ -38,7 +37,6 @@ export default function ProfileAdmin(props) {
 
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
-  const profileAdmin = useSelector((state) => state);
 
   const myProfile = session.username === profile.username;
 

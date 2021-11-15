@@ -1,6 +1,3 @@
-import { useState, useEffect } from "react";
-import { Link, NavLink, useHistory, useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import UserCard from "../UserCard/UserCard";
 
 import styles from "./Notification.module.css";

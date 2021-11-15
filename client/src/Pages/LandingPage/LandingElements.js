@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import { fadeInDown, fadeInLeft, fadeInRight, pulse } from "react-animations";
+import { fadeInDown, fadeInLeft, fadeInRight } from "react-animations";
 
 const toDown = keyframes`${fadeInDown}`;
 const toLeft = keyframes`${fadeInLeft}`;

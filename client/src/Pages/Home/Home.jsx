@@ -41,7 +41,7 @@ function Home(props) {
   ];
   useEffect(() => {
     dispatch(socketConnection(session.username));
-  }, []);
+  }, [dispatch, session.username]);
 
   // useEffect(() => {
   //   if(Object.keys(socket).length){
@@ -88,12 +88,13 @@ function Home(props) {
   const handleSelect = (e) => {
     setOrden(e.value);
   };
-  const handleSelect2 = (e) => {
-    setTags(e.map((option) => option.value));
-  };
   <li>
     <Select onChange={handleSelect} options={options} />
   </li>
+
+  const handleSelect2 = (e) => {
+    setTags(e.map((option) => option.value));
+  };
   <li>
     <Select onChange={handleSelect2} options={tagsOptions} isMulti />
   </li>

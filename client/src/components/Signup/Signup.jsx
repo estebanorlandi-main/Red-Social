@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Redirect } from "react-router";
-import Select from "react-select";
 import { Link } from "react-router-dom";
 
-import { singUp, validateEmail, validateUsername } from "../../Redux/actions/Session.js";
+import {
+  singUp,
+  validateEmail,
+  validateUsername,
+} from "../../Redux/actions/Session.js";
 import validate from "../../utils/validate";
 
 import { MdEmail } from "react-icons/md";
@@ -14,69 +17,39 @@ import style from "./Signup.module.css";
 
 function Signup(props) {
   const dispatch = useDispatch();
-  const [section, setSection] = useState(1);
 
   const [inputs, setInputs] = useState({
     username: process.env.REACT_APP_USERNAME || "",
     password: process.env.REACT_APP_PASSWORD || "",
-    // name: process.env.REACT_APP_NAME || "",
-    // lastname: process.env.REACT_APP_LAST_NAME || "",
-    // image: process.env.REACT_APP_AVATAR || "",
     email: process.env.REACT_APP_EMAIL || "",
-    // gitaccount: process.env.REACT_APP_GITHUB || "",
-    // about: process.env.REACT_APP_ABOUT || "",
-    // tags: [],
   });
 
   const [err, setErr] = useState({
     username: "",
     password: "",
-    // name: "",
-    // lastname: "",
     email: "",
-    // gitaccount: "",
-    // image: "",
-    // about: "",
   });
 
   const [registered, setRegistered] = useState(false);
-
-  const options = [
-    { value: "js", label: "JavaScript" },
-    { value: "python", label: "Python" },
-    { value: "cpp", label: "C++" },
-    { value: "php", label: "PHP" },
-    { value: "java", label: "Java" },
-    { value: "c", label: "C" },
-    { value: "go", label: "Go" },
-    { value: "kotlin", label: "Kotiln" },
-    { value: "sql", label: "SQL" },
-    { value: "mongodb", label: "MongoDB" },
-    { value: "postgresql", label: "PostgreSQL" },
-  ];
 
   const handleChange = ({ target: { name, value } }) => {
     setInputs((old) => ({ ...old, [name]: value }));
     setErr((old) => ({ ...old, [name]: validate(name, value) }));
   };
 
-  const handleBlur = async ({ target: { name, value } })=>{
-    if(name == "username" && value){
-      let username = await dispatch(validateUsername(value))
-      if(!username.payload.data.success){
-        setErr((old)=>({...old, [name]:username.payload.data.username}))
+  const handleBlur = async ({ target: { name, value } }) => {
+    if (name === "username" && value) {
+      let username = await dispatch(validateUsername(value));
+      if (!username.payload.data.success) {
+        setErr((old) => ({ ...old, [name]: username.payload.data.username }));
       }
     }
-    if(name == "email" && value){
-      let email = await dispatch(validateEmail(value))
-      if(!email.payload.data.success){
-        setErr((old)=>({...old,[name]:email.payload.data.email}))
+    if (name === "email" && value) {
+      let email = await dispatch(validateEmail(value));
+      if (!email.payload.data.success) {
+        setErr((old) => ({ ...old, [name]: email.payload.data.email }));
       }
     }
-  }
-
-  const handleSelect = (e) => {
-    setInputs((old) => ({ ...old, tags: e.map((option) => option.value) }));
   };
 
   const handleSubmit = (e) => {
@@ -90,28 +63,18 @@ function Signup(props) {
       if (obj.image === "")
         obj.image = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
 
-      // obj.gitaccount = `https://github.com/${obj.gitaccount}`;
-
       dispatch(singUp(obj));
 
       setInputs({
         username: "",
         password: "",
-        // name: "",
-        // lastname: "",
         email: "",
-        // gitaccount: "",
-        // about: "",
-        // tags: "",
       });
 
       setErr((old) => ({
         username: "",
         password: "",
-        // name: "",
-        // lastname: "",
         email: "",
-        // gitaccount: "",
       }));
 
       setRegistered(true);
@@ -119,7 +82,7 @@ function Signup(props) {
       setErr((old) => errors);
     }
   };
-  console.log(err)
+
   return (
     <div className={style.container}>
       {!registered ? (
@@ -127,42 +90,14 @@ function Signup(props) {
           <form onSubmit={(e) => handleSubmit(e)}>
             <h1>Sign Up</h1>
 
-            {/*<ul className={style.dots}>
-              {[1, 2, 3, 4].map((value, i) => (
-                <li
-                  key={value}
-                  onClick={() => setSection(value)}
-                  className={`${style.dot} ${
-                    value === section ? style.active : ""
-                  }`}
-                ></li>
-              ))}
-            </ul>*/}
-
-            {/*
-            <div>
-              <button
-                type="button"
-                onClick={() => setSection((old) => (old > 1 ? --old : old))}
-              >
-                prev
-              </button>
-              <button
-                type="button"
-                onClick={() => setSection((old) => (old < 4 ? ++old : old))}
-              >
-                next
-              </button>
-            </div>
-            */}
-            <section style={{ display: section === 1 ? "block" : "none" }}>
+            <section>
               <label>
                 Username
                 <div className="input-group">
                   <FaUserCircle />
                   <input
                     onChange={(e) => handleChange(e)}
-                    onBlur={(e)=> handleBlur(e)}
+                    onBlur={(e) => handleBlur(e)}
                     className={style.input}
                     value={inputs.username}
                     name="username"
@@ -179,7 +114,7 @@ function Signup(props) {
                   <MdEmail />
                   <input
                     onChange={(e) => handleChange(e)}
-                    onBlur={(e)=> handleBlur(e)}
+                    onBlur={(e) => handleBlur(e)}
                     className={style.input}
                     value={inputs.email}
                     name="email"
@@ -292,7 +227,11 @@ function Signup(props) {
               </label>
             </section>*/}
             <div className="buttonContainer">
-              <button className="btn" type="submit" disabled={err.username || err.email || err.password}>
+              <button
+                className="btn"
+                type="submit"
+                disabled={err.username || err.email || err.password}
+              >
                 SignUp
               </button>
               <Link className="btn" to="/login">

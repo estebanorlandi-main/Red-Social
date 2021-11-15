@@ -47,7 +47,7 @@ export default function Profile(props) {
     if (!Object.keys(socket).length) {
       dispatch(socketConnection(session.username));
     }
-  }, []);
+  }, [dispatch, socket, session.username]);
 
   useEffect(async () => {
     if (allTags.length === 0) {
@@ -103,7 +103,10 @@ export default function Profile(props) {
     <div>
       {profile.strike?.length === 3 ? (
         <div>
-          <img src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png" />
+          <img
+            src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png"
+            alt=""
+          />
         </div>
       ) : (
         <main className={styles.container}>
