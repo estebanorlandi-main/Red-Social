@@ -1,17 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Post from "../../Post/Post";
 import PostAdmin from "../PostAdmin/PostAdmin";
 import NewPost from "../../NewPost/NewPost";
 import UserCardAdmin from "../UserCardAdmin/UserCardAdmin";
 
 import styles from "./stalesAdmin.css";
-import { clearPosts, getPosts, updatePage } from "../../../Redux/actions/Post";
-import { FaLeaf } from "react-icons/fa";
+import { getPosts, updatePage } from "../../../Redux/actions/Post";
 
 function HomeAdmin(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
-  
+
   const [page, totalPages] = useSelector(
     ({ postsReducer: { page, totalPages } }) => [page, totalPages]
   );
@@ -19,7 +17,7 @@ function HomeAdmin(props) {
   const dispatch = useDispatch();
 
   const [createPost, setCreatePost] = useState(false);
-  const [first, setFirst] = useState(true);
+  const [first] = useState(true);
 
   const handleScroll = useCallback(() => {
     if (
@@ -89,3 +87,4 @@ function HomeAdmin(props) {
 }
 
 export default HomeAdmin;
+

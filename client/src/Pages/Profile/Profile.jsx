@@ -29,7 +29,11 @@ export default function Profile(props) {
 
   const allTags = useSelector((state) => state.postsReducer.tags);
 
-  const [options, setOptions] = useState(allTags.map(tag => {return ({value: tag.label, label: tag.label})}))//El select no funciona sin un array de objetos con value y label
+  const [options] = useState(
+    allTags.map((tag) => {
+      return { value: tag.label, label: tag.label };
+    })
+  ); //El select no funciona sin un array de objetos con value y label
 
   const socket = useSelector((state) => state.usersReducer.socket);
 
@@ -44,7 +48,7 @@ export default function Profile(props) {
     if (!Object.keys(socket).length) {
       dispatch(socketConnection(session.username));
     }
-  }, []);
+  }, [dispatch, socket, session.username]);
 
   const [inputs, setInputs] = useState({
     name: session.name || "",
@@ -89,7 +93,10 @@ export default function Profile(props) {
     <div>
       {profile.strike?.length === 3 ? (
         <div>
-          <img src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png" />
+          <img
+            src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png"
+            alt=""
+          />
         </div>
       ) : (
         <main className={styles.container}>
@@ -104,13 +111,10 @@ export default function Profile(props) {
                 ""
               )}
               {myProfile ? (
-                <button
-                  onClick={() => setEditar(!editar)}
-                  className={styles.edit}
-                >
+                <Link to="/settings" className={styles.edit}>
                   <BsFillPencilFill style={{ color: "#C94F4F" }} />
                   Edit
-                </button>
+                </Link>
               ) : (
                 ""
               )}

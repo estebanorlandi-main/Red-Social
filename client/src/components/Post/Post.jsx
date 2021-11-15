@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import image from "../../images/userCard.png";
-import Select from "react-select";
 import UserCard from "../UserCard/UserCard";
 import Tags from "../Tags/Tags";
 import { NavLink } from "react-router-dom";
@@ -10,7 +7,6 @@ import {
   commentPost,
   deletePost,
   updatePost,
-  updatePage,
   likePost,
 } from "../../Redux/actions/Post";
 
@@ -22,7 +18,6 @@ import styles from "./Post.module.css";
 import {
   MdFavoriteBorder,
   MdOutlineModeComment,
-  MdShare,
   MdSend,
   MdFavorite,
 } from "react-icons/md";
@@ -31,7 +26,7 @@ import { GoTrashcan } from "react-icons/go";
 
 import { BsFillPencilFill } from "react-icons/bs";
 
-import { BiCommentDetail, BiDotsVerticalRounded } from "react-icons/bi";
+import { BiDotsVerticalRounded } from "react-icons/bi";
 import validate from "../../utils/validate";
 
 const parseContent = (text) => {
@@ -59,7 +54,6 @@ const parseContent = (text) => {
 function Post({ post, customClass, socket, admin }) {
   const dispatch = useDispatch();
 
-  const page = useSelector(({ postsReducer: { page } }) => page);
   const session = useSelector((state) => state.sessionReducer || {});
   const allTags = useSelector((state) => state.postsReducer.tags);
   const [firstLoad, setFirstLoad] = useState(true);
@@ -77,7 +71,6 @@ function Post({ post, customClass, socket, admin }) {
   const [commentError, setCommentError] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editErrors, setEditErrors] = useState({});
-  const [reload, setReload] = useState(false);
 
   const [options, setOptions] = useState(false);
 
@@ -85,22 +78,16 @@ function Post({ post, customClass, socket, admin }) {
     title: post.title,
     content: post.content,
     image: post.image,
-    tag: post.tags
+    tag: post.tags,
   });
-  const [optionsTags, setOptionsTags] = useState(allTags.map((tag) =>({value: tag.label, label: tag.label})))//El select no funciona sin un array de objetos con value y label
+
+  const [optionsTags, setOptionsTags] = useState(
+    allTags.map((tag) => ({ value: tag.label, label: tag.label }))
+  ); //El select no funciona sin un array de objetos con value y label
 
   const createdAt = new Date(post.updatedAt).getTime();
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
-
-  // useEffect(() => {
-  //   if(currentPost){
-  //     post = currentPost
-
-  //     // console.log(post)
-  //     setReload((prev) => !prev)
-  //   }
-  // }, [currentPost])
 
   useEffect(() => {
     if (Object.keys(socket).length) {
@@ -110,7 +97,7 @@ function Post({ post, customClass, socket, admin }) {
         }
       });
     }
-  }, [socket]);
+  }, [socket, post.idPost]);
 
   useEffect(() => {
     if (liked) {
@@ -122,7 +109,15 @@ function Post({ post, customClass, socket, admin }) {
         type: 1,
       });
     }
-  }, [liked]);
+  }, [
+    liked,
+    post.idPost,
+    post.username,
+    session.image,
+    session.username,
+    socket,
+    post.user.username,
+  ]);
 
   useEffect(() => {
     if (firstLoad) {
@@ -135,7 +130,7 @@ function Post({ post, customClass, socket, admin }) {
       title: post.title,
       content: post.content,
       image: post.image,
-      tags: post.tags
+      tags: post.tags,
     });
   }, [post]);
 
@@ -163,7 +158,7 @@ function Post({ post, customClass, socket, admin }) {
       title: post.title,
       content: post.content,
       image: post.image,
-      tag: post.tag
+      tag: post.tag,
     });
     setEditMode(mode);
   };
@@ -189,10 +184,12 @@ function Post({ post, customClass, socket, admin }) {
     }
     setEdit((old) => ({ ...old, [name]: value }));
   }
-  function handleSelect(e){
-    console.log(e, post.tag)
-    setEdit((old) => ({...old, tag:e.map(tag => tag.value)}))
+
+  function handleSelect(e) {
+    console.log(e, post.tag);
+    setEdit((old) => ({ ...old, tag: e.map((tag) => tag.value) }));
   }
+
   const submitEdit = (e) => dispatch(updatePost(post.idPost, edit));
 
   const handleOptions = () => setOptions((old) => !old);
@@ -253,15 +250,6 @@ function Post({ post, customClass, socket, admin }) {
       ) : (
         ""
       )}
-      {editMode ?
-        <Select onChange={handleSelect} defaultValue={post.tag.map(tag=>({label:tag, value:tag}))} options={optionsTags} isMulti />
-        :
-        <ul className={styles.tags}>
-          {post.tag.map((tag, i) => (
-            <li key={i}>{tag}</li>
-          ))}
-        </ul>
-      }
 
       <Tags tags={post.tag} />
 

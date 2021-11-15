@@ -12,7 +12,7 @@ import styles from "./Messenger.module.css";
 
 export default function Messenger() {
   const user = useSelector((store) => store.sessionReducer);
-  const socket = useSelector((state) => state.usersReducer.socket)
+  const socket = useSelector((state) => state.usersReducer.socket);
 
   const dispatch = useDispatch();
 
@@ -29,13 +29,13 @@ export default function Messenger() {
   // console.log(untrackMessages)
 
   useEffect(() => {
-    if(!Object.keys(socket).length){
+    if (!Object.keys(socket).length) {
       dispatch(socketConnection(user.username));
-    } 
-  }, [])
+    }
+  }, [dispatch, socket, user.username]);
 
   useEffect(() => {
-    if(Object.keys(socket).length){
+    if (Object.keys(socket).length) {
       socket.on("getMessage", (data) => {
 
         // console.log(data)
@@ -46,8 +46,8 @@ export default function Messenger() {
           createdAt: Date.now(),
         });
       });
-    } 
-  }, []);
+    }
+  }, [socket]);
 
   useEffect(() => {
     if(Object.keys(socket).length){
@@ -88,7 +88,7 @@ export default function Messenger() {
   }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
-    if(Object.keys(socket).length){
+    if (Object.keys(socket).length) {
       socket.on("getUsers", (users) => {
         // console.log(users);
 
@@ -96,8 +96,8 @@ export default function Messenger() {
         //   user.followings.filter((f) => users.some((u) => u.userId === f))
         // );
       });
-    } 
-  }, [user]);
+    }
+  }, [socket, user]);
 
   useEffect(() => {
     const getConversations = async () => {
@@ -259,4 +259,3 @@ export default function Messenger() {
     </>
   );
 }
-
