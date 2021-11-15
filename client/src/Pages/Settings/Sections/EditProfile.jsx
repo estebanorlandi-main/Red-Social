@@ -14,14 +14,10 @@ function EditProfile(props) {
   const [inputs, setInputs] = useState({
     name: "",
     lastname: "",
+    gitaccount: "",
     about: "",
     tags: session.tags,
   });
-
-  const options = allTags.map((tag) => ({
-    value: tag.label,
-    label: tag.label,
-  }));
 
   /*const [errors, setErrors] = useState({
     name: "",
@@ -57,6 +53,7 @@ function EditProfile(props) {
               name="name"
               onChange={handleChange}
               placeholder={session.name || "Name"}
+              value={inputs.name}
             />
           </div>
         </label>
@@ -68,6 +65,7 @@ function EditProfile(props) {
               name="lastname"
               onChange={handleChange}
               placeholder={session.lastname || "Last Name"}
+              value={inputs.lastname}
             />
           </div>
         </label>
@@ -80,6 +78,7 @@ function EditProfile(props) {
             name="gitaccount"
             onChange={handleChange}
             placeholder={session.gitaccount || "GitHub Account"}
+            value={inputs.gitaccount}
           />
         </div>
       </label>
@@ -91,6 +90,7 @@ function EditProfile(props) {
             name="about"
             onChange={handleChange}
             placeholder={session.about || "About"}
+            value={inputs.about}
           />
         </div>
       </label>
@@ -98,7 +98,13 @@ function EditProfile(props) {
       <label>
         Tags
         <Select
-          options={options}
+          options={
+            allTags?.length &&
+            allTags.map((tag) => ({
+              value: tag.label,
+              label: tag.label,
+            }))
+          }
           name="tags"
           onChange={handleTags}
           placeholder="Tags"
