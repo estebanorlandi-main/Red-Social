@@ -6,9 +6,9 @@ router.post("/", async (req, res) => {
     const { code } = req.body;
 
     try {
-      const tested = eval(code);
-      const tested2 = Function("return " + code)();
-      res.status(200).send({ tested, tested2 });
+      /*const tested = eval(code);*/
+      const tested2 = (new Function("return " + code)();)
+      res.status(200).send({ tested2 });
     } catch (e) {
       res.status(200).send({ error: "Non iterable function", e });
     }
