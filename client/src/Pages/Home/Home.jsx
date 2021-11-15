@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { socketConnection } from "../../Redux/actions/Users";
-import { getPosts, updatePage, uploadTags } from "../../Redux/actions/Post";
+import { getPosts, updatePage, getTags, loadTags } from "../../Redux/actions/Post";
 import { Link } from "react-router-dom";
 
 import axios from "axios";
@@ -65,9 +65,10 @@ function Home(props) {
     dispatch(getPosts(page, tags, orden));
   }, [dispatch, page, first, totalPages, orden]);
 
-  useEffect(() => {
-    if (first) {
-      dispatch(uploadTags());
+  useEffect(async () => {
+    if (allTags.length === 0) {
+      await dispatch(loadTags());
+      dispatch(getTags())
       setFirst(false);
     }
     setTagsOptions(

@@ -74,9 +74,9 @@ export function commentPost(postid, content, username, socket) {
       .then((res) => {
         socket.emit("reloadPostInfo", res.data);
 
-        dispatch({ 
-          type: POST_COMMENT, 
-          payload: res.data 
+        dispatch({
+          type: POST_COMMENT,
+          payload: res.data
         })
       })
       .catch((error) => dispatch({ type: ERROR, payload: error }));
@@ -88,7 +88,7 @@ export function getPosts(page, tag, orden) {
   return (dispatch) =>
     axios
       .get(`http://localhost:3001/post?page=${page}&tag=${tag}&orden=${orden}`,)
-      .then((res) => {console.log(res.data.tags);dispatch({ type: GET_POSTS, payload: res.data })})
+      .then((res) => {dispatch({ type: GET_POSTS, payload: res.data })})
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }
 
@@ -120,7 +120,7 @@ export function likePost(data, socket) {
       .post("http://localhost:3001/likes", data, { withCredentials: true })
       .then((res) => {
         socket.emit("reloadPostInfo", res.data);
-        
+
         dispatch({
           type: POST_LIKE,
           payload: res.data
@@ -128,7 +128,7 @@ export function likePost(data, socket) {
       });
 }
 
-export function uploadTags(){
+export function getTags(){
   return (dispatch) =>
     axios
       .get("http://localhost:3001/tags", { withCredentials: true })
@@ -137,6 +137,15 @@ export function uploadTags(){
           type: SET_TAGS,
           payload: res.data,
         });
+      });
+}
+
+export function loadTags(){
+  return (dispatch) =>
+    axios
+      .post("http://localhost:3001/tags", { withCredentials: true })
+      .then((res) => {
+        console.log(res.data)
       });
 }
 export function banPost(idPost){

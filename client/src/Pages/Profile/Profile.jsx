@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import userimg from "../../images/userCard.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { removeProfile } from "../../Redux/actions/Users";
-
+import { getTags, loadTags } from "../../Redux/actions/Post";
 import Post from "../../components/Post/Post";
 
 import { getUser, socketConnection } from "../../Redux/actions/Users";
@@ -38,7 +38,6 @@ export default function Profile(props) {
   const socket = useSelector((state) => state.usersReducer.socket);
 
   const myProfile = session.username === profile.username;
-
   useEffect(() => {
     dispatch(getUser(props.username));
     return () => dispatch(removeProfile());
@@ -49,6 +48,19 @@ export default function Profile(props) {
       dispatch(socketConnection(session.username));
     }
   }, []);
+
+  useEffect(async () => {
+    if (allTags.length === 0) {
+      console.log("entre")
+      await dispatch(loadTags());
+      dispatch(getTags())
+    }
+    setOptions(
+      allTags.map((tag) => {
+        return { value: tag.label, label: tag.label };
+      })
+    );
+  }, [allTags]);
 
   const [inputs, setInputs] = useState({
     name: session.name || "",
@@ -74,7 +86,6 @@ export default function Profile(props) {
   const handleSubmit = () => {
     const errs = validate(inputs);
     if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
-    console.log(profile.username, inputs);
 
     dispatch(updateUser(profile.username, inputs));
     setEditar(false);
@@ -88,7 +99,6 @@ export default function Profile(props) {
 
   let git = profile.gitaccount && profile.gitaccount.split("/");
   git = git && git[git.length - 1];
-
   return profile ? (
     <div>
       {profile.strike?.length === 3 ? (
@@ -100,7 +110,7 @@ export default function Profile(props) {
           <div className={styles.left}>
             <section>
               <div className={styles.tags}>
-                <Tags tags={profile.tags} />
+                {session.tags ? <Tags tags={session.tag} mode={editar} handleSelect={handleSelect} editTags={inputs.tags}/> : ""}
               </div>
               {myProfile && editar ? (
                 <button onClick={handleSubmit}>Change</button>
