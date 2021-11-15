@@ -6,7 +6,6 @@ import image from "../../../images/userCard.svg";
 import {
   commentPost,
   deletePost,
-  updatePost,
   updatePage,
   likePost,
   banPost,
@@ -29,7 +28,7 @@ import { GoTrashcan } from "react-icons/go";
 
 import { BsFillPencilFill } from "react-icons/bs";
 
-import { BiCommentDetail, BiDotsVerticalRounded } from "react-icons/bi";
+import { BiDotsVerticalRounded } from "react-icons/bi";
 import validate from "../../../utils/validate";
 
 const parseContent = (text) => {
@@ -53,10 +52,9 @@ const parseContent = (text) => {
   return parsed;
 };
 
-function PostAdmin({ post, customClass, user, admin }) {
+function PostAdmin({ post, customClass }) {
   const dispatch = useDispatch();
 
-  const page = useSelector(({ postsReducer: { page } }) => page);
   const session = useSelector((state) => state.adminReducer.user || {});
 
   const [firstLoad, setFirstLoad] = useState(true);
@@ -66,7 +64,6 @@ function PostAdmin({ post, customClass, user, admin }) {
 
   const [commentError, setCommentError] = useState("");
   const [editMode, setEditMode] = useState(false);
-  const [editErrors, setEditErrors] = useState({});
 
   const [options, setOptions] = useState(false);
 
@@ -146,10 +143,10 @@ function PostAdmin({ post, customClass, user, admin }) {
   let test;
   if (post.content) test = parseContent(post.content);
 
-  const hanbleBanPost = (e) =>{
+  const hanbleBanPost = (e) => {
     e.preventDefault();
-    dispatch(banPost(e.target.value))
-  }
+    dispatch(banPost(e.target.value));
+  };
 
   return (
     <div className={styles.container + ` ${customClass}`}>
@@ -198,15 +195,19 @@ function PostAdmin({ post, customClass, user, admin }) {
       ) : (
         ""
       )}
-      
-        <ul className={styles.tags}>
+
+      <ul className={styles.tags}>
         {post.tag.map((tag, i) => (
           <li key={i}>{tag}</li>
         ))}
       </ul>
-      <button value={post.idPost}
+      <button
+        value={post.idPost}
         name="Ban Post"
-        onClick={(e) => hanbleBanPost(e)}>Ban POST</button>
+        onClick={(e) => hanbleBanPost(e)}
+      >
+        Ban POST
+      </button>
       <Link
         className={styles.userContainer}
         to={`/profileAdmin/${post.user.username}`}
@@ -326,8 +327,8 @@ function PostAdmin({ post, customClass, user, admin }) {
         </ul>
       ) : (
         ""
-      )} 
-      </div>
+      )}
+    </div>
   );
 }
 

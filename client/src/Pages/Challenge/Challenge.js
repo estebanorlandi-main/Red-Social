@@ -28,14 +28,14 @@ export default function Challenge(props) {
   };
 
   const initialVimTest = getNewVimTest();
-  const [vimTest, setVimTest] = useState(initialVimTest);
+  const [/*vimTest, */ setVimTest] = useState(initialVimTest);
   const [victories, setVictories] = useState(0);
   const [game, setGame] = useState(false);
 
   // Challenge
   const [code, setCode] = useState("a = 0");
-  const [testCases, setTestCases] = useState([]);
-  const [inputs, setInputs] = useState([]);
+  const [testCases /*, setTestCases*/] = useState([]);
+  //const [inputs, setInputs] = useState([]);
 
   // const submitCode = () => {
   //   axios
