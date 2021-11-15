@@ -186,12 +186,30 @@ function Post({ post, customClass, user, socket, admin, type }) {
     //   .catch((e) => console.log(e));
   };
 
+  const [result, setResult] = useState(null);
+
+  const testing = () => {
+    axios
+      .post("http://localhost:3001/challenge/testing/", { code: newComment })
+      .then((res) => {
+        console.log(res.data);
+        if (res?.data.error) setErrorTest(true);
+        else {
+          setErrorTest(false);
+          setResult(res.data.tested);
+        }
+      })
+      .catch((e) => console.log(e));
+  };
+
   const tags = new Set();
   post.tag.filter((tag) => (!!tag ? tags.add(tag) : false));
   post.tag = Array.from(tags);
 
   let test;
   if (post.content) test = parseContent(post.content);
+
+  const [errorTest, setErrorTest] = useState(null);
 
   return (
     <div className={styles.container + ` ${customClass}`}>
@@ -397,26 +415,28 @@ function Post({ post, customClass, user, socket, admin, type }) {
                 width="100%"
                 onChange={(editor, viewUpdate) => {
                   setNewComment(editor.getValue());
-                  console.log(newComment);
                 }}
               />
               <a id="cerrar" href="#">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/macos-close.png" />
               </a>
               <div class="popupContent">
-                <img
-                  className={styles.icon}
-                  src="https://img.icons8.com/color/48/000000/fail.png"
-                />
-                <img
-                  className={styles.icon}
-                  src="https://img.icons8.com/color/48/000000/pass.png"
-                />
-                <img
-                  className={styles.icon}
-                  src="https://img.icons8.com/color/48/000000/pass.png"
-                />
+                {errorTest ? (
+                  <img
+                    className={styles.icon}
+                    src="https://img.icons8.com/color/48/000000/fail.png"
+                  />
+                ) : (
+                  <img
+                    className={styles.icon}
+                    src="https://img.icons8.com/color/48/000000/pass.png"
+                  />
+                )}
+
+                <h2>{result}</h2>
+
                 <button onClick={submitComment}>Submitt</button>
+                <button onClick={testing}>Test</button>
               </div>
             </div>
           </div>
