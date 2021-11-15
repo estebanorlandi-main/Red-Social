@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
+import image from "../../images/userCard.png";
+import Select from "react-select";
 import UserCard from "../UserCard/UserCard";
 import Tags from "../Tags/Tags";
-
+import { NavLink } from "react-router-dom";
 import {
   commentPost,
   deletePost,
@@ -59,7 +61,7 @@ function Post({ post, customClass, socket, admin }) {
 
   const page = useSelector(({ postsReducer: { page } }) => page);
   const session = useSelector((state) => state.sessionReducer || {});
-
+  const allTags = useSelector((state) => state.postsReducer.tags);
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
   const [liked, setLiked] = useState(
@@ -83,7 +85,11 @@ function Post({ post, customClass, socket, admin }) {
     title: post.title,
     content: post.content,
     image: post.image,
+    tag: post.tags,
   });
+  const [optionsTags, setOptionsTags] = useState(
+    allTags.map((tag) => ({ value: tag.label, label: tag.label }))
+  ); //El select no funciona sin un array de objetos con value y label
 
   const createdAt = new Date(post.updatedAt).getTime();
   const now = new Date().getTime();
@@ -131,6 +137,7 @@ function Post({ post, customClass, socket, admin }) {
       title: post.title,
       content: post.content,
       image: post.image,
+      tags: post.tags,
     });
   }, [post]);
 
@@ -158,6 +165,7 @@ function Post({ post, customClass, socket, admin }) {
       title: post.title,
       content: post.content,
       image: post.image,
+      tag: post.tag,
     });
     setEditMode(mode);
   };
@@ -183,7 +191,10 @@ function Post({ post, customClass, socket, admin }) {
     }
     setEdit((old) => ({ ...old, [name]: value }));
   }
-
+  function handleSelect(e) {
+    console.log(e, post.tag);
+    setEdit((old) => ({ ...old, tag: e.map((tag) => tag.value) }));
+  }
   const submitEdit = (e) => dispatch(updatePost(post.idPost, edit));
 
   const handleOptions = () => setOptions((old) => !old);
