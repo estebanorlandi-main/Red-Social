@@ -79,6 +79,7 @@ export function validateUsername(username) {
       .catch((e) => console.log(e));
 }
 
+
 /*export function updatePassword(password, query) {
   return (dispatch) =>
     axios
@@ -91,6 +92,7 @@ export function validateUsername(username) {
 
 export function validateAccount(data) {
   return (dispatch) =>
+
     axios
       .put(`http://localhost:3001/user/validate/account`, data)
       .then((res) => dispatch({ type: NEW_REGISTER, payload: res }));
