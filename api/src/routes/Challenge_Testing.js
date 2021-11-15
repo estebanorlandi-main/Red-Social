@@ -1,10 +1,20 @@
 const router = require("express").Router();
 const Challenge_utils = require("./Challengeutils.js");
 
+
+
 router.post("/", async (req, res) => {
+
+  const BlackList = ["require", "import", "express", "sequelize"]
+
   try {
     const { code } = req.body;
-
+    const forbid = null
+    const stringedcode = JSON.stringify(code)
+    BlackList.forEach((name)=> stringedcode.includes(name) ? forbid = true : null)
+    if(forbid){
+      return res.status(200).send({msg: "Test cant be runned", error: "Forbidden keywords used"})
+    }
     try {
       /*const tested = eval(code);*/
       const tested2 = (new Function("return " + code)();)
