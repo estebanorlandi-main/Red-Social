@@ -53,7 +53,7 @@ router.use("/message",Message);
 
 router.use("/challenge", Challenge);
 
-router.use("/tags", AuthControllers.isAuthenticated, Tags)
+router.use("/tags", Tags)
 router.use("/likes", Likes);
 router.use("/support",  AuthControllers.isAuthenticated, Support);
 router.get('/logout', AuthControllers.logout)
