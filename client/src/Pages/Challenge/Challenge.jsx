@@ -4,13 +4,16 @@ import "codemirror/keymap/vim";
 import "codemirror/keymap/sublime";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import styles from "./Challenge.module.css";
 import Select from "react-select";
 import "./Challenge.css";
 import Post from "../../components/Post/Post";
 import "./Popup.css";
+import { socketConnection } from "../../Redux/actions/Users";
+import { clearPosts, getPosts, updatePage } from "../../Redux/actions/Post";
 
 export default function Challenge(props) {
   // Game
@@ -35,9 +38,27 @@ export default function Challenge(props) {
   const [game, setGame] = useState(false);
 
   // Challenge
-  const [code, setCode] = useState("a = 0");
+  const [code, setCode] = useState("");
   const [testCases, setTestCases] = useState([]);
   const [inputs, setInputs] = useState([]);
+  const posts = useSelector((state) => state.postsReducer.posts);
+  const socket = useSelector((state) => state.usersReducer.socket);
+  const session = useSelector((state) => state.sessionReducer);
+  const dispatch = useDispatch();
+  const [first, setFirst] = useState(true);
+
+  const [page, totalPages] = useSelector(
+    ({ postsReducer: { page, totalPages } }) => [page, totalPages]
+  );
+
+  useEffect(() => {
+    if (page === -1) {
+      window.scroll(0, 0);
+      dispatch(updatePage(0));
+      return;
+    }
+    dispatch(getPosts(page));
+  }, [dispatch, page, first, totalPages]);
 
   // const submitCode = () => {
   //   axios
@@ -52,21 +73,26 @@ export default function Challenge(props) {
   // };
 
   const submitCode = () => {
-    axios
-      .get("http://localhost:3001/challenge/comment/atalesam", {
-        code,
-        username: "atalesam",
-        postid: 1,
-        description: "asd",
-      })
-      .then((res) => console.log(res))
-      .catch((e) => console.log(e));
+    // axios
+    //   .get("http://localhost:3001/challenge/comment/atalesam", {
+    //     code,
+    //     username: "atalesam",
+    //     postid: 1,
+    //     description: "asd",
+    //   })
+    //   .then((res) => console.log(res))
+    //   .catch((e) => console.log(e));
+    console.log(posts);
   };
 
   const handleSelect = (e) => {
     if (e.value === "game") setGame(true);
     else setGame(false);
   };
+
+  useEffect(() => {
+    dispatch(socketConnection(session.username));
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -92,14 +118,7 @@ export default function Challenge(props) {
         </div>
       ) : (
         <div className={styles.container}>
-          {testCases.map((testCase, i) => {
-            return (
-              <div key={i}>
-                <div>{testCase === "True" ? "success" : "failed"}</div>
-              </div>
-            );
-          })}
-          <Post
+          {/* <Post
             post={{
               ban: false,
               comments: [],
@@ -117,63 +136,24 @@ export default function Challenge(props) {
               userId: "293fe521-68ce-4383-9ca6-1ca925eb7b3b",
               userLikes: [],
             }}
-          />
-
-          <button className={styles.button} onClick={submitCode}>
-            Submit
-          </button>
-          <button
-            onClick={() =>
-              axios
-                .get("http://localhost:3001/challenge/post")
-                .then((res) => console.log(res))
-            }
-          >
-            AXIOS
-          </button>
-          {/* Pop Up */}
-          <p>
-            <a href="#popup">Abrir Popup</a>
-          </p>
-          <div id="popup" class="overlay">
-            <div id="popupBody">
-              <h2>Create a function that adds two numbers in JavaScript</h2>
-              <CodeMirror
-                className={styles.CodeMirror}
-                options={{
-                  theme: "dracula",
-                  mode: "javascript",
-                  keyMap: "sublime",
-                  autoCloseTags: true,
-                  autoCloseBrackets: true,
-                }}
-                value={code}
-                height="90%"
-                width="100%"
-                onChange={(editor, viewUpdate) => {
-                  setCode(editor.getValue());
-                  console.log(code);
-                }}
-              />
-              <a id="cerrar" href="#">
-                <img src="https://img.icons8.com/ios-glyphs/30/000000/macos-close.png" />
-              </a>
-              <div class="popupContent">
-                <img src="https://img.icons8.com/color/48/000000/fail.png" />
-                <img src="https://img.icons8.com/color/48/000000/pass.png" />
-                <img src="https://img.icons8.com/color/48/000000/pass.png" />
-              </div>
-            </div>
-          </div>
+          /> */}
+          {posts.map((post, i) => {
+            if (post.type === "challenge")
+              return (
+                <li key={i}>
+                  <Post post={post} socket={socket} user={session.username} />
+                </li>
+              );
+          })}
         </div>
       )}
-      <Select
+      {/* <Select
         onChange={handleSelect}
         options={[
           { value: "challenge", label: "Challenge" },
           { value: "game", label: "Game" },
         ]}
-      />
+      /> */}
     </div>
   );
 }

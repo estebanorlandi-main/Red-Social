@@ -14,12 +14,12 @@ import Support from "./components/Support/Support";
 //Admin
 import AdminLogin from "./components/Admin/AdminLogin";
 import AdminSupport from "./components/Admin/AdminSupport";
-import HomeAdmin from "./components/Admin/HomeAdmin/HomeAdmin"
-import ProfileAdmin from "./components/Admin/ProfileAdmin/ProfileAdmin"
+import HomeAdmin from "./components/Admin/HomeAdmin/HomeAdmin";
+import ProfileAdmin from "./components/Admin/ProfileAdmin/ProfileAdmin";
 
 import Popup from "./components/Support/SupportLocalPopUp.jsx";
 
-import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx"
+import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx";
 // Variables CSS
 import "./App.css";
 import UserCard from "./components/UserCard/UserCard";
@@ -31,6 +31,7 @@ import { BiMessageAltDetail } from "react-icons/bi";
 // chat v.2
 import Chat from "./components/Chat/Chat";
 import Challenge from "./Pages/Challenge/Challenge";
+import ChallengeComment from "./Pages/ChallengeComment/ChallengeComment";
 
 function App() {
   const dispatch = useDispatch();
@@ -74,16 +75,17 @@ function App() {
         <Route path="/support" component={Support} />
         <Route path="/loginAdmin" component={AdminLogin} />
         <Route path="/supportAdmin" component={AdminSupport} />
-        <Route path="/challenge" component={Challenge} />
-        <Route path="/homeAdmin" component={HomeAdmin}/>
-        <Route 
-          path="/profileAdmin/:username" 
+        <Route exact path="/challenge" component={Challenge} />
+        <Route path="/homeAdmin" component={HomeAdmin} />
+        <Route path="/challenge/comment" component={ChallengeComment} />
+        <Route
+          path="/profileAdmin/:username"
           render={({
-            match:{
-              params: {username},
+            match: {
+              params: { username },
             },
-          }) => <ProfileAdmin username={username}/>}
-          />
+          }) => <ProfileAdmin username={username} />}
+        />
 
         <Route exact path="/chat/test" component={Chat} />
         <Route exact path="/auth/reset-password" component={ForgetPassword} />
