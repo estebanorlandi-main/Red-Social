@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import image from "../../../images/userCard.png";
+import image from "../../../images/userCard.svg";
 
 import {
   commentPost,
@@ -9,7 +9,7 @@ import {
   updatePost,
   updatePage,
   likePost,
-  banPost
+  banPost,
 } from "../../../Redux/actions/Post";
 
 import Comment from "../../Comment/Comment";
@@ -105,7 +105,6 @@ function PostAdmin({ post, customClass, user, admin }) {
     dispatch(commentPost(post.idPost, newComment, session.username));
   };
 
-  console.log(data)
   const handleDelete = () => dispatch(deletePost(post.idPost));
   const handleEditMode = (mode) => {
     setData({
@@ -146,6 +145,11 @@ function PostAdmin({ post, customClass, user, admin }) {
 
   let test;
   if (post.content) test = parseContent(post.content);
+
+  const hanbleBanPost = (e) =>{
+    e.preventDefault();
+    dispatch(banPost(e.target.value))
+  }
 
   return (
     <div className={styles.container + ` ${customClass}`}>
@@ -194,16 +198,20 @@ function PostAdmin({ post, customClass, user, admin }) {
       ) : (
         ""
       )}
-
-      <ul className={styles.tags}>
+      
+      {post.ban === false?
+      <div>
+        <ul className={styles.tags}>
         {post.tag.map((tag, i) => (
           <li key={i}>{tag}</li>
         ))}
       </ul>
-
+      <button value={post.idPost}
+        name="Ban Post"
+        onClick={(e) => hanbleBanPost(e)}>Ban POST</button>
       <Link
         className={styles.userContainer}
-        to={`/profile/${post.user.username}`}
+        to={`/profileAdmin/${post.user.username}`}
       >
         <img
           className={styles.avatar}
@@ -320,7 +328,9 @@ function PostAdmin({ post, customClass, user, admin }) {
         </ul>
       ) : (
         ""
-      )}
+      )} 
+      </div>
+      : ''}
     </div>
   );
 }

@@ -9,19 +9,15 @@ export default function AdminSupport(){
     const user = useSelector((state) => state)
    
     useEffect(()=>{
-        console.log('flags')
         dispatch(getSupport())
     },[flags])
     
     const handleClick = (e)=>{
         e.preventDefault();
         dispatch(getSupport())
-        console.log('entra')
         setFlags(true)
-        console.log(flags)
     }
-    console.log(user)
-    console.log(message)
+
     return(
         <div>
         { message.length > 0 ? message.map(e =>
