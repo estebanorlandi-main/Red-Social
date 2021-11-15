@@ -1,6 +1,6 @@
 import style from "./NewPost.module.css";
 import { useState } from "react";
-import { createPost, updatePage } from "../../Redux/actions/Post.js";
+import { createPost } from "../../Redux/actions/Post.js";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import validate from "../../utils/validate";
@@ -23,7 +23,11 @@ export default function NewPost() {
     title: "",
     content: "",
   });
-  const [options, setOptions] = useState(allTags.map(tag => {return ({value: tag.label, label: tag.label})}))//El select no funciona sin un array de objetos con value y label
+  const [options] = useState(
+    allTags.map((tag) => {
+      return { value: tag.label, label: tag.label };
+    })
+  ); //El select no funciona sin un array de objetos con value y label
 
   /*function separarTags(str) {
     var arr = str.split(",");
@@ -58,16 +62,16 @@ export default function NewPost() {
     if (!Object.values(errores).filter((error) => error).length) {
       const formData = new FormData();
 
-      if(session.dayBan === null){
-      formData.append("title", data.title);
-      formData.append("content", data.content);
-      formData.append("image", data.image);
-      formData.append("tag", data.tag);
-      formData.append("username", data.username);
+      if (session.dayBan === null) {
+        formData.append("title", data.title);
+        formData.append("content", data.content);
+        formData.append("image", data.image);
+        formData.append("tag", data.tag);
+        formData.append("username", data.username);
 
-      dispatch(createPost(formData));
-      }else{
-        alert('You are banned, therefore you cannot post anything')
+        dispatch(createPost(formData));
+      } else {
+        alert("You are banned, therefore you cannot post anything");
       }
       setData({
         title: "",

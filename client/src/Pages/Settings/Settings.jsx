@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
 import { CgProfile } from "react-icons/cg";
 import { BiAdjust } from "react-icons/bi";

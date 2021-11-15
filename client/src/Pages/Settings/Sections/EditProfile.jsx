@@ -18,16 +18,17 @@ function EditProfile(props) {
     tags: session.tags,
   });
 
-  const [options, setOptions] = useState(
-    allTags.map((tag) => ({ value: tag.label, label: tag.label }))
-  );
+  const options = allTags.map((tag) => ({
+    value: tag.label,
+    label: tag.label,
+  }));
 
-  const [errors, setErrors] = useState({
+  /*const [errors, setErrors] = useState({
     name: "",
     lastname: "",
     gitaccount: "",
     about: "",
-  });
+  });*/
 
   const handleTags = (options) => {
     setInputs((old) => ({ ...old, tags: options.map((tag) => tag.value) }));
