@@ -57,27 +57,90 @@ const paginate = (page = 0, arr) => {
   };
 };
 
+function ordenarTags(todos, tags){
+  let arr;
+  let conTags = [];
+  let sinTags= []
+  arr = todos.map((post, i, arr)=>{
+    let cant = tags.filter((tag)=>{
+      if (post.tag.includes(tag)) {
+        return post.idPost
+      }
+    })
+    let c = 0
+    if (cant.length !== 0) {
+      while(c < tags.length){
+        if(cant.length === tags.length - c){
+          while (!conTags[c]) {
+            conTags.push([])
+          }
+          conTags[c] = [...conTags[c], post]
+        }
+        c++
+      }
+    }else {
+      sinTags.push(post)
+    }
+  })
+  return ({conTags, sinTags})
+}
+
+function ordenamiento(arr, orden){
+  return arr.sort(function (a, b) {
+    if (a[orden].length < b[orden].length) {
+      return 1;
+    }
+    if (a[orden].length > b[orden].length) {
+      return -1;
+    }
+    return 0;
+  })
+}
+
+const ordenar = (how, arr) => {
+  if (how === "combinados") {
+    return arr.sort(function (a, b) {
+      if (a.userLikes.length + a.comments.length < b.userLikes.length + b.comments.length) {
+        return 1;
+      }
+      if (a.userLikes.length + a.comments.length > b.userLikes.length + b.comments.length) {
+        return -1;
+      }
+      return 0;
+    })
+  }else{
+    return ordenamiento(arr, how)
+  }
+}
 //Devuelve post de una categoria o si no todos los post
 router.get("/", async (req, res) => {
   // const posts = await Post.findAll({order: [['createdAt', 'DESC']]})
   // return res.send(posts)
 
-  const { tag, page } = req.query;
-  const allPosts = await DB_Postsearch({});
+  const { tag, page, orden } = req.query;
+  const tags = tag.split(",")
+  const allPosts2 = await DB_Postsearch({});
+  let finalPosts = []
+  let ordenadosPorTags = ordenarTags(allPosts2, tags)
+  for (let arr of ordenadosPorTags.conTags){
+    finalPosts = [...finalPosts, ...ordenar(orden, arr)]
+  }
+  let allPosts;
+  if (orden === "cronologico") {
+    allPosts = ordenadosPorTags.sinTags
+  }else {
+    allPosts = ordenar(orden, ordenadosPorTags.sinTags)
+  }
+  // let postCategoria = allPosts.filter((e) =>
+  //   e.tag
+  //     .map((postTag) => postTag && postTag.toLowerCase())
+  //     .includes(tag.toLowerCase())
+  // );
+  // if (!postCategoria.length)
+  //   res.status(404).send(paginate(page, allPosts));
 
-  if (!tag) return res.status(200).send(paginate(page, allPosts));
-
-  let postCategoria = allPosts.filter((e) =>
-    e.tag
-      .map((postTag) => postTag && postTag.toLowerCase())
-      .includes(tag.toLowerCase())
-  );
-
-  if (!postCategoria.length)
-    res.status(404).send("There is no post with that tag");
-
-  let { posts, totalPages } = paginate(page, postCategoria);
-  res.status(200).send({ posts, totalPages });
+  let { posts, totalPages } = paginate(page, [...finalPosts,...allPosts]);
+  res.status(200).send({ posts, totalPages, tags: finalPosts });
 });
 
 //Trae todos los posteos que hizo un usuario
