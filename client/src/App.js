@@ -25,9 +25,9 @@ import PrivateRoute from "./components/TypeRoutes/PrivateRoute";
 
 import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx";
 import ResetPassword from "./components/ResetPassword/ResetPassword.jsx";
+
 // Variables CSS
 import "./App.css";
-import UserCard from "./components/UserCard/UserCard";
 import { useDispatch, useSelector } from "react-redux";
 import { removeError } from "./Redux/actions/Errors";
 import { Link } from "react-router-dom";
