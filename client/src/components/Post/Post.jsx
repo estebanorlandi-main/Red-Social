@@ -193,8 +193,10 @@ function Post({ post, customClass, user, socket, admin, type }) {
       .post("http://localhost:3001/challenge/testing/", { code: newComment })
       .then((res) => {
         console.log(res.data);
-        if (res?.data.error) setErrorTest(true);
-        else {
+        if (res?.data.error) {
+          setErrorTest(true);
+          setResult(null)
+        }else {
           setErrorTest(false);
           setResult(res.data.tested);
         }
