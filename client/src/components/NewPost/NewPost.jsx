@@ -14,6 +14,7 @@ export default function NewPost() {
     content: "",
     image: null,
     tag: [],
+    type: "normal",
     likes: 0,
     username: session.username,
   });
@@ -37,6 +38,11 @@ export default function NewPost() {
     { value: "postgresql", label: "PostgreSQL" },
   ];
 
+  const type = [
+    { value: "normal", label: "Normal" },
+    { value: "challenge", label: "Challenge" },
+  ];
+
   /*function separarTags(str) {
     var arr = str.split(",");
     setData((old) => ({
@@ -54,6 +60,10 @@ export default function NewPost() {
     setData((old) => ({ ...old, tag: e.map((option) => option.value) }));
   };
 
+  const handleSelectType = (e) => {
+    setData((old) => ({ ...old, type: e.value }));
+  };
+
   const handleImage = ({ target: { name, files } }) => {
     setData((old) => ({ ...old, [name]: files[0] }));
   };
@@ -68,6 +78,7 @@ export default function NewPost() {
       formData.append("content", data.content);
       formData.append("image", data.image);
       formData.append("tag", data.tag);
+      formData.append("type", data.type);
       formData.append("username", data.username);
 
       dispatch(createPost(formData));
@@ -77,6 +88,7 @@ export default function NewPost() {
         content: "",
         image: null,
         tag: [],
+        type: "normal",
         likes: 0,
         username: session.username,
       });
@@ -133,6 +145,12 @@ export default function NewPost() {
       <label className={style.wrapper}>
         Tags
         <Select onChange={handleSelect} options={options} isMulti />
+        <span className={style.error}></span>
+      </label>
+
+      <label className={style.wrapper}>
+        Type
+        <Select onChange={handleSelectType} options={type} />
         <span className={style.error}></span>
       </label>
 
