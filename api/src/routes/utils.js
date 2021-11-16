@@ -517,6 +517,6 @@ module.exports = {
   BD_banUser,
   BD_loginBan,
   BD_banComment
-=======
+
 
 };
