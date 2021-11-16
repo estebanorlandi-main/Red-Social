@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Select from "react-select";
 import ImageUpload from "../../../components/ImageUpload/ImageUpload";
-
+import { getTags, loadTags } from "../../../Redux/actions/Post";
 import styles from "./EditProfile.module.css";
 import { updateUser } from "../../../Redux/actions/Session";
 
@@ -19,6 +19,13 @@ function EditProfile(props) {
     tags: session.tags,
   });
 
+  useEffect(async () => {
+    if (allTags.length === 0) {
+      console.log("entre")
+      await dispatch(loadTags());
+      dispatch(getTags())
+    }
+  }, [allTags]);
   /*const [errors, setErrors] = useState({
     name: "",
     lastname: "",
