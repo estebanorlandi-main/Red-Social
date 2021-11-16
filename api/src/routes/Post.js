@@ -87,10 +87,10 @@ function ordenarTags(todos, tags){
 
 function ordenamiento(arr, orden){
   return arr.sort(function (a, b) {
-    if (a[orden].length < b[orden].length) {
+    if (a[orden]?.length < b[orden]?.length) {
       return 1;
     }
-    if (a[orden].length > b[orden].length) {
+    if (a[orden]?.length > b[orden]?.length) {
       return -1;
     }
     return 0;
@@ -175,6 +175,7 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", upload.single("image"), async (req, res) => {
   let { title, content, tag, username, type } = req.body;
+  console.log(type)
 
   try {
     let userDB = await DB_UserID(username);

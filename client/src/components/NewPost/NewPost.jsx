@@ -76,6 +76,7 @@ export default function NewPost() {
         formData.append("image", data.image);
         formData.append("tag", data.tag);
         formData.append("username", data.username);
+        formData.append("type",data.type)
 
         dispatch(createPost(formData));
       } else {
