@@ -487,6 +487,22 @@ const BD_banComment = async(idComment) => {
 }
 
 
+const DB_AdminSignUp = async () =>{
+  const user = {
+    "username": "admin",
+    "name":"admin",
+    "lastname":"admin",
+    "email":"admin@gmail.com",
+    "image":"http://pm1.narvii.com/6750/8ac0676013474827a00f3dde5dd83009ec20f6ebv2_00.jpg",
+  }
+
+  const admin = await DB_userCreates(user);
+  const isAdmin = await BD_createPrivileges(admin);
+  return isAdmin;
+
+}
+
+
 module.exports = {
   DB_findUserEmailOrUsername,
   DB_findUserAll,
@@ -516,5 +532,7 @@ module.exports = {
   BD_searchPost,
   BD_banUser,
   BD_loginBan,
-  BD_banComment
+  BD_banComment,
+  DB_AdminSignUp
+
 };
