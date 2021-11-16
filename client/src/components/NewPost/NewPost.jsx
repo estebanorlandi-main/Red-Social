@@ -1,6 +1,6 @@
 import style from "./NewPost.module.css";
 import { useState } from "react";
-import { createPost } from "../../Redux/actions/Post.js";
+import { createPost, updatePage } from "../../Redux/actions/Post.js";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import validate from "../../utils/validate";
@@ -9,13 +9,11 @@ import Tags from "../Tags/Tags";
 export default function NewPost({orden, tags}) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
-  const allTags = useSelector((state) => state.postsReducer.tags);
   const [data, setData] = useState({
     title: "",
     content: "",
     image: null,
     tag: [],
-    type: "normal",
     likes: 0,
     username: session.username,
   });
@@ -46,9 +44,7 @@ export default function NewPost({orden, tags}) {
   const handleSelect = (e) => {
     setData((old) => ({ ...old, tag: e.map((option) => option.value) }));
   };
-  const handleSelectType = (e) => {
-    setData((old) => ({ ...old, type: e.value }));
-  };
+
   const handleImage = (e) => {
     if (!e) return setData((old) => ({ ...old, image: null }));
 
@@ -98,13 +94,14 @@ export default function NewPost({orden, tags}) {
   return (
     <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
       <label className={style.wrapper}>
+        Title
         <div className="input-group">
           <input
             value={data.title}
             onChange={handleChange}
             name="title"
             type="text"
-            placeholder="Post title"
+            placeholder="Title"
             autoComplete="off"
           />
         </div>
@@ -112,6 +109,7 @@ export default function NewPost({orden, tags}) {
       </label>
 
       <label className={style.wrapper}>
+        Content {data.content.length}/1000
         <textarea
           value={data.content}
           onChange={handleChange}
@@ -136,12 +134,6 @@ export default function NewPost({orden, tags}) {
           value={data.tag.map((t)=>({label:t, value:t}))}
           isMulti
         />*/}
-        <span className={style.error}></span>
-      </label>
-
-      <label className={style.wrapper}>
-        Type
-        <Select onChange={handleSelectType} options={type} />
         <span className={style.error}></span>
       </label>
 

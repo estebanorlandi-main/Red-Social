@@ -130,6 +130,7 @@ router.get("/", async (req, res) => {
   // const posts = await Post.findAll({order: [['createdAt', 'DESC']]})
   // return res.send(posts)
 
+
   const { tag, page, orden } = req.query;
   const tags = tag.split(",")
   const allPosts = await DB_Postsearch({});

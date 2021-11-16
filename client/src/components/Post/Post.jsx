@@ -247,7 +247,9 @@ function Post({ post, customClass, user, socket, admin, type }) {
   let test;
   if (post.content) test = parseContent(post.content);
 
+
   const [errorTest, setErrorTest] = useState(null);
+
 
   return (
     <div className={styles.container + ` ${customClass}`}>
