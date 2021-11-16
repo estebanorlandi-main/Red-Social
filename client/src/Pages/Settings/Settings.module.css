@@ -75,26 +75,22 @@
 }
 
 .hide {
-  position: absolute;
-  transform: translateX(25%);
   display: none;
+  position: absolute;
   opacity: 0;
 }
 
 .show {
   display: block;
   position: relative;
-  animation: show 0.5s forwards;
+  animation: show 0.25s forwards;
 }
 
 @keyframes show {
   from {
-    display: block;
-    transform: translateX(25%);
     opacity: 0;
   }
   to {
-    transform: translateX(0);
     opacity: 1;
   }
 }

@@ -186,7 +186,6 @@ function Post({ post, customClass, socket, admin }) {
   }
 
   function handleSelect(e) {
-    console.log(e, post.tag);
     setEdit((old) => ({ ...old, tag: e.map((tag) => tag.value) }));
   }
 
@@ -200,8 +199,6 @@ function Post({ post, customClass, socket, admin }) {
 
   let test;
   if (post.content) test = parseContent(post.content);
-
-  console.log(currentPost);
 
   return (
     <div className={styles.container + ` ${customClass}`}>

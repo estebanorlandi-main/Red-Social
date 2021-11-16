@@ -14,8 +14,8 @@ export const GET_POST_FOR_ID = "GET_POST_FOR_ID";
 export const GET_POST_FOR_USERNAME = "GET_POST_FOR_USERNAME";
 export const UPDATE_PAGE = "UPDATE_PAGE";
 export const CLEAR_POST = "CLEAR_POST";
-export const SET_TAGS = "SET_TAGS"
-export const BANPOST_ADMIN =  "banPost_admin";
+export const SET_TAGS = "SET_TAGS";
+export const BANPOST_ADMIN = "banPost_admin";
 // Crear Posteo
 // return (dispatch) => axios.post('localhost:3001/post')
 //  -> title
@@ -51,7 +51,6 @@ export function deletePost(postId) {
 }
 
 export function updatePost(postId, data) {
-  console.log(data)
   return (dispatch) =>
     axios
       .put(`http://localhost:3001/post/${postId}`, data, {
@@ -74,10 +73,10 @@ export function commentPost(postid, content, username, socket) {
       .then((res) => {
         socket.emit("reloadPostInfo", res.data);
 
-        dispatch({ 
-          type: POST_COMMENT, 
-          payload: res.data 
-        })
+        dispatch({
+          type: POST_COMMENT,
+          payload: res.data,
+        });
       })
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 
@@ -87,8 +86,8 @@ export function commentPost(postid, content, username, socket) {
 export function getPosts(page, tag, orden) {
   return (dispatch) =>
     axios
-      .get(`http://localhost:3001/post?page=${page}&tag=${tag}&orden=${orden}`,)
-      .then((res) => {console.log(res.data.tags);dispatch({ type: GET_POSTS, payload: res.data })})
+      .get(`http://localhost:3001/post?page=${page}&tag=${tag}&orden=${orden}`)
+      .then((res) => dispatch({ type: GET_POSTS, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }
 
@@ -120,15 +119,15 @@ export function likePost(data, socket) {
       .post("http://localhost:3001/likes", data, { withCredentials: true })
       .then((res) => {
         socket.emit("reloadPostInfo", res.data);
-        
+
         dispatch({
           type: POST_LIKE,
-          payload: res.data
+          payload: res.data,
         });
       });
 }
 
-export function uploadTags(){
+export function uploadTags() {
   return (dispatch) =>
     axios
       .get("http://localhost:3001/tags", { withCredentials: true })
@@ -139,13 +138,17 @@ export function uploadTags(){
         });
       });
 }
-export function banPost(idPost){
+export function banPost(idPost) {
   return (dispatch) =>
-      axios
-          .post(`http://localhost:3001/admin/banPost`, {idPost},{ withCredentials: true } )
-          .then(res => dispatch({type: BANPOST_ADMIN, payload:res}) )
-          .catch((e) =>(err) => dispatch({ type: ERROR, payload: err }))
-        }
+    axios
+      .post(
+        `http://localhost:3001/admin/banPost`,
+        { idPost },
+        { withCredentials: true }
+      )
+      .then((res) => dispatch({ type: BANPOST_ADMIN, payload: res }))
+      .catch((e) => (err) => dispatch({ type: ERROR, payload: err }));
+}
 /*
 export function likePost(idPost, username) {
   return (dispatch) =>

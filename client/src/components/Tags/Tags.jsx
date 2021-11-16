@@ -4,7 +4,11 @@ function Tags({ tags }) {
   return (
     <ul className={styles.tags}>
       {tags && tags.length ? (
-        tags.map((tag) => <li className={styles.tag}>{tag}</li>)
+        tags.map((tag, i) => (
+          <li key={i} className={styles.tag}>
+            {tag}
+          </li>
+        ))
       ) : (
         <></>
       )}

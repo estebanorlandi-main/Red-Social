@@ -190,16 +190,22 @@ function Home(props) {
       </section>
 
       <section className={styles.right}>
-        <div>
-          <h3>Friends.</h3>
-          <ul>
-            {conversations.map(({ members }) => (
-              <li>
-                <p>{members.filter((member) => member !== session.username)}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {conversations?.length ? (
+          <div>
+            <h3>Friends</h3>
+            <ul>
+              {conversations.map(({ members }, i) => (
+                <li key={i}>
+                  <p>
+                    {members.filter((member) => member !== session.username)}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          ""
+        )}
       </section>
     </div>
   );
