@@ -130,6 +130,11 @@ function Post({ post, customClass, socket, admin }) {
       image: post.image,
       tags: post.tag,
     });
+    setLiked(post.userLikes.filter((like) => like.user.username === session.username)
+      .length
+      ? true
+      : false)
+      setEditMode(false)
   }, [post]);
 
   const handleComment = ({ target: { name, value } }) => {
@@ -150,7 +155,6 @@ function Post({ post, customClass, socket, admin }) {
   };
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
-  console.log(post)
   const handleEditMode = (mode) => {
     setEdit({
       title: post.title,

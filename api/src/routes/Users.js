@@ -21,7 +21,7 @@ const sanitizeUser = (data) => {
       dayBan: user.dayBan,
     }));
   }
-
+  console.log(data.posts, "posts")
   return {
     username: data.username,
     name: data.name,

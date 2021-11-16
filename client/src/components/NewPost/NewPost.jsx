@@ -6,7 +6,7 @@ import Select from "react-select";
 import validate from "../../utils/validate";
 import ImageUpload from "../ImageUpload/ImageUpload";
 
-export default function NewPost() {
+export default function NewPost({orden, tags}) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
   const allTags = useSelector((state) => state.postsReducer.tags);
@@ -56,31 +56,35 @@ export default function NewPost() {
     setData((old) => ({ ...old, [name]: files[0] }));
   };
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (!Object.values(errores).filter((error) => error).length) {
       const formData = new FormData();
-
-      if (session.dayBan === null) {
+      if (!session.dayBan) {
         formData.append("title", data.title);
         formData.append("content", data.content);
         formData.append("image", data.image);
         formData.append("tag", data.tag);
         formData.append("username", data.username);
 
-        dispatch(createPost(formData));
+        let errores = await dispatch(createPost(formData, orden, tags));
+        if (errores.type === "ERROR") {
+          alert(errores.payload.response.data.error.errors[0].message)
+        }else {
+          setData({
+            title: "",
+            content: "",
+            image: null,
+            tag: [],
+            likes: 0,
+            username: session.username,
+          });
+        }
       } else {
         alert("You are banned, therefore you cannot post anything");
       }
-      setData({
-        title: "",
-        content: "",
-        image: null,
-        tag: [],
-        likes: 0,
-        username: session.username,
-      });
+
       //console.log(obj);
       //dispatch(updatePage(true, obj.payload.posts));
     }
@@ -122,6 +126,7 @@ export default function NewPost() {
           options={options}
           menuPlacement="top"
           placeholder="Tags"
+          value={data.tag.map((t)=>({label:t, value:t}))}
           isMulti
         />
         <span className={style.error}></span>

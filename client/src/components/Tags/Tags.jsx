@@ -12,19 +12,15 @@ function Tags({ tags, mode, handleSelect, editTags }) {
       if (!tags.includes(tag.label)) {
         return { value: tag.label, label: tag.label }
       }}).filter((tag)=> tag!== undefined)); //El select no funciona sin un array de objetos con value y label
-      console.log(editTags, tags)
+
   useEffect(async () => {
-    if (allTags.length === 0) {
-      await dispatch(loadTags());
-      dispatch(getTags())
-    }
     setOptionsTags(
       allTags.map((tag) => {
         if (!tags.includes(tag.label)) {
           return { value: tag.label, label: tag.label }
         }}).filter((tag)=> tag!== undefined)
     );
-  }, [allTags]);
+  }, []);
 
   useEffect(()=>{
     if (editTags.length < tags.length) {

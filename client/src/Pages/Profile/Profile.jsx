@@ -36,7 +36,6 @@ export default function Profile(props) {
   ); //El select no funciona sin un array de objetos con value y label
 
   const socket = useSelector((state) => state.usersReducer.socket);
-
   const myProfile = session.username === profile.username;
   useEffect(() => {
     dispatch(getUser(props.username));
@@ -96,7 +95,7 @@ export default function Profile(props) {
       dispatch(conversation(session.username, profile.username));
     }
   };
-
+  console.log(profile.strike)
   let git = profile.gitaccount && profile.gitaccount.split("/");
   git = git && git[git.length - 1];
   return profile ? (
@@ -113,7 +112,7 @@ export default function Profile(props) {
           <div className={styles.left}>
             <section>
               <div className={styles.tags}>
-                {session.tags ? <Tags tags={session.tag} mode={editar} handleSelect={handleSelect} editTags={inputs.tags}/> : ""}
+                {session.tags ? <Tags tags={session.tags} mode={editar} handleSelect={handleSelect} editTags={inputs.tags}/> : ""}
               </div>
               {myProfile && editar ? (
                 <button onClick={handleSubmit}>Change</button>

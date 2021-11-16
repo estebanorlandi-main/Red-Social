@@ -32,10 +32,10 @@ export const BANPOST_ADMIN =  "banPost_admin";
 
 // comentario devuelve el comentario creado
 
-export function createPost(data) {
+export function createPost(data, orden, tags) {
   return (dispatch) =>
     axios
-      .post("http://localhost:3001/post", data, { withCredentials: true })
+      .post(`http://localhost:3001/post/?orden=${orden}&tags=${tags}`, data, { withCredentials: true })
       .then((res) => dispatch({ type: POST_CREATE, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 
@@ -101,6 +101,7 @@ export function getPostForId(id) {
 }
 
 export function getPostForUsername(username) {
+  console.log("hola")
   return (dispatch) =>
     axios
       .get(`localhost:3001/`, username)

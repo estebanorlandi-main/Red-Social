@@ -31,7 +31,7 @@ function Home(props) {
   const [newPosts, setNewPosts] = useState(true);
   const [conversations, setConversations] = useState([]);
   const [first, setFirst] = useState(true);
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState(session.tags);
   const [tagsOptions, setTagsOptions] = useState([]); //El select no funciona sin un array de objetos con value y label
   const options = [
     { value: "cronologico", label: "Cronologico" },
@@ -42,7 +42,6 @@ function Home(props) {
   useEffect(() => {
     dispatch(socketConnection(session.username));
   }, [dispatch, session.username]);
-
   // useEffect(() => {
   //   if(Object.keys(socket).length){
   //     socket.emit("addUser", session.username);
@@ -68,7 +67,7 @@ function Home(props) {
   useEffect(async () => {
     if (allTags.length === 0) {
       await dispatch(loadTags());
-      dispatch(getTags())
+      await dispatch(getTags())
       setFirst(false);
     }
     setTagsOptions(
@@ -76,7 +75,8 @@ function Home(props) {
         return { value: tag.label, label: tag.label };
       })
     );
-  }, [allTags]);
+  }, []);
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
@@ -120,7 +120,7 @@ function Home(props) {
   const handleCharge = (e) => {
     window.scrollTo(0, 0);
     dispatch(updatePage(0));
-    dispatch(getPosts(page));
+    dispatch(getPosts(page, tags, orden));
     setNewPosts(false);
   };
 
@@ -159,7 +159,7 @@ function Home(props) {
               e.target.id === "close" ? setCreatePost((old) => false) : ""
             }
           >
-            <NewPost />
+            <NewPost orden={orden} tags={tags}/>
           </div>
         ) : (
           ""
@@ -180,11 +180,11 @@ function Home(props) {
         </div>
 
         <ul>
-          {posts.map((post, i) => (
+          {posts ? posts.map((post, i) => (
             <li key={i}>
               <Post post={post} socket={socket} />
             </li>
-          ))}
+          )) : "No hay ningun post"}
         </ul>
 
         {page < totalPages - 1 && <Loader />}
