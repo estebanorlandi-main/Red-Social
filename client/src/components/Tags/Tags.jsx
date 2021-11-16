@@ -21,15 +21,13 @@ function Tags({ tags, mode, handleSelect, editTags }) {
         }}).filter((tag)=> tag!== undefined)
     );
   }, []);
-
   useEffect(()=>{
 
     if (editTags && editTags.length < tags.length) {
-      console.log("cambio")
       setOptionsTags(
         allTags.map((tag) => {
           if (!editTags.includes(tag.label)) {
-            return { value: tag.label, label: tag.label }
+            return tag
           }}).filter((tag)=> tag!== undefined)
       );
     }
