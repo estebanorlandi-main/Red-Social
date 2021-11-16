@@ -2,13 +2,23 @@ import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Post from "../../components/Post/Post";
 import NewPost from "../../components/NewPost/NewPost";
+import { io, Socket } from "socket.io-client";
 import UserCard from "../../components/UserCard/UserCard";
 
+import { Link } from "react-router-dom";
+
 import styles from "./Home.module.css";
+
+import { socketConnection } from "../../Redux/actions/Users";
 import { clearPosts, getPosts, updatePage } from "../../Redux/actions/Post";
+import axios from "axios";
 
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
+  const session = useSelector((state) => state.sessionReducer);
+
+  const socket = useSelector((state) => state.usersReducer.socket);
+  console.log(socket);
   const [page, totalPages] = useSelector(
     ({ postsReducer: { page, totalPages } }) => [page, totalPages]
   );
@@ -16,7 +26,18 @@ function Home(props) {
   const dispatch = useDispatch();
 
   const [createPost, setCreatePost] = useState(false);
+  const [conversations, setConversations] = useState([]);
   const [first, setFirst] = useState(true);
+
+  useEffect(() => {
+    dispatch(socketConnection(session.username));
+  }, []);
+
+  // useEffect(() => {
+  //   if(Object.keys(socket).length){
+  //     socket.emit("addUser", session.username);
+  //   }
+  // }, [socket, session.username]);
 
   const handleScroll = useCallback(() => {
     if (
@@ -42,31 +63,76 @@ function Home(props) {
     };
   }, [handleScroll]);
 
+  console.log(posts.length);
+
+  /*
+  useEffect(() => {
+    const getConversations = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:3001/conversation/" + session.username
+        );
+        console.log(res.data);
+        setConversations(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getConversations();
+  }, [session.username]);
+  */
+
   return (
     <div className={styles.home + ` ${createPost ? styles.noScroll : ""} `}>
-      <section className={styles.userCard}>
-        <UserCard showPostForm={() => setCreatePost((old) => !old)} />
-
-        {createPost ? (
-          <div
-            className={styles.newPost}
-            id="close"
-            onClick={(e) =>
-              e.target.id === "close" ? setCreatePost((old) => false) : ""
-            }
-          >
-            <NewPost />
-          </div>
-        ) : (
-          ""
-        )}
+      <section>
+        <div className={styles.filters}>
+          <h3>Tags</h3>
+          <ul className={styles.tags}>
+            {session.tags && session.tags.length ? (
+              session.tags.map((tag, i) => (
+                <li key={i}>
+                  <Link className={styles.tag} to="/home">
+                    # {tag}
+                  </Link>
+                </li>
+              ))
+            ) : (
+              <></>
+            )}
+          </ul>
+        </div>
       </section>
 
       <section className={styles.sectionPosts}>
         <ul>
+          <li>
+            {createPost ? (
+              <div
+                className={styles.newPost}
+                id="close"
+                onClick={(e) =>
+                  e.target.id === "close" ? setCreatePost((old) => false) : ""
+                }
+              >
+                <NewPost />
+              </div>
+            ) : (
+              ""
+            )}
+
+            <div className={styles.newPostOpen}>
+              <UserCard toRight showImage />
+              <button
+                className={styles.createPost}
+                onClick={() => setCreatePost(true)}
+              >
+                Create Post
+              </button>
+            </div>
+          </li>
           {posts.map((post, i) => (
             <li key={i}>
-              <Post post={post} />
+              <Post post={post} socket={socket} user={session.username} />
             </li>
           ))}
 
@@ -79,7 +145,12 @@ function Home(props) {
       </section>
 
       <section>
-        <div>algo</div>
+        <div>
+          <h3>Friends.</h3>
+          <ul>
+            <li></li>
+          </ul>
+        </div>
       </section>
     </div>
   );

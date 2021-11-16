@@ -1,36 +1,26 @@
 .home {
-  overflow-y: auto;
   display: grid;
-  grid-template-columns: auto auto auto;
-  width: 75vw;
+  grid-template-columns: auto 2fr auto;
   margin: 0 auto;
-  gap: 1em;
+  gap: 3em;
 }
 
 .home li {
   list-style: none;
 }
-.home section {
-  min-width: 320px;
+
+.home section:first-child {
+  display: flex;
+  flex-flow: column wrap;
 }
 
-.home section:last-child {
-  text-align: right;
-}
-
-.home section:last-child > div {
-  background-color: #fff;
-  margin-top: 2em;
-  border-radius: 10px;
+.home section > div {
   padding: 1em;
-}
-
-.home section {
-  margin: 1em auto;
+  background-color: #fff;
+  width: 100%;
 }
 
 .sectionPosts {
-  max-width: max-content;
   margin: 0 auto;
 }
 
@@ -76,52 +66,40 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
   background-color: var(--c-light);
   text-align: center;
   font-size: 1.25rem;
   min-height: 7em;
 }
 
-@media screen and (max-width: 1400px) {
-  .home {
-    width: 90vw;
-    grid-template-columns: auto auto auto;
-  }
+.tags {
+  margin: 0.75em 1em;
+}
+.tag {
+  color: var(--c-blue) !important;
+  font-size: 1rem !important;
 }
 
-@media screen and (max-width: 1200px) {
-  .home {
-    width: 95vw;
-    grid-template-columns: auto auto;
-  }
-  .home section:last-child {
-    display: none;
-  }
+.newPostOpen {
+  border-radius: 5em;
+  margin: 2em 0 0 0;
+  background-color: #fff;
+  padding: 0.25em 0.5em;
+  display: flex;
+  align-items: center;
 }
 
-@media screen and (max-width: 1200px) {
-  .home {
-    width: 80vw;
-    grid-template-columns: auto auto;
-  }
-
-  .home section:last-child {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 900px) {
-  .home {
-    width: 98vw;
-    grid-template-columns: auto;
-  }
-
-  .home section:first-child {
-    display: none;
-  }
-
-  .home section:last-child {
-    display: none;
-  }
+.createPost {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 1em;
+  text-align: left;
+  gap: 0.5em;
+  border-radius: 5em;
+  background-color: transparent;
+  border: 1px solid #aaa;
+  font-size: 1rem;
+  color: #888;
+  height: 2.5em;
 }

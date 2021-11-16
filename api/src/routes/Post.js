@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { Sequelize, Model } = require("sequelize");
-const { User, Post } = require("../db.js");
+const { User, Post, Comment, Likes } = require("../db.js");
 const {
   DB_UserID,
   validateUpdatePost,
@@ -17,6 +17,24 @@ const upload = multer({ storage });
 
 // router.use("/", );
 
+const modifiedPost = async (idPost) => {
+  return await Post.findOne({
+    where: { idPost },
+    include: [
+      { model: User, attributes: ["image", "username"] },
+      {
+        model: Comment,
+        include: [{ model: User, attributes: ["image", "username"] }],
+      },
+      {
+        model: Likes,
+        as: "userLikes",
+        include: [{ model: User, attributes: ["username"] }],
+      },
+    ],
+  });
+};
+
 const paginate = (page = 0, arr) => {
   const postsPerPage = 15;
   const to = page * postsPerPage + postsPerPage;
@@ -31,7 +49,7 @@ const paginate = (page = 0, arr) => {
       return post;
     });
 
-  const totalPages = Math.floor(arr.length / postsPerPage);
+  const totalPages = Math.ceil(arr.length / postsPerPage);
 
   return {
     posts,
@@ -93,7 +111,7 @@ router.get("/:id", async (req, res, next) => {
 });
 
 router.post("/", upload.single("image"), async (req, res) => {
-  let { title, content, tag, username } = req.body;
+  let { title, content, tag, username, type } = req.body;
 
   try {
     let userDB = await DB_UserID(username);
@@ -111,6 +129,7 @@ router.post("/", upload.single("image"), async (req, res) => {
       ...image,
       content,
       tag: tag || [],
+      type,
       title,
       userId: userDB.id,
     });
@@ -143,12 +162,12 @@ router.delete("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const updatePost = await DB_Postedit(id, req.body);
+    await DB_Postedit(id, req.body);
 
-    const allPosts = await DB_Postsearch({});
-    const { posts, totalPages } = paginate(0, allPosts);
-    res.status(200).send({ posts, totalPages, success: true });
+    const post = await modifiedPost(id);
+    res.status(200).send({ post, success: true });
   } catch (e) {
+    console.log(e);
     res.status(404).send({ success: false, error: "Cant apply changes" });
   }
 });

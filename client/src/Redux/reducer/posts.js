@@ -2,11 +2,14 @@ import {
   POST_LIKE,
   POST_COMMENT,
   POST_CREATE,
+  POST_DELETE,
+  POST_UPDATE,
   GET_POSTS,
   GET_POST_FOR_ID,
   GET_POST_FOR_USERNAME,
   UPDATE_PAGE,
   CLEAR_POST,
+  BANPOST_ADMIN
 } from "../actions/Post";
 
 const initialState = {
@@ -26,41 +29,57 @@ export default function root(state = initialState, action) {
       };
 
     case POST_LIKE:
+      if (action.payload.post) {
+        return {
+          ...state,
+          posts: state.posts.map((post) => {
+            if (post.idPost === action.payload.post.idPost) {
+              post = action.payload.post;
+            }
+            return post;
+          }),
+        };
+      }
       return {
         ...state,
-        posts: state.posts.map((post) => {
-          if (post.idPost === action.payload.idPost) {
-            if (post.likes.includes(action.payload.username)) {
-              post.likes = post.likes.filter(
-                (user) => user !== action.payload.username
-              );
-            } else post.likes.push(action.payload.username);
-          }
+      };
 
-          return post;
-        }),
+    case POST_UPDATE:
+      if (action.payload.post) {
+        return {
+          ...state,
+          posts: state.posts.map((post) => {
+            if (post.idPost === action.payload.post.idPost) {
+              post = action.payload.post;
+            }
+            return post;
+          }),
+        };
+      }
+      return {
+        ...state,
       };
 
     case POST_COMMENT:
       return {
         ...state,
         posts: state.posts.map((post) => {
-          if (post.idPost === action.payload.idPost) {
-            post.comments.push({
-              user: action.payload.user,
-              text: action.payload.text,
-            });
+          if (post.idPost === action.payload.post.idPost) {
+            post = action.payload.post;
           }
-
           return post;
         }),
       };
 
+    case POST_DELETE:
+      return { ...state, posts: action.payload.posts };
+
     case GET_POSTS:
-      if (action.page === 0) {
+      if (state.page === 0) {
         return {
           ...state,
           posts: action.payload.posts,
+          totalPages: action.payload.totalPages,
         };
       }
       return {
@@ -86,9 +105,15 @@ export default function root(state = initialState, action) {
         ...state,
         page: action.payload,
       };
+
     case CLEAR_POST:
       return { ...initialState, posts: [] };
 
+    case BANPOST_ADMIN:
+      return{
+        ...state,
+        posts: [...state.posts, ...action.payload.post]
+      }
     default:
       return state;
   }

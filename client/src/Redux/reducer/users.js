@@ -1,9 +1,12 @@
-import { SEARCH_USER, GET_USER, REMOVE_PROFILE, GET_USERS,NEW_MSG } from "../actions/Users";
+
+import { SEARCH_USER, GET_USER, REMOVE_PROFILE, GET_USERS,NEW_MSG, SOCKET_CONN,BAN_USER_ADMIN  } from "../actions/Users";
+
 
 const initialState = {
   users: [],
   profile: {},
-  convers:{}
+  convers:{},
+  socket: {}
 };
 
 export default function root(state = initialState, action) {
@@ -33,11 +36,22 @@ export default function root(state = initialState, action) {
         ...state
       };
 
+    case SOCKET_CONN:
+      return {
+        ...state,
+        socket: action.payload
+      };  
+
     case REMOVE_PROFILE:
       return {
         ...state,
         profile: {},
       };
+
+    case BAN_USER_ADMIN:
+      return{
+        ...state
+      }
 
     default:
       return state;

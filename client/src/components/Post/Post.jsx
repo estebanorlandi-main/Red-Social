@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import image from "../../images/userCard.png";
+import UserCard from "../UserCard/UserCard";
 
 import {
   commentPost,
@@ -28,8 +28,20 @@ import { GoTrashcan } from "react-icons/go";
 
 import { BsFillPencilFill } from "react-icons/bs";
 
+import { FaPlay } from "react-icons/fa";
+
 import { BiCommentDetail, BiDotsVerticalRounded } from "react-icons/bi";
 import validate from "../../utils/validate";
+
+import axios from "axios";
+
+// CodeMirror
+import CodeMirror from "@uiw/react-codemirror";
+import "codemirror/theme/dracula.css";
+import "codemirror/keymap/vim";
+import "codemirror/keymap/sublime";
+import "codemirror/addon/edit/closetag";
+import "codemirror/addon/edit/closebrackets";
 
 const parseContent = (text) => {
   const mentions = text && text.match(/@\w+/gi);
@@ -52,7 +64,7 @@ const parseContent = (text) => {
   return parsed;
 };
 
-function Post({ post, customClass, user }) {
+function Post({ post, customClass, user, socket, admin, type }) {
   const dispatch = useDispatch();
 
   const page = useSelector(({ postsReducer: { page } }) => page);
@@ -60,6 +72,12 @@ function Post({ post, customClass, user }) {
 
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
+  const [liked, setLiked] = useState(
+    post.userLikes.filter((like) => like.user.username === session.username)
+      .length
+      ? true
+      : false
+  );
 
   const [newComment, setNewComment] = useState("");
 
@@ -69,7 +87,7 @@ function Post({ post, customClass, user }) {
 
   const [options, setOptions] = useState(false);
 
-  const [data, setData] = useState({
+  const [edit, setEdit] = useState({
     title: post.title,
     content: post.content,
     image: post.image,
@@ -79,6 +97,18 @@ function Post({ post, customClass, user }) {
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
 
+  const [code, setCode] = useState("a = 0");
+
+  useEffect(() => {
+    if (liked) {
+      socket.emit("sendNotification", {
+        senderName: user,
+        receiverName: post.user.username,
+        type: 1,
+      });
+    }
+  }, [liked]);
+
   useEffect(() => {
     if (firstLoad) {
       setFirstLoad(false);
@@ -86,7 +116,7 @@ function Post({ post, customClass, user }) {
   }, [firstLoad, setFirstLoad]);
 
   useEffect(() => {
-    setData({
+    setEdit({
       title: post.title,
       content: post.content,
       image: post.image,
@@ -102,11 +132,17 @@ function Post({ post, customClass, user }) {
     e.preventDefault();
     if (commentError) return;
     dispatch(commentPost(post.idPost, newComment, session.username));
+    socket.emit("sendNotification", {
+      senderName: user,
+      receiverName: post.user.username,
+      type: 2,
+    });
   };
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
+
   const handleEditMode = (mode) => {
-    setData({
+    setEdit({
       title: post.title,
       content: post.content,
       image: post.image,
@@ -114,29 +150,59 @@ function Post({ post, customClass, user }) {
     setEditMode(mode);
   };
 
-  const handleLike = async (e) => {
-    let obj;
+  const handleLike = (e) => {
     if (session.username) {
-      obj = await dispatch(
-        likePost({ postIdPost: post.idPost, userId: session.username })
-      );
+      dispatch(likePost({ postIdPost: post.idPost, userId: session.username }));
+
+      liked ? setLiked(false) : setLiked(true);
     }
-    dispatch(updatePage(true, obj.payload.posts));
   };
 
   function handleChange({ target: { name, value } }) {
     if (
       value === "" &&
-      ((!data.content && name === "image") ||
-        (!data.image && name === "content") ||
+      ((!edit.content && name === "image") ||
+        (!edit.image && name === "content") ||
         name === "title")
     ) {
       return;
     }
-    setData((old) => ({ ...old, [name]: value }));
+    setEdit((old) => ({ ...old, [name]: value }));
   }
 
+  const submitEdit = (e) => dispatch(updatePost(post.idPost, edit));
+
   const handleOptions = () => setOptions((old) => !old);
+
+  const submitCode = () => {
+    // axios
+    //   .get("http://localhost:3001/challenge/comment/atalesam", {
+    //     code,
+    //     username: "atalesam",
+    //     postid: 1,
+    //     description: "asd",
+    //   })
+    //   .then((res) => console.log(res))
+    //   .catch((e) => console.log(e));
+  };
+
+  const [result, setResult] = useState(null);
+
+  const testing = () => {
+    axios
+      .post("http://localhost:3001/challenge/testing/", { code: newComment })
+      .then((res) => {
+        console.log(res.data);
+        if (res?.data.error) {
+          setErrorTest(true);
+          setResult(null)
+        }else {
+          setErrorTest(false);
+          setResult(res.data.tested);
+        }
+      })
+      .catch((e) => console.log(e));
+  };
 
   const tags = new Set();
   post.tag.filter((tag) => (!!tag ? tags.add(tag) : false));
@@ -145,13 +211,15 @@ function Post({ post, customClass, user }) {
   let test;
   if (post.content) test = parseContent(post.content);
 
+  const [errorTest, setErrorTest] = useState(null);
+
   return (
     <div className={styles.container + ` ${customClass}`}>
       {session.username === post.user.username ? (
         <div className={styles.options}>
           <button onClick={handleOptions} className={styles.optionsHandler}>
             <BiDotsVerticalRounded
-              style={{ color: "#aaa", width: "2em", height: "2em" }}
+              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
             />
           </button>
 
@@ -203,20 +271,17 @@ function Post({ post, customClass, user }) {
         className={styles.userContainer}
         to={`/profile/${post.user.username}`}
       >
-        <img
-          className={styles.avatar}
-          src={post.user.image || image}
-          alt="avatar"
+        <UserCard
+          toRight
+          showImage
+          showName
+          other={`Posted ${TimeSpan}hr ago`}
         />
-        <div>
-          <span className={styles.username}>{post.user.username}</span>
-          <span className={styles.github}>Posted {TimeSpan}hr</span>
-        </div>
       </Link>
       <div className={styles.postBody}>
         {editMode ? (
           <input
-            value={data.title}
+            value={edit.title}
             name="title"
             onChange={(e) => handleChange(e)}
           />
@@ -227,10 +292,11 @@ function Post({ post, customClass, user }) {
         {editMode ? (
           <div>
             <textarea
-              value={data.content}
+              value={edit.content}
               name="content"
               onChange={(e) => handleChange(e)}
             />
+            <button onClick={submitEdit}>Submit</button>
           </div>
         ) : (
           <div
@@ -265,17 +331,18 @@ function Post({ post, customClass, user }) {
       <div className={styles.actions}>
         <button className={!session.username ? "" : ""} onClick={handleLike}>
           {post.userLikes.filter(
-            (user) => user.user.username === session.username
+            (like) => like.user.username === session.username
           ).length ? (
-            <MdFavorite color="red" />
+            <MdFavorite className={styles.icons} color="#f55" />
           ) : (
-            <MdFavoriteBorder />
+            <MdFavoriteBorder className={styles.icons} />
           )}
-          {post.userLikes.length} |
-          {/* <span>
-            {post.likes[post.likes.length - 1]},{" "}
-            {post.likes[post.likes.length - 2]}
-          </span> */}
+          {post.userLikes.length}
+          <span className={styles.users}>
+            {post.userLikes.length
+              ? "| " + post.userLikes[post.userLikes.length - 1].user.username
+              : ""}
+          </span>
         </button>
         <button>
           <MdOutlineModeComment /> {post.comments && post.comments.length}
@@ -285,13 +352,16 @@ function Post({ post, customClass, user }) {
         </button>
       </div>
 
-      {session.username ? (
+      {session.username && post.type !== "challenge" ? (
         <div className={styles.newCommentContainer}>
-          <span className={styles.maxLength}>{newComment.length} / 1000</span>
+          <div className={styles.inline}>
+            <span className={styles.maxLength}>{newComment.length} / 1000</span>
+            <span>{commentError}</span>
+          </div>
           <form className={styles.newComment} onSubmit={submitComment}>
             <label className={commentError ? "error" : ""}>
               <div className="input-group">
-                <textarea
+                <input
                   onChange={handleComment}
                   name="comment"
                   type="text"
@@ -299,22 +369,119 @@ function Post({ post, customClass, user }) {
                   placeholder="New comment..."
                 />
               </div>
-              <button type="submit">
-                <MdSend className={styles.icons} />
-              </button>
             </label>
-            <span>{commentError}</span>
+            {newComment.length && !commentError ? (
+              <button type="submit">
+                <MdSend
+                  className={styles.icons}
+                  style={{ margin: "0", color: "#fff" }}
+                />
+              </button>
+            ) : (
+              <></>
+            )}
           </form>
         </div>
       ) : (
-        ""
+        <div className={styles.newChallengeContainer}>
+          {/* <button className={styles.button} onClick={submitCode}>
+            Submit
+          </button>
+          <button
+            onClick={() =>
+              axios
+                .get("http://localhost:3001/challenge/post")
+                .then((res) => console.log(res))
+            }
+          >
+            AXIOS
+          </button> */}
+          {/* Pop Up */}
+          <a className={styles.toButton} href="#popup">
+            <FaPlay style={{ color: "white" }} />
+          </a>
+          <div id="popup" class="overlay">
+            <div id="popupBody">
+              <h2>Create a function that adds two numbers in JavaScript</h2>
+              <CodeMirror
+                className={styles.CodeMirror}
+                options={{
+                  theme: "dracula",
+                  mode: "javascript",
+                  keyMap: "sublime",
+                  autoCloseTags: true,
+                  autoCloseBrackets: true,
+                }}
+                value={code}
+                height="80%"
+                width="100%"
+                onChange={(editor, viewUpdate) => {
+                  setNewComment(editor.getValue());
+                }}
+              />
+              <a id="cerrar" href="#">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/macos-close.png" />
+              </a>
+              <div class="popupContent">
+                {errorTest ? (
+                  <img
+                    className={styles.icon}
+                    src="https://img.icons8.com/color/48/000000/fail.png"
+                  />
+                ) : (
+                  <img
+                    className={styles.icon}
+                    src="https://img.icons8.com/color/48/000000/pass.png"
+                  />
+                )}
+
+                <h2>{result}</h2>
+
+                <button onClick={submitComment}>Submitt</button>
+                <button onClick={testing}>Test</button>
+              </div>
+            </div>
+          </div>
+          {/* <div className={styles.inline}>
+            <span className={styles.maxLength}>{newComment.length} / 1000</span>
+            <span>{commentError}</span>
+          </div>
+          <form className={styles.newComment} onSubmit={submitComment}>
+            <label className={commentError ? "error" : ""}>
+              <div className="input-group">
+                <input
+                  onChange={handleComment}
+                  name="comment"
+                  type="text"
+                  value={newComment}
+                  placeholder="New comment..."
+                />
+              </div>
+            </label>
+            {newComment.length && !commentError ? (
+              <button type="submit">
+                <MdSend
+                  className={styles.icons}
+                  style={{ margin: "0", color: "#fff" }}
+                />
+              </button>
+            ) : (
+              <></>
+            )}
+          </form> */}
+        </div>
       )}
 
       {post.comments && post.comments.length ? (
         <ul className={styles.comments}>
-          {post.comments.map((comment) => (
-            <Comment comment={comment} />
-          ))}
+          <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
+          {post.comments.map((comment, i) =>
+            i < 3 ? (
+              <Comment key={i} comment={comment} type={post.type} />
+            ) : (
+              <></>
+            )
+          )}
         </ul>
       ) : (
         ""

@@ -24,6 +24,7 @@
   margin: 2em auto 0 auto;
   padding: 1em 0;
   border-radius: 10px;
+  gap: 1em;
   overflow: hidden;
   background-color: var(--c-bg);
   box-shadow: 0 1px 2px #0001;
@@ -75,32 +76,11 @@
   object-position: center;
   width: 3em;
   height: 3em;
-  background-color: var(--c-avatar-bg);
   border-radius: 100%;
 }
 
 .userContainer {
-  color: var(--c-font);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   margin: 0.5em 0 var(--pX) var(--pX);
-}
-.userContainer:hover .avatar {
-  background-color: var(--c-enfasis);
-}
-
-.userContainer > div {
-  display: flex;
-  flex-direction: column;
-  margin: 0 0 0 1em;
-}
-.userContainer .username {
-  font-weight: bold;
-}
-.userContainer .github {
-  margin-top: 0.25em;
-  font-size: 0.9rem;
 }
 
 .postBody {
@@ -165,9 +145,11 @@
 .tags > li {
   list-style: none;
   padding: 0.25em 1em;
-  font-size: 0.85rem;
+  font-size: 1rem;
+  font-weight: bold;
   color: #fff;
   background-color: var(--c-blue);
+  box-shadow: var(--bs-blue);
   border-radius: 4px;
 }
 
@@ -186,7 +168,6 @@
 .actions {
   display: flex;
   justify-content: space-between;
-  padding: 1.25em var(--pX) 1em var(--pX);
   width: 100%;
 }
 
@@ -198,11 +179,18 @@
   border: none;
   font-size: 0.9rem;
   font-weight: 300;
+  width: max-content;
+  padding: var(--pX) var(--pX);
   cursor: pointer;
 }
 
 .icons {
+  width: 1.25em;
+  height: 1.25em;
   margin-right: 0.5em;
+}
+.actions > button:hover .icons {
+  color: #f55 !important;
 }
 
 .newCommentContainer {
@@ -211,33 +199,34 @@
 }
 
 .newComment > label {
-  width: 100%;
   display: flex !important;
   flex-direction: row;
 }
 
-.newComment textarea {
+.newComment input {
   resize: none;
   padding: 1em;
   height: calc(1rem + 2em);
 }
 
-.newComment button[type="submit"] {
-  max-width: 7em;
-  border-radius: 0 4px 4px 0;
+.inline {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.icons {
-  transform: translateX(4px);
-  width: 1.25em;
-  height: 1.25em;
+.newComment button[type="submit"] {
+  max-width: 7em;
+  border-radius: 5em;
+  margin: 0.5em 0 0.5em auto;
+  padding: 1em;
+  box-shadow: var(--bs-blue);
 }
 
 .maxLength {
   font-size: 0.8rem;
   color: #888;
-  width: 90%;
-  margin: 0 auto;
   text-align: right;
 }
 
@@ -253,5 +242,27 @@
 .comments {
   width: 100%;
   padding: 0 var(--pX);
-  background-color: #fafafa;
+}
+.users {
+  color: #888;
+}
+
+.newChallengeContainer {
+  width: 100%;
+  text-align: center;
+  background-color: var(--c-blue);
+  padding: 10px 10px;
+  border: var(--c-blue) 10px solid;
+  border-radius: 20px;
+}
+
+.toButton {
+  text-decoration: none;
+  color: #fff;
+  border-radius: 12px;
+  width: 100%;
+}
+
+.icon {
+  width: 40px;
 }

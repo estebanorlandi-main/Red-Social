@@ -5,7 +5,7 @@ const { DataTypes, Sequelize } = require("sequelize");
 module.exports = (sequelize) => {
   // defino el modelo
   sequelize.define(
-    "challengePost",
+    "ChallengePost",
     {
       title: {
         type: DataTypes.STRING,
@@ -21,6 +21,7 @@ module.exports = (sequelize) => {
           },
         },
       },
+
       content: {
         type: DataTypes.TEXT,
         allowNull: false,
@@ -35,10 +36,12 @@ module.exports = (sequelize) => {
           },
         },
       },
+
       tag: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: true,
       },
+
       idPost: {
         unique: true,
         type: DataTypes.UUID,
@@ -48,9 +51,5 @@ module.exports = (sequelize) => {
       likes: {
         type: DataTypes.INTEGER,
       },
-    },
-    {
-      timestamps: false,
-    }
-  );
+    });
 };

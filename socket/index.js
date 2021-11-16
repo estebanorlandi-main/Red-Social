@@ -38,6 +38,15 @@ io.on("connection", (socket) => {
     });
   });
 
+  //send about a notification
+  socket.on("sendNotification", ({ senderName, receiverName, type }) => {
+    const receiver = getUser(receiverName);
+    io.to(receiver?.socketId).emit("getNotification", {
+      senderName,
+      type,
+    });
+  });
+
   //when disconnect
   socket.on("disconnect", () => {
     console.log("a user disconnected!");
