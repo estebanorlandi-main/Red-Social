@@ -42,22 +42,6 @@ const followedInfo = {
   attributes: ["id", "username", "image", "name", "lastname"],
 };
 
-const DB_UserFollow = async (date) => {
-  const { userId, followerId } = date;
-  const follow = await User_Follow.findOne({ where: { userId } }).catch((e) =>
-    console.log(e)
-  );
-  if (follow) {
-    return follow.destroy();
-  }
-  const user = await User.findOne({ where: { id: userId } }).catch((e) => null);
-  const follower = await User.findOne({ where: { id: followerId } }).catch(
-    (e) => null
-  );
-  if (user || follower) {
-    return newFollower;
-  } else return { errors: "fatal errores" };
-};
 //fn
 const DB_findUsersEmail = async (email) => {
   if (email == null || email == undefined) return null;
@@ -115,6 +99,7 @@ const DB_findUserQuery = async (query) => {
       "postLikes",
       followersInfo,
       followedInfo,
+      { model: User, as:"Friends", attributes:["username","image"]}
     ],
   });
   return findUser;
@@ -131,6 +116,7 @@ const DB_findUserParams = async (params) => {
       likeUserPost,
       followersInfo,
       followedInfo,
+      { model: User, as:"Friends", attributes:["username","image"]}
     ],
   });
   return findUser;
@@ -145,11 +131,25 @@ const DB_UserID = async (username) => {
   });
   return UserID;
 };
-
+const DB_findUserEmailOrUsername = async(data)=>{
+  const findUser = await User.findOne({
+    where: {
+      [Op.or]: [
+        {
+          username: data,
+        },
+        {
+          email: data,
+        },
+      ]
+    }
+  })
+  return findUser
+}
 const DB_Allcomments = async (username) => {
   user = await DB_UserID(username);
   const final = user.comments.map((comment) => {
-    return comment.dataValues;
+    if(comment.ban === false) return comment.dataValues;
   });
   return final;
 };
@@ -175,6 +175,9 @@ const DB_Postsearch = async ({ username, id }) => {
   try {
     if (username === undefined && id === undefined) {
       var post_search = await Post.findAll({
+        where: {
+          ban:false,
+        },
         include: [
           { model: User, attributes: ["image", "username"] },
           {
@@ -189,14 +192,16 @@ const DB_Postsearch = async ({ username, id }) => {
         ],
         order: [["createdAt", "DESC"]],
       });
+      console.log(post_search.length)
       return post_search;
     }
     if (username === undefined && id) {
       var post_search = await Post.findOne({
         where: {
           idPost: id,
+          ban:false
         },
-        include: [{ model: User, attributes: ["image", "username"] }, Comment],
+        include: [{ model: User, attributes: ["image", "username"] }, {model:Comment, where:{ban:false}}],
         order: [["createdAt", "DESC"]],
       });
       return post_search;
@@ -205,8 +210,9 @@ const DB_Postsearch = async ({ username, id }) => {
       var post_search = await Post.findAll({
         where: {
           userId: userDB.id,
+          ban: false
         },
-        include: [{ model: User, attributes: ["image", "username"] }, Comment],
+        include: [{ model: User, attributes: ["image", "username"] }, {model:Comment, where:{ban:false}}],
         order: [["createdAt", "DESC"]],
       });
       return post_search;
@@ -457,15 +463,32 @@ const BD_banUser = async (username) => {
 };
 
 const BD_loginBan = async (username) => {
-  const user = await User.findOne({ where: { username: username } });
-
-  if (user.strike?.length === 3) {
-    return { error: "You are temporarily suspended" };
+  const user = await User.findOne({ where:{username: username}})
+  const day = new Date()
+  if(user.strike?.length === 3){
+    return {error: 'You are temporarily suspended'};
   }
-  return {};
-};
+  if(user.dayBan !== null){
+    if(day <user.dayBan){
+    return {};
+    }
+  }
+  user.dayBan = null
+  return {}
+}
+
+
+const BD_banComment = async(idComment) => {
+  const comment = await  Comment.findOne({ where:{id: idComment}});
+  if(comment === null) return {error:'Error, comment not found'}
+  comment.ban = true;
+  comment.save();
+  return {Succes:'The BAN was applied successfully'}
+}
+
 
 module.exports = {
+  DB_findUserEmailOrUsername,
   DB_findUserAll,
   DB_findUserQuery,
   DB_findUserParams,
@@ -487,11 +510,13 @@ module.exports = {
   DB_userSearch,
   DB_findUsersEmail,
   DB_findUsersUsername,
-  DB_UserFollow,
   BD_searchSupport,
   BD_createPrivileges,
   BD_searchAdmin,
   BD_searchPost,
   BD_banUser,
   BD_loginBan,
+  BD_banComment
+=======
+
 };
