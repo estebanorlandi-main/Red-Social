@@ -14,8 +14,10 @@ export const GET_POST_FOR_ID = "GET_POST_FOR_ID";
 export const GET_POST_FOR_USERNAME = "GET_POST_FOR_USERNAME";
 export const UPDATE_PAGE = "UPDATE_PAGE";
 export const CLEAR_POST = "CLEAR_POST";
-export const SET_TAGS = "SET_TAGS";
-export const BANPOST_ADMIN = "banPost_admin";
+export const SET_TAGS = "SET_TAGS"
+export const BANPOST_ADMIN =  "banPost_admin";
+export const BANCOMMENT_ADMIN = "banComment_admin";
+export const COMMENT_DELETE = "comment_delete"
 // Crear Posteo
 // return (dispatch) => axios.post('localhost:3001/post')
 //  -> title
@@ -32,10 +34,10 @@ export const BANPOST_ADMIN = "banPost_admin";
 
 // comentario devuelve el comentario creado
 
-export function createPost(data) {
+export function createPost(data, orden, tags) {
   return (dispatch) =>
     axios
-      .post("http://localhost:3001/post", data, { withCredentials: true })
+      .post(`http://localhost:3001/post/?orden=${orden}&tags=${tags}`, data, { withCredentials: true })
       .then((res) => dispatch({ type: POST_CREATE, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 
@@ -100,6 +102,7 @@ export function getPostForId(id) {
 }
 
 export function getPostForUsername(username) {
+  console.log("hola")
   return (dispatch) =>
     axios
       .get(`localhost:3001/`, username)
@@ -127,7 +130,7 @@ export function likePost(data, socket) {
       });
 }
 
-export function uploadTags() {
+export function getTags(){
   return (dispatch) =>
     axios
       .get("http://localhost:3001/tags", { withCredentials: true })
@@ -138,17 +141,43 @@ export function uploadTags() {
         });
       });
 }
-export function banPost(idPost) {
+
+export function loadTags(){
   return (dispatch) =>
     axios
-      .post(
-        `http://localhost:3001/admin/banPost`,
-        { idPost },
-        { withCredentials: true }
-      )
-      .then((res) => dispatch({ type: BANPOST_ADMIN, payload: res }))
-      .catch((e) => (err) => dispatch({ type: ERROR, payload: err }));
+      .post("http://localhost:3001/tags", { withCredentials: true })
+      .then((res) => {
+        console.log(res.data)
+      });
 }
+export function banPost(idPost){
+  return (dispatch) =>
+      axios
+          .post(`http://localhost:3001/admin/banPost`, {idPost},{ withCredentials: true } )
+          .then(res => dispatch({type: BANPOST_ADMIN, payload:res}) )
+          .catch((e) =>(err) => dispatch({ type: ERROR, payload: err })
+          )
+}
+
+export function banComment(idComent){
+  return (dispatch) => {
+    axios 
+      .post(`http://localhost:3001/admin/banComment`, {idComment:idComent},{withCredentials: true})
+      .then(res => dispatch({type: BANCOMMENT_ADMIN, payload:res}) )
+      .catch((e) =>(err) => dispatch({ type: ERROR, payload: err })
+      )
+  }
+}
+
+
+export function deleteComment(commentId) {
+  return (dispatch) =>
+    axios
+      .delete(`http://localhost:3001/comment/${commentId}`, { withCredentials: true })
+      .then((res) => dispatch({ type: COMMENT_DELETE, payload: res.data }))
+      .catch((error) => dispatch({ type: ERROR, payload: error }));
+}
+
 /*
 export function likePost(idPost, username) {
   return (dispatch) =>

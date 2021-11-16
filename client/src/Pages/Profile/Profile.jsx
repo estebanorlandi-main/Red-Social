@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import userimg from "../../images/userCard.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { removeProfile } from "../../Redux/actions/Users";
-import Follow, {FollowBtn} from "../Follow/Follow.jsx"
-
+import { getTags, loadTags } from "../../Redux/actions/Post";
 import Post from "../../components/Post/Post";
-
+import Follow, {FollowBtn} from "../Follow/Follow.jsx"
 import { getUser, socketConnection } from "../../Redux/actions/Users";
 import { conversation, updateUser } from "../../Redux/actions/Session";
 import validate from "../../utils/validate";
@@ -30,16 +29,14 @@ export default function Profile(props) {
 
   const allTags = useSelector((state) => state.postsReducer.tags);
 
-  const [options] = useState(
+  const [options, setOptions] = useState(
     allTags.map((tag) => {
       return { value: tag.label, label: tag.label };
     })
   ); //El select no funciona sin un array de objetos con value y label
 
   const socket = useSelector((state) => state.usersReducer.socket);
-
   const myProfile = session.username === profile.username;
-
   useEffect(() => {
     dispatch(getUser(props.username));
     return () => dispatch(removeProfile());
@@ -50,6 +47,19 @@ export default function Profile(props) {
       dispatch(socketConnection(session.username));
     }
   }, [dispatch, socket, session.username]);
+
+  useEffect(async () => {
+    if (allTags.length === 0) {
+      console.log("entre")
+      await dispatch(loadTags());
+      dispatch(getTags())
+    }
+    setOptions(
+      allTags.map((tag) => {
+        return { value: tag.label, label: tag.label };
+      })
+    );
+  }, [allTags]);
 
   const [inputs, setInputs] = useState({
     name: session.name || "",
@@ -75,7 +85,6 @@ export default function Profile(props) {
   const handleSubmit = () => {
     const errs = validate(inputs);
     if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
-    console.log(profile.username, inputs);
 
     dispatch(updateUser(profile.username, inputs));
     setEditar(false);
@@ -86,10 +95,9 @@ export default function Profile(props) {
       dispatch(conversation(session.username, profile.username));
     }
   };
-
+  console.log(profile.strike)
   let git = profile.gitaccount && profile.gitaccount.split("/");
   git = git && git[git.length - 1];
-
   return profile ? (
     <div>
       {profile.strike?.length === 3 ? (
@@ -104,7 +112,7 @@ export default function Profile(props) {
           <div className={styles.left}>
             <section>
               <div className={styles.tags}>
-                <Tags tags={profile.tags} />
+                {session.tags ? <Tags tags={session.tags} mode={editar} handleSelect={handleSelect} editTags={inputs.tags}/> : ""}
               </div>
               {myProfile && editar ? (
                 <button onClick={handleSubmit}>Change</button>
@@ -129,7 +137,7 @@ export default function Profile(props) {
                 <FollowBtn props={{user:session.username,follow:profile.username, info:profile.following,socket:socket}} />:
                 <></>
               }
-              
+
               {myProfile && editar ? (
                 <form>
                   <label>
@@ -167,7 +175,7 @@ export default function Profile(props) {
               <Follow  props={{followers:profile.followers,following:profile.following,socket:socket}} />:
               <></>
               }
-              
+
               <a className={styles.github} href={profile.gitaccount}>
                 {git}
               </a>
