@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Select from "react-select";
+import Tags from "../../../components/Tags/Tags";
 import ImageUpload from "../../../components/ImageUpload/ImageUpload";
 import { getTags, loadTags } from "../../../Redux/actions/Post";
 import styles from "./EditProfile.module.css";
@@ -16,7 +16,7 @@ function EditProfile(props) {
     lastname: "",
     gitaccount: "",
     about: "",
-    tags: session.tags,
+    tags: [],
   });
 
   useEffect(async () => {
@@ -104,19 +104,7 @@ function EditProfile(props) {
 
       <label>
         Tags
-        <Select
-          options={
-            allTags?.length &&
-            allTags.map((tag) => ({
-              value: tag.label,
-              label: tag.label,
-            }))
-          }
-          name="tags"
-          onChange={handleTags}
-          placeholder="Tags"
-          isMulti
-        />
+        <Tags tags={session.tags} mode={true} handleSelect={handleTags} editTags={inputs.tags}/>
       </label>
       <button type="submit">Change</button>
     </form>
