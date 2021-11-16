@@ -183,6 +183,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   let { title, content, tag, username, type } = req.body;
   let orden = req.query.orden
   let tags = req.query.tags.split(",")
+
   try {
     let userDB = await DB_UserID(username);
 
