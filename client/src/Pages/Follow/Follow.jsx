@@ -5,6 +5,8 @@ import {followUnfollow } from "../../Redux/actions/Users";
 // import { conversation, updateUser } from "../../Redux/actions/Session";
 import styles from "./Follow.module.css";
 // import { Link } from "react-router-dom";
+import { BsFillPersonPlusFill } from "react-icons/bs";
+import { BsFillPersonXFill } from "react-icons/bs";
 
 export default function Follow({props}) {
   const { socket } = props
@@ -51,7 +53,7 @@ export function FollowBtn({props}){
     <div className={styles.container}>
       <div className={styles.containerBtn}>
         <button onClick={(e)=> handleClick(e)} className={Follow? styles.unfollow: styles.follow}>
-          {Follow === true? "Unfollow": "Follow"}
+          {Follow === true? <span><BsFillPersonXFill style={{ color: "#fff" }}  className={styles.icon}/> Unfollow</span>: <span><BsFillPersonPlusFill style={{ color: "#fff" }} className={styles.icon}/> Follow</span>}
         </button> 
       </div>
     </div>

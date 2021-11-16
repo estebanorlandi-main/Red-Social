@@ -11,6 +11,12 @@ import validate from "../../utils/validate";
 import styles from "./Profile.module.css";
 import Select from "react-select";
 import { BsFillPencilFill } from "react-icons/bs";
+import { IoMdMail } from "react-icons/io";
+import { BsGithub } from "react-icons/bs";
+
+
+import { MdMessage } from "react-icons/md";
+
 import Tags from "../../components/Tags/Tags";
 import { Link } from "react-router-dom";
 
@@ -113,17 +119,15 @@ export default function Profile(props) {
       ) : (
         <div className={styles.profile}>
           <section className={styles.head}>
-              <div className={styles.tags}>
-                {session.tags ? <Tags tags={session.tags} mode={editar} handleSelect={handleSelect} editTags={inputs.tags}/> : ""}
-              </div>
+              
               {myProfile && editar ? (
                 <button onClick={handleSubmit}>Change</button>
               ) : (
                 ""
               )}
               {myProfile ? (
-                <Link to="/settings" className={styles.edit}>
-                  <BsFillPencilFill style={{ color: "#C94F4F" }} />
+                <Link to="/settings" className={styles.edit} style={ myProfile ? {} : {display:'none'}}>
+                  <BsFillPencilFill style={{ color: "#C94F4F", marginRight:'4px' }} />
                   Edit
                 </Link>
               ) : (
@@ -131,16 +135,46 @@ export default function Profile(props) {
               )}
 
               <div className={styles.importantInfo}> 
-              <img
-                className={styles.image}
-                src={profile.image || userimg}
-                alt=""
-              />
+                <img
+                  className={styles.image}
+                  src={profile.image || userimg}
+                  alt=""
+                  style={{marginRight:"24px"}}
+                />
+                <div className={styles.profileInfoDisplay}>
+                  <div> 
+                  {
+                    profile.name && profile.lastname ? 
+                    <p className={styles.name}>
+                      {profile.name} {profile.lastname}
+                    </p>
+                    :
+                    <p>
+                    </p>
+                  }
+                  <p>@{profile.username}</p>
+                  </div>
+
+                  {socket !== undefined?
+                  <Follow  props={{followers:profile.followers,following:profile.following,socket:socket}} />:
+                  <></>
+                  }
+                </div>
               </div>
+              <div className={styles.profileActions} style={myProfile ? {display:'none'} : {}}>
               {profile.following && !myProfile?
                 <FollowBtn props={{user:session.username,follow:profile.username, info:profile.following,socket:socket}} />:
                 <></>
               }
+              {
+                !myProfile?
+                <button onClick={sendMessage} className={styles.messageButton}><MdMessage style={{ color: "#fff", width:'1.2em', height:'1.2em', marginRight:'4px' }}/> Message</button>
+                :
+                <></>
+              }
+              </div>
+              
+              
 
               {myProfile && editar ? (
                 <form>
@@ -169,22 +203,13 @@ export default function Profile(props) {
                   <span>{errors.lastname}</span>
                 </form>
               ) : (
-                <p className={styles.name}>
-                  {profile.name} {profile.lastname}
+                <p>
+                  {/* {profile.name} {profile.lastname} */}
                 </p>
               )}
 
-              <p className={styles.email}>{profile.email} </p>
-              {socket !== undefined?
-              <Follow  props={{followers:profile.followers,following:profile.following,socket:socket}} />:
-              <></>
-              }
-
-              <a className={styles.github} href={profile.gitaccount}>
-                {git}
-              </a>
-
-              <button onClick={sendMessage}>Send Message</button>
+             
+              
 
               {myProfile && editar ? (
                 <Select
@@ -216,7 +241,25 @@ export default function Profile(props) {
                   </div>
                 </label>
               ) : (
-                <p>{profile.about}</p>
+                <div>
+                  <p className={styles.about}>{profile.about}</p>
+                  <hr></hr>
+                  
+                  <p className={styles.email}><IoMdMail style={{marginRight:'4px', width:'1.2em', height:'1.2em'}}/>{profile.email} </p>
+                  {
+                    profile.gitaccount ? 
+                    <a className={styles.github} href={profile.gitaccount}>
+                      <BsGithub style={{marginRight:'4px', width:'1.2em', height:'1.2em'}}/>
+                      {git}
+                    </a>
+                    :
+                    <></>
+                  }
+                  
+                  <div className={styles.tags}>
+                    {session.tags ? <Tags tags={session.tags} mode={editar} handleSelect={handleSelect} editTags={inputs.tags}/> : ""}
+                  </div>
+              </div>
               )}
             </section>
             <section>
