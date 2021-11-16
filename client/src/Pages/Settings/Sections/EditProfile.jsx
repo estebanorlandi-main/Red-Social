@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Select from "react-select";
+import Tags from "../../../components/Tags/Tags";
 import ImageUpload from "../../../components/ImageUpload/ImageUpload";
-
+import { getTags, loadTags } from "../../../Redux/actions/Post";
 import styles from "./EditProfile.module.css";
 import { updateUser } from "../../../Redux/actions/Session";
+import { Redirect } from "react-router";
 
 function EditProfile(props) {
   const dispatch = useDispatch();
@@ -12,13 +13,21 @@ function EditProfile(props) {
   const allTags = useSelector((state) => state.postsReducer.tags);
 
   const [inputs, setInputs] = useState({
-    name: "",
-    lastname: "",
-    gitaccount: "",
-    about: "",
-    tags: session.tags,
+    name: session.name || "",
+    lastname: session.lastname || "",
+    gitaccount: session.gitaccount || "",
+    about: session.about || "",
+    tags: session.tags || [],
   });
 
+  const [submit, setSubmit] = useState(false)
+  useEffect(async () => {
+    if (allTags.length === 0) {
+      console.log("entre")
+      await dispatch(loadTags());
+      dispatch(getTags())
+    }
+  }, [allTags]);
   /*const [errors, setErrors] = useState({
     name: "",
     lastname: "",
@@ -34,12 +43,17 @@ function EditProfile(props) {
     setInputs((old) => ({ ...old, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(updateUser(session.username, inputs));
+    let errores = await dispatch(updateUser(session.username, inputs));
+    if (errores.type === "ERROR") {
+      alert(errores.payload.response.data[Object.keys(errores.payload.response.data)[0]])
+    }else {
+      setSubmit(true)
+    }
   };
 
-  return (
+  return submit ? <Redirect to={`/profile/${session.username}`} /> : (
     <form onSubmit={handleSubmit} className={styles.form}>
       <h3>User</h3>
 
@@ -97,19 +111,7 @@ function EditProfile(props) {
 
       <label>
         Tags
-        <Select
-          options={
-            allTags?.length &&
-            allTags.map((tag) => ({
-              value: tag.label,
-              label: tag.label,
-            }))
-          }
-          name="tags"
-          onChange={handleTags}
-          placeholder="Tags"
-          isMulti
-        />
+        <Tags tags={session.tags?session.tags:[]} mode={true} handleSelect={handleTags} editTags={inputs.tags}/>
       </label>
       <button type="submit">Change</button>
     </form>

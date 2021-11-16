@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import image from "../../images/userCard.png";
 import UserCard from "../UserCard/UserCard";
 import Tags from "../Tags/Tags";
 import { NavLink } from "react-router-dom";
@@ -67,7 +69,6 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const dispatch = useDispatch();
 
   const session = useSelector((state) => state.sessionReducer || {});
-  const allTags = useSelector((state) => state.postsReducer.tags);
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
   const [liked, setLiked] = useState(
@@ -90,12 +91,9 @@ function Post({ post, customClass, user, socket, admin, type }) {
     title: post.title,
     content: post.content,
     image: post.image,
-    tag: post.tags,
+    tag: post.tag,
   });
 
-  const [optionsTags, setOptionsTags] = useState(
-    allTags.map((tag) => ({ value: tag.label, label: tag.label }))
-  ); //El select no funciona sin un array de objetos con value y label
 
   const createdAt = new Date(post.updatedAt).getTime();
   const now = new Date().getTime();
@@ -104,7 +102,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const [code, setCode] = useState("a = 0");
 
   useEffect(() => {
-    if (Object.keys(socket).length) {
+    if (socket && Object.keys(socket).length) {
       socket.on("getPost", (data) => {
         if (post.idPost === data.idPost) {
           setCurrentPost(data);
@@ -144,8 +142,13 @@ function Post({ post, customClass, user, socket, admin, type }) {
       title: post.title,
       content: post.content,
       image: post.image,
-      tags: post.tags,
+      tag: post.tag,
     });
+    setLiked(post.userLikes.filter((like) => like.user.username === session.username)
+      .length
+      ? true
+      : false)
+      setEditMode(false)
   }, [post]);
 
   const handleComment = ({ target: { name, value } }) => {
@@ -166,7 +169,6 @@ function Post({ post, customClass, user, socket, admin, type }) {
   };
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
-
   const handleEditMode = (mode) => {
     setEdit({
       title: post.title,
@@ -200,7 +202,6 @@ function Post({ post, customClass, user, socket, admin, type }) {
   }
 
   function handleSelect(e) {
-    console.log(e, post.tag);
     setEdit((old) => ({ ...old, tag: e.map((tag) => tag.value) }));
   }
 
@@ -245,7 +246,9 @@ function Post({ post, customClass, user, socket, admin, type }) {
   let test;
   if (post.content) test = parseContent(post.content);
 
+
   const [errorTest, setErrorTest] = useState(null);
+
 
   return (
     <div className={styles.container + ` ${customClass}`}>
@@ -291,11 +294,11 @@ function Post({ post, customClass, user, socket, admin, type }) {
             </button>
           </div>
         </div>
-      ) : (
+      ) :
         ""
-      )}
+      }
 
-      <Tags tags={post.tag} />
+      <Tags tags={post.tag} mode={editMode} handleSelect={handleSelect} editTags={edit.tag}/>
 
       <NavLink
         activeClassName={styles.active}
