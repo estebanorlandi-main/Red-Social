@@ -49,7 +49,7 @@ router.get("/", async (req, res, next) => {
     if (Object.keys(req.query).length != 0) return next();
     let findUsers = await fn.DB_findUserAll();
 
-    return res.send(findUsers)
+    return res.send(findUsers);
 
     findUsers = sanitizeUser(findUsers);
     res.send(findUsers);
@@ -150,7 +150,7 @@ router.put("/:id", async (req, res, next) => {
       else req.body.password = bcrypt.hashSync(req.body.password, saltRounds);
     }
 
-    const UserID = await User.findOne({
+    const UserID = await db.User.findOne({
       where: {
         username: req.params.id,
       },
@@ -167,35 +167,38 @@ router.put("/:id", async (req, res, next) => {
 
     return res.send({ user: userUpdated, success: true });
   } catch (e) {
+    console.log(e);
     res.sendStatus(500).send({ errors: e, success: false });
   }
 });
 //VALIDATE EMAIL
-router.get("/validate/email/:email", async(req,res,next)=>{
-  const email = await fn.DB_findUsersEmail(req.params.email)
-  if(email) return res.send({success:false, email:"Email in use"})
-  else return res.send({success:true, email:"Email ok"})
-})
+router.get("/validate/email/:email", async (req, res, next) => {
+  const email = await fn.DB_findUsersEmail(req.params.email);
+  if (email) return res.send({ success: false, email: "Email in use" });
+  else return res.send({ success: true, email: "Email ok" });
+});
 // VALIDATE USERNAME
-router.get("/validate/username/:username", async(req,res,next)=>{
-  const username = await  fn.DB_findUsersUsername(req.params.username)
-  if(username) return res.send({success:false, username:"Username in use"})
-  else return res.send({success:true, username:"Username ok"})
-})
+router.get("/validate/username/:username", async (req, res, next) => {
+  const username = await fn.DB_findUsersUsername(req.params.username);
+  if (username)
+    return res.send({ success: false, username: "Username in use" });
+  else return res.send({ success: true, username: "Username ok" });
+});
 
-router.put("/validate/account", async(req,res,next)=>{
+router.put("/validate/account", async (req, res, next) => {
   try {
-    const findUser = await fn.DB_findUserEmailOrUsername(req.body.account)
-    if(findUser){
-      return res.send({success:true,msg:"Account found"})
-    }
-    else return res.send({success:false,msg:"Couldn't find your CodeNet account"})
-  } catch(e) {    
+    const findUser = await fn.DB_findUserEmailOrUsername(req.body.account);
+    if (findUser) {
+      return res.send({ success: true, msg: "Account found" });
+    } else
+      return res.send({
+        success: false,
+        msg: "Couldn't find your CodeNet account",
+      });
+  } catch (e) {
     res.sendStatus(500);
   }
-})
-
-
+});
 
 // FUNCIONES USADAS
 // DB_findUserAll

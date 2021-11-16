@@ -18,7 +18,6 @@ ReactDOM.render(
         <IconContext.Provider
           value={{
             color: "#333",
-            size: "1rem",
             style: {
               verticalAlign: "middle",
             },
