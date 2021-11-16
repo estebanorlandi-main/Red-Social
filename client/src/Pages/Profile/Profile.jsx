@@ -28,20 +28,13 @@ export default function Profile(props) {
   const profile = useSelector((state) => state.usersReducer.profile);
 
   const allTags = useSelector((state) => state.postsReducer.tags);
-
-  const [options, setOptions] = useState(
-    allTags.map((tag) => {
-      return { value: tag.label, label: tag.label };
-    })
-  ); //El select no funciona sin un array de objetos con value y label
-
   const socket = useSelector((state) => state.usersReducer.socket);
   const myProfile = session.username === profile.username;
   useEffect(() => {
     dispatch(getUser(props.username));
     return () => dispatch(removeProfile());
   }, [dispatch, props.username]);
-
+  console.log(allTags)
   useEffect(() => {
     if (!Object.keys(socket).length) {
       dispatch(socketConnection(session.username));
@@ -50,15 +43,9 @@ export default function Profile(props) {
 
   useEffect(async () => {
     if (allTags.length === 0) {
-      console.log("entre")
       await dispatch(loadTags());
       dispatch(getTags())
     }
-    setOptions(
-      allTags.map((tag) => {
-        return { value: tag.label, label: tag.label };
-      })
-    );
   }, [allTags]);
 
   const [inputs, setInputs] = useState({
@@ -181,18 +168,6 @@ export default function Profile(props) {
               </a>
 
               <button onClick={sendMessage}>Send Message</button>
-
-              {myProfile && editar ? (
-                <Select
-                  onChange={handleSelect}
-                  className={styles.select_container}
-                  options={options}
-                  styles={selectStyles}
-                  isMulti
-                />
-              ) : (
-                ""
-              )}
             </section>
             <section>
               <h3>About</h3>
