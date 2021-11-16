@@ -15,6 +15,7 @@ export default function NewPost() {
     content: "",
     image: null,
     tag: [],
+    type: "normal",
     likes: 0,
     username: session.username,
   });
@@ -28,6 +29,11 @@ export default function NewPost() {
       return { value: tag.label, label: tag.label };
     })
   ); //El select no funciona sin un array de objetos con value y label
+
+  const type = [
+    { value: "normal", label: "Normal" },
+    { value: "challenge", label: "Challenge" },
+  ];
 
   /*function separarTags(str) {
     var arr = str.split(",");
@@ -45,7 +51,9 @@ export default function NewPost() {
   const handleSelect = (e) => {
     setData((old) => ({ ...old, tag: e.map((option) => option.value) }));
   };
-
+  const handleSelectType = (e) => {
+    setData((old) => ({ ...old, type: e.value }));
+  };
   const handleImage = (e) => {
     if (!e) return setData((old) => ({ ...old, image: null }));
 
@@ -78,6 +86,7 @@ export default function NewPost() {
         content: "",
         image: null,
         tag: [],
+        type: "normal",
         likes: 0,
         username: session.username,
       });
@@ -124,6 +133,12 @@ export default function NewPost() {
           placeholder="Tags"
           isMulti
         />
+        <span className={style.error}></span>
+      </label>
+
+      <label className={style.wrapper}>
+        Type
+        <Select onChange={handleSelectType} options={type} />
         <span className={style.error}></span>
       </label>
 
