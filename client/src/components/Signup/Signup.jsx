@@ -52,7 +52,7 @@ function Signup(props) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const errors = validate(inputs);
@@ -63,21 +63,26 @@ function Signup(props) {
       if (obj.image === "")
         obj.image = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
 
-      dispatch(singUp(obj));
+      let errores = await dispatch(singUp(obj));
+      console.log(errores)
+      if (errores.payload.data.username || errores.payload.data.email) {
+        alert(`${Object.keys(errores.payload.data)[0]} ${errores.payload.data.username}`)
+      }else{
+        setInputs({
+          username: "",
+          password: "",
+          email: "",
+        });
 
-      setInputs({
-        username: "",
-        password: "",
-        email: "",
-      });
+        setErr((old) => ({
+          username: "",
+          password: "",
+          email: "",
+        }));
 
-      setErr((old) => ({
-        username: "",
-        password: "",
-        email: "",
-      }));
+        setRegistered(true);
+      }
 
-      setRegistered(true);
     } else {
       setErr((old) => errors);
     }

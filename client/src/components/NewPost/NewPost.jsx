@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import validate from "../../utils/validate";
 import ImageUpload from "../ImageUpload/ImageUpload";
-
-export default function NewPost() {
+import Tags from "../Tags/Tags";
+export default function NewPost({orden, tags}) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
   const [data, setData] = useState({
@@ -23,18 +23,9 @@ export default function NewPost() {
     content: "",
   });
 
-  const options = [
-    { value: "js", label: "JavaScript" },
-    { value: "python", label: "Python" },
-    { value: "cpp", label: "C++" },
-    { value: "php", label: "PHP" },
-    { value: "java", label: "Java" },
-    { value: "c", label: "C" },
-    { value: "go", label: "Go" },
-    { value: "kotlin", label: "Kotiln" },
-    { value: "sql", label: "SQL" },
-    { value: "mongodb", label: "MongoDB" },
-    { value: "postgresql", label: "PostgreSQL" },
+  const type = [
+    { value: "normal", label: "Normal" },
+    { value: "challenge", label: "Challenge" },
   ];
 
   /*function separarTags(str) {
@@ -64,31 +55,37 @@ export default function NewPost() {
     setData((old) => ({ ...old, [name]: files[0] }));
   };
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (!Object.values(errores).filter((error) => error).length) {
       const formData = new FormData();
+      if (!session.dayBan) {
+        formData.append("title", data.title);
+        formData.append("content", data.content);
+        formData.append("image", data.image);
+        formData.append("tag", data.tag);
+        formData.append("username", data.username);
+        formData.append("type",data.type)
 
-      if(session.dayBan === null || session.dayBan === undefined){
-      formData.append("title", data.title);
-      formData.append("content", data.content);
-      formData.append("image", data.image);
-      formData.append("tag", data.tag);
-      formData.append("username", data.username);
-
-      dispatch(createPost(formData));
-      }else{
-        alert('You are banned, therefore you cannot post anything')
+        let errores = await dispatch(createPost(formData, orden, tags));
+        if (errores.type === "ERROR") {
+          alert(errores.payload.response.data.error.errors[0].message)
+        }else {
+          setData({
+            title: "",
+            content: "",
+            image: null,
+            tag: [],
+            likes: 0,
+            type: "normal",
+            username: session.username,
+          });
+        }
+      } else {
+        alert("You are banned, therefore you cannot post anything");
       }
-      setData({
-        title: "",
-        content: "",
-        image: null,
-        tag: [],
-        likes: 0,
-        username: session.username,
-      });
+
       //console.log(obj);
       //dispatch(updatePage(true, obj.payload.posts));
     }
@@ -127,13 +124,16 @@ export default function NewPost() {
       <ImageUpload onChange={handleImage} />
 
       <label className={style.wrapper}>
-        Tags
-        <Select
-          menuPlacement={"top"}
+      <Tags tags={[]} mode={true} handleSelect={handleSelect} editTags={data.tag}/>
+
+        {/*<Select
           onChange={handleSelect}
           options={options}
+          menuPlacement="top"
+          placeholder="Tags"
+          value={data.tag.map((t)=>({label:t, value:t}))}
           isMulti
-        />
+        />*/}
         <span className={style.error}></span>
       </label>
 

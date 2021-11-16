@@ -34,17 +34,17 @@ export default function root(state = initialState, action) {
 
     case POST_LIKE:
       if (action.payload.post) {
-        
+
         // let postSocket;
 
         // action.socket.on("getPost", (data) => {
         //   postSocket = data
         //   console.log(postSocket)
-          
+
         // });
-        
+
         // console.log( postSocket)
-        
+
 
         return {
           ...state,
@@ -95,7 +95,7 @@ export default function root(state = initialState, action) {
     case COMMENT_DELETE:
       return { ...state, posts: action.payload.posts };
 
-      
+
     case GET_POSTS:
       if (state.page === 0) {
         return {

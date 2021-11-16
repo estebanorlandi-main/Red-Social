@@ -193,3 +193,17 @@ svg {
     display: none;
   }
 }
+
+.top {
+  position: absolute !important;
+  display: flex;
+  width: max-content;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  top: 50% !important;
+  left: 50% !important;
+}
+
+.dark {
+  background-color: #333;
+}
