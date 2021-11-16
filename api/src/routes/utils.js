@@ -355,7 +355,6 @@ const DB_postCreates = async (data) => {
 const DB_userSearch = async (username, email, password) => {
   // const hashPassword =  bcrypt.hashSync(password,saltRounds)
   // console.log(hashPassword)
-
   try {
     if (username && username != null) {
       var user = await User.findOne({
@@ -363,9 +362,11 @@ const DB_userSearch = async (username, email, password) => {
           username: username,
         },
       });
-
+      
       if (!user) return { error: "username" };
-
+      
+      console.log(password)
+      console.log(user.password)
       var isValid = await bcrypt.compare(password, user.password);
 
       if (!isValid) return { error: "password" };
@@ -492,13 +493,20 @@ const DB_AdminSignUp = async () =>{
     "username": "admin",
     "name":"admin",
     "lastname":"admin",
+    "password":"Contr1234",
     "email":"admin@gmail.com",
     "image":"http://pm1.narvii.com/6750/8ac0676013474827a00f3dde5dd83009ec20f6ebv2_00.jpg",
   }
 
-  const admin = await DB_userCreates(user);
-  const isAdmin = await BD_createPrivileges(admin);
-  return isAdmin;
+  const userRegister =await axios
+        .post("http://localhost:3001/user/register", user)
+        .catch((e) => e);
+
+  const admin = await axios
+      .post("http://localhost:3001/admin/register", user)
+      .catch((e) => e);
+
+  return admin;
 
 }
 

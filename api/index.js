@@ -9,7 +9,7 @@ const dataPosts = require("../Mockups/DB_Posts.json");
 const { DB_userCreates, DB_postCreates, DB_AdminSignUp  } = require("./src/routes/utils.js");
 
 // Syncing all the models at once.
-conn.sync({ force: false }).then(() => {
+conn.sync({ force: false}).then(() => {
   server.listen(3001, () => {
     //CARGA DE DATOS
     //PASOS A SEGUIR :
@@ -21,8 +21,8 @@ conn.sync({ force: false }).then(() => {
     // DB_userCreates(DataUsers);
 
     // DB_postCreates(dataPosts);
-    //DB_AdminSignUp()
-
+    
+    // DB_AdminSignUp()
     console.log("%s listening at 3001"); // eslint-disable-line no-console
   });
 });

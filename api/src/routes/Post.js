@@ -177,7 +177,7 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", upload.single("image"), async (req, res) => {
   let { title, content, tag, username, type } = req.body;
-  console.log(type)
+
 
   try {
     let userDB = await DB_UserID(username);
