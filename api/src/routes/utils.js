@@ -99,7 +99,7 @@ const DB_findUserQuery = async (query) => {
       "postLikes",
       followersInfo,
       followedInfo,
-      { model: User, as:"Friends", attributes:["username","image"]}
+      { model: User, as: "Friends", attributes: ["username", "image"] },
     ],
   });
   return findUser;
@@ -116,7 +116,7 @@ const DB_findUserParams = async (params) => {
       likeUserPost,
       followersInfo,
       followedInfo,
-      { model: User, as:"Friends", attributes:["username","image"]}
+      { model: User, as: "Friends", attributes: ["username", "image"] },
     ],
   });
   return findUser;
@@ -131,7 +131,7 @@ const DB_UserID = async (username) => {
   });
   return UserID;
 };
-const DB_findUserEmailOrUsername = async(data)=>{
+const DB_findUserEmailOrUsername = async (data) => {
   const findUser = await User.findOne({
     where: {
       [Op.or]: [
@@ -141,15 +141,15 @@ const DB_findUserEmailOrUsername = async(data)=>{
         {
           email: data,
         },
-      ]
-    }
-  })
-  return findUser
-}
+      ],
+    },
+  });
+  return findUser;
+};
 const DB_Allcomments = async (username) => {
   user = await DB_UserID(username);
   const final = user.comments.map((comment) => {
-    if(comment.ban === false) return comment.dataValues;
+    if (comment.ban === false) return comment.dataValues;
   });
   return final;
 };
@@ -176,7 +176,7 @@ const DB_Postsearch = async ({ username, id }) => {
     if (username === undefined && id === undefined) {
       var post_search = await Post.findAll({
         where: {
-          ban:false,
+          ban: false,
         },
         include: [
           { model: User, attributes: ["image", "username"] },
@@ -192,16 +192,19 @@ const DB_Postsearch = async ({ username, id }) => {
         ],
         order: [["createdAt", "DESC"]],
       });
-      console.log(post_search.length)
+      console.log(post_search.length);
       return post_search;
     }
     if (username === undefined && id) {
       var post_search = await Post.findOne({
         where: {
           idPost: id,
-          ban:false
+          ban: false,
         },
-        include: [{ model: User, attributes: ["image", "username"] }, {model:Comment, where:{ban:false}}],
+        include: [
+          { model: User, attributes: ["image", "username"] },
+          { model: Comment, where: { ban: false } },
+        ],
         order: [["createdAt", "DESC"]],
       });
       return post_search;
@@ -210,9 +213,12 @@ const DB_Postsearch = async ({ username, id }) => {
       var post_search = await Post.findAll({
         where: {
           userId: userDB.id,
-          ban: false
+          ban: false,
         },
-        include: [{ model: User, attributes: ["image", "username"] }, {model:Comment, where:{ban:false}}],
+        include: [
+          { model: User, attributes: ["image", "username"] },
+          { model: Comment, where: { ban: false } },
+        ],
         order: [["createdAt", "DESC"]],
       });
       return post_search;
@@ -355,7 +361,6 @@ const DB_postCreates = async (data) => {
 const DB_userSearch = async (username, email, password) => {
   // const hashPassword =  bcrypt.hashSync(password,saltRounds)
   // console.log(hashPassword)
-
   try {
     if (username && username != null) {
       var user = await User.findOne({
@@ -363,9 +368,11 @@ const DB_userSearch = async (username, email, password) => {
           username: username,
         },
       });
-
+      
       if (!user) return { error: "username" };
-
+      
+      console.log(password)
+      console.log(user.password)
       var isValid = await bcrypt.compare(password, user.password);
 
       if (!isValid) return { error: "password" };
@@ -463,27 +470,48 @@ const BD_banUser = async (username) => {
 };
 
 const BD_loginBan = async (username) => {
-  const user = await User.findOne({ where:{username: username}})
-  const day = new Date()
-  if(user.strike?.length === 3){
-    return {error: 'You are temporarily suspended'};
+  const user = await User.findOne({ where: { username: username } });
+  const day = new Date();
+  if (user.strike?.length === 3) {
+    return { error: "You are temporarily suspended" };
   }
-  if(user.dayBan !== null){
-    if(day <user.dayBan){
-    return {};
+  if (user.dayBan !== null) {
+    if (day < user.dayBan) {
+      return {};
     }
   }
-  user.dayBan = null
-  return {}
-}
+  user.dayBan = null;
+  return {};
+};
 
-
-const BD_banComment = async(idComment) => {
-  const comment = await  Comment.findOne({ where:{id: idComment}});
-  if(comment === null) return {error:'Error, comment not found'}
+const BD_banComment = async (idComment) => {
+  const comment = await Comment.findOne({ where: { id: idComment } });
+  if (comment === null) return { error: "Error, comment not found" };
   comment.ban = true;
   comment.save();
-  return {Succes:'The BAN was applied successfully'}
+  return { Succes: "The BAN was applied successfully" };
+};
+
+const DB_AdminSignUp = async () =>{
+  const user = {
+    "username": "admin",
+    "name":"admin",
+    "lastname":"admin",
+    "password":"Contr1234",
+    "email":"admin@gmail.com",
+    "image":"http://pm1.narvii.com/6750/8ac0676013474827a00f3dde5dd83009ec20f6ebv2_00.jpg",
+  }
+
+  const userRegister =await axios
+        .post("http://localhost:3001/user/register", user)
+        .catch((e) => e);
+
+  const admin = await axios
+      .post("http://localhost:3001/admin/register", user)
+      .catch((e) => e);
+
+  return admin;
+
 }
 
 
@@ -516,5 +544,10 @@ module.exports = {
   BD_searchPost,
   BD_banUser,
   BD_loginBan,
+<<<<<<< HEAD
   BD_banComment
+=======
+  BD_banComment,
+  DB_AdminSignUp
+>>>>>>> 6b57806182d32fb9a232fcf9a3f5434d5462f670
 };

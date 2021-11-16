@@ -42,6 +42,10 @@ export const Headline = styled.h1`
   z-index: 2;
   font-size: 3em;
   font-weight: 600;
+  color: ${(props) => {
+    return props.isDark ? "#fff" : "#1e1e1e";
+  }}
+
   animation: 1s ${toDown};
 
   @media screen and (max-width: 600px) {
