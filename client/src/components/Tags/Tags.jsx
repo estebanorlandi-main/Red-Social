@@ -37,25 +37,23 @@ function Tags({ tags, mode, handleSelect, editTags }) {
 
   return (
     <>
-    {mode ? <Select
-      onChange={(e)=>handleSelect(e)}
-      options={optionsTags}
-      placeholder="Tags"
-      defaultValue={tags.map((tag)=>({label:tag, value:tag}))}
-      value={editTags.map((tag)=>({label:tag, value:tag}))}
-      isMulti
-    /> :
-      <ul className={styles.tags}>
-        {tags && tags.length ? (
-          tags.map((tag) => <li className={styles.tag}>{tag}</li>)
-        ) : (
-          <></>
-        )}
-      </ul>
-    }
-
+      {mode ? <Select
+        onChange={(e)=>handleSelect(e)}
+        options={optionsTags}
+        placeholder="Tags"
+        defaultValue={tags.map((tag)=>({label:tag, value:tag}))}
+        value={editTags.map((tag)=>({label:tag, value:tag}))}
+        isMulti
+      /> :
+        <ul className={styles.tags}>
+          {tags && tags.length ? (
+            tags.map((tag) => <li className={styles.tag}>{tag}</li>)
+          ) : (
+            <></>
+          )}
+        </ul>
+      }
     </>
-
   );
 }
 

@@ -53,7 +53,6 @@ export function deletePost(postId) {
 }
 
 export function updatePost(postId, data) {
-  console.log(data)
   return (dispatch) =>
     axios
       .put(`http://localhost:3001/post/${postId}`, data, {
@@ -78,8 +77,8 @@ export function commentPost(postid, content, username, socket) {
 
         dispatch({
           type: POST_COMMENT,
-          payload: res.data
-        })
+          payload: res.data,
+        });
       })
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 
@@ -89,8 +88,8 @@ export function commentPost(postid, content, username, socket) {
 export function getPosts(page, tag, orden) {
   return (dispatch) =>
     axios
-      .get(`http://localhost:3001/post?page=${page}&tag=${tag}&orden=${orden}`,)
-      .then((res) => {dispatch({ type: GET_POSTS, payload: res.data })})
+      .get(`http://localhost:3001/post?page=${page}&tag=${tag}&orden=${orden}`)
+      .then((res) => dispatch({ type: GET_POSTS, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }
 
@@ -126,7 +125,7 @@ export function likePost(data, socket) {
 
         dispatch({
           type: POST_LIKE,
-          payload: res.data
+          payload: res.data,
         });
       });
 }
@@ -178,7 +177,6 @@ export function deleteComment(commentId) {
       .then((res) => dispatch({ type: COMMENT_DELETE, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }
-
 
 /*
 export function likePost(idPost, username) {

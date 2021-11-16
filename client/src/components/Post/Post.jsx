@@ -202,7 +202,6 @@ function Post({ post, customClass, user, socket, admin, type }) {
   }
 
   function handleSelect(e) {
-    console.log(e)
     setEdit((old) => ({ ...old, tag: e.map((tag) => tag.value) }));
   }
 
