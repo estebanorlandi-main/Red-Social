@@ -164,7 +164,7 @@ export default function Profile(props) {
 
               <p className={styles.email}>{profile.email} </p>
               {socket !== undefined?
-              <Follow  props={{followers:profile.followers,following:profile.following,socket:socket}} />:
+              <Follow  props={{profile:profile.username,follow:profile.username,followers:profile.followers,following:profile.following,socket:socket}} />:
               <></>
               }
               
@@ -186,7 +186,6 @@ export default function Profile(props) {
                 ""
               )}
             </section>
-
             <section>
               <h3>About</h3>
               {myProfile && editar ? (
