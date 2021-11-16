@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import userimg from "../../images/userCard.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { removeProfile } from "../../Redux/actions/Users";
+import Follow, {FollowBtn} from "../Follow/Follow.jsx"
 
 import Post from "../../components/Post/Post";
 
@@ -124,7 +125,11 @@ export default function Profile(props) {
                 src={profile.image || userimg}
                 alt=""
               />
-
+              {profile.following && !myProfile?
+                <FollowBtn props={{user:session.username,follow:profile.username, info:profile.following,socket:socket}} />:
+                <></>
+              }
+              
               {myProfile && editar ? (
                 <form>
                   <label>
@@ -157,8 +162,12 @@ export default function Profile(props) {
                 </p>
               )}
 
-              <p className={styles.email}>{profile.email}</p>
-
+              <p className={styles.email}>{profile.email} </p>
+              {socket !== undefined?
+              <Follow  props={{followers:profile.followers,following:profile.following,socket:socket}} />:
+              <></>
+              }
+              
               <a className={styles.github} href={profile.gitaccount}>
                 {git}
               </a>
@@ -200,8 +209,7 @@ export default function Profile(props) {
                 ? profile.posts.map((post) => (
                     <Post
                       customClass={styles.post}
-                      post={{ ...post, user: profile }}
-                      socket={socket}
+                      post={{ ...post, user: profile}}
                     />
                   ))
                 : ""}

@@ -11,6 +11,7 @@ import {
   CLEAR_POST,
   SET_TAGS,
   BANPOST_ADMIN,
+  GET_POSTS_C
 } from "../actions/Post";
 
 const initialState = {
