@@ -50,14 +50,15 @@ function App() {
 
   return (
     <div className={`App ${isDark ? "dark" : ""}`}>
-      {/*<button
+      <button
         className="top"
         onClick={() => {
           dispatch(changeTheme(!isDark));
         }}
       >
         Change Theme
-      </button>*/}
+      </button>
+
       {errors && errors.length ? (
         <ul className="errors">
           {errors.map((error) => (

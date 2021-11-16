@@ -55,6 +55,7 @@ label {
   margin: 1em 0 0 0;
   font-size: 0.9rem;
   width: 100%;
+  background-color: #fff;
 }
 
 label input,
@@ -65,7 +66,6 @@ label textarea {
   width: 100%;
   font-size: 0.9rem;
   border: none;
-  background-color: #fff;
   resize: none;
 }
 
@@ -205,5 +205,16 @@ svg {
 }
 
 .dark {
+  background-color: #1e1e1e;
+}
+
+.dark label {
+  color: #aaa;
   background-color: #333;
+  border: none;
+}
+.dark input,
+.dark textarea {
+  background-color: transparent;
+  color: #fff;
 }

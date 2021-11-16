@@ -288,3 +288,10 @@
 .active:hover::after {
   display: none;
 }
+
+.dark {
+  background-color: #222;
+}
+.dark .brand {
+  color: #fff;
+}
