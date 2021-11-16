@@ -37,6 +37,7 @@ export default function ProfileAdmin(props) {
 
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
+  const profileAdmin = useSelector((state) => state);
 
   const myProfile = session.username === profile.username;
 

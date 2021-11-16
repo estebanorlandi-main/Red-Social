@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeProfile } from "../../Redux/actions/Users";
 import { getTags, loadTags } from "../../Redux/actions/Post";
 import Post from "../../components/Post/Post";
-
+import Follow, {FollowBtn} from "../Follow/Follow.jsx"
 import { getUser, socketConnection } from "../../Redux/actions/Users";
 import { conversation, updateUser } from "../../Redux/actions/Session";
 import validate from "../../utils/validate";
@@ -133,6 +133,10 @@ export default function Profile(props) {
                 src={profile.image || userimg}
                 alt=""
               />
+              {profile.following && !myProfile?
+                <FollowBtn props={{user:session.username,follow:profile.username, info:profile.following,socket:socket}} />:
+                <></>
+              }
 
               {myProfile && editar ? (
                 <form>
@@ -166,7 +170,11 @@ export default function Profile(props) {
                 </p>
               )}
 
-              <p className={styles.email}>{profile.email}</p>
+              <p className={styles.email}>{profile.email} </p>
+              {socket !== undefined?
+              <Follow  props={{followers:profile.followers,following:profile.following,socket:socket}} />:
+              <></>
+              }
 
               <a className={styles.github} href={profile.gitaccount}>
                 {git}
@@ -209,8 +217,7 @@ export default function Profile(props) {
                 ? profile.posts.map((post) => (
                     <Post
                       customClass={styles.post}
-                      post={{ ...post, user: profile }}
-                      socket={socket}
+                      post={{ ...post, user: profile}}
                     />
                   ))
                 : ""}

@@ -15,6 +15,7 @@ export default function NewPost({orden, tags}) {
     content: "",
     image: null,
     tag: [],
+    type: "normal",
     likes: 0,
     username: session.username,
   });
@@ -28,6 +29,11 @@ export default function NewPost({orden, tags}) {
       return { value: tag.label, label: tag.label };
     })
   ); //El select no funciona sin un array de objetos con value y label
+
+  const type = [
+    { value: "normal", label: "Normal" },
+    { value: "challenge", label: "Challenge" },
+  ];
 
   /*function separarTags(str) {
     var arr = str.split(",");
@@ -45,7 +51,9 @@ export default function NewPost({orden, tags}) {
   const handleSelect = (e) => {
     setData((old) => ({ ...old, tag: e.map((option) => option.value) }));
   };
-
+  const handleSelectType = (e) => {
+    setData((old) => ({ ...old, type: e.value }));
+  };
   const handleImage = (e) => {
     if (!e) return setData((old) => ({ ...old, image: null }));
 
@@ -67,6 +75,7 @@ export default function NewPost({orden, tags}) {
         formData.append("image", data.image);
         formData.append("tag", data.tag);
         formData.append("username", data.username);
+        formData.append("type",data.type)
 
         let errores = await dispatch(createPost(formData, orden, tags));
         if (errores.type === "ERROR") {
@@ -78,13 +87,26 @@ export default function NewPost({orden, tags}) {
             image: null,
             tag: [],
             likes: 0,
+            type: "normal",
             username: session.username,
           });
         }
       } else {
         alert("You are banned, therefore you cannot post anything");
       }
+<<<<<<< HEAD
 
+=======
+      setData({
+        title: "",
+        content: "",
+        image: null,
+        tag: [],
+        type: "normal",
+        likes: 0,
+        username: session.username,
+      });
+>>>>>>> fbaa90a50e7f882fcfd61920f2c309de6dd02317
       //console.log(obj);
       //dispatch(updatePage(true, obj.payload.posts));
     }
@@ -129,6 +151,12 @@ export default function NewPost({orden, tags}) {
           value={data.tag.map((t)=>({label:t, value:t}))}
           isMulti
         />
+        <span className={style.error}></span>
+      </label>
+
+      <label className={style.wrapper}>
+        Type
+        <Select onChange={handleSelectType} options={type} />
         <span className={style.error}></span>
       </label>
 
