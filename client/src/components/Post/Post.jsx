@@ -104,7 +104,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const [code, setCode] = useState("a = 0");
 
   useEffect(() => {
-    if (Object.keys(socket).length) {
+    if (socket && Object.keys(socket).length) {
       socket.on("getPost", (data) => {
         if (post.idPost === data.idPost) {
           setCurrentPost(data);

@@ -28,6 +28,9 @@ export default function Profile(props) {
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
 
+  // console.log(session);
+  console.log(profile)
+
   const allTags = useSelector((state) => state.postsReducer.tags);
 
   const [options] = useState(
@@ -100,9 +103,8 @@ export default function Profile(props) {
           />
         </div>
       ) : (
-        <main className={styles.container}>
-          <div className={styles.left}>
-            <section>
+        <div className={styles.profile}>
+          <section className={styles.head}>
               <div className={styles.tags}>
                 <Tags tags={profile.tags} />
               </div>
@@ -120,11 +122,13 @@ export default function Profile(props) {
                 ""
               )}
 
+              <div className={styles.importantInfo}> 
               <img
                 className={styles.image}
                 src={profile.image || userimg}
                 alt=""
               />
+              </div>
               {profile.following && !myProfile?
                 <FollowBtn props={{user:session.username,follow:profile.username, info:profile.following,socket:socket}} />:
                 <></>
@@ -186,7 +190,10 @@ export default function Profile(props) {
                 ""
               )}
             </section>
-
+        <main className={styles.container}>
+          
+          <div className={styles.left}>
+            
             <section>
               <h3>About</h3>
               {myProfile && editar ? (
@@ -204,6 +211,11 @@ export default function Profile(props) {
                 <p>{profile.about}</p>
               )}
             </section>
+            <section>
+              <h3>Recomendaciones?</h3>
+            </section>
+          </div>
+          <div className={styles.right}>
             <section className={styles.posts}>
               {profile.posts
                 ? profile.posts.map((post) => (
@@ -214,13 +226,10 @@ export default function Profile(props) {
                   ))
                 : ""}
             </section>
-          </div>
-          <div className={styles.right}>
-            <section>
-              <h3>Recomendaciones?</h3>
-            </section>
+            
           </div>
         </main>
+        </div>
       )}
     </div>
   ) : (
