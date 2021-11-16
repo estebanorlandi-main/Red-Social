@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
 
   router.post("/register", async (req, res) =>{
     try {
-      const {username, password,email} =req.body;
+      const {username, password,email} =req.body;      
       const user = await fn.DB_userSearch(username, email, password);
       if(user.error) return res.send({Error:user.error}).status(400);
 
