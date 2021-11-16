@@ -502,7 +502,7 @@ const DB_AdminSignUp = async () =>{
     "image":"http://pm1.narvii.com/6750/8ac0676013474827a00f3dde5dd83009ec20f6ebv2_00.jpg",
   }
 
-  const userRegister =await axios
+  const userRegister = await axios
         .post("http://localhost:3001/user/register", user)
         .catch((e) => e);
 
@@ -511,7 +511,15 @@ const DB_AdminSignUp = async () =>{
       .catch((e) => e);
 
   return admin;
+}
 
+const validatesupport = async (postReported, username) => {
+  const report = await Support.findOne({where:{
+    postReported,
+    username
+    }});
+    
+  return report
 }
 
 
@@ -545,5 +553,6 @@ module.exports = {
   BD_banUser,
   BD_loginBan,
   BD_banComment,
-  DB_AdminSignUp
+  DB_AdminSignUp,
+  validatesupport
 };
