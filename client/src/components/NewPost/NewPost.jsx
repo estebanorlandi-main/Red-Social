@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import validate from "../../utils/validate";
 import ImageUpload from "../ImageUpload/ImageUpload";
-
+import Tags from "../Tags/Tags";
 export default function NewPost({orden, tags}) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
@@ -24,11 +24,6 @@ export default function NewPost({orden, tags}) {
     title: "",
     content: "",
   });
-  const [options] = useState(
-    allTags.map((tag) => {
-      return { value: tag.label, label: tag.label };
-    })
-  ); //El select no funciona sin un array de objetos con value y label
 
   const type = [
     { value: "normal", label: "Normal" },
@@ -131,14 +126,16 @@ export default function NewPost({orden, tags}) {
       <ImageUpload onChange={handleImage} />
 
       <label className={style.wrapper}>
-        <Select
+      <Tags tags={[]} mode={true} handleSelect={handleSelect} editTags={data.tag}/>
+
+        {/*<Select
           onChange={handleSelect}
           options={options}
           menuPlacement="top"
           placeholder="Tags"
           value={data.tag.map((t)=>({label:t, value:t}))}
           isMulti
-        />
+        />*/}
         <span className={style.error}></span>
       </label>
 

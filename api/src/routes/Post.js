@@ -231,6 +231,7 @@ router.delete("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(req.body)
     await DB_Postedit(id, req.body);
 
     const post = await modifiedPost(id);

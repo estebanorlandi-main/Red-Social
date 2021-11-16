@@ -91,7 +91,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
     title: post.title,
     content: post.content,
     image: post.image,
-    tags: post.tag,
+    tag: post.tag,
   });
 
 
@@ -102,7 +102,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const [code, setCode] = useState("a = 0");
 
   useEffect(() => {
-    if (Object.keys(socket).length) {
+    if (socket && Object.keys(socket).length) {
       socket.on("getPost", (data) => {
         if (post.idPost === data.idPost) {
           setCurrentPost(data);
@@ -142,7 +142,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
       title: post.title,
       content: post.content,
       image: post.image,
-      tags: post.tag,
+      tag: post.tag,
     });
     setLiked(post.userLikes.filter((like) => like.user.username === session.username)
       .length
@@ -174,7 +174,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
       title: post.title,
       content: post.content,
       image: post.image,
-      tags: post.tag,
+      tag: post.tag,
     });
     setEditMode(mode);
   };
@@ -202,7 +202,8 @@ function Post({ post, customClass, user, socket, admin, type }) {
   }
 
   function handleSelect(e) {
-    setEdit((old) => ({ ...old, tags: e.map((tag) => tag.value) }));
+    console.log(e)
+    setEdit((old) => ({ ...old, tag: e.map((tag) => tag.value) }));
   }
 
   const submitEdit = (e) => dispatch(updatePost(post.idPost, edit));
@@ -296,7 +297,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
         ""
       }
 
-      <Tags tags={post.tag} mode={editMode} handleSelect={handleSelect} editTags={edit.tags}/>
+      <Tags tags={post.tag} mode={editMode} handleSelect={handleSelect} editTags={edit.tag}/>
 
       <NavLink
         activeClassName={styles.active}

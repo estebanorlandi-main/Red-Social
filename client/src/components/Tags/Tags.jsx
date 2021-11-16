@@ -23,7 +23,8 @@ function Tags({ tags, mode, handleSelect, editTags }) {
   }, []);
 
   useEffect(()=>{
-    if (editTags.length < tags.length) {
+
+    if (editTags && editTags.length < tags.length) {
       console.log("cambio")
       setOptionsTags(
         allTags.map((tag) => {
@@ -41,6 +42,7 @@ function Tags({ tags, mode, handleSelect, editTags }) {
       options={optionsTags}
       placeholder="Tags"
       defaultValue={tags.map((tag)=>({label:tag, value:tag}))}
+      value={editTags.map((tag)=>({label:tag, value:tag}))}
       isMulti
     /> :
       <ul className={styles.tags}>
