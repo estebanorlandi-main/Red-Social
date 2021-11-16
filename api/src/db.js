@@ -56,7 +56,7 @@ const {
 } = sequelize.models;
 
 //Comentar para no floodear la base de datos con tags :*
-//Tags.bulkCreate(BulkTags, { returning: true });
+Tags.bulkCreate(BulkTags, { returning: true });
 
 // Aca vendrian las relaciones
 //Usuario

@@ -84,7 +84,7 @@ export default function Login() {
           </div>
         </label>
         <span>{errors.password}</span>
-        <Link className="btn simple" to="/signup">
+        <Link className="btn simple" to="/accounts/password/reset/">
           forgot password?
         </Link>
 

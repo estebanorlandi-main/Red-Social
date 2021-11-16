@@ -14,6 +14,7 @@ export const GET_POST_FOR_ID = "GET_POST_FOR_ID";
 export const GET_POST_FOR_USERNAME = "GET_POST_FOR_USERNAME";
 export const UPDATE_PAGE = "UPDATE_PAGE";
 export const CLEAR_POST = "CLEAR_POST";
+export const SET_TAGS = "SET_TAGS"
 export const BANPOST_ADMIN =  "banPost_admin";
 export const BANCOMMENT_ADMIN = "banComment_admin";
 export const COMMENT_DELETE = "comment_delete"
@@ -52,6 +53,7 @@ export function deletePost(postId) {
 }
 
 export function updatePost(postId, data) {
+  console.log(data)
   return (dispatch) =>
     axios
       .put(`http://localhost:3001/post/${postId}`, data, {
@@ -84,11 +86,11 @@ export function commentPost(postid, content, username, socket) {
   //return { type: POST_COMMENT, payload: { idPost, text, user } };
 }
 
-export function getPosts(page) {
+export function getPosts(page, tag, orden) {
   return (dispatch) =>
     axios
-      .get(`http://localhost:3001/post?page=${page}`)
-      .then((res) => dispatch({ type: GET_POSTS, payload: res.data }))
+      .get(`http://localhost:3001/post?page=${page}&tag=${tag}&orden=${orden}`,)
+      .then((res) => {console.log(res.data);dispatch({ type: GET_POSTS, payload: res.data })})
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }
 
@@ -128,8 +130,19 @@ export function likePost(data, socket) {
       });
 }
 
+export function uploadTags(){
+  return (dispatch) =>
+    axios
+      .get("http://localhost:3001/tags", { withCredentials: true })
+      .then((res) => {
+        dispatch({
+          type: SET_TAGS,
+          payload: res.data,
+        });
+      });
+}
 export function banPost(idPost){
-  return (dispatch) => 
+  return (dispatch) =>
       axios
           .post(`http://localhost:3001/admin/banPost`, {idPost},{ withCredentials: true } )
           .then(res => dispatch({type: BANPOST_ADMIN, payload:res}) )
@@ -155,6 +168,7 @@ export function deleteComment(commentId) {
       .then((res) => dispatch({ type: COMMENT_DELETE, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }
+
 
 /*
 export function likePost(idPost, username) {

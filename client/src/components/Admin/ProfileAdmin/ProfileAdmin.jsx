@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import userimg from "../../../images/userCard.png";
+import userimg from "../../../images/userCard.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { removeProfile,getUser } from "../../../Redux/actions/Users";
+import { removeProfile, getUser } from "../../../Redux/actions/Users";
 
 import PostAdmin from "../../../components/Admin/PostAdmin/PostAdmin";
 
-// import { getUser } from "../../Redux/actions/Users";
 import { updateUser } from "../../../Redux/actions/Session";
 import validate from "../../../utils/validate";
 import styles from "./stylesProfile.css";
 import Select from "react-select";
-import { BsFillPencilFill } from "react-icons/bs";
+import { BiCog } from "react-icons/bi";
 import { banUserAdmin } from "../../../Redux/actions/Users";
 
 const selectStyles = {
@@ -38,8 +37,8 @@ export default function ProfileAdmin(props) {
 
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
-  const profileAdmin = useSelector((state) => state)
-  
+  const profileAdmin = useSelector((state) => state);
+
   const myProfile = session.username === profile.username;
 
   useEffect(() => {
@@ -79,139 +78,151 @@ export default function ProfileAdmin(props) {
   git = git && git[git.length - 1];
 
   const handleBanUser = (e) => {
-      e.preventDefault();
-      dispatch(banUserAdmin(e.target.value))
-      alert('They have applied successfully')
-  }
+    e.preventDefault();
+    dispatch(banUserAdmin(e.target.value));
+    alert("They have applied successfully");
+  };
 
   return profile ? (
     <div>
-    {profile.strike?.length === 3? (<div><img src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png" alt="Not found"/></div>) :
-    <main className={styles.container}>
-      <div className={styles.left}>
-        <section>
-          <div className={styles.tags}>
-            {profile.tags &&
-              profile.tags
-                .filter((tag) => tag)
-                .map((tag, i) => (
-                  <span key={i} className={styles.tag}>
-                    {tag}
-                  </span>
-                ))}
-          </div>
-          {myProfile && editar ? (
-            <button onClick={handleSubmit}>Change</button>
-          ) : (
-            ""
-          )}
-          {myProfile ? (
-            <button
-              className={styles.edit}
-              onClick={() => setEditar((old) => !old)}
-            >
-              <BsFillPencilFill style={{ color: "#C94F4F" }} />
-              Edit
-            </button>
-          ) : (
-            ""
-          )}
+      {profile.strike?.length === 3 ? (
+        <div>
+          <img
+            src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png"
+            alt="Not found"
+          />
+        </div>
+      ) : (
+        <main className={styles.container}>
+          <div className={styles.left}>
+            <section>
+              <div className={styles.tags}>
+                {profile.tags &&
+                  profile.tags
+                    .filter((tag) => tag)
+                    .map((tag, i) => (
+                      <span key={i} className={styles.tag}>
+                        {tag}
+                      </span>
+                    ))}
+              </div>
+              {myProfile && editar ? (
+                <button onClick={handleSubmit}>Change</button>
+              ) : (
+                ""
+              )}
+              {myProfile ? (
+                <button
+                  className={styles.edit}
+                  onClick={() => setEditar((old) => !old)}
+                >
+                  <BiCog />
+                  Edit
+                </button>
+              ) : (
+                ""
+              )}
 
-          <img className={styles.image} src={profile.image || userimg} alt="" />
-            <button 
+              <img
+                className={styles.image}
+                src={profile.image || userimg}
+                alt=""
+              />
+              <button
                 value={profile.username}
                 name="banUser"
                 onClick={(e) => handleBanUser(e)}
-            >
-            Ban User</button>
-          {myProfile && editar ? (
-            <form>
-              <label>
-                <div className="input-group">
-                  <input
-                    name="name"
-                    onChange={handleChange}
-                    value={inputs.name}
-                    placeholder={session.name}
-                  />
-                </div>
-              </label>
-              <span>{errors.name}</span>
+              >
+                Ban User
+              </button>
+              {myProfile && editar ? (
+                <form>
+                  <label>
+                    <div className="input-group">
+                      <input
+                        name="name"
+                        onChange={handleChange}
+                        value={inputs.name}
+                        placeholder={session.name}
+                      />
+                    </div>
+                  </label>
+                  <span>{errors.name}</span>
 
-              <label>
-                <div className="input-group">
-                  <input
-                    name="lastname"
-                    onChange={handleChange}
-                    value={inputs.lastname}
-                    placeholder={session.lasnName}
-                  />
-                </div>
-              </label>
-              <span>{errors.lastname}</span>
-            </form>
-          ) : (
-            <p className={styles.name}>
-              {profile.name} {profile.lastname}
-            </p>
-          )}
+                  <label>
+                    <div className="input-group">
+                      <input
+                        name="lastname"
+                        onChange={handleChange}
+                        value={inputs.lastname}
+                        placeholder={session.lasnName}
+                      />
+                    </div>
+                  </label>
+                  <span>{errors.lastname}</span>
+                </form>
+              ) : (
+                <p className={styles.name}>
+                  {profile.name} {profile.lastname}
+                </p>
+              )}
 
-          <p className={styles.email}>{profile.email}</p>
+              <p className={styles.email}>{profile.email}</p>
 
-          <a className={styles.github} href={profile.gitaccount}>
-            {git}
-          </a>
+              <a className={styles.github} href={profile.gitaccount}>
+                {git}
+              </a>
 
-          {myProfile && editar ? (
-            <Select
-              onChange={handleSelect}
-              className={styles.select_container}
-              options={options}
-              styles={selectStyles}
-              isMulti
-            />
-          ) : (
-            ""
-          )}
-        </section>
-
-        <section>
-          <h3>About</h3>
-          {myProfile && editar ? (
-            <label>
-              <div className="input-group">
-                <textarea
-                  name="about"
-                  onChange={handleChange}
-                  value={inputs.about}
-                  placeholder={session.about}
-                ></textarea>
-              </div>
-            </label>
-          ) : (
-            <p>{profile.about}</p>
-          )}
-        </section>
-        <section className={styles.posts}>
-          {profile.posts
-            ? profile.posts.map((post) => (
-                <PostAdmin
-                  customClass={styles.post}
-                  post={{ ...post, user: profile }}
+              {myProfile && editar ? (
+                <Select
+                  onChange={handleSelect}
+                  className={styles.select_container}
+                  options={options}
+                  styles={selectStyles}
+                  isMulti
                 />
-              ))
-            : ""}
-        </section>
-      </div>
-      <div className={styles.right}>
-        <section>
-          <h3>Recomendaciones?</h3>
-        </section>
-      </div>
-    </main>
-    }</div>
+              ) : (
+                ""
+              )}
+            </section>
+
+            <section>
+              <h3>About</h3>
+              {myProfile && editar ? (
+                <label>
+                  <div className="input-group">
+                    <textarea
+                      name="about"
+                      onChange={handleChange}
+                      value={inputs.about}
+                      placeholder={session.about}
+                    ></textarea>
+                  </div>
+                </label>
+              ) : (
+                <p>{profile.about}</p>
+              )}
+            </section>
+            <section className={styles.posts}>
+              {profile.posts
+                ? profile.posts.map((post) => (
+                    <PostAdmin
+                      customClass={styles.post}
+                      post={{ ...post, user: profile }}
+                    />
+                  ))
+                : ""}
+            </section>
+          </div>
+          <div className={styles.right}>
+            <section>
+              <h3>Recomendaciones?</h3>
+            </section>
+          </div>
+        </main>
+      )}
+    </div>
   ) : (
     ""
   );
 }
-

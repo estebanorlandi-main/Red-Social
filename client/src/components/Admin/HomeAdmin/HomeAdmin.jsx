@@ -79,7 +79,7 @@ function HomeAdmin(props) {
     getConversations();
   }, [session.username]);
 
-  return (
+    return (
     <div className={styles.home + ` ${createPost ? styles.noScroll : ""} `}>
       <section className={styles.left}>
         <div className={styles.filters}>
@@ -159,3 +159,5 @@ function HomeAdmin(props) {
 }
 
 export default HomeAdmin;
+
+

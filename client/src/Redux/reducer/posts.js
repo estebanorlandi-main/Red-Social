@@ -9,8 +9,10 @@ import {
   GET_POST_FOR_USERNAME,
   UPDATE_PAGE,
   CLEAR_POST,
-  BANPOST_ADMIN,
   COMMENT_DELETE
+  SET_TAGS,
+  BANPOST_ADMIN,
+  GET_POSTS_C
 } from "../actions/Post";
 
 const initialState = {
@@ -18,6 +20,7 @@ const initialState = {
   post: {},
   page: 0,
   totalPages: 0,
+  tags:[]
 };
 
 export default function root(state = initialState, action) {
@@ -63,6 +66,7 @@ export default function root(state = initialState, action) {
           ...state,
           posts: state.posts.map((post) => {
             if (post.idPost === action.payload.post.idPost) {
+              console.log(action.payload.post)
               post = action.payload.post;
             }
             return post;
@@ -127,6 +131,8 @@ export default function root(state = initialState, action) {
     case CLEAR_POST:
       return { ...initialState, posts: [] };
 
+    case SET_TAGS:
+      return {...state, tags:action.payload}
     case BANPOST_ADMIN:
       return{
         ...state,

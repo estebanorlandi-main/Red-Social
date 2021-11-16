@@ -1,44 +1,53 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { socketConnection } from "../../Redux/actions/Users";
+import { getPosts, updatePage, uploadTags } from "../../Redux/actions/Post";
+import { Link } from "react-router-dom";
+
+import axios from "axios";
+
 import Post from "../../components/Post/Post";
 import NewPost from "../../components/NewPost/NewPost";
-import { io, Socket } from "socket.io-client";
 import UserCard from "../../components/UserCard/UserCard";
+import Loader from "../../components/Loader/Loader";
 
-import { Link } from "react-router-dom";
+import { BiChevronUp } from "react-icons/bi";
 
 import styles from "./Home.module.css";
 
-import { socketConnection } from "../../Redux/actions/Users";
-import { clearPosts, getPosts, updatePage } from "../../Redux/actions/Post";
-import axios from "axios";
-
 function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
+  const allTags = useSelector((state) => state.postsReducer.tags);
   const session = useSelector((state) => state.sessionReducer);
 
   const socket = useSelector((state) => state.usersReducer.socket);
-  // console.log(socket);
+
   const [page, totalPages] = useSelector(
     ({ postsReducer: { page, totalPages } }) => [page, totalPages]
   );
-
   const dispatch = useDispatch();
-
+  const [orden, setOrden] = useState("cronologico");
   const [createPost, setCreatePost] = useState(false);
+  const [newPosts, setNewPosts] = useState(true);
   const [conversations, setConversations] = useState([]);
   const [first, setFirst] = useState(true);
-
+  const [tags, setTags] = useState([]);
+  const [tagsOptions, setTagsOptions] = useState([]); //El select no funciona sin un array de objetos con value y label
+  const options = [
+    { value: "cronologico", label: "Cronologico" },
+    { value: "userLikes", label: "Likes" },
+    { value: "comments", label: "Comentarios" },
+    { value: "combinados", label: "Inicial" },
+  ];
   useEffect(() => {
     dispatch(socketConnection(session.username));
-  }, []);
+  }, [dispatch, session.username]);
 
   // useEffect(() => {
   //   if(Object.keys(socket).length){
   //     socket.emit("addUser", session.username);
   //   }
   // }, [socket, session.username]);
-
   const handleScroll = useCallback(() => {
     if (
       Math.ceil(window.innerHeight + window.scrollY) >=
@@ -53,9 +62,20 @@ function Home(props) {
       dispatch(updatePage(0));
       return;
     }
-    dispatch(getPosts(page));
-  }, [dispatch, page, first, totalPages]);
+    dispatch(getPosts(page, tags, orden));
+  }, [dispatch, page, first, totalPages, orden]);
 
+  useEffect(() => {
+    if (first) {
+      dispatch(uploadTags());
+      setFirst(false);
+    }
+    setTagsOptions(
+      allTags.map((tag) => {
+        return { value: tag.label, label: tag.label };
+      })
+    );
+  }, [allTags]);
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
@@ -63,7 +83,21 @@ function Home(props) {
     };
   }, [handleScroll]);
 
-  console.log(posts.length);
+  /*
+  const handleSelect = (e) => {
+    setOrden(e.value);
+  };
+  <li>
+    <Select onChange={handleSelect} options={options} />
+  </li>
+
+  const handleSelect2 = (e) => {
+    setTags(e.map((option) => option.value));
+  };
+  <li>
+    <Select onChange={handleSelect2} options={tagsOptions} isMulti />
+  </li>
+  */
 
   useEffect(() => {
     const getConversations = async () => {
@@ -76,6 +110,18 @@ function Home(props) {
     };
     getConversations();
   }, [session.username]);
+
+  useEffect(() => {
+    let newPosts = setTimeout(() => setNewPosts(true), 60000);
+    return () => clearTimeout(newPosts);
+  });
+
+  const handleCharge = (e) => {
+    window.scrollTo(0, 0);
+    dispatch(updatePage(0));
+    dispatch(getPosts(page));
+    setNewPosts(false);
+  };
 
   return (
     <div className={styles.home + ` ${createPost ? styles.noScroll : ""} `}>
@@ -99,6 +145,11 @@ function Home(props) {
       </section>
 
       <section className={styles.center}>
+        {newPosts && (
+          <button className={styles.newPosts} onClick={handleCharge}>
+            Check new posts <BiChevronUp className={styles.icon} />
+          </button>
+        )}
         {createPost ? (
           <div
             className={styles.newPost}
@@ -135,9 +186,7 @@ function Home(props) {
           ))}
         </ul>
 
-        {totalPages > page && (
-          <div className={styles.cargando}>Cargando...</div>
-        )}
+        {page < totalPages - 1 && <Loader />}
       </section>
 
       <section className={styles.right}>

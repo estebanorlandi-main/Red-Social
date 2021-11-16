@@ -17,13 +17,9 @@ conn.sync({ force: false }).then(() => {
     //3---> DESCOMENTE SEGUNDO:  DB_postCreates(dataPosts)
     //4---> COMENTE: DB_postCreates(dataPosts)
 
-    /*DB_userCreates(DataUsers);*/
-
-    /*DB_postCreates(dataPosts);*/
     // DB_userCreates(DataUsers);
 
     // DB_postCreates(dataPosts);
-
     console.log("%s listening at 3001"); // eslint-disable-line no-console
   });
 });

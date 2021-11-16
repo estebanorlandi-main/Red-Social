@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { Sequelize, Model } = require("sequelize");
-const { User, Post } = require("../db.js");
+const db = require("../db.js");
 const fn = require("./utils.js");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -18,7 +18,10 @@ const sanitizeUser = (data) => {
       tags: user.tags,
       posts: user.posts,
       strike: user.strike,
-      dayBan:user.dayBan
+      dayBan:user.dayBan,
+      followers:user.followers,
+      following:user.following,
+      friends:user.Friends
     }));
   }
 
@@ -33,7 +36,10 @@ const sanitizeUser = (data) => {
     tags: data.tags,
     posts: data.posts,
     strike: data.strike,
-    dayBan:data.dayBan
+    dayBan:data.dayBan,
+    followers:data.followers,
+    following:data.following,
+    friends:data.Friends
   };
 };
 
@@ -42,6 +48,8 @@ router.get("/", async (req, res, next) => {
   try {
     if (Object.keys(req.query).length != 0) return next();
     let findUsers = await fn.DB_findUserAll();
+
+    return res.send(findUsers);
 
     findUsers = sanitizeUser(findUsers);
     res.send(findUsers);
@@ -142,11 +150,11 @@ router.put("/:id", async (req, res, next) => {
       else req.body.password = bcrypt.hashSync(req.body.password, saltRounds);
     }
 
-    const UserID = await User.findOne({
+    const UserID = await db.User.findOne({
       where: {
         username: req.params.id,
       },
-      include: [Post],
+      include: [db.Post],
     });
 
     let validate = await fn.DB_updateUser(req.body, UserID.id);
@@ -159,36 +167,38 @@ router.put("/:id", async (req, res, next) => {
 
     return res.send({ user: userUpdated, success: true });
   } catch (e) {
+    console.log(e);
     res.sendStatus(500).send({ errors: e, success: false });
   }
 });
-//FOLLOW/UNFOLLOW
-router.post("/follow", async (req, res, next) => {
-  const validate = await fn.DB_UserFollow(req.body);
+//VALIDATE EMAIL
+router.get("/validate/email/:email", async (req, res, next) => {
+  const email = await fn.DB_findUsersEmail(req.params.email);
+  if (email) return res.send({ success: false, email: "Email in use" });
+  else return res.send({ success: true, email: "Email ok" });
+});
+// VALIDATE USERNAME
+router.get("/validate/username/:username", async (req, res, next) => {
+  const username = await fn.DB_findUsersUsername(req.params.username);
+  if (username)
+    return res.send({ success: false, username: "Username in use" });
+  else return res.send({ success: true, username: "Username ok" });
+});
 
-  return res.send("ok");
+router.put("/validate/account", async (req, res, next) => {
   try {
-    const findUser = await fn.DB_findUserParams(req.params.username);
-    findUser
-      ? res.send(findUser.comments)
-      : res.send({ errors: "USER not found" }).status(200);
+    const findUser = await fn.DB_findUserEmailOrUsername(req.body.account);
+    if (findUser) {
+      return res.send({ success: true, msg: "Account found" });
+    } else
+      return res.send({
+        success: false,
+        msg: "Couldn't find your CodeNet account",
+      });
   } catch (e) {
     res.sendStatus(500);
   }
 });
-//VALIDATE EMAIL
-router.get("/validate/email/:email", async(req,res,next)=>{
-  const email = await fn.DB_findUsersEmail(req.params.email)
-  if(email) return res.send({success:false, email:"Email in use"})
-  else return res.send({success:true, email:"Email ok"})
-})
-router.get("/validate/username/:username", async(req,res,next)=>{
-  const username = await  fn.DB_findUsersUsername(req.params.username)
-  if(username) return res.send({success:false, username:"Username in use"})
-  else return res.send({success:true, username:"Username ok"})
-})
-
-
 
 // FUNCIONES USADAS
 // DB_findUserAll
