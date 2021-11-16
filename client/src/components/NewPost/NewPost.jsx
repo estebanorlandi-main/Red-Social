@@ -70,7 +70,7 @@ export default function NewPost() {
     if (!Object.values(errores).filter((error) => error).length) {
       const formData = new FormData();
 
-      if(session.dayBan === null){
+      if(session.dayBan === null || session.dayBan === undefined){
       formData.append("title", data.title);
       formData.append("content", data.content);
       formData.append("image", data.image);

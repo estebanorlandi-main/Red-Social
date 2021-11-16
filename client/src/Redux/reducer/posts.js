@@ -9,7 +9,8 @@ import {
   GET_POST_FOR_USERNAME,
   UPDATE_PAGE,
   CLEAR_POST,
-  BANPOST_ADMIN
+  BANPOST_ADMIN,
+  COMMENT_DELETE
 } from "../actions/Post";
 
 const initialState = {
@@ -86,6 +87,11 @@ export default function root(state = initialState, action) {
     case POST_DELETE:
       return { ...state, posts: action.payload.posts };
 
+
+    case COMMENT_DELETE:
+      return { ...state, posts: action.payload.posts };
+
+      
     case GET_POSTS:
       if (state.page === 0) {
         return {

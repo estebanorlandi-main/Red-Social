@@ -65,6 +65,7 @@ router.get("/", async (req, res) => {
   const { tag, page } = req.query;
   const allPosts = await DB_Postsearch({});
 
+
   if (!tag) return res.status(200).send(paginate(page, allPosts));
 
   let postCategoria = allPosts.filter((e) =>

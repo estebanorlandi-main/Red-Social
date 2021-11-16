@@ -15,6 +15,8 @@ export const GET_POST_FOR_USERNAME = "GET_POST_FOR_USERNAME";
 export const UPDATE_PAGE = "UPDATE_PAGE";
 export const CLEAR_POST = "CLEAR_POST";
 export const BANPOST_ADMIN =  "banPost_admin";
+export const BANCOMMENT_ADMIN = "banComment_admin";
+export const COMMENT_DELETE = "comment_delete"
 // Crear Posteo
 // return (dispatch) => axios.post('localhost:3001/post')
 //  -> title
@@ -134,6 +136,26 @@ export function banPost(idPost){
           .catch((e) =>(err) => dispatch({ type: ERROR, payload: err })
           )
 }
+
+export function banComment(idComent){
+  return (dispatch) => {
+    axios 
+      .post(`http://localhost:3001/admin/banComment`, {idComment:idComent},{withCredentials: true})
+      .then(res => dispatch({type: BANCOMMENT_ADMIN, payload:res}) )
+      .catch((e) =>(err) => dispatch({ type: ERROR, payload: err })
+      )
+  }
+}
+
+
+export function deleteComment(commentId) {
+  return (dispatch) =>
+    axios
+      .delete(`http://localhost:3001/comment/${commentId}`, { withCredentials: true })
+      .then((res) => dispatch({ type: COMMENT_DELETE, payload: res.data }))
+      .catch((error) => dispatch({ type: ERROR, payload: error }));
+}
+
 /*
 export function likePost(idPost, username) {
   return (dispatch) =>

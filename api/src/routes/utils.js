@@ -145,7 +145,7 @@ const DB_UserID = async (username) => {
 const DB_Allcomments = async (username) => {
   user = await DB_UserID(username);
   const final = user.comments.map((comment) => {
-    return comment.dataValues;
+    if(comment.ban === false) return comment.dataValues;
   });
   return final;
 };
@@ -172,7 +172,7 @@ const DB_Postsearch = async ({ username, id }) => {
     if (username === undefined && id === undefined) {
       var post_search = await Post.findAll({
         where: {
-          ban:false
+          ban:false,
         },
         include: [
           { model: User, attributes: ["image", "username"] },
@@ -188,6 +188,7 @@ const DB_Postsearch = async ({ username, id }) => {
         ],
         order: [["createdAt", "DESC"]],
       });
+      console.log(post_search.length)
       return post_search;
     }
     if (username === undefined && id) {
@@ -196,7 +197,7 @@ const DB_Postsearch = async ({ username, id }) => {
           idPost: id,
           ban:false
         },
-        include: [{ model: User, attributes: ["image", "username"] }, Comment],
+        include: [{ model: User, attributes: ["image", "username"] }, {model:Comment, where:{ban:false}}],
         order: [["createdAt", "DESC"]],
       });
       return post_search;
@@ -207,7 +208,7 @@ const DB_Postsearch = async ({ username, id }) => {
           userId: userDB.id,
           ban: false
         },
-        include: [{ model: User, attributes: ["image", "username"] }, Comment],
+        include: [{ model: User, attributes: ["image", "username"] }, {model:Comment, where:{ban:false}}],
         order: [["createdAt", "DESC"]],
       });
       return post_search;
@@ -468,6 +469,14 @@ const BD_loginBan = async (username) => {
 }
 
 
+const BD_banComment = async(idComment) => {
+  const comment = await  Comment.findOne({ where:{id: idComment}});
+  if(comment === null) return {error:'Error, comment not found'}
+  comment.ban = true;
+  comment.save();
+  return {Succes:'The BAN was applied successfully'}
+}
+
 
 module.exports = {
   DB_findUserAll,
@@ -497,7 +506,6 @@ module.exports = {
   BD_searchAdmin,
   BD_searchPost,
   BD_banUser,
-  BD_loginBan
-
-
+  BD_loginBan,
+  BD_banComment
 };

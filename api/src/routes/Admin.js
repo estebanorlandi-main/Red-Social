@@ -106,12 +106,18 @@ router.post('/login', async (req, res) => {
     }
   })
 
-  router.post("/banComment", async (req, res) =>{
+  router.post('/banComment', async (req, res) =>{
     try{
-      const {comment} = req.body;
+      const {idComment} = req.body;
+      const comment = await fn.BD_banComment(idComment);
+      comment.error ?
+        res.status(404).send(user.error) :
+        res.status(200).send(comment)
     }catch(e){
-
+      console.log('Error in ban comment', e)
+      res.status(404).send({error:'Error, BAN could not be applied'})
     }
   })
+
   module.exports = router;
   

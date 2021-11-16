@@ -195,6 +195,7 @@ function Post({ post, customClass, socket, admin }) {
   if (post.content) test = parseContent(post.content);
 
   console.log(currentPost);
+  console.log(session)
 
   return (
     <div className={styles.container + ` ${customClass}`}>
