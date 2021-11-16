@@ -34,6 +34,7 @@ import { BiMessageAltDetail } from "react-icons/bi";
 
 // chat v.2
 import Challenge from "./Pages/Challenge/Challenge";
+import ChallengeComment from "./Pages/ChallengeComment/ChallengeComment";
 
 function App() {
   const dispatch = useDispatch();
@@ -76,6 +77,18 @@ function App() {
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
         <Route path="/loginAdmin" component={AdminLogin} />
+        <Route path="/supportAdmin" component={AdminSupport} />
+        <Route exact path="/challenge" component={Challenge} />
+        <Route path="/homeAdmin" component={HomeAdmin} />
+        <Route path="/challenge/comment" component={ChallengeComment} />
+        <Route
+          path="/profileAdmin/:username"
+          render={({
+            match: {
+              params: { username },
+            },
+          }) => <ProfileAdmin username={username} />}
+        />
         <Route path="/n/signup" component={NewRegister} />
 
         <Route

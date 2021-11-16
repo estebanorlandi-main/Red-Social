@@ -37,6 +37,10 @@ module.exports = (sequelize) => {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true,
     },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     idPost: {
       unique: true,
       type: DataTypes.UUID,
@@ -53,9 +57,9 @@ module.exports = (sequelize) => {
       allowNull: true,
     },
     ban: {
-			type: Sequelize.BOOLEAN,
-			allowNull: false,
-			defaultValue: false,
-		}
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
   });
 };
