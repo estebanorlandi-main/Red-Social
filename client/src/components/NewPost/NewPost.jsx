@@ -1,6 +1,6 @@
 import style from "./NewPost.module.css";
 import { useState } from "react";
-import { createPost } from "../../Redux/actions/Post.js";
+import { createPost, updatePage } from "../../Redux/actions/Post.js";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import validate from "../../utils/validate";
@@ -9,13 +9,11 @@ import ImageUpload from "../ImageUpload/ImageUpload";
 export default function NewPost() {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
-  const allTags = useSelector((state) => state.postsReducer.tags);
   const [data, setData] = useState({
     title: "",
     content: "",
     image: null,
     tag: [],
-    type: "normal",
     likes: 0,
     username: session.username,
   });
@@ -24,15 +22,19 @@ export default function NewPost() {
     title: "",
     content: "",
   });
-  const [options] = useState(
-    allTags.map((tag) => {
-      return { value: tag.label, label: tag.label };
-    })
-  ); //El select no funciona sin un array de objetos con value y label
 
-  const type = [
-    { value: "normal", label: "Normal" },
-    { value: "challenge", label: "Challenge" },
+  const options = [
+    { value: "js", label: "JavaScript" },
+    { value: "python", label: "Python" },
+    { value: "cpp", label: "C++" },
+    { value: "php", label: "PHP" },
+    { value: "java", label: "Java" },
+    { value: "c", label: "C" },
+    { value: "go", label: "Go" },
+    { value: "kotlin", label: "Kotiln" },
+    { value: "sql", label: "SQL" },
+    { value: "mongodb", label: "MongoDB" },
+    { value: "postgresql", label: "PostgreSQL" },
   ];
 
   /*function separarTags(str) {
@@ -51,9 +53,7 @@ export default function NewPost() {
   const handleSelect = (e) => {
     setData((old) => ({ ...old, tag: e.map((option) => option.value) }));
   };
-  const handleSelectType = (e) => {
-    setData((old) => ({ ...old, type: e.value }));
-  };
+
   const handleImage = (e) => {
     if (!e) return setData((old) => ({ ...old, image: null }));
 
@@ -70,24 +70,22 @@ export default function NewPost() {
     if (!Object.values(errores).filter((error) => error).length) {
       const formData = new FormData();
 
-      if (session.dayBan === null) {
-        formData.append("title", data.title);
-        formData.append("content", data.content);
-        formData.append("image", data.image);
-        formData.append("tag", data.tag);
-        formData.append("username", data.username);
-        formData.append("type",data.type)
+      if(session.dayBan === null || session.dayBan === undefined){
+      formData.append("title", data.title);
+      formData.append("content", data.content);
+      formData.append("image", data.image);
+      formData.append("tag", data.tag);
+      formData.append("username", data.username);
 
-        dispatch(createPost(formData));
-      } else {
-        alert("You are banned, therefore you cannot post anything");
+      dispatch(createPost(formData));
+      }else{
+        alert('You are banned, therefore you cannot post anything')
       }
       setData({
         title: "",
         content: "",
         image: null,
         tag: [],
-        type: "normal",
         likes: 0,
         username: session.username,
       });
@@ -99,13 +97,14 @@ export default function NewPost() {
   return (
     <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
       <label className={style.wrapper}>
+        Title
         <div className="input-group">
           <input
             value={data.title}
             onChange={handleChange}
             name="title"
             type="text"
-            placeholder="Post title"
+            placeholder="Title"
             autoComplete="off"
           />
         </div>
@@ -113,6 +112,7 @@ export default function NewPost() {
       </label>
 
       <label className={style.wrapper}>
+        Content {data.content.length}/1000
         <textarea
           value={data.content}
           onChange={handleChange}
@@ -127,19 +127,13 @@ export default function NewPost() {
       <ImageUpload onChange={handleImage} />
 
       <label className={style.wrapper}>
+        Tags
         <Select
+          menuPlacement={"top"}
           onChange={handleSelect}
           options={options}
-          menuPlacement="top"
-          placeholder="Tags"
           isMulti
         />
-        <span className={style.error}></span>
-      </label>
-
-      <label className={style.wrapper}>
-        Type
-        <Select onChange={handleSelectType} options={type} />
         <span className={style.error}></span>
       </label>
 

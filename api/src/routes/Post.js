@@ -117,6 +117,7 @@ router.get("/", async (req, res) => {
   // const posts = await Post.findAll({order: [['createdAt', 'DESC']]})
   // return res.send(posts)
 
+
   const { tag, page, orden } = req.query;
   const tags = tag.split(",")
   const allPosts2 = await DB_Postsearch({});
@@ -141,6 +142,7 @@ router.get("/", async (req, res) => {
 
   let { posts, totalPages } = paginate(page, [...finalPosts,...allPosts]);
   res.status(200).send({ posts, totalPages, tags: finalPosts });
+
 });
 
 //Trae todos los posteos que hizo un usuario

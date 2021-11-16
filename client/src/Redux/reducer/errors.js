@@ -7,7 +7,7 @@ let id = 0;
 export default function root(state = initialState, action) {
   switch (action.type) {
     case ERROR:
-      return [...state, { id: ++id, ...action.payload.response.data }];
+      return [...state, { id: ++id, ...action.payload.response?.data }];
 
     case REMOVE_ERROR:
       return [...state.filter((error) => error.id !== action.payload)];
