@@ -20,6 +20,7 @@ const Prueba = require("./PRUEBA.js")
 const Admin = require("./Admin.js")
 const Register = require("./newRegister.js")
 const Friends = require("./Friends.js")
+const Follows = require("./Follows.js")
 
 
 
@@ -50,6 +51,7 @@ router.use("/admin", Admin);
 // router.use("/support",Support);
 router.use("/conversation",Conversation);
 router.use("/message",Message);
+router.use("/follow", Follows)
 
 router.use("/challenge", Challenge);
 

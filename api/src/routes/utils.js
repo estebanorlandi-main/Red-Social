@@ -42,22 +42,6 @@ const followedInfo = {
   attributes: ["id", "username", "image", "name", "lastname"],
 };
 
-const DB_UserFollow = async (date) => {
-  const { userId, followerId } = date;
-  const follow = await User_Follow.findOne({ where: { userId } }).catch((e) =>
-    console.log(e)
-  );
-  if (follow) {
-    return follow.destroy();
-  }
-  const user = await User.findOne({ where: { id: userId } }).catch((e) => null);
-  const follower = await User.findOne({ where: { id: followerId } }).catch(
-    (e) => null
-  );
-  if (user || follower) {
-    return newFollower;
-  } else return { errors: "fatal errores" };
-};
 //fn
 const DB_findUsersEmail = async (email) => {
   if (email == null || email == undefined) return null;
@@ -111,6 +95,7 @@ const DB_findUserQuery = async (query) => {
       "postLikes",
       followersInfo,
       followedInfo,
+      { model: User, as:"Friends", attributes:["username","image"]}
     ],
   });
   return findUser;
@@ -127,6 +112,7 @@ const DB_findUserParams = async (params) => {
       likeUserPost,
       followersInfo,
       followedInfo,
+      { model: User, as:"Friends", attributes:["username","image"]}
     ],
   });
   return findUser;
@@ -506,7 +492,6 @@ module.exports = {
   DB_userSearch,
   DB_findUsersEmail,
   DB_findUsersUsername,
-  DB_UserFollow,
   BD_searchSupport,
   BD_createPrivileges,
   BD_searchAdmin,

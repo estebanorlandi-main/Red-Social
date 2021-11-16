@@ -59,6 +59,11 @@ io.on("connection", (socket) => {
     // }
   });
 
+  // follow/unfollow
+  socket.on("setFollows", (info)=>{
+    io.emit("getFollows", !info)
+  })
+
   //when disconnect
   socket.on("disconnect", () => {
     console.log("a user disconnected!");
