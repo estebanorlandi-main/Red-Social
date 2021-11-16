@@ -88,11 +88,7 @@ export function getPosts(page, tag, orden) {
   return (dispatch) =>
     axios
       .get(`http://localhost:3001/post?page=${page}&tag=${tag}&orden=${orden}`,)
-<<<<<<< HEAD
       .then((res) => {dispatch({ type: GET_POSTS, payload: res.data })})
-=======
-      .then((res) => {console.log(res.data);dispatch({ type: GET_POSTS, payload: res.data })})
->>>>>>> fbaa90a50e7f882fcfd61920f2c309de6dd02317
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }
 

@@ -94,19 +94,7 @@ export default function NewPost({orden, tags}) {
       } else {
         alert("You are banned, therefore you cannot post anything");
       }
-<<<<<<< HEAD
 
-=======
-      setData({
-        title: "",
-        content: "",
-        image: null,
-        tag: [],
-        type: "normal",
-        likes: 0,
-        username: session.username,
-      });
->>>>>>> fbaa90a50e7f882fcfd61920f2c309de6dd02317
       //console.log(obj);
       //dispatch(updatePage(true, obj.payload.posts));
     }
