@@ -45,12 +45,12 @@ router.use("/user", Users);
 router.use("/comment", Comments);
 router.use("/post", Post);
 router.use("/login", Login);
-router.use("/admin", Admin);
+router.use("/admin", AuthControllers.isAuthenticated, Admin);
 // router.use("/tags", Tags)
 // router.use("/likes", Likes);
 // router.use("/support",Support);
-router.use("/conversation",Conversation);
-router.use("/message",Message);
+router.use("/conversation", AuthControllers.isAuthenticated, Conversation);
+router.use("/message", AuthControllers.isAuthenticated, Message);
 router.use("/follow", Follows)
 
 router.use("/challenge", Challenge);
