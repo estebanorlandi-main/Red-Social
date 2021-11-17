@@ -6,7 +6,11 @@ const DataUsers = require("../Mockups/DB_USERS.json");
 const dataPosts = require("../Mockups/DB_Posts.json");
 // const {User} = require('./src/db.js');
 
-const { DB_userCreates, DB_postCreates, DB_AdminSignUp  } = require("./src/routes/utils.js");
+const {
+  DB_userCreates,
+  DB_postCreates,
+  DB_AdminSignUp,
+} = require("./src/routes/utils.js");
 
 // Syncing all the models at once.
 conn.sync({ force: false }).then(() => {
@@ -21,8 +25,10 @@ conn.sync({ force: false }).then(() => {
     // DB_userCreates(DataUsers);
 
     // DB_postCreates(dataPosts);
+
     
     //Descomentar y comentar una sola vez!! Para crear el admin
+
     // DB_AdminSignUp()
     console.log("%s listening at 3001"); // eslint-disable-line no-console
   });
