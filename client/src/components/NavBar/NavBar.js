@@ -28,6 +28,7 @@ export default function Navbar(props) {
   const user = useSelector((store) => store.sessionReducer);
   const admin = useSelector((store) => store.adminReducer);
   const socket = useSelector((state) => state.usersReducer.socket);
+  const isDark = useSelector((state) => state.themeReducer.theme);
 
   const dispatch = useDispatch();
 
@@ -94,7 +95,11 @@ export default function Navbar(props) {
   };
 
   return (
-    <header className={styles.navbar + ` ${isLanding ? styles.landing : ""}`}>
+    <header
+      className={`${styles.navbar} ${isLanding ? styles.landing : ""} ${
+        isDark ? styles.dark : ""
+      }`}
+    >
       <nav className={styles.nav}>
         <div className={styles.left}>
           <Link className={styles.brand} to="/">

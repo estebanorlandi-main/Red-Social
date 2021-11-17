@@ -157,7 +157,8 @@
   cursor: pointer;
 }
 
-.icons {
+.icons,
+.iconPaint {
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 0.5em;
@@ -259,4 +260,23 @@
 
 .icon {
   width: 40px;
+}
+
+.dark {
+  color: #fff;
+}
+
+.dark .text {
+  color: #aaa;
+}
+.dark .icons *,
+.dark .actions * {
+  color: #888;
+}
+.dark .favorite:hover .icons * {
+  color: #f33;
+}
+.dark .iconPaint *,
+.iconPaint * {
+  color: #f33;
 }

@@ -35,7 +35,6 @@
 }
 
 .noImage {
-  /*box-shadow: var(--bs-blue);*/
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,4 +54,10 @@
 
 .small .other {
   font-size: 0.8rem;
+}
+.dark * {
+  color: #ddd;
+}
+.dark .other {
+  color: #aaa;
 }

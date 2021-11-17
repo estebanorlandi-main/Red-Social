@@ -71,6 +71,8 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const dispatch = useDispatch();
 
   const session = useSelector((state) => state.sessionReducer || {});
+  const isDark = useSelector((state) => state.themeReducer.theme);
+
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
   const [liked, setLiked] = useState(
@@ -257,24 +259,31 @@ function Post({ post, customClass, user, socket, admin, type }) {
 
   const handleReport = () => {
     const report = {
-      username:session.username,
-      content:"Report the user",
-      title:"Report Post",
-      postReported:post.idPost,
-      userReported:post.user.username
-    }
-    dispatch(creatReport(report))
-    alert('Report send')
-  }
-
+      username: session.username,
+      content: "Report the user",
+      title: "Report Post",
+      postReported: post.idPost,
+      userReported: post.user.username,
+    };
+    dispatch(creatReport(report));
+    alert("Report send");
+  };
 
   return (
-    <div className={styles.container + ` ${customClass}`}>
+    <div
+      className={
+        styles.container + ` ${customClass} ${isDark ? styles.dark : ""}`
+      }
+    >
       {session.username === post.user.username ? (
         <div className={styles.options}>
           <button onClick={handleOptions} className={styles.optionsHandler}>
             <BiDotsVerticalRounded
-              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
+              style={{
+                color: isDark ? "#fff" : "#1e1e1e",
+                width: "2em",
+                height: "2em",
+              }}
             />
           </button>
 
@@ -331,6 +340,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
           </button>
         </div>
       )}
+
       <Tags
         tags={post.tag}
         mode={editMode}
@@ -414,7 +424,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
       <div className={styles.actions}>
         <button className={styles.favorite} onClick={handleLike}>
           {liked ? (
-            <MdFavorite className={styles.icons} color="#f55" />
+            <MdFavorite className={styles.iconPaint} />
           ) : (
             <MdFavoriteBorder className={styles.icons} />
           )}
