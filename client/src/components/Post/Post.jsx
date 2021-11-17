@@ -12,6 +12,8 @@ import {
   likePost,
 } from "../../Redux/actions/Post";
 
+import { infoAdmin } from "../../Redux/actions/Admin";
+
 import { creatReport } from "../../Redux/actions/Support";
 
 import Comment from "../Comment/Comment";
@@ -72,6 +74,8 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const history = useHistory();
   const session = useSelector((state) => state.sessionReducer || {});
   const isDark = useSelector((state) => state.themeReducer.theme);
+  const info = useSelector(state => state.usersReducer.users)
+  var day = new Date();
 
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
@@ -104,6 +108,10 @@ function Post({ post, customClass, user, socket, admin, type }) {
 
   const [code, setCode] = useState("");
 
+  useEffect(()=>{
+    dispatch(infoAdmin(session.username))
+  },[1])
+
   useEffect(() => {
     if (socket && Object.keys(socket).length) {
       socket.on("getPost", (data) => {
@@ -112,6 +120,8 @@ function Post({ post, customClass, user, socket, admin, type }) {
         }
       });
     }
+    
+
   }, [socket, post.idPost]);
 
   useEffect(() => {
@@ -167,6 +177,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
     e.preventDefault();
     if (commentError) return;
     if (socket) {
+      if (day > info.dayBan === true){
       dispatch(commentPost(post.idPost, newComment, session.username, socket));
       socket.emit("sendNotification", {
         senderName: session.username,
@@ -174,6 +185,10 @@ function Post({ post, customClass, user, socket, admin, type }) {
         receiverName: post.user.username,
         type: 2,
       });
+    }else{
+      alert("You are banned, therefore you cannot post anything");
+      setNewComment('')
+    }
     }
   };
 
