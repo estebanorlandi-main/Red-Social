@@ -113,13 +113,15 @@ function Post({ post, customClass, user, socket, admin, type }) {
 
   useEffect(() => {
     if (liked) {
-      socket.emit("sendNotification", {
-        senderName: session.username,
-        userImage: session.image,
-        receiverName: post.user.username,
-        id: post.idPost,
-        type: 1,
-      });
+      if(socket){
+        socket.emit("sendNotification", {
+          senderName: session.username,
+          userImage: session.image,
+          receiverName: post.user.username,
+          id: post.idPost,
+          type: 1,
+        });
+      }
     }
   }, [
     liked,
@@ -159,13 +161,16 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const submitComment = (e) => {
     e.preventDefault();
     if (commentError) return;
-    dispatch(commentPost(post.idPost, newComment, session.username, socket));
-    socket.emit("sendNotification", {
-      senderName: session.username,
-      userImage: session.image,
-      receiverName: post.user.username,
-      type: 2,
-    });
+    if(socket){
+      dispatch(commentPost(post.idPost, newComment, session.username, socket));
+      socket.emit("sendNotification", {
+        senderName: session.username,
+        userImage: session.image,
+        receiverName: post.user.username,
+        type: 2,
+      });
+    }
+    
   };
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
