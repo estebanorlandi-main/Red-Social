@@ -196,6 +196,7 @@ const DB_Postsearch = async ({ username, id }) => {
       return post_search;
     }
     if (username === undefined && id) {
+      console.log(id)
       var post_search = await Post.findOne({
         where: {
           idPost: id,
@@ -206,7 +207,7 @@ const DB_Postsearch = async ({ username, id }) => {
           { model: Comment, where: { ban: false } },
         ],
         order: [["createdAt", "DESC"]],
-      });
+      }).catch(e=> console.log(e))
       return post_search;
     } else if (id === undefined && username) {
       let userDB = await DB_UserID(username);
@@ -522,6 +523,16 @@ const validatesupport = async (postReported, username) => {
   return report
 }
 
+const DB_DestroyMessage = async (id) => {
+  try{
+    const erasePost = await Support.findOne({ where: { idSupport: id } });
+    await erasePost.destroy();
+    return {Succes:"Deleted Succesfully"};
+  } catch (e) {
+    throw new Error("We had a problem with your Delete");
+  }
+}
+
 
 module.exports = {
   DB_findUserEmailOrUsername,
@@ -554,5 +565,6 @@ module.exports = {
   BD_loginBan,
   BD_banComment,
   DB_AdminSignUp,
-  validatesupport
+  validatesupport,
+  DB_DestroyMessage
 };
