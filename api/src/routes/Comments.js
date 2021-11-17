@@ -43,7 +43,7 @@ router.post("/", async (req, res) => {
     const { content, username, postid } = req.body;
 
     const UserAssociation = await database_Utils.DB_UserID(username);
-    const PostAssociation = await Post.findOne({where:{idPost:postid}}).catch(e=>null)
+    const PostAssociation = await Post.findOne({where:{idPost:postid,ban: false}}).catch(e=>null)
     if(UserAssociation && PostAssociation){
       const comment = await Comment.create({
         content,
