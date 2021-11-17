@@ -121,7 +121,10 @@ export function likePost(data, socket) {
     axios
       .post("http://localhost:3001/likes", data, { withCredentials: true })
       .then((res) => {
-        socket.emit("reloadPostInfo", res.data);
+        if(socket){
+          socket.emit("reloadPostInfo", res.data);
+        }
+        
 
         dispatch({
           type: POST_LIKE,
@@ -134,7 +137,7 @@ export function getTags(){
   return (dispatch) =>
     axios
       .get("http://localhost:3001/tags", { withCredentials: true })
-      .then((res) => {
+      .then((res) => {console.log(res.data);
         dispatch({
           type: SET_TAGS,
           payload: res.data,
@@ -161,7 +164,7 @@ export function banPost(idPost){
 
 export function banComment(idComent){
   return (dispatch) => {
-    axios 
+    axios
       .post(`http://localhost:3001/admin/banComment`, {idComment:idComent},{withCredentials: true})
       .then(res => dispatch({type: BANCOMMENT_ADMIN, payload:res}) )
       .catch((e) =>(err) => dispatch({ type: ERROR, payload: err })

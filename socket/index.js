@@ -38,7 +38,7 @@ io.on("connection", (socket) => {
     });
   });
 
-   //send and get message
+   //send and get post
    socket.on("reloadPostInfo", (post) => {
     console.log(post);
 
@@ -60,8 +60,16 @@ io.on("connection", (socket) => {
   });
 
   // follow/unfollow
-  socket.on("setFollows", (info)=>{
-    io.emit("getFollows", !info)
+  socket.on("setFollow", ({info, receiverName})=>{
+    const receiver = getUser(receiverName);
+
+    console.log(receiver)
+
+    // if(senderName !== receiverName){
+      io.emit("getFollow", {
+        info,
+        receiverName
+      });
   })
 
   //when disconnect

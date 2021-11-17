@@ -6,13 +6,14 @@ import Select from "react-select";
 import validate from "../../utils/validate";
 import ImageUpload from "../ImageUpload/ImageUpload";
 import Tags from "../Tags/Tags";
-export default function NewPost({orden, tags}) {
+export default function NewPost({ orden, tags }) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
   const [data, setData] = useState({
     title: "",
     content: "",
     image: null,
+    type: "normal",
     tag: [],
     likes: 0,
     username: session.username,
@@ -45,6 +46,10 @@ export default function NewPost({orden, tags}) {
     setData((old) => ({ ...old, tag: e.map((option) => option.value) }));
   };
 
+  const handleSelectType = (e) => {
+    setData((old) => ({ ...old, type: e.value }));
+  };
+
   const handleImage = (e) => {
     if (!e) return setData((old) => ({ ...old, image: null }));
 
@@ -66,12 +71,12 @@ export default function NewPost({orden, tags}) {
         formData.append("image", data.image);
         formData.append("tag", data.tag);
         formData.append("username", data.username);
-        formData.append("type",data.type)
+        formData.append("type", data.type);
 
         let errores = await dispatch(createPost(formData, orden, tags));
         if (errores.type === "ERROR") {
-          alert(errores.payload.response.data.error.errors[0].message)
-        }else {
+          alert(errores.payload.response.data.error.errors[0].message);
+        } else {
           setData({
             title: "",
             content: "",
@@ -124,7 +129,12 @@ export default function NewPost({orden, tags}) {
       <ImageUpload onChange={handleImage} />
 
       <label className={style.wrapper}>
-      <Tags tags={[]} mode={true} handleSelect={handleSelect} editTags={data.tag}/>
+        <Tags
+          tags={[]}
+          mode={true}
+          handleSelect={handleSelect}
+          editTags={data.tag}
+        />
 
         {/*<Select
           onChange={handleSelect}
@@ -134,6 +144,8 @@ export default function NewPost({orden, tags}) {
           value={data.tag.map((t)=>({label:t, value:t}))}
           isMulti
         />*/}
+        <Select onChange={handleSelectType} options={type} />
+
         <span className={style.error}></span>
       </label>
 

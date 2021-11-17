@@ -53,8 +53,7 @@ export default function Challenge(props) {
 
   // console.log(page)
   // console.log(totalPages)
-  console.log(posts, "posts")
-
+  console.log(posts, "posts");
 
   useEffect(() => {
     if (page === -1) {
@@ -62,7 +61,7 @@ export default function Challenge(props) {
       dispatch(updatePage(0));
       return;
     }
-    dispatch(getPosts(page,"","cronologico"));
+    dispatch(getPosts(page, "", "cronologico"));
   }, [dispatch, page, first, totalPages]);
 
   // const submitCode = () => {
