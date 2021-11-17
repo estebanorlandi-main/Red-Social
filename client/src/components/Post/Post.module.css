@@ -157,7 +157,8 @@
   cursor: pointer;
 }
 
-.icons {
+.icons,
+.iconPaint {
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 0.5em;
@@ -240,7 +241,6 @@
 }
 .newChallengeContainer {
   width: 100%;
-  text-align: center;
   background-color: var(--c-blue);
   padding: 10px 10px;
   border: var(--c-blue) 10px solid;
@@ -252,8 +252,31 @@
   color: #fff;
   border-radius: 12px;
   width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .icon {
   width: 40px;
+}
+
+.dark {
+  color: #fff;
+}
+
+.dark .text {
+  color: #aaa;
+}
+.dark .icons *,
+.dark .actions * {
+  color: #888;
+}
+.dark .favorite:hover .icons * {
+  color: #f33;
+}
+.dark .iconPaint *,
+.iconPaint * {
+  color: #f33;
 }

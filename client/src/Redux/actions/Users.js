@@ -11,6 +11,7 @@ export const NEW_MSG = "NEW_MSG";
 export const BAN_USER_ADMIN = "ban_user_admin";
 
 
+
 export const SOCKET_CONN = "SOCKET_CONN"
 
 
@@ -68,11 +69,23 @@ export function socketConnection(username) {
   } 
 }
 
-export function followUnfollow(data) {
+export function followUnfollow(data, socket) {
   return (dispatch) =>
     axios
       .post(`http://localhost:3001/follow/`, data, { withCredentials: true })
-      .then( res => dispatch({type:FOLLOW_UNFOLLOW, payload: res}))
+      .then( res => {
+        // console.log(res.data)
+        if(socket && res.data.username){
+          socket.emit("setFollow", {
+            info: res.data.followers,
+            receiverName: res.data.username
+          });
+        }
+
+        dispatch({type:FOLLOW_UNFOLLOW, payload: res})
+      })
       .catch((e) =>(err) => dispatch({ type: ERROR, payload: err }))
 }
+
+
 

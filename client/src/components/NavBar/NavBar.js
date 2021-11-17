@@ -28,6 +28,7 @@ export default function Navbar(props) {
   const user = useSelector((store) => store.sessionReducer);
   const admin = useSelector((store) => store.adminReducer);
   const socket = useSelector((state) => state.usersReducer.socket);
+  const isDark = useSelector((state) => state.themeReducer.theme);
 
   const dispatch = useDispatch();
 
@@ -35,6 +36,19 @@ export default function Navbar(props) {
     if (Object.keys(socket).length) {
       socket.on("getNotification", (data) => {
         if (data.type === 1) {
+          setNotifications((prev) => {
+            if (
+              !prev.find(
+                (notif) =>
+                  notif.senderName === data.senderName && notif.id === data.id
+              )
+            ) {
+              return [data, ...prev];
+            } else {
+              return [...prev];
+            }
+          });
+        } else if(data.type === 3){
           setNotifications((prev) => {
             if (
               !prev.find(
@@ -81,7 +95,11 @@ export default function Navbar(props) {
   };
 
   return (
-    <header className={styles.navbar + ` ${isLanding ? styles.landing : ""}`}>
+    <header
+      className={`${styles.navbar} ${isLanding ? styles.landing : ""} ${
+        isDark ? styles.dark : ""
+      }`}
+    >
       <nav className={styles.nav}>
         <div className={styles.left}>
           <Link className={styles.brand} to="/">

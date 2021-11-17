@@ -10,26 +10,24 @@ function Tags({ tags, mode, handleSelect, editTags }) {
   const allTags = useSelector((state) => state.postsReducer.tags);
   const [optionsTags, setOptionsTags] = useState(allTags.map((tag) => {
       if (!tags.includes(tag.label)) {
-        return { value: tag.label, label: tag.label }
+        return tag
       }}).filter((tag)=> tag!== undefined)); //El select no funciona sin un array de objetos con value y label
 
   useEffect(async () => {
     setOptionsTags(
       allTags.map((tag) => {
         if (!tags.includes(tag.label)) {
-          return { value: tag.label, label: tag.label }
+          return tag
         }}).filter((tag)=> tag!== undefined)
     );
   }, []);
-
   useEffect(()=>{
 
     if (editTags && editTags.length < tags.length) {
-      console.log("cambio")
       setOptionsTags(
         allTags.map((tag) => {
           if (!editTags.includes(tag.label)) {
-            return { value: tag.label, label: tag.label }
+            return tag
           }}).filter((tag)=> tag!== undefined)
       );
     }

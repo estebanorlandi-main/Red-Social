@@ -10,7 +10,7 @@ const {
 } = require("./utils.js");
 const Op = Sequelize.Op;
 const router = Router();
-
+const AuthControllers = require('../controllers/AuthControllers.js')
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -57,47 +57,56 @@ const paginate = (page = 0, arr) => {
   };
 };
 
-function ordenarTags(todos, tags, orden){
+function ordenarTags(todos, tags, orden) {
   let arr;
   let conTags = [];
-  let sinTags= []
-  arr = todos.map((post, i, arr)=>{
-    let cant = tags?.filter((tag)=>{
+
+  let sinTags = [];
+  arr = todos.map((post, i, arr) => {
+    let cant = tags?.filter((tag) => {
+
       if (post.tag.includes(tag)) {
-        return post.idPost
+        return post.idPost;
       }
-    })
-    let c = 0
+
+    });
+    let c = 0;
     if (cant?.length !== 0) {
-      while(c < tags?.length){
-        if(cant?.length === tags?.length - c){
+      while (c < tags?.length) {
+        if (cant?.length === tags?.length - c) {
+
           while (!conTags[c]) {
-            conTags.push([])
+            conTags.push([]);
           }
-          conTags[c] = [...conTags[c], post]
+          conTags[c] = [...conTags[c], post];
         }
-        c++
+        c++;
       }
-    }else {
-      sinTags.push(post)
+    } else {
+      sinTags.push(post);
     }
-  })
-  let ordenadosPorTags = []
-  for (let arr of conTags){
-    if(orden==="cronologico"){ordenadosPorTags = [...ordenadosPorTags, ...arr];}else{
-        ordenadosPorTags = [...ordenadosPorTags, ...ordenar(orden, arr)]
+  });
+  let ordenadosPorTags = [];
+  for (let arr of conTags) {
+    if (orden === "cronologico") {
+      ordenadosPorTags = [...ordenadosPorTags, ...arr];
+    } else {
+      ordenadosPorTags = [...ordenadosPorTags, ...ordenar(orden, arr)];
     }
   }
   let ordenadosSinTags;
   if (orden === "cronologico") {
-    ordenadosSinTags = sinTags
-  }else {
-    ordenadosSinTags = ordenar(orden, sinTags)
+    ordenadosSinTags = sinTags;
+  } else {
+    ordenadosSinTags = ordenar(orden, sinTags);
   }
-  return [...ordenadosPorTags, ...ordenadosSinTags]
+  return [...ordenadosPorTags, ...ordenadosSinTags];
 }
 
-function ordenamiento(arr, orden){
+
+function ordenamiento(arr, orden) {
+  console.log(arr, orden);
+
   return arr.sort(function (a, b) {
     if (a[orden]?.length < b[orden]?.length) {
       return 1;
@@ -106,34 +115,41 @@ function ordenamiento(arr, orden){
       return -1;
     }
     return 0;
-  })
+  });
 }
 
 const ordenar = (how, arr) => {
   if (how === "combinados") {
     return arr.sort(function (a, b) {
-      if (a.userLikes.length + a.comments.length < b.userLikes.length + b.comments.length) {
+      if (
+        a.userLikes.length + a.comments.length <
+        b.userLikes.length + b.comments.length
+      ) {
         return 1;
       }
-      if (a.userLikes.length + a.comments.length > b.userLikes.length + b.comments.length) {
+      if (
+        a.userLikes.length + a.comments.length >
+        b.userLikes.length + b.comments.length
+      ) {
         return -1;
       }
       return 0;
-    })
-  }else{
-    return ordenamiento(arr, how)
+    });
+  } else {
+    return ordenamiento(arr, how);
   }
-}
+};
 //Devuelve post de una categoria o si no todos los post
 router.get("/", async (req, res) => {
   // const posts = await Post.findAll({order: [['createdAt', 'DESC']]})
   // return res.send(posts)
 
-
   const { tag, page, orden } = req.query;
+
   const tags = tag?.split(",")
+
   const allPosts = await DB_Postsearch({});
-  let finalPosts = ordenarTags(allPosts, tags, orden)
+  let finalPosts = ordenarTags(allPosts, tags, orden);
   // let postCategoria = allPosts.filter((e) =>
   //   e.tag
   //     .map((postTag) => postTag && postTag.toLowerCase())
@@ -148,13 +164,16 @@ router.get("/", async (req, res) => {
 
 //Trae todos los posteos que hizo un usuario
 router.get("/", async (req, res, next) => {
+
+  console.log("holaaaaaa");
+
   try {
     const { username } = req.body;
     if (!!Number(username)) {
       return next();
     }
     const postName = await DB_Postsearch({ username: username });
-    console.log(postName)
+    console.log(postName);
     postName ? res.send(postName) : res.send("This user has no Post");
   } catch (e) {
     res.status(404).send("Error with the username");
@@ -177,10 +196,12 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", upload.single("image"), AuthControllers.isAuthenticated, async (req, res) => {
   let { title, content, tag, username, type } = req.body;
-  let orden = req.query.orden
-  let tags = req.query.tags?.split(",")
+
+  let orden = req.query.orden;
+  let tags = req.query.tags?.split(",");
+
 
   try {
     let userDB = await DB_UserID(username);
@@ -206,8 +227,8 @@ router.post("/", upload.single("image"), async (req, res) => {
     await userDB.addPost(createPost);
 
     const allPosts = await DB_Postsearch({});
-    let finalPosts = ordenarTags(allPosts, tags, orden)
-    res.status(200).send({...paginate(0, finalPosts), success:true});
+    let finalPosts = ordenarTags(allPosts, tags, orden);
+    res.status(200).send({ ...paginate(0, finalPosts), success: true });
   } catch (e) {
     console.log(e);
     res.status(404).send({ success: false, error: e });
@@ -215,7 +236,7 @@ router.post("/", upload.single("image"), async (req, res) => {
 });
 
 //Eliminacion de un Post
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", AuthControllers.isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     const deletePost = await DB_Postdestroy(id);
@@ -228,10 +249,10 @@ router.delete("/:id", async (req, res) => {
 });
 
 //Edicion de post
-router.put("/:id", async (req, res) => {
+router.put("/:id", AuthControllers.isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(req.body)
+    console.log(req.body);
     await DB_Postedit(id, req.body);
 
     const post = await modifiedPost(id);
