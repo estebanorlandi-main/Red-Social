@@ -22,6 +22,7 @@ conn.sync({ force: false }).then(() => {
 
     // DB_postCreates(dataPosts);
     
+    //Descomentar y comentar una sola vez!! Para crear el admin
     // DB_AdminSignUp()
     console.log("%s listening at 3001"); // eslint-disable-line no-console
   });
