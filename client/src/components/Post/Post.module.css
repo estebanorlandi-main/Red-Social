@@ -241,7 +241,6 @@
 }
 .newChallengeContainer {
   width: 100%;
-  text-align: center;
   background-color: var(--c-blue);
   padding: 10px 10px;
   border: var(--c-blue) 10px solid;
@@ -253,6 +252,10 @@
   color: #fff;
   border-radius: 12px;
   width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .icon {
@@ -277,4 +280,3 @@
 .iconPaint * {
   color: #f33;
 }
-

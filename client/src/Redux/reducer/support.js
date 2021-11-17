@@ -1,4 +1,4 @@
-import { GET_SUPPORT_MESSAGE } from "../actions/Support";
+import { GET_SUPPORT_MESSAGE,DELETE_MESSAGE_SUPPORT } from "../actions/Support";
 
 const initialState = {
     messageSupport:{}
@@ -6,9 +6,13 @@ const initialState = {
 
 export default function root(state = initialState, action){
     switch (action.type){
-        case GET_SUPPORT_MESSAGE:
-            console.log(action.payload)
-        return{
+        case GET_SUPPORT_MESSAGE:    
+            return{
+                ...state,
+                messageSupport :action.payload
+            }
+        case DELETE_MESSAGE_SUPPORT:
+            return{
                 ...state,
                 messageSupport :action.payload
             }

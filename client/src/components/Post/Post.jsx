@@ -12,6 +12,8 @@ import {
   likePost,
 } from "../../Redux/actions/Post";
 
+import { creatReport } from "../../Redux/actions/Support";
+
 import Comment from "../Comment/Comment";
 
 import styles from "./Post.module.css";
@@ -100,7 +102,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
 
-  const [code, setCode] = useState("a = 0");
+  const [code, setCode] = useState("");
 
   useEffect(() => {
     if (socket && Object.keys(socket).length) {
@@ -114,7 +116,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
 
   useEffect(() => {
     if (liked) {
-      if(socket){
+      if (socket) {
         socket.emit("sendNotification", {
           senderName: session.username,
           userImage: session.image,
@@ -164,7 +166,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const submitComment = (e) => {
     e.preventDefault();
     if (commentError) return;
-    if(socket){
+    if (socket) {
       dispatch(commentPost(post.idPost, newComment, session.username, socket));
       socket.emit("sendNotification", {
         senderName: session.username,
@@ -173,7 +175,6 @@ function Post({ post, customClass, user, socket, admin, type }) {
         type: 2,
       });
     }
-    
   };
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
@@ -256,6 +257,18 @@ function Post({ post, customClass, user, socket, admin, type }) {
 
   const [errorTest, setErrorTest] = useState(null);
 
+  const handleReport = () => {
+    const report = {
+      username: session.username,
+      content: "Report the user",
+      title: "Report Post",
+      postReported: post.idPost,
+      userReported: post.user.username,
+    };
+    dispatch(creatReport(report));
+    alert("Report send");
+  };
+
   return (
     <div
       className={
@@ -309,7 +322,23 @@ function Post({ post, customClass, user, socket, admin, type }) {
           </div>
         </div>
       ) : (
-        ""
+        <div className={`${styles.show} ${styles.optionsMenu}`}>
+          <button onClick={handleOptions} className={styles.optionsHandler}>
+            <BiDotsVerticalRounded
+              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
+            />
+          </button>
+
+          <button
+            className={styles.danger}
+            onClick={() => {
+              handleReport();
+            }}
+          >
+            <GoTrashcan style={{ color: "#fff" }} />
+            Report
+          </button>
+        </div>
       )}
 
       <Tags

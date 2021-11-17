@@ -1,22 +1,37 @@
 import { BiSupport } from "react-icons/bi";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
+import { useSelector } from "react-redux";
 
 import { NavLink, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 import styles from "./Menu.module.css";
 
 function Menu({ column }) {
   const isLanding = useLocation().pathname === "/";
   const isDark = useSelector((state) => state.themeReducer.theme);
+  const admin = useSelector((state) => state.adminReducer.admin);
 
   return (
-    !isLanding && (
+    !isLanding &&
+    (admin === true ? (
       <ul
-        className={`${styles.menu} ${column ? styles.column : ""} ${
+        className={`${styles.menu} ${column ? styles.column : ""}${
           isDark ? styles.dark : ""
         }`}
       >
+        <li>
+          <NavLink
+            className={styles.menu__link}
+            activeClassName={styles.active}
+            to="/supportAdmin"
+          >
+            {column ? "Support" : <></>}
+            <BiSupport className={styles.icon} />
+          </NavLink>
+        </li>
+      </ul>
+    ) : (
+      <ul className={`${styles.menu} ${column ? styles.column : ""}`}>
         <li>
           <NavLink
             className={styles.menu__link}
@@ -43,7 +58,7 @@ function Menu({ column }) {
           <script src="https://commerce.coinbase.com/v1/checkout.js?version=201807"></script>
         </li>
       </ul>
-    )
+    ))
   );
 }
 
