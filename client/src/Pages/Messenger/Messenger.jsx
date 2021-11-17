@@ -18,6 +18,7 @@ export default function Messenger() {
 
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
+  const [input, setInput] = useState('')
   const [messages, setMessages] = useState([]);
   const [untrackMessages, setUntrackMessages] = useState({})
   const [newMessage, setNewMessage] = useState("");
@@ -166,6 +167,10 @@ export default function Messenger() {
   }, [messages]);
 
 
+  const handleChange = async (e) => {
+    setInput(e.target.value.replace(/\s+/g, ''))
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const message = {
@@ -205,8 +210,21 @@ export default function Messenger() {
             <input
               placeholder="Search for friends"
               className={styles.chatMenuInput}
+              value={input}
+              onChange={handleChange}
             />
-            {conversations.map((c) => (
+            {conversations.filter(
+              conver => {
+                if(input){
+                  if(conver.members.filter( member =>
+                    member.includes(input)).length){
+                   return conver
+                  }
+                } else{
+                  return conver
+                }
+              }
+            ).map((c) => (
               <div onClick={() => setCurrentChat(c)}>
                 <Conversation conversation={c} currentUser={user} />
               </div>
