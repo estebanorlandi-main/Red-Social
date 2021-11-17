@@ -1,3 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+.profile{
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
 .container * {
   box-sizing: border-box;
 }
@@ -5,9 +13,21 @@
 .container {
   --br: 10px;
   margin: 1em auto;
-  max-width: 60em;
+  max-width: 70em;
   display: grid;
-  grid-template-columns: auto minmax(20em, 20em);
+  grid-template-columns: auto minmax(20em, 40em);
+}
+
+.head{
+  --br: 10px;
+  width: 64em;
+  box-sizing: border-box;
+  position: relative;
+  background-color: #fff;
+  padding: 2em;
+  margin: 1em 1em;
+  border-radius: var(--br);
+  box-shadow: 0 0.5em 1em #0001;
 }
 
 .container .image {
@@ -24,9 +44,49 @@
   box-shadow: 0 0.5em 1em #0001;
 }
 
+.importantInfo{
+  display: flex;
+}
+
+.profileInfoDisplay{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.messageButton {
+  background-color: #2589cc;
+  border-radius: 4px;
+  color: #fff;
+  margin: 0 1em 1em 1em;
+  border: none;
+  padding: 0.5em;
+  transition: all 0.25s;
+  max-width: max-content;
+}
+.messageButton:hover {
+  background-color: #167abd;
+  cursor: pointer; 
+}
+
+.profileActions{
+  display: flex;
+  padding: 2em 2em;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
 .left {
   display: flex;
   flex-direction: column;
+  width: 26em;
+}
+
+.about{
+  color: #555;
+  font-size: 14px;
+  margin: 0.5em 0 1em 0;
 }
 
 .edit {
@@ -49,7 +109,10 @@
   color: #555;
   font-weight: 300;
   text-decoration: none;
-  margin: 0.25em 0 0 0;
+  margin: 0.5em 0 0 0;
+}
+.github{
+  font-size: 16px;
 }
 .tags {
   margin: 0 0 1em 0;
