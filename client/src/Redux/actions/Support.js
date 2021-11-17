@@ -21,5 +21,13 @@ export function getSupport(){
       })
       .then((res) => dispatch({ type: GET_SUPPORT_MESSAGE, payload: res.data } ));
      
+}
 
+export function creatReport(data){
+  return (dispatch) => 
+    axios
+      .post(`http://localhost:3001/support`,data,{ withCredentials: true } )
+      .then((res) => dispatch({ payload: res }))
+      .catch((err) => dispatch({ type: ERROR, payload: err }));
+  
 }

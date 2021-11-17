@@ -26,7 +26,8 @@ module.exports = (sequelize) => {
     },
     userReported: {
         type: DataTypes.UUID
-    },username: {
+    },
+    username: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {

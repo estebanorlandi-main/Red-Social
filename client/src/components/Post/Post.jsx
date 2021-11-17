@@ -12,6 +12,8 @@ import {
   likePost,
 } from "../../Redux/actions/Post";
 
+import {creatReport} from "../../Redux/actions/Support"
+
 import Comment from "../Comment/Comment";
 
 import styles from "./Post.module.css";
@@ -254,6 +256,18 @@ function Post({ post, customClass, user, socket, admin, type }) {
 
   const [errorTest, setErrorTest] = useState(null);
 
+  const handleReport = () => {
+    const report = {
+      username:session.username,
+      content:"Report the user",
+      title:"Report Post",
+      postReported:post.idPost,
+      userReported:null
+    }
+    dispatch(creatReport(report))
+    alert('Report send')
+  }
+
 
   return (
     <div className={styles.container + ` ${customClass}`}>
@@ -300,10 +314,31 @@ function Post({ post, customClass, user, socket, admin, type }) {
           </div>
         </div>
       ) :
-        ""
-      }
+        <div
+        className={`${styles.show } ${
+              styles.optionsMenu
+            }`}>
+        <button onClick={handleOptions} className={styles.optionsHandler}>
+            <BiDotsVerticalRounded
+              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
+            />
+          </button>
+        
+            <button
+              className={styles.danger}
+              onClick={() => {
+                handleReport();
+              }}
+            >
+              <GoTrashcan style={{ color: "#fff" }} />
+              Report
+            </button>
 
+        </div>
+      }
       <Tags tags={post.tag} mode={editMode} handleSelect={handleSelect} editTags={edit.tag}/>
+      
+
 
       <NavLink
         activeClassName={styles.active}
