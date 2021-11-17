@@ -8,12 +8,17 @@ import styles from "./Menu.module.css";
 
 function Menu({ column }) {
   const isLanding = useLocation().pathname === "/";
-  const admin = useSelector((state) => state.adminReducer.admin)
-  console.log("admin",admin)
+  const isDark = useSelector((state) => state.themeReducer.theme);
+  const admin = useSelector((state) => state.adminReducer.admin);
+
   return (
-    !isLanding && (
-      admin === true ? 
-      <ul className={`${styles.menu} ${column ? styles.column : ""}`}>
+    !isLanding &&
+    (admin === true ? (
+      <ul
+        className={`${styles.menu} ${column ? styles.column : ""}${
+          isDark ? styles.dark : ""
+        }`}
+      >
         <li>
           <NavLink
             className={styles.menu__link}
@@ -25,7 +30,7 @@ function Menu({ column }) {
           </NavLink>
         </li>
       </ul>
-      :
+    ) : (
       <ul className={`${styles.menu} ${column ? styles.column : ""}`}>
         <li>
           <NavLink
@@ -53,7 +58,7 @@ function Menu({ column }) {
           <script src="https://commerce.coinbase.com/v1/checkout.js?version=201807"></script>
         </li>
       </ul>
-    )
+    ))
   );
 }
 
