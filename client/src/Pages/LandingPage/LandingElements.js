@@ -60,8 +60,7 @@ export const JoinNow = styled(Link)`
   border-radius: 5em;
   padding: 0.75em 1.5em;
   background-color: var(--c-blue);
-  box-shadow: ${({ theme: { mode } }) =>
-    mode ? "none" : "0 0.25rem 0.75rem #6588ff"};
+  box-shadow: var(--bs-blue);
   width: max-content;
   color: #fff;
   text-decoration: none;

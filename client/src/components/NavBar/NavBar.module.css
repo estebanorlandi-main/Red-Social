@@ -295,3 +295,17 @@
 .dark .brand {
   color: #fff;
 }
+
+.dark .icon * {
+  color: #888;
+}
+.dark .nav__link:hover * {
+  color: #fff;
+}
+.dark .profile {
+  background-color: transparent;
+}
+.dark .profile__menu {
+  background-color: #222;
+  box-shadow: none;
+}

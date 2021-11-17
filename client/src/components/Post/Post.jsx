@@ -69,6 +69,8 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const dispatch = useDispatch();
 
   const session = useSelector((state) => state.sessionReducer || {});
+  const isDark = useSelector((state) => state.themeReducer.theme);
+
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
   const [liked, setLiked] = useState(
@@ -93,7 +95,6 @@ function Post({ post, customClass, user, socket, admin, type }) {
     image: post.image,
     tag: post.tag,
   });
-
 
   const createdAt = new Date(post.updatedAt).getTime();
   const now = new Date().getTime();
@@ -144,11 +145,13 @@ function Post({ post, customClass, user, socket, admin, type }) {
       image: post.image,
       tag: post.tag,
     });
-    setLiked(post.userLikes.filter((like) => like.user.username === session.username)
-      .length
-      ? true
-      : false)
-      setEditMode(false)
+    setLiked(
+      post.userLikes.filter((like) => like.user.username === session.username)
+        .length
+        ? true
+        : false
+    );
+    setEditMode(false);
   }, [post]);
 
   const handleComment = ({ target: { name, value } }) => {
@@ -230,8 +233,8 @@ function Post({ post, customClass, user, socket, admin, type }) {
         console.log(res.data);
         if (res?.data.error) {
           setErrorTest(true);
-          setResult(null)
-        }else {
+          setResult(null);
+        } else {
           setErrorTest(false);
           setResult(res.data.tested);
         }
@@ -246,17 +249,23 @@ function Post({ post, customClass, user, socket, admin, type }) {
   let test;
   if (post.content) test = parseContent(post.content);
 
-
   const [errorTest, setErrorTest] = useState(null);
 
-
   return (
-    <div className={styles.container + ` ${customClass}`}>
+    <div
+      className={
+        styles.container + ` ${customClass} ${isDark ? styles.dark : ""}`
+      }
+    >
       {session.username === post.user.username ? (
         <div className={styles.options}>
           <button onClick={handleOptions} className={styles.optionsHandler}>
             <BiDotsVerticalRounded
-              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
+              style={{
+                color: isDark ? "#fff" : "#1e1e1e",
+                width: "2em",
+                height: "2em",
+              }}
             />
           </button>
 
@@ -294,11 +303,16 @@ function Post({ post, customClass, user, socket, admin, type }) {
             </button>
           </div>
         </div>
-      ) :
+      ) : (
         ""
-      }
+      )}
 
-      <Tags tags={post.tag} mode={editMode} handleSelect={handleSelect} editTags={edit.tag}/>
+      <Tags
+        tags={post.tag}
+        mode={editMode}
+        handleSelect={handleSelect}
+        editTags={edit.tag}
+      />
 
       <NavLink
         activeClassName={styles.active}
@@ -376,7 +390,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
       <div className={styles.actions}>
         <button className={styles.favorite} onClick={handleLike}>
           {liked ? (
-            <MdFavorite className={styles.icons} color="#f55" />
+            <MdFavorite className={styles.iconPaint} />
           ) : (
             <MdFavoriteBorder className={styles.icons} />
           )}

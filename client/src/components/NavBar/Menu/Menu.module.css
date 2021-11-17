@@ -113,3 +113,16 @@
 .active * {
   color: #ddd;
 }
+
+.dark .icon * {
+  color: #888;
+}
+.dark .active * {
+  color: #888;
+}
+.dark .menu__link:hover * {
+  color: #fff;
+}
+.active {
+  border-bottom: 2px solid var(--c-blue);
+}

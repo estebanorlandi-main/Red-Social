@@ -43,7 +43,6 @@ form {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background-color: #fff;
 }
 
 form > h1 {
@@ -205,16 +204,32 @@ svg {
 }
 
 .dark {
+  --c-soft-blue: hsl(226deg, 100%, 95%);
+  --c-blue: hsl(226deg, 90%, 60%);
+  --c-hard-blue: hsl(226deg, 100%, 50%);
+  --bs-blue: none;
+  --c-lightPost: #333;
+
   background-color: #1e1e1e;
 }
 
 .dark label {
   color: #aaa;
-  background-color: #333;
+  background-color: var(--c-lightPost);
   border: none;
 }
 .dark input,
 .dark textarea {
   background-color: transparent;
+  color: #fff;
+}
+.dark .input-group,
+.dark .message {
+  background-color: var(--c-lightPost);
+  border: 1px solid #fff;
+}
+
+.dark .message {
+  background-color: #444;
   color: #fff;
 }

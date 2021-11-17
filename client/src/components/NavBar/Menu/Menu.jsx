@@ -2,15 +2,21 @@ import { BiSupport } from "react-icons/bi";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 
 import { NavLink, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import styles from "./Menu.module.css";
 
 function Menu({ column }) {
   const isLanding = useLocation().pathname === "/";
+  const isDark = useSelector((state) => state.themeReducer.theme);
 
   return (
     !isLanding && (
-      <ul className={`${styles.menu} ${column ? styles.column : ""}`}>
+      <ul
+        className={`${styles.menu} ${column ? styles.column : ""} ${
+          isDark ? styles.dark : ""
+        }`}
+      >
         <li>
           <NavLink
             className={styles.menu__link}
