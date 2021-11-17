@@ -60,6 +60,7 @@ const parseContent = (text) => {
 function PostAdmin({  post, customClass, socket, admin  }) {
   const dispatch = useDispatch();
 
+  const isDark = useSelector((state) => state.themeReducer.theme);
   const page = useSelector(({ postsReducer: { page } }) => page);
   const session = useSelector((state) => state.sessionReducer || {});
 
@@ -91,16 +92,6 @@ function PostAdmin({  post, customClass, socket, admin  }) {
   const createdAt = new Date(post.updatedAt).getTime();
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
-
-  // useEffect(() => {
-  //   if(currentPost){
-  //     post = currentPost
-
-  //     // console.log(post)
-  //     setReload((prev) => !prev)
-  //   }
-  // }, [currentPost])
-
 
   useEffect(() => {
     if(!socket) return;
@@ -220,7 +211,7 @@ function PostAdmin({  post, customClass, socket, admin  }) {
   }
 
   return (
-    <div className={styles.container + ` ${customClass}`}>
+    <div className={styles.container + ` ${customClass} ${isDark ? styles.dark : ""}`}>
      {session.username !== post.user.username ? (
       <div className={styles.options}>
       <button onClick={handleOptions} className={styles.optionsHandler}>
@@ -354,7 +345,7 @@ function PostAdmin({  post, customClass, socket, admin  }) {
       <div className={styles.actions}>
         <button className={!session.username ? "" : ""} onClick={handleLike}>
           {liked ? (
-            <MdFavorite className={styles.icons} color="#f55" />
+            <MdFavorite className={styles.iconPaint}/>
           ) : (
             <MdFavoriteBorder className={styles.icons} />
           )}
@@ -362,7 +353,7 @@ function PostAdmin({  post, customClass, socket, admin  }) {
         </button>
 
         <button>
-          <MdOutlineModeComment />{" "}
+          <MdOutlineModeComment className={styles.icons}/>
           {currentPost
             ? currentPost.comments && currentPost.comments.length
             : post.comments && post.comments.length}

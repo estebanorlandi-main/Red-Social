@@ -5,6 +5,7 @@ import { ERROR } from "./Errors";
 export const SIGNUP_ADMIN = "signup_admin";
 export const LOGIN_ADMIN = "login_admin";
 export const LOGOUT_ADMIN = "logOut_admin";
+export const INFO_USER = "INFO_USER";
 
 
 export function sidnupAdmin(admin){
@@ -28,3 +29,11 @@ export function logOutAdmin(){
     return { type: LOGOUT_ADMIN, payload: {} };
 }
 
+export function infoAdmin(username){
+    return (dispatch) =>
+        axios   
+            .post(`http://localhost:3001/admin/info`,{username}, { withCredentials: true })
+            .then((res) => dispatch({type: INFO_USER, payload:res}))
+            .catch((e) =>(err) => dispatch({ type: ERROR, payload: err })
+            )
+}
