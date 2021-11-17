@@ -17,10 +17,10 @@ export default function Follow({props}) {
 
   const handleClick = (e)=>{
 
-    if(e.target.id == "Followers"){
+    if(e.target.id == "Followers" && followers.length){
       setPopup(true)
       return setStyle("Followers")
-    }else if(e.target.id == "Following"){
+    }else if(e.target.id == "Following" && following.length){
       setPopup(true)
       return setStyle("Following")
     }else if(e.target.className.includes("close")){
@@ -30,32 +30,40 @@ export default function Follow({props}) {
 
   return (
     <div className={styles.container}>
-      <span id="Followers" onClick={(e)=> handleClick(e)}><strong>{following?.length}</strong> Followers</span>
+      <span id="Followers" style={followers?.length ? {cursor:'pointer'} : {}} onClick={(e)=> handleClick(e)}><strong>{followers?.length}</strong> Followers</span>
       <span>&nbsp;&nbsp;</span>
-      <span id="Following" onClick={(e)=> handleClick(e)}><strong>{followers?.length}</strong> Following</span>
+      <span id="Following" style={following?.length ? {cursor:'pointer'} : {}} onClick={(e)=> handleClick(e)}><strong>{following?.length}</strong> Following</span>
       {  
         !popup?
           <></>:
         popup && style === "Followers"?
           <div className={`close ${styles.popup}`} onClick={(e)=> handleClick(e)} >
-            <section>      
-              <h2>Followers</h2>
+            <section className={styles.followDisplay}>
+              <div className={styles.titles}> 
+                <h3>Followers</h3>
+              </div>
+              <hr></hr>
               <br/>
-              {following?.map(e=><div className={styles.followers}>
+              {followers?.map(e=><div className={styles.followers}>
                 <img src={e.image? e.image:userimg} alt="Usuario"/>
                 <div>
                   <Link onClick={()=>setPopup(false)} to={e.username}>{e.username}</Link>
                   <p>{e.name}</p>                  
                 </div>
-              </div>)}
+              </div>)
+              
+              }
             </section>
           </div>:
         popup && style === "Following"?
           <div className={`close ${styles.popup}`} onClick={(e)=> handleClick(e)} >
-            <section>     
-              <h2>Following</h2>
+            <section className={styles.followDisplay}>     
+              <div className={styles.titles}> 
+                <h3>Following</h3>
+              </div>
+              <hr></hr>
               <br/>
-              {followers?.map(e=><div className={styles.followers}>
+              {following?.map(e=><div className={styles.followers}>
                 <img src={e.image? e.image:userimg} alt="Usuario"/>
                 <div>
                   <Link onClick={()=>setPopup(false)} to={e.username}>{e.username}</Link>

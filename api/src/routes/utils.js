@@ -544,10 +544,6 @@ module.exports = {
   BD_searchPost,
   BD_banUser,
   BD_loginBan,
-<<<<<<< HEAD
-  BD_banComment
-=======
   BD_banComment,
   DB_AdminSignUp
->>>>>>> 6b57806182d32fb9a232fcf9a3f5434d5462f670
 };

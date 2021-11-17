@@ -43,7 +43,7 @@ export default function Profile(props) {
     dispatch(getUser(props.username));
     return () => dispatch(removeProfile());
   }, [dispatch, props.username]);
-  console.log(allTags)
+  // console.log(allTags)
   useEffect(() => {
     if (!Object.keys(socket).length) {
       dispatch(socketConnection(session.username));
@@ -196,9 +196,7 @@ export default function Profile(props) {
               )}
 
              
-              
-
-              {myProfile && editar ? (
+              {/* {myProfile && editar ? (
                 <Select
                   onChange={handleSelect}
                   className={styles.select_container}
@@ -208,7 +206,8 @@ export default function Profile(props) {
                 />
               ) : (
                 ""
-              )}
+              )} */}
+
             </section>
         <main className={styles.container}>
           
@@ -242,7 +241,7 @@ export default function Profile(props) {
                     :
                     <></>
                   }
-                  
+                  <h4 style={{marginTop:'2em', marginBottom:'1em'}}>Tags</h4>
                   <div className={styles.tags}>
                     {session.tags ? <Tags tags={session.tags} mode={editar} handleSelect={handleSelect} editTags={inputs.tags}/> : ""}
                   </div>
