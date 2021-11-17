@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 import { createSupport } from "../../Redux/actions/Support";
 import style from "./Support.css";
 
+
 export default function Support() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const session = useSelector((state) => state.sessionReducer);
   const [inputs, setInputs] = useState({
     title: "",
@@ -25,7 +28,7 @@ export default function Support() {
     dispatch(createSupport(inputs));
     setInputs({ title: "", content: "", username: "" });
     alert('Message send')
-    //history.push("/home");
+    history.push("/home");
   };
 
   return (

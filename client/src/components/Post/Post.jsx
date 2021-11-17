@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import image from "../../images/userCard.png";
 import UserCard from "../UserCard/UserCard";
 import Tags from "../Tags/Tags";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import {
   commentPost,
   deletePost,
@@ -69,7 +69,7 @@ const parseContent = (text) => {
 
 function Post({ post, customClass, user, socket, admin, type }) {
   const dispatch = useDispatch();
-
+  const history = useHistory();
   const session = useSelector((state) => state.sessionReducer || {});
   const isDark = useSelector((state) => state.themeReducer.theme);
 
@@ -259,15 +259,18 @@ function Post({ post, customClass, user, socket, admin, type }) {
 
   const handleReport = () => {
     const report = {
-      username: session.username,
-      content: "Report the user",
-      title: "Report Post",
-      postReported: post.idPost,
-      userReported: post.user.username,
-    };
-    dispatch(creatReport(report));
-    alert("Report send");
-  };
+      username:session.username,
+      content:"Report the user",
+      title:"Report Post",
+      postReported:post.idPost,
+      userReported:post.user.username
+    }
+    dispatch(creatReport(report))
+    alert('Report send')
+    // history.push('/home')
+  }
+
+
 
   return (
     <div

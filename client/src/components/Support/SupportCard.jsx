@@ -50,7 +50,7 @@ export default function SupportUserCard({
         className={styles.userContainer}
         to={`/profileAdmin/${message.userReported}`}
       >
-      <div>{message.userReported}</div>
+      <div>User reported: {message.userReported}</div>
       </NavLink>
     <button onClick={ ()=> handleDelete()}>Delete</button>
     </div>

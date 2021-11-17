@@ -25,7 +25,7 @@ const sanitizeUser = (data) => {
       friends:user.Friends
     }));
   }
-  console.log(data.posts, "posts")
+
   return {
     username: data.username,
     name: data.name,
