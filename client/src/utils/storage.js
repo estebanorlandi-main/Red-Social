@@ -4,7 +4,7 @@ function parse(data) {
 
 export function getLocal(name) {
   if (!name) return {};
-  return parse(localStorage.getItem("codenet_user"));
+  return parse(localStorage.getItem(name));
 }
 
 export function saveLocal(name, value) {

@@ -57,7 +57,7 @@ const paginate = (page = 0, arr) => {
   };
 };
 
-function ordenarTags(todos, tags){
+function ordenarTags(todos, tags, orden){
   let arr;
   let conTags = [];
   let sinTags= []
@@ -82,10 +82,23 @@ function ordenarTags(todos, tags){
       sinTags.push(post)
     }
   })
-  return ({conTags, sinTags})
+  let ordenadosPorTags = []
+  for (let arr of conTags){
+    if(orden==="cronologico"){ordenadosPorTags = [...ordenadosPorTags, ...arr];}else{
+        ordenadosPorTags = [...ordenadosPorTags, ...ordenar(orden, arr)]
+    }
+  }
+  let ordenadosSinTags;
+  if (orden === "cronologico") {
+    ordenadosSinTags = sinTags
+  }else {
+    ordenadosSinTags = ordenar(orden, sinTags)
+  }
+  return [...ordenadosPorTags, ...ordenadosSinTags]
 }
 
 function ordenamiento(arr, orden){
+  console.log(arr, orden)
   return arr.sort(function (a, b) {
     if (a[orden]?.length < b[orden]?.length) {
       return 1;
@@ -117,20 +130,11 @@ router.get("/", async (req, res) => {
   // const posts = await Post.findAll({order: [['createdAt', 'DESC']]})
   // return res.send(posts)
 
+
   const { tag, page, orden } = req.query;
   const tags = tag.split(",")
-  const allPosts2 = await DB_Postsearch({});
-  let finalPosts = []
-  let ordenadosPorTags = ordenarTags(allPosts2, tags)
-  for (let arr of ordenadosPorTags.conTags){
-    finalPosts = [...finalPosts, ...ordenar(orden, arr)]
-  }
-  let allPosts;
-  if (orden === "cronologico") {
-    allPosts = ordenadosPorTags.sinTags
-  }else {
-    allPosts = ordenar(orden, ordenadosPorTags.sinTags)
-  }
+  const allPosts = await DB_Postsearch({});
+  let finalPosts = ordenarTags(allPosts, tags, orden)
   // let postCategoria = allPosts.filter((e) =>
   //   e.tag
   //     .map((postTag) => postTag && postTag.toLowerCase())
@@ -139,18 +143,20 @@ router.get("/", async (req, res) => {
   // if (!postCategoria.length)
   //   res.status(404).send(paginate(page, allPosts));
 
-  let { posts, totalPages } = paginate(page, [...finalPosts,...allPosts]);
-  res.status(200).send({ posts, totalPages, tags: finalPosts });
+  let { posts, totalPages } = paginate(page, finalPosts);
+  res.status(200).send({ posts, totalPages });
 });
 
 //Trae todos los posteos que hizo un usuario
 router.get("/", async (req, res, next) => {
+  console.log("holaaaaaa")
   try {
     const { username } = req.body;
     if (!!Number(username)) {
       return next();
     }
     const postName = await DB_Postsearch({ username: username });
+    console.log(postName)
     postName ? res.send(postName) : res.send("This user has no Post");
   } catch (e) {
     res.status(404).send("Error with the username");
@@ -175,7 +181,8 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", upload.single("image"), async (req, res) => {
   let { title, content, tag, username, type } = req.body;
-  console.log(type)
+  let orden = req.query.orden
+  let tags = req.query.tags.split(",")
 
   try {
     let userDB = await DB_UserID(username);
@@ -201,11 +208,11 @@ router.post("/", upload.single("image"), async (req, res) => {
     await userDB.addPost(createPost);
 
     const allPosts = await DB_Postsearch({});
-
-    res.status(200).send(paginate(0, allPosts));
+    let finalPosts = ordenarTags(allPosts, tags, orden)
+    res.status(200).send({...paginate(0, finalPosts), success:true});
   } catch (e) {
     console.log(e);
-    res.status(404).send({ success: false, error: "Cant create post" });
+    res.status(404).send({ success: false, error: e });
   }
 });
 
@@ -226,6 +233,7 @@ router.delete("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(req.body)
     await DB_Postedit(id, req.body);
 
     const post = await modifiedPost(id);
