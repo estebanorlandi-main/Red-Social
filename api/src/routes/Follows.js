@@ -12,8 +12,8 @@ const db = require("../db.js");
 router.post("/", async (req, res, next) => {
   try {
     const {user, follow} = req.body
-    const findUser = await db.User.findOne({where:{username:user}}).catch(e=>null)
-    const findFollow = await db.User.findOne({where:{username:follow}}).catch(e=>null)
+    const findUser = await db.User.findOne({where:{username:follow}}).catch(e=>null)
+    const findFollow = await db.User.findOne({where:{username:user}}).catch(e=>null)
     if(findUser && findFollow){
       //eliminar follow
       const deleteFollow = await db.User_Follow.findOne({where:{userId:findUser.id,followerId:findFollow.id}}).catch(e=>null)

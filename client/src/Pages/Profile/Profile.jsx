@@ -150,7 +150,7 @@ export default function Profile(props) {
               </div>
               <div className={styles.profileActions} style={myProfile ? {display:'none'} : {}}>
               {profile.following && !myProfile?
-                <FollowBtn props={{user:session.username,follow:profile.username, info:profile.following,socket:socket}} />:
+                <FollowBtn props={{user:session.username,follow:profile.username, info:profile.followers,socket:socket}} />:
                 <></>
               }
               {

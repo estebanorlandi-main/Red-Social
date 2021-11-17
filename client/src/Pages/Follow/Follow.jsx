@@ -81,7 +81,7 @@ export default function Follow({props}) {
 
 export function FollowBtn({props}){
   const {user, follow, info} = props
-  const $follows = info.some(e=> e.username === user)
+  const $follows = info.some(e => e.username === user)
   const [Follow, SetFollow] = useState($follows)
   const dispatch = useDispatch()
 
