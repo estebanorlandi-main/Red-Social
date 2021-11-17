@@ -18,12 +18,37 @@ router.post("/", async (req, res, next) => {
       //eliminar follow
       const deleteFollow = await db.User_Follow.findOne({where:{userId:findUser.id,followerId:findFollow.id}}).catch(e=>null)
       if(deleteFollow){
-        deleteFollow.destroy()
-        return res.send({msg:"Unfollow",success:true})
+        await deleteFollow.destroy();
+
+        const userUF = await db.User.findOne({
+          where:{ username: follow },
+          include: [
+            {
+              model: db.User,
+              as: "followers",
+              attributes: ["id", "username", "image", "name", "lastname"],
+            }
+          ]
+        });
+        console.log(userUF.followers)
+
+        return res.send({msg:"Unfollow",success:true, followers: userUF.followers, username: userUF.username})
       }else{
         const addFollow = await db.User_Follow.create({userId:findUser.id,followerId:findFollow.id}).catch(e=> null)
         if(addFollow){
-          return res.send({msg:"Follow",success:true})
+          const userF = await db.User.findOne({
+            where:{ username: follow },
+            include: [
+              {
+                model: db.User,
+                as: "followers",
+                attributes: ["id", "username", "image", "name", "lastname"],
+              }
+            ]
+          });
+          console.log(userF.followers)
+
+          return res.send({msg:"Follow",success:true, followers: userF.followers, username: userF.username })
         }
         else return res.send({errors:"Se ha producido un error",success:false})
       }
@@ -33,5 +58,6 @@ router.post("/", async (req, res, next) => {
     res.status(500).send({ errors: e, success: false });
   }
 });
+
 
 module.exports = router;
