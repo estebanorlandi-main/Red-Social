@@ -196,6 +196,7 @@ const DB_Postsearch = async ({ username, id }) => {
       return post_search;
     }
     if (username === undefined && id) {
+      console.log(id)
       var post_search = await Post.findOne({
         where: {
           idPost: id,
@@ -206,7 +207,7 @@ const DB_Postsearch = async ({ username, id }) => {
           { model: Comment, where: { ban: false } },
         ],
         order: [["createdAt", "DESC"]],
-      });
+      }).catch(e=> console.log(e))
       return post_search;
     } else if (id === undefined && username) {
       let userDB = await DB_UserID(username);
