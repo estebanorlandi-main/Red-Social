@@ -9,8 +9,10 @@ import {
   GET_POST_FOR_USERNAME,
   UPDATE_PAGE,
   CLEAR_POST,
+  COMMENT_DELETE,
   SET_TAGS,
   BANPOST_ADMIN,
+  GET_POSTS_C
 } from "../actions/Post";
 
 const initialState = {
@@ -32,17 +34,17 @@ export default function root(state = initialState, action) {
 
     case POST_LIKE:
       if (action.payload.post) {
-        
+
         // let postSocket;
 
         // action.socket.on("getPost", (data) => {
         //   postSocket = data
         //   console.log(postSocket)
-          
+
         // });
-        
+
         // console.log( postSocket)
-        
+
 
         return {
           ...state,
@@ -88,6 +90,11 @@ export default function root(state = initialState, action) {
 
     case POST_DELETE:
       return { ...state, posts: action.payload.posts };
+
+
+    case COMMENT_DELETE:
+      return { ...state, posts: action.payload.posts };
+
 
     case GET_POSTS:
       if (state.page === 0) {

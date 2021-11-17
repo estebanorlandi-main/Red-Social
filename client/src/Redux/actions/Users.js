@@ -5,10 +5,11 @@ import { ERROR } from "./Errors";
 export const SEARCH_USER = "SEARCH_USER";
 export const GET_USER = "GET_USER";
 export const REMOVE_PROFILE = "REMOVE_PROFILE";
-
+export const FOLLOW_UNFOLLOW = "FOLLOW_UNFOLLOW"
 export const GET_USERS = "GET_USERS"
 export const NEW_MSG = "NEW_MSG";
 export const BAN_USER_ADMIN = "ban_user_admin";
+
 
 
 export const SOCKET_CONN = "SOCKET_CONN"
@@ -67,4 +68,24 @@ export function socketConnection(username) {
     dispatch({type:SOCKET_CONN, payload: socket})
   } 
 }
+
+export function followUnfollow(data, socket) {
+  return (dispatch) =>
+    axios
+      .post(`http://localhost:3001/follow/`, data, { withCredentials: true })
+      .then( res => {
+        // console.log(res.data)
+        if(socket && res.data.username){
+          socket.emit("setFollow", {
+            info: res.data.followers,
+            receiverName: res.data.username
+          });
+        }
+
+        dispatch({type:FOLLOW_UNFOLLOW, payload: res})
+      })
+      .catch((e) =>(err) => dispatch({ type: ERROR, payload: err }))
+}
+
+
 

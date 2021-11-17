@@ -18,10 +18,13 @@ const sanitizeUser = (data) => {
       tags: user.tags,
       posts: user.posts,
       strike: user.strike,
-      dayBan: user.dayBan,
+      dayBan:user.dayBan,
+      followers:user.followers,
+      following:user.following,
+      friends:user.Friends
     }));
   }
-
+  console.log(data.posts, "posts")
   return {
     username: data.username,
     name: data.name,
@@ -33,7 +36,10 @@ const sanitizeUser = (data) => {
     tags: data.tags,
     posts: data.posts,
     strike: data.strike,
-    dayBan: data.dayBan,
+    dayBan:data.dayBan,
+    followers:data.followers,
+    following:data.following,
+    friends:data.Friends
   };
 };
 
@@ -163,20 +169,6 @@ router.put("/:id", async (req, res, next) => {
   } catch (e) {
     console.log(e);
     res.sendStatus(500).send({ errors: e, success: false });
-  }
-});
-//FOLLOW/UNFOLLOW
-router.post("/follow", async (req, res, next) => {
-  const validate = await fn.DB_UserFollow(req.body);
-
-  return res.send("ok");
-  try {
-    const findUser = await fn.DB_findUserParams(req.params.username);
-    findUser
-      ? res.send(findUser.comments)
-      : res.send({ errors: "USER not found" }).status(200);
-  } catch (e) {
-    res.sendStatus(500);
   }
 });
 //VALIDATE EMAIL

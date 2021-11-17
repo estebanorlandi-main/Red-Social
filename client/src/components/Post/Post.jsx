@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import image from "../../images/userCard.png";
 import UserCard from "../UserCard/UserCard";
 import Tags from "../Tags/Tags";
 import { NavLink } from "react-router-dom";
@@ -9,6 +11,8 @@ import {
   updatePost,
   likePost,
 } from "../../Redux/actions/Post";
+
+import { creatReport } from "../../Redux/actions/Support";
 
 import Comment from "../Comment/Comment";
 
@@ -26,8 +30,20 @@ import { GoTrashcan } from "react-icons/go";
 
 import { BsFillPencilFill } from "react-icons/bs";
 
-import { BiDotsVerticalRounded } from "react-icons/bi";
+import { FaPlay } from "react-icons/fa";
+
+import { BiCommentDetail, BiDotsVerticalRounded } from "react-icons/bi";
 import validate from "../../utils/validate";
+
+import axios from "axios";
+
+// CodeMirror
+import CodeMirror from "@uiw/react-codemirror";
+import "codemirror/theme/dracula.css";
+import "codemirror/keymap/vim";
+import "codemirror/keymap/sublime";
+import "codemirror/addon/edit/closetag";
+import "codemirror/addon/edit/closebrackets";
 
 const parseContent = (text) => {
   const mentions = text && text.match(/@\w+/gi);
@@ -51,11 +67,10 @@ const parseContent = (text) => {
   return parsed;
 };
 
-function Post({ post, customClass, socket, admin }) {
+function Post({ post, customClass, user, socket, admin, type }) {
   const dispatch = useDispatch();
 
   const session = useSelector((state) => state.sessionReducer || {});
-  const allTags = useSelector((state) => state.postsReducer.tags);
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
   const [liked, setLiked] = useState(
@@ -78,19 +93,17 @@ function Post({ post, customClass, socket, admin }) {
     title: post.title,
     content: post.content,
     image: post.image,
-    tag: post.tags,
+    tag: post.tag,
   });
-
-  const [optionsTags, setOptionsTags] = useState(
-    allTags.map((tag) => ({ value: tag.label, label: tag.label }))
-  ); //El select no funciona sin un array de objetos con value y label
 
   const createdAt = new Date(post.updatedAt).getTime();
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
 
+  const [code, setCode] = useState("");
+
   useEffect(() => {
-    if (Object.keys(socket).length) {
+    if (socket && Object.keys(socket).length) {
       socket.on("getPost", (data) => {
         if (post.idPost === data.idPost) {
           setCurrentPost(data);
@@ -101,13 +114,15 @@ function Post({ post, customClass, socket, admin }) {
 
   useEffect(() => {
     if (liked) {
-      socket.emit("sendNotification", {
-        senderName: session.username,
-        userImage: session.image,
-        receiverName: post.user.username,
-        id: post.idPost,
-        type: 1,
-      });
+      if (socket) {
+        socket.emit("sendNotification", {
+          senderName: session.username,
+          userImage: session.image,
+          receiverName: post.user.username,
+          id: post.idPost,
+          type: 1,
+        });
+      }
     }
   }, [
     liked,
@@ -130,8 +145,15 @@ function Post({ post, customClass, socket, admin }) {
       title: post.title,
       content: post.content,
       image: post.image,
-      tags: post.tags,
+      tag: post.tag,
     });
+    setLiked(
+      post.userLikes.filter((like) => like.user.username === session.username)
+        .length
+        ? true
+        : false
+    );
+    setEditMode(false);
   }, [post]);
 
   const handleComment = ({ target: { name, value } }) => {
@@ -142,17 +164,18 @@ function Post({ post, customClass, socket, admin }) {
   const submitComment = (e) => {
     e.preventDefault();
     if (commentError) return;
-    dispatch(commentPost(post.idPost, newComment, session.username, socket));
-    socket.emit("sendNotification", {
-      senderName: session.username,
-      userImage: session.image,
-      receiverName: post.user.username,
-      type: 2,
-    });
+    if (socket) {
+      dispatch(commentPost(post.idPost, newComment, session.username, socket));
+      socket.emit("sendNotification", {
+        senderName: session.username,
+        userImage: session.image,
+        receiverName: post.user.username,
+        type: 2,
+      });
+    }
   };
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
-
   const handleEditMode = (mode) => {
     setEdit({
       title: post.title,
@@ -186,13 +209,42 @@ function Post({ post, customClass, socket, admin }) {
   }
 
   function handleSelect(e) {
-    console.log(e, post.tag);
     setEdit((old) => ({ ...old, tag: e.map((tag) => tag.value) }));
   }
 
   const submitEdit = (e) => dispatch(updatePost(post.idPost, edit));
 
   const handleOptions = () => setOptions((old) => !old);
+
+  const submitCode = () => {
+    // axios
+    //   .get("http://localhost:3001/challenge/comment/atalesam", {
+    //     code,
+    //     username: "atalesam",
+    //     postid: 1,
+    //     description: "asd",
+    //   })
+    //   .then((res) => console.log(res))
+    //   .catch((e) => console.log(e));
+  };
+
+  const [result, setResult] = useState(null);
+
+  const testing = () => {
+    axios
+      .post("http://localhost:3001/challenge/testing/", { code: newComment })
+      .then((res) => {
+        console.log(res.data);
+        if (res?.data.error) {
+          setErrorTest(true);
+          setResult(null);
+        } else {
+          setErrorTest(false);
+          setResult(res.data.tested);
+        }
+      })
+      .catch((e) => console.log(e));
+  };
 
   const tags = new Set();
   post.tag.filter((tag) => (!!tag ? tags.add(tag) : false));
@@ -201,7 +253,20 @@ function Post({ post, customClass, socket, admin }) {
   let test;
   if (post.content) test = parseContent(post.content);
 
-  console.log(currentPost);
+  const [errorTest, setErrorTest] = useState(null);
+
+  const handleReport = () => {
+    const report = {
+      username:session.username,
+      content:"Report the user",
+      title:"Report Post",
+      postReported:post.idPost,
+      userReported:post.user.username
+    }
+    dispatch(creatReport(report))
+    alert('Report send')
+  }
+
 
   return (
     <div className={styles.container + ` ${customClass}`}>
@@ -248,10 +313,30 @@ function Post({ post, customClass, socket, admin }) {
           </div>
         </div>
       ) : (
-        ""
-      )}
+        <div className={`${styles.show} ${styles.optionsMenu}`}>
+          <button onClick={handleOptions} className={styles.optionsHandler}>
+            <BiDotsVerticalRounded
+              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
+            />
+          </button>
 
-      <Tags tags={post.tag} />
+          <button
+            className={styles.danger}
+            onClick={() => {
+              handleReport();
+            }}
+          >
+            <GoTrashcan style={{ color: "#fff" }} />
+            Report
+          </button>
+        </div>
+      )}
+      <Tags
+        tags={post.tag}
+        mode={editMode}
+        handleSelect={handleSelect}
+        editTags={edit.tag}
+      />
 
       <NavLink
         activeClassName={styles.active}
@@ -344,7 +429,7 @@ function Post({ post, customClass, socket, admin }) {
         </button>
       </div>
 
-      {session.username ? (
+      {session.username && post.type !== "challenge" ? (
         <div className={styles.newCommentContainer}>
           <div className={styles.inline}>
             <span className={styles.maxLength}>{newComment.length} / 1000</span>
@@ -375,7 +460,93 @@ function Post({ post, customClass, socket, admin }) {
           </form>
         </div>
       ) : (
-        ""
+        <div className={styles.newChallengeContainer}>
+          {/* <button className={styles.button} onClick={submitCode}>
+            Submit
+          </button>
+          <button
+            onClick={() =>
+              axios
+                .get("http://localhost:3001/challenge/post")
+                .then((res) => console.log(res))
+            }
+          >
+            AXIOS
+          </button> */}
+          {/* Pop Up */}
+          <a className={styles.toButton} href="#popup">
+            <FaPlay style={{ color: "white" }} />
+          </a>
+          <div id="popup" class="overlay">
+            <div id="popupBody">
+              <h2>Create a function that adds two numbers in JavaScript</h2>
+              <CodeMirror
+                className={styles.CodeMirror}
+                options={{
+                  theme: "dracula",
+                  mode: "javascript",
+                  keyMap: "sublime",
+                  autoCloseTags: true,
+                  autoCloseBrackets: true,
+                }}
+                value={code}
+                height="80%"
+                width="100%"
+                onChange={(editor, viewUpdate) => {
+                  setNewComment(editor.getValue());
+                }}
+              />
+              <a id="cerrar" href="#">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/macos-close.png" />
+              </a>
+              <div class="popupContent">
+                {errorTest ? (
+                  <img
+                    className={styles.icon}
+                    src="https://img.icons8.com/color/48/000000/fail.png"
+                  />
+                ) : (
+                  <img
+                    className={styles.icon}
+                    src="https://img.icons8.com/color/48/000000/pass.png"
+                  />
+                )}
+
+                <h2>{result}</h2>
+
+                <button onClick={submitComment}>Submitt</button>
+                <button onClick={testing}>Test</button>
+              </div>
+            </div>
+          </div>
+          {/* <div className={styles.inline}>
+            <span className={styles.maxLength}>{newComment.length} / 1000</span>
+            <span>{commentError}</span>
+          </div>
+          <form className={styles.newComment} onSubmit={submitComment}>
+            <label className={commentError ? "error" : ""}>
+              <div className="input-group">
+                <input
+                  onChange={handleComment}
+                  name="comment"
+                  type="text"
+                  value={newComment}
+                  placeholder="New comment..."
+                />
+              </div>
+            </label>
+            {newComment.length && !commentError ? (
+              <button type="submit">
+                <MdSend
+                  className={styles.icons}
+                  style={{ margin: "0", color: "#fff" }}
+                />
+              </button>
+            ) : (
+              <></>
+            )}
+          </form> */}
+        </div>
       )}
 
       {currentPost ? (
@@ -393,7 +564,11 @@ function Post({ post, customClass, socket, admin }) {
         <ul className={styles.comments}>
           <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
           {post.comments.map((comment, i) =>
-            i < 3 ? <Comment key={i} comment={comment} /> : <></>
+            i < 3 ? (
+              <Comment key={i} comment={comment} type={post.type} />
+            ) : (
+              <></>
+            )
           )}
         </ul>
       ) : (

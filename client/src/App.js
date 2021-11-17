@@ -34,6 +34,8 @@ import { BiMessageAltDetail } from "react-icons/bi";
 
 // chat v.2
 import Challenge from "./Pages/Challenge/Challenge";
+import ChallengeComment from "./Pages/ChallengeComment/ChallengeComment";
+import { changeTheme } from "./Redux/actions/Theme";
 
 function App() {
   const dispatch = useDispatch();
@@ -42,11 +44,20 @@ function App() {
 
   const errors = useSelector((state) => state.errorsReducer);
   const session = useSelector((state) => !!state.sessionReducer.username);
+  const isDark = useSelector((state) => state.themeReducer.theme);
 
   const handleDelete = (id) => dispatch(removeError(id));
 
   return (
-    <div className="App">
+    <div className={`App ${isDark ? "dark" : ""}`}>
+      {/*<button
+        className="top"
+        onClick={() => {
+          dispatch(changeTheme(!isDark));
+        }}
+      >
+        Change Theme
+      </button>*/}
       {errors && errors.length ? (
         <ul className="errors">
           {errors.map((error) => (
@@ -76,6 +87,18 @@ function App() {
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
         <Route path="/loginAdmin" component={AdminLogin} />
+        <Route path="/supportAdmin" component={AdminSupport} />
+        <Route exact path="/challenge" component={Challenge} />
+        <Route path="/homeAdmin" component={HomeAdmin} />
+        <Route path="/challenge/comment" component={ChallengeComment} />
+        <Route
+          path="/profileAdmin/:username"
+          render={({
+            match: {
+              params: { username },
+            },
+          }) => <ProfileAdmin username={username} />}
+        />
         <Route path="/n/signup" component={NewRegister} />
 
         <Route

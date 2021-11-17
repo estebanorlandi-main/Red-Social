@@ -72,6 +72,19 @@ io.on("connection", (socket) => {
     // }
   });
 
+  // follow/unfollow
+  socket.on("setFollow", ({info, receiverName})=>{
+    const receiver = getUser(receiverName);
+
+    console.log(receiver)
+
+    // if(senderName !== receiverName){
+      io.emit("getFollow", {
+        info,
+        receiverName
+      });
+  })
+
   //when disconnect
   socket.on("disconnect", () => {
     console.log("a user disconnected!");

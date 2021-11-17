@@ -238,3 +238,25 @@
   background-color: var(--c-blue);
   color: #fff;
 }
+.newChallengeContainer {
+  width: 100%;
+  background-color: var(--c-blue);
+  padding: 10px 10px;
+  border: var(--c-blue) 10px solid;
+  border-radius: 20px;
+}
+
+.toButton {
+  text-decoration: none;
+  color: #fff;
+  border-radius: 12px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 40px;
+}
