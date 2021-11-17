@@ -105,6 +105,19 @@ export default function Navbar(props) {
         </div>
 
         <ul className={styles.menu}>
+          {admin.admin === true ? 
+          <li>
+            <NavLink
+              className={styles.nav__link}
+              activeClassName={styles.active}
+              to="/homeAdmin"
+            >
+              <BiHomeAlt className={styles.icon} />
+            </NavLink>
+          </li>
+          
+          :
+          
           <li>
             <NavLink
               className={styles.nav__link}
@@ -114,6 +127,8 @@ export default function Navbar(props) {
               <BiHomeAlt className={styles.icon} />
             </NavLink>
           </li>
+          }
+         
 
           {!isLanding && (user.username || admin.admin === true) ? (
             <li>

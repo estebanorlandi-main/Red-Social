@@ -57,7 +57,7 @@ router.use("/challenge", Challenge);
 
 router.use("/tags", Tags)
 router.use("/likes", Likes);
-router.use("/support",  AuthControllers.isAuthenticated, Support);
+router.use("/support", Support);
 router.get('/logout', AuthControllers.logout)
 
 router.use("/auth", Register)

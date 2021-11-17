@@ -1,6 +1,12 @@
 .container {
+  display: flex;
+  justify-content: center;
 }
 
 .button {
   width: 50px;
+}
+
+li {
+  list-style: none;
 }
