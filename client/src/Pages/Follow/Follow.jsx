@@ -30,7 +30,7 @@ export default function Follow({props}) {
 
   return (
     <div className={styles.container}>
-      <span id="Followers" style={ followers?.length ? {cursor:'pointer'} : {}} onClick={(e)=> handleClick(e)}><strong>{followersOnline ? followersOnline.length : followers?.length}</strong> Followers</span>
+      <span id="Followers" style={followersOnline ? (followersOnline?.length ? {cursor:'pointer'} : {}) : (followers?.length ? {cursor:'pointer'} : {})} onClick={(e)=> handleClick(e)}><strong>{followersOnline ? followersOnline.length : followers?.length}</strong> Followers</span>
       <span>&nbsp;&nbsp;</span>
       <span id="Following" style={following?.length ? {cursor:'pointer'} : {}} onClick={(e)=> handleClick(e)}><strong>{following?.length}</strong> Following</span>
       {  
