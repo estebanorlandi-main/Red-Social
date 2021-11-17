@@ -257,15 +257,16 @@ function Post({ post, customClass, user, socket, admin, type }) {
 
   const handleReport = () => {
     const report = {
-      username: session.username,
-      content: "Report the user",
-      title: "Report Post",
-      postReported: post.idPost,
-      userReported: null,
-    };
-    dispatch(creatReport(report));
-    alert("Report send");
-  };
+      username:session.username,
+      content:"Report the user",
+      title:"Report Post",
+      postReported:post.idPost,
+      userReported:post.user.username
+    }
+    dispatch(creatReport(report))
+    alert('Report send')
+  }
+
 
   return (
     <div className={styles.container + ` ${customClass}`}>

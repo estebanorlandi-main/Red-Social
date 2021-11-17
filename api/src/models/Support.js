@@ -25,7 +25,18 @@ module.exports = (sequelize) => {
         type: DataTypes.UUID,
     },
     userReported: {
-        type: DataTypes.UUID
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isAlphanumeric: {
+          args: true,
+          msg: "The username must contain only letters and numbers.",
+        },
+        len: {
+          args: [3, 16],
+          msg: "The username must be a minimum of three characters and a maximum of sixteen.",
+        },
+      }
     },
     username: {
         type: DataTypes.STRING,

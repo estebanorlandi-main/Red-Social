@@ -60,17 +60,21 @@ const paginate = (page = 0, arr) => {
 function ordenarTags(todos, tags, orden) {
   let arr;
   let conTags = [];
+
   let sinTags = [];
   arr = todos.map((post, i, arr) => {
     let cant = tags?.filter((tag) => {
+
       if (post.tag.includes(tag)) {
         return post.idPost;
       }
+
     });
     let c = 0;
     if (cant?.length !== 0) {
       while (c < tags?.length) {
         if (cant?.length === tags?.length - c) {
+
           while (!conTags[c]) {
             conTags.push([]);
           }
@@ -99,8 +103,10 @@ function ordenarTags(todos, tags, orden) {
   return [...ordenadosPorTags, ...ordenadosSinTags];
 }
 
+
 function ordenamiento(arr, orden) {
   console.log(arr, orden);
+
   return arr.sort(function (a, b) {
     if (a[orden]?.length < b[orden]?.length) {
       return 1;
@@ -139,7 +145,9 @@ router.get("/", async (req, res) => {
   // return res.send(posts)
 
   const { tag, page, orden } = req.query;
-  const tags = tag.split(",");
+
+  const tags = tag?.split(",")
+
   const allPosts = await DB_Postsearch({});
   let finalPosts = ordenarTags(allPosts, tags, orden);
   // let postCategoria = allPosts.filter((e) =>
@@ -156,7 +164,9 @@ router.get("/", async (req, res) => {
 
 //Trae todos los posteos que hizo un usuario
 router.get("/", async (req, res, next) => {
+
   console.log("holaaaaaa");
+
   try {
     const { username } = req.body;
     if (!!Number(username)) {
@@ -188,8 +198,10 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", upload.single("image"), async (req, res) => {
   let { title, content, tag, username, type } = req.body;
+
   let orden = req.query.orden;
   let tags = req.query.tags?.split(",");
+
 
   try {
     let userDB = await DB_UserID(username);
