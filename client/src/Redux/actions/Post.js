@@ -121,7 +121,10 @@ export function likePost(data, socket) {
     axios
       .post("http://localhost:3001/likes", data, { withCredentials: true })
       .then((res) => {
-        socket.emit("reloadPostInfo", res.data);
+        if(socket){
+          socket.emit("reloadPostInfo", res.data);
+        }
+        
 
         dispatch({
           type: POST_LIKE,

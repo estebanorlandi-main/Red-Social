@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { followUnfollow } from "../../Redux/actions/Users";
 import styles from "./Follow.module.css";
 // import { Link } from "react-router-dom";
@@ -13,11 +13,11 @@ export default function Follow({props}) {
 
   const [popup,setPopup] = useState(false)
   const [style, setStyle] = useState("none")
-  const {user,followers,following, profile,follow} = props
+  const {user,followers,following, followersOnline, profile,follow} = props
 
   const handleClick = (e)=>{
 
-    if(e.target.id == "Followers" && followers.length){
+    if(followersOnline ? (e.target.id == "Followers" && followersOnline.length) : (e.target.id == "Followers" && followers.length)){
       setPopup(true)
       return setStyle("Followers")
     }else if(e.target.id == "Following" && following.length){
@@ -30,7 +30,7 @@ export default function Follow({props}) {
 
   return (
     <div className={styles.container}>
-      <span id="Followers" style={followers?.length ? {cursor:'pointer'} : {}} onClick={(e)=> handleClick(e)}><strong>{followers?.length}</strong> Followers</span>
+      <span id="Followers" style={ followers?.length ? {cursor:'pointer'} : {}} onClick={(e)=> handleClick(e)}><strong>{followersOnline ? followersOnline.length : followers?.length}</strong> Followers</span>
       <span>&nbsp;&nbsp;</span>
       <span id="Following" style={following?.length ? {cursor:'pointer'} : {}} onClick={(e)=> handleClick(e)}><strong>{following?.length}</strong> Following</span>
       {  
@@ -44,14 +44,22 @@ export default function Follow({props}) {
               </div>
               <hr></hr>
               <br/>
-              {followers?.map(e=><div className={styles.followers}>
-                <img src={e.image? e.image:userimg} alt="Usuario"/>
-                <div>
-                  <Link onClick={()=>setPopup(false)} to={e.username}>{e.username}</Link>
-                  <p>{e.name}</p>                  
-                </div>
-              </div>)
-              
+              { followersOnline ?
+                followersOnline?.map(e=><div className={styles.followers}>
+                  <img src={e.image? e.image:userimg} alt="Usuario"/>
+                  <div>
+                    <Link onClick={()=>setPopup(false)} to={e.username}>{e.username}</Link>
+                    <p>{e.name}</p>                  
+                  </div>
+                </div>)
+              :
+                followers?.map(e=><div className={styles.followers}>
+                  <img src={e.image? e.image:userimg} alt="Usuario"/>
+                  <div>
+                    <Link onClick={()=>setPopup(false)} to={e.username}>{e.username}</Link>
+                    <p>{e.name}</p>                  
+                  </div>
+                </div>)
               }
             </section>
           </div>:
@@ -80,16 +88,31 @@ export default function Follow({props}) {
 }
 
 export function FollowBtn({props}){
-  const {user, follow, info} = props
+  const {user, follow, userImg, info} = props
+  const socket = useSelector((state) => state.usersReducer.socket);
   const $follows = info.some(e => e.username === user)
   const [Follow, SetFollow] = useState($follows)
   const dispatch = useDispatch()
 
   const handleClick = (e) => {
     if(!user || !follow) return
-    dispatch(followUnfollow({user,follow}))
+    dispatch(followUnfollow({user,follow}, socket))
+
+    if(!Follow){
+      socket?.emit("sendNotification", {
+        senderName: user,
+        userImage: userImg,
+        receiverName: follow,
+        id: follow,
+        type: 3,
+      });
+    }
+
+  
+    
     SetFollow(!Follow)
   };
+
   return (
     <div className={styles.container}>
       <div className={styles.containerBtn}>

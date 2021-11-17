@@ -32,6 +32,8 @@ export default function Profile(props) {
 
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
+  const [followersOnline, setFollowersOnline] = useState(null);
+  console.log(followersOnline)
 
   // console.log(session);
   console.log(profile)
@@ -39,6 +41,22 @@ export default function Profile(props) {
   const allTags = useSelector((state) => state.postsReducer.tags);
   const socket = useSelector((state) => state.usersReducer.socket);
   const myProfile = session.username === profile.username;
+
+  useEffect(() => {
+    if (socket && Object.keys(socket).length) {
+      socket.on("getFollow", (data) => {
+
+        if(profile.username === data.receiverName){
+          setFollowersOnline({
+            user: data.receiverName,
+            info: data.info
+          });
+        }
+      
+      });
+    }
+  }, [socket, profile]);
+
   useEffect(() => {
     dispatch(getUser(props.username));
     return () => dispatch(removeProfile());
@@ -143,14 +161,14 @@ export default function Profile(props) {
                   </div>
 
                   {socket !== undefined?
-                  <Follow  props={{followers:profile.followers,following:profile.following,socket:socket}} />:
+                  <Follow  props={{followers:profile.followers,following:profile.following, followersOnline: followersOnline?.info && profile.username === followersOnline?.user ? followersOnline.info : null , socket:socket}} />:
                   <></>
                   }
                 </div>
               </div>
               <div className={styles.profileActions} style={myProfile ? {display:'none'} : {}}>
               {profile.following && !myProfile?
-                <FollowBtn props={{user:session.username,follow:profile.username, info:profile.followers,socket:socket}} />:
+                <FollowBtn props={{user:session.username, userImg: session.image, follow:profile.username, info:profile.followers,socket:socket}} />:
                 <></>
               }
               {
@@ -243,7 +261,7 @@ export default function Profile(props) {
                   }
                   <h4 style={{marginTop:'2em', marginBottom:'1em'}}>Tags</h4>
                   <div className={styles.tags}>
-                    {session.tags ? <Tags tags={session.tags} mode={editar} handleSelect={handleSelect} editTags={inputs.tags}/> : ""}
+                    {profile.tags ? <Tags tags={profile.tags} mode={editar} handleSelect={handleSelect} editTags={inputs.tags}/> : ""}
                   </div>
               </div>
               )}

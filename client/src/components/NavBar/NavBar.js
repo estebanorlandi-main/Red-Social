@@ -47,6 +47,19 @@ export default function Navbar(props) {
               return [...prev];
             }
           });
+        } else if(data.type === 3){
+          setNotifications((prev) => {
+            if (
+              !prev.find(
+                (notif) =>
+                  notif.senderName === data.senderName && notif.id === data.id
+              )
+            ) {
+              return [data, ...prev];
+            } else {
+              return [...prev];
+            }
+          });
         } else {
           setNotifications((prev) => [data, ...prev]);
         }
