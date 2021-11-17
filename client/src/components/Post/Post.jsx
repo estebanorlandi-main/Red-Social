@@ -257,7 +257,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
       content:"Report the user",
       title:"Report Post",
       postReported:post.idPost,
-      userReported:null
+      userReported:post.user.username
     }
     dispatch(creatReport(report))
     alert('Report send')

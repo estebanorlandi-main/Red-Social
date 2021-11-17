@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ERROR } from "./Errors";
 export const GET_SUPPORT_MESSAGE = "get_support_message"
-
+export const DELETE_MESSAGE_SUPPORT = "DELETE_MESSAGE_SUPPORT"
 
 export function createSupport(payload) {
   return (dispatch) =>
@@ -30,4 +30,12 @@ export function creatReport(data){
       .then((res) => dispatch({ payload: res }))
       .catch((err) => dispatch({ type: ERROR, payload: err }));
   
+}
+
+export function deleteMessageSupport(id){
+  return (dispatch) =>
+    axios 
+      .delete(`http://localhost:3001/support/${id}`,{ withCredentials: true })
+      .then((res) => dispatch({ type: DELETE_MESSAGE_SUPPORT ,payload: res }))
+      .catch((err) => dispatch({ type: ERROR, payload: err }));
 }

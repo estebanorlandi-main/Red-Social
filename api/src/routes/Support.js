@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { Sequelize, Model, Association } = require("sequelize");
 const {Support} = require('../db.js');
-const { DB_findUsersUsername,BD_searchSupport,validatesupport } = require("./utils.js");
+const { DB_findUsersUsername,BD_searchSupport,DB_DestroyMessage,validatesupport } = require("./utils.js");
 const router = Router();
 
 
@@ -50,6 +50,16 @@ router.get("/", async (req, res) =>{
         res.send(400).send("Error in support all")
     }
    
+})
+
+router.delete("/:id", async (req, res) => {
+    try{
+        const {id} = req.params;
+        const deleteMessage = await DB_DestroyMessage(id);
+        res.status(200).send(deleteMessage)
+    }catch(e){
+        res.status(404).send({ success: false, error: "Cant delete message support" });
+    }
 })
 
 module.exports = router;
