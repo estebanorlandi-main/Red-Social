@@ -4,6 +4,7 @@ const db = require("../db.js");
 const fn = require("./utils.js");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const AuthControllers = require('../controllers/AuthControllers.js')
 
 const sanitizeUser = (data) => {
   if (Array.isArray(data)) {
@@ -142,7 +143,7 @@ router.post("/register", async (req, res, next) => {
   }
 });
 //UPDATE
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", AuthControllers.isAuthenticated, async (req, res, next) => {
   try {
     if (req.body.password) {
       let errors = await fn.DB_validatePassword(req.body.password);
