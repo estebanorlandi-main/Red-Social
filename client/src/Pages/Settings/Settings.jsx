@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 import { CgProfile } from "react-icons/cg";
 import { BiAdjust } from "react-icons/bi";
@@ -17,8 +18,10 @@ function Settings(props) {
     setSection(target.getAttribute("showsection"));
   };
 
+  const isDark = useSelector((state) => state.themeReducer.theme);
+
   return (
-    <main className={styles.container}>
+    <main className={`${styles.container} ${isDark ? styles.dark : ""}`}>
       <div className={styles.left}>
         <ul>
           <li>

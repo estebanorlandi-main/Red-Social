@@ -225,8 +225,8 @@ svg {
 }
 .dark .input-group,
 .dark .message {
-  background-color: var(--c-lightPost);
-  border: 1px solid #fff;
+  background-color: #444;
+  border: none;
 }
 
 .dark .message {
