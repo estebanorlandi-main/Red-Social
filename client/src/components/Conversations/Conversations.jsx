@@ -31,12 +31,12 @@ export default function Conversation({ conversation, currentUser }) {
     if(Object.keys(socket).length){
       socket.on("getUntrackMessage", (data) => {
 
-        // console.log(data.untrack)
-        // console.log(data.conversationId)
+        console.log(data.untrack)
+        console.log(data.conversationId)
 
-        // if(conversation.id === data.conversationId){
-        //   setUntrackMessages(data.untrack)
-        // }
+        if(conversation.id === data.conversationId){
+          setUntrackMessages(data.untrack)
+        }
       });
     } 
   }, []);
@@ -49,6 +49,9 @@ export default function Conversation({ conversation, currentUser }) {
         alt=""
       />
       <span className={styles.conversationName}>{user?.username}</span>
+      {untrackMessages.length > 0 && (
+        <div className={styles.counter}>{untrackMessages.length}</div>
+      )}
     </div>
   );
 }
