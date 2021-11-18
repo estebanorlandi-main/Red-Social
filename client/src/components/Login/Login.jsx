@@ -33,8 +33,8 @@ export default function Login() {
     if (!Object.values(errors).filter((error) => error).length) {
       let errores = await dispatch(logIn(input));
       if (errores.type === "ERROR") {
-        alert("Usuario o Contrasena invalidos")
-      }else{
+        alert("Usuario o Contrasena invalidos");
+      } else {
         setInput({
           username: "",
           password: "",
