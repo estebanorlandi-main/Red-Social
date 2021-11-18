@@ -30,7 +30,7 @@ export const NEW_REGISTER = "NEW_REGISTER";
 export function singUp(user) {
   return (dispatch) =>
     axios
-      .post(`http://localhost:3001/user/register`, user, {
+      .post(URL + `/user/register`, user, {
         withCredentials: true,
       })
       .then((res) => {
@@ -45,7 +45,7 @@ export function singUp(user) {
 export function logIn(user) {
   return (dispatch) =>
     axios
-      .post(`http://localhost:3001/login`, user, { withCredentials: true })
+      .post(URL + `/login`, user, { withCredentials: true })
       .then((res) => dispatch({ type: LOG_IN, payload: res }))
       .catch((err) => dispatch({ type: ERROR, payload: err }));
 }
@@ -53,7 +53,7 @@ export function logIn(user) {
 export function updateUser(username, user) {
   return (dispatch) =>
     axios
-      .put(`http://localhost:3001/user/${username}`, user, {
+      .put(URL + `/user/${username}`, user, {
         withCredentials: true,
       })
       .then((res) => dispatch({ type: UPDATE_USER, payload: res }))
@@ -63,7 +63,7 @@ export function updateUser(username, user) {
 export function logOut() {
   return (dispatch) =>
     axios
-      .get(`http://localhost:3001/logout`, { withCredentials: true })
+      .get(URL + `/logout`, { withCredentials: true })
       .then((res) => dispatch({ type: LOG_OUT, res }))
       .catch((err) => dispatch({ type: ERROR, payload: err }));
 }
@@ -71,7 +71,7 @@ export function logOut() {
 export function validateEmail(email) {
   return (dispatch) =>
     axios
-      .get(`http://localhost:3001/user/validate/email/${email}`)
+      .get(URL + `/user/validate/email/${email}`)
       .then((res) => dispatch({ type: VALIDATE_EMAIL, payload: res }))
       .catch((e) => console.log(e));
 }
@@ -79,57 +79,47 @@ export function validateEmail(email) {
 export function validateUsername(username) {
   return (dispatch) =>
     axios
-      .get(`http://localhost:3001/user/validate/username/${username}`)
+      .get(URL + `/user/validate/username/${username}`)
       .then((res) => dispatch({ type: VALIDATE_USERNAME, payload: res }))
       .catch((e) => console.log(e));
 }
 
-/*export function updatePassword(password, query) {
-  return (dispatch) =>
-    axios
-      .post(
-        `http://localhost:3001/validate/password/generated${query}`,
-        password
-      )
-      .then((res) => dispatch({ type: UPDATE_PASSWORD, payload: res }));
-}*/
-
 export function validateAccount(data) {
   return (dispatch) =>
     axios
-      .put(`http://localhost:3001/user/validate/account`, data)
+      .put(URL + `/user/validate/account`, data)
       .then((res) => dispatch({ type: NEW_REGISTER, payload: res }));
 }
 
 export function updatePassword(password, query) {
   return (dispatch) =>
     axios
-      .post(`http://localhost:3001/auth/password/generated${query}`, password)
+      .post(URL + `/auth/password/generated${query}`, password)
       .then((res) => dispatch({ type: UPDATE_PASSWORD, payload: res }));
 }
 
 export function newRegister(user) {
   return (dispatch) =>
     axios
-      .post(`http://localhost:3001/auth/signup`, user)
+      .post(URL + `/auth/signup`, user)
       .then((res) => dispatch({ type: NEW_REGISTER, payload: res }));
 }
 export function sendResetPassword(user) {
   return (dispatch) =>
     axios
-      .post(`http://localhost:3001/auth/forgot/password`, user)
+      .post(URL + `/auth/forgot/password`, user)
       .then((res) => dispatch({ type: SEND_RESET_PASSWORD, payload: res }));
 }
 export function SearchToken(query) {
   return (dispatch) =>
     axios
-      .get(`http://localhost:3001/auth/token/validate${query}`)
+      .get(URL + `/auth/token/validate${query}`)
       .then((res) => dispatch({ type: SEARCH_TOKEN, payload: res }));
 }
 export function conversation(from, to) {
   return (dispatch) =>
     axios
-      .post("http://localhost:3001/conversation", {
+      .post(URL + "/conversation", {
         senderId: from,
         receiverId: to,
       })
