@@ -6,15 +6,15 @@ import styles from "./ImageUpload.module.css";
 
 export default function ImageUpload({ onChange, imagedata }) {
   const [data, setData] = useState(imagedata);
-
   const handleChange = (e) => {
-    setData(e.target.files[0]);
-    onChange(e);
+    console.log(imagedata)
+    setData(e.target.files[0] ? e.target.files[0] : imagedata);
+    onChange(e.target.name ? e : imagedata);
   };
 
   const handleRemove = () => {
-    setData(null);
-    onChange(null);
+    setData(imagedata);
+    onChange(imagedata);
   };
 
   return (
@@ -30,7 +30,15 @@ export default function ImageUpload({ onChange, imagedata }) {
         <></>
       )}
 
-      {data ? (
+      {data.imageData ? (
+        <div className={styles.imageContainer}>
+          <img
+            className={styles.uploadImage}
+            src={`data:${data?.imageType};base64, ${data?.imageData}`}
+            alt=""
+          />
+        </div>
+      ) : (
         <div className={styles.imageContainer}>
           <img
             className={styles.uploadImage}
@@ -38,8 +46,6 @@ export default function ImageUpload({ onChange, imagedata }) {
             alt=""
           />
         </div>
-      ) : (
-        <></>
       )}
 
       <input

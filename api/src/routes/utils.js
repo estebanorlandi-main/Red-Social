@@ -306,9 +306,17 @@ const DB_createUser = async (date) => {
   else return errors;
 };
 
-const DB_updateUser = async (date, id) => {
+const DB_updateUser = async (date, id, images) => {
   let errors = {};
-  let validateDate = await User.update(date, { where: { id: id } }).catch(
+  let validateDate = await User.update(
+    {about: date.about || '',
+      name: date.name,
+      lastname: date.lastname,
+      gitaccount: date.gitaccount,
+      imageType: images.imageType,
+      imageName: images.imageName,
+      imageData: images.imageData,
+    }, { where: { id: id } }).catch(
     (e) => {
       console.log(e);
       e.errors.forEach((e) => {

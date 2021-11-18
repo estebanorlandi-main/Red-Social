@@ -1,4 +1,5 @@
 .input__image {
+  display: flex;
   position: relative;
 }
 
@@ -9,8 +10,10 @@
   max-height: 10em;
 }
 
+
+
 .input__image input[type="file"] {
-  display: none;
+  opacity: 0;
 }
 
 .iconContainer {

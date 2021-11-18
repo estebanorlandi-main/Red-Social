@@ -12,9 +12,7 @@ function mayuscula(str){
 router.get('/', async (req, res) =>{
 	try{
 		let tags = await Tags.findAll({attributes:['label'], raw:true})
-		console.log(tags)
 		tags = tags.map((el)=> {return {...el, value:el.label}})
-		console.log(tags)
 		res.status(200).json(tags)
 	}catch(e){
 		res.status(404).send(e)
