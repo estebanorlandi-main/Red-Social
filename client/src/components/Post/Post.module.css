@@ -241,10 +241,6 @@
 }
 .newChallengeContainer {
   width: 100%;
-  background-color: var(--c-blue);
-  padding: 10px 10px;
-  border: var(--c-blue) 10px solid;
-  border-radius: 20px;
 }
 
 .toButton {
