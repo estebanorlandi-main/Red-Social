@@ -19,12 +19,12 @@ function EditProfile(props) {
     gitaccount: session.gitaccount || "",
     about: session.about || "",
     tags: session.tags || [],
+    image: session.image || null,
   });
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState(inputs.image);
   const [submit, setSubmit] = useState(false);
   useEffect(async () => {
     if (allTags.length === 0) {
-      console.log("entre");
       await dispatch(loadTags());
       dispatch(getTags());
     }
@@ -37,10 +37,10 @@ function EditProfile(props) {
   });*/
 
   const handleImagechange = (event) => {
-    if (event?.target.files[0]) {
+    if (event?.target?.files[0]) {
       setFile(event.target.files[0]);
     } else {
-      setFile(null);
+      setFile(session.image);
     }
   };
 
@@ -48,7 +48,7 @@ function EditProfile(props) {
     setInputs((old) => ({ ...old, tags: options.map((tag) => tag.value) }));
   };
 
-  const handleChange = ({ target: { name, value } }) => {
+  const handleChange = ({ target: { name, value }}) => {
     setInputs((old) => ({ ...old, [name]: value }));
   };
 
@@ -80,7 +80,7 @@ function EditProfile(props) {
     <form onSubmit={handleSubmit} className={styles.form}>
       <h3>User</h3>
 
-      <ImageUpload onChange={handleImagechange} imagedata={file} />
+      <ImageUpload onChange={handleImagechange} imagedata={file || session.image} />
 
       <div className={styles.inline}>
         <label>

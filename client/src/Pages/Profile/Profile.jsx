@@ -38,8 +38,10 @@ export default function Profile(props) {
   const [followersOnline, setFollowersOnline] = useState(null);
   console.log(followersOnline)
 
+
   // console.log(session);
-  console.log(profile)
+  console.log(profile, 'Hola soy profile')
+  
 
   const allTags = useSelector((state) => state.postsReducer.tags);
   const socket = useSelector((state) => state.usersReducer.socket);
@@ -167,7 +169,7 @@ export default function Profile(props) {
               <div className={styles.importantInfo}> 
                 <img
                   className={styles.image}
-                  src={profile.image || userimg}
+                  src={`data:${profile?.image?.imageType};base64, ${profile?.image?.imageData}` || userimg}
                   alt=""
                   style={{marginRight:"24px"}}
                 />
