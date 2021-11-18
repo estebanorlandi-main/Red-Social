@@ -59,7 +59,7 @@ const parseContent = (text) => {
 
   return parsed;
 };
-function PostAdmin({  post, customClass, socket, admin  }) {
+function PostAdmin({  post, customClass, socket, admin,hanbleBanPost  }) {
   const dispatch = useDispatch();
 
   const isDark = useSelector((state) => state.themeReducer.theme);
@@ -193,17 +193,7 @@ function PostAdmin({  post, customClass, socket, admin  }) {
   let test;
   if (post.content) test = parseContent(post.content);
 
-  const hanbleBanPost = (e) =>{
-    e.preventDefault();
-    dispatch(banPost(e.target.value));
-    socket.emit("sendNotification", {
-      senderName: session.username,
-      userImage: session.image,
-      receiverName: post.user.username,
-      type: 2,
-    });
-    alert('Ban, successfully applied');
-  }
+
 
 
   const handleBanComment = (e) => {

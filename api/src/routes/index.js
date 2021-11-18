@@ -45,7 +45,7 @@ router.use("/user", Users);
 router.use("/comment", Comments);
 router.use("/post", Post);
 router.use("/login", Login);
-router.use("/admin", AuthControllers.isAuthenticated, Admin);
+router.use("/admin",  Admin);
 // router.use("/tags", Tags)
 // router.use("/likes", Likes);
 // router.use("/support",Support);
