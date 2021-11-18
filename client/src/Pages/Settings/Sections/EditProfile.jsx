@@ -6,6 +6,7 @@ import { getTags, loadTags } from "../../../Redux/actions/Post";
 import styles from "./EditProfile.module.css";
 import { updateUser } from "../../../Redux/actions/Session";
 import { Redirect } from "react-router";
+import axios from "axios";
 
 function EditProfile(props) {
   const dispatch = useDispatch();
@@ -19,13 +20,13 @@ function EditProfile(props) {
     about: session.about || "",
     tags: session.tags || [],
   });
-
-  const [submit, setSubmit] = useState(false)
+  const [file, setFile] = useState(null);
+  const [submit, setSubmit] = useState(false);
   useEffect(async () => {
     if (allTags.length === 0) {
-      console.log("entre")
+      console.log("entre");
       await dispatch(loadTags());
-      dispatch(getTags())
+      dispatch(getTags());
     }
   }, [allTags]);
   /*const [errors, setErrors] = useState({
@@ -34,6 +35,14 @@ function EditProfile(props) {
     gitaccount: "",
     about: "",
   });*/
+
+  const handleImagechange = (event) => {
+    if (event?.target.files[0]) {
+      setFile(event.target.files[0]);
+    } else {
+      setFile(null);
+    }
+  };
 
   const handleTags = (options) => {
     setInputs((old) => ({ ...old, tags: options.map((tag) => tag.value) }));
@@ -45,23 +54,37 @@ function EditProfile(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let errores = await dispatch(updateUser(session.username, inputs));
+
+    let formData = new FormData();
+    formData.append("image", file);
+    formData.append("name", inputs.name);
+    formData.append("lastname", inputs.lastname);
+    formData.append("gitaccount", inputs.gitaccount);
+    formData.append("about", inputs.about);
+
+    let errores = await dispatch(updateUser(session.username, formData));
     if (errores.type === "ERROR") {
-      alert(errores.payload.response.data[Object.keys(errores.payload.response.data)[0]])
-    }else {
-      setSubmit(true)
+      alert(
+        errores.payload.response.data[
+          Object.keys(errores.payload.response.data)[0]
+        ]
+      );
+    } else {
+      setSubmit(true);
     }
   };
 
-  return submit ? <Redirect to={`/profile/${session.username}`} /> : (
+  return submit ? (
+    <Redirect to={`/profile/${session.username}`} />
+  ) : (
     <form onSubmit={handleSubmit} className={styles.form}>
       <h3>User</h3>
 
-      <ImageUpload />
+      <ImageUpload onChange={handleImagechange} imagedata={file} />
 
       <div className={styles.inline}>
         <label>
-          Nombre
+          Name
           <div className="input-group">
             <input
               name="name"
@@ -73,7 +96,7 @@ function EditProfile(props) {
         </label>
 
         <label>
-          Apellido
+          Last Name
           <div className="input-group">
             <input
               name="lastname"
@@ -111,7 +134,12 @@ function EditProfile(props) {
 
       <label>
         Tags
-        <Tags tags={session.tags?session.tags:[]} mode={true} handleSelect={handleTags} editTags={inputs.tags}/>
+        <Tags
+          tags={session.tags ? session.tags : []}
+          mode={true}
+          handleSelect={handleTags}
+          editTags={inputs.tags}
+        />
       </label>
       <button type="submit">Change</button>
     </form>

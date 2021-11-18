@@ -36,8 +36,6 @@ import { BiMessageAltDetail } from "react-icons/bi";
 // chat v.2
 import Challenge from "./Pages/Challenge/Challenge";
 import ChallengeComment from "./Pages/ChallengeComment/ChallengeComment";
-import { changeTheme } from "./Redux/actions/Theme";
-
 function App() {
   const dispatch = useDispatch();
 
@@ -51,14 +49,6 @@ function App() {
 
   return (
     <div className={`App ${isDark ? "dark" : ""}`}>
-      {/*<button
-        className="top"
-        onClick={() => {
-          dispatch(changeTheme(!isDark));
-        }}
-      >
-        Change Theme
-      </button>*/}
       {errors && errors.length ? (
         <ul className="errors">
           {errors.map((error) => (

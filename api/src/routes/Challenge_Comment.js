@@ -2,6 +2,8 @@ const router = require("express").Router();
 const { User, ChallengeComment, Challengepost } = require("../db.js");
 const Challenge_utils = require("./Challengeutils.js");
 const database_Utils = require("./utils.js");
+const AuthControllers = require('../controllers/AuthControllers.js')
+
 
 router.get("/:username", async (req, res) => {
   try {
@@ -13,7 +15,7 @@ router.get("/:username", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", AuthControllers.isAuthenticated, async (req, res) => {
   try {
     const { code, description, username, postid } = req.body;
     const UserAssociation = await database_Utils.DB_UserID(username);
@@ -32,7 +34,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", AuthControllers.isAuthenticated, async (req, res) => {
   if (!req.body.contentData) {
     return res.status(404).send("Invalid content for editing");
   }
@@ -46,7 +48,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", AuthControllers.isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     const Comment = await Challenge_utils.DB_ChallCommentdestroy(id);

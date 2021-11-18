@@ -26,7 +26,7 @@ module.exports = (sequelize) => {
     },
     userReported: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         isAlphanumeric: {
           args: true,

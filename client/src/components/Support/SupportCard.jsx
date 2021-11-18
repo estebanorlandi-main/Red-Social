@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { deleteMessageSupport } from "../../Redux/actions/Support";
 
-import styles from "../Admin/UserCardAdmin/UserAdminStyles.css";
+import styles from "../Admin/UserCardAdmin/UserCardAdmin.module.css";
 
 import image from "../../images/userCard.svg";
 import { useDispatch } from "react-redux";
@@ -50,7 +50,7 @@ export default function SupportUserCard({
         className={styles.userContainer}
         to={`/profileAdmin/${message.userReported}`}
       >
-      <div>{message.userReported}</div>
+      <div>User reported: {message.userReported}</div>
       </NavLink>
     <button onClick={ ()=> handleDelete()}>Delete</button>
     </div>

@@ -2,6 +2,7 @@ const router = require("express").Router();
 const { User, ChallengeComment, ChallengePost } = require("../db.js");
 const Challenge_utils = require("./Challengeutils.js");
 const database_Utils = require("./utils.js");
+const AuthControllers = require('../controllers/AuthControllers.js')
 
 const paginate = (page = 0, arr) => {
   const postsPerPage = 15;
@@ -43,7 +44,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", AuthControllers.isAuthenticated, async (req, res) => {
   const { title, content, tag, likes, username } = req.body;
   try {
     let userDB = await database_Utils.DB_UserID(username);
@@ -65,7 +66,7 @@ router.post("/", async (req, res) => {
 });
 
 //Eliminacion de un Post
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", AuthControllers.isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     const deletePost = await Challenge_utils.DB_ChallPostdestroy(id);
@@ -78,7 +79,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 //Edicion de post
-router.put("/:id", async (req, res) => {
+router.put("/:id", AuthControllers.isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     const updatePost = await Challenge_utils.DB_ChallPostedit(id, req.body);

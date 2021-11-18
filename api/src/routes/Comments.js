@@ -9,6 +9,7 @@ const {
   Post_User,
 } = require("../db.js");
 const database_Utils = require("./utils.js");
+const AuthControllers = require('../controllers/AuthControllers.js')
 
 const modifiedPost = async (idPost) => {
   return await Post.findOne({
@@ -38,7 +39,7 @@ router.get("/:username", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", AuthControllers.isAuthenticated, async (req, res) => {
   try {
     const { content, username, postid } = req.body;
 
@@ -62,7 +63,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", AuthControllers.isAuthenticated, async (req, res) => {
   if (!req.body.contentData) {
     return res.status(404).send("Invalid content for editing");
   }
@@ -76,7 +77,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", AuthControllers.isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     await database_Utils.DB_Commentdestroy(id);

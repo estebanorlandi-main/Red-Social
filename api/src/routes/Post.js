@@ -10,7 +10,7 @@ const {
 } = require("./utils.js");
 const Op = Sequelize.Op;
 const router = Router();
-
+const AuthControllers = require('../controllers/AuthControllers.js')
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -196,7 +196,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", upload.single("image"), AuthControllers.isAuthenticated, async (req, res) => {
   let { title, content, tag, username, type } = req.body;
 
   let orden = req.query.orden;
@@ -230,13 +230,12 @@ router.post("/", upload.single("image"), async (req, res) => {
     let finalPosts = ordenarTags(allPosts, tags, orden);
     res.status(200).send({ ...paginate(0, finalPosts), success: true });
   } catch (e) {
-    console.log(e);
     res.status(404).send({ success: false, error: e });
   }
 });
 
 //Eliminacion de un Post
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", AuthControllers.isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     const deletePost = await DB_Postdestroy(id);
@@ -249,7 +248,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 //Edicion de post
-router.put("/:id", async (req, res) => {
+router.put("/:id", AuthControllers.isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
     console.log(req.body);
@@ -258,7 +257,6 @@ router.put("/:id", async (req, res) => {
     const post = await modifiedPost(id);
     res.status(200).send({ post, success: true });
   } catch (e) {
-    console.log(e);
     res.status(404).send({ success: false, error: "Cant apply changes" });
   }
 });
