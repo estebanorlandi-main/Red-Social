@@ -7,6 +7,7 @@ import Profile from "./Pages/Profile/Profile.jsx";
 import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import NavBar from "./components/NavBar/NavBar.js";
+import DisplayConversations from "./components/DisplayConversations/DisplayConversations";
 
 import Messenger from "./Pages/Messenger/Messenger";
 import Support from "./components/Support/Support";
@@ -35,8 +36,6 @@ import { BiMessageAltDetail } from "react-icons/bi";
 // chat v.2
 import Challenge from "./Pages/Challenge/Challenge";
 import ChallengeComment from "./Pages/ChallengeComment/ChallengeComment";
-import { changeTheme } from "./Redux/actions/Theme";
-
 function App() {
   const dispatch = useDispatch();
 
@@ -50,15 +49,6 @@ function App() {
 
   return (
     <div className={`App ${isDark ? "dark" : ""}`}>
-      <button
-        className="top"
-        onClick={() => {
-          dispatch(changeTheme(!isDark));
-        }}
-      >
-        Change Theme
-      </button>
-
       {errors && errors.length ? (
         <ul className="errors">
           {errors.map((error) => (
@@ -72,12 +62,9 @@ function App() {
       )}
 
       {!isLanding && session && (
-        <Link className="message" to="/messenger">
-          <BiMessageAltDetail
-            style={{ margin: "0", width: "1.5em", height: "1.5em" }}
-          />
-          <span>Messages</span>
-        </Link>
+        
+        <DisplayConversations />
+      
       )}
 
       <NavBar />

@@ -74,7 +74,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const history = useHistory();
   const session = useSelector((state) => state.sessionReducer || {});
   const isDark = useSelector((state) => state.themeReducer.theme);
-  const info = useSelector(state => state.usersReducer.users)
+  const info = useSelector((state) => state.usersReducer.users);
   var day = new Date();
 
   const [firstLoad, setFirstLoad] = useState(true);
@@ -108,9 +108,9 @@ function Post({ post, customClass, user, socket, admin, type }) {
 
   const [code, setCode] = useState("");
 
-  useEffect(()=>{
-    dispatch(infoAdmin(session.username))
-  },[1])
+  useEffect(() => {
+    dispatch(infoAdmin(session.username));
+  }, [1]);
 
   useEffect(() => {
     if (socket && Object.keys(socket).length) {
@@ -120,8 +120,6 @@ function Post({ post, customClass, user, socket, admin, type }) {
         }
       });
     }
-    
-
   }, [socket, post.idPost]);
 
   useEffect(() => {
@@ -177,18 +175,20 @@ function Post({ post, customClass, user, socket, admin, type }) {
     e.preventDefault();
     if (commentError) return;
     if (socket) {
-      if (day > info.dayBan === true){
-      dispatch(commentPost(post.idPost, newComment, session.username, socket));
-      socket.emit("sendNotification", {
-        senderName: session.username,
-        userImage: session.image,
-        receiverName: post.user.username,
-        type: 2,
-      });
-    }else{
-      alert("You are banned, therefore you cannot post anything");
-      setNewComment('')
-    }
+      if (day > info.dayBan === true) {
+        dispatch(
+          commentPost(post.idPost, newComment, session.username, socket)
+        );
+        socket.emit("sendNotification", {
+          senderName: session.username,
+          userImage: session.image,
+          receiverName: post.user.username,
+          type: 2,
+        });
+      } else {
+        alert("You are banned, therefore you cannot post anything");
+        setNewComment("");
+      }
     }
   };
 
@@ -337,7 +337,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
             </button>
           </div>
         </div>
-      ) : (
+      ) : session.username ? (
         <div className={`${styles.show} ${styles.optionsMenu}`}>
           <button onClick={handleOptions} className={styles.optionsHandler}>
             <BiDotsVerticalRounded
@@ -355,6 +355,8 @@ function Post({ post, customClass, user, socket, admin, type }) {
             Report
           </button>
         </div>
+      ) : (
+        <></>
       )}
 
       <Tags
@@ -444,7 +446,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
           ) : (
             <MdFavoriteBorder className={styles.icons} />
           )}
-          {post.userLikes.length}
+          {currentPost ? currentPost.userLikes.length : post.userLikes.length}
         </button>
 
         <button>

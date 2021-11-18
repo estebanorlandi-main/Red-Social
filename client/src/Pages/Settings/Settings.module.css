@@ -94,3 +94,11 @@
     opacity: 1;
   }
 }
+
+.dark .left,
+.dark .right {
+  background-color: #333;
+}
+.dark * {
+  color: #fff;
+}
