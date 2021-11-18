@@ -36,6 +36,7 @@
     border-color: var(--c-blue);
     width: 100%;
     text-align: center;
+    padding-bottom: 0.2em;
 }
 .dots {
   margin: 1em 0;
