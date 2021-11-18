@@ -32,7 +32,6 @@ export function singUp(user) {
         withCredentials: true,
       })
       .then((res) => {
-        console.log("hola")
         return dispatch({ type: SIGN_UP, payload: res });
       })
       .catch((err) => {console.log(err); return dispatch({ type: ERROR, payload: err })});

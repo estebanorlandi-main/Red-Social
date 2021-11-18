@@ -47,7 +47,7 @@ function SupportCardMessage({ message,customClass }) {
   
   
   return (
-    <div className={styles.container  + ` ${customClass}`}>
+    <div >
         {message? message.map(e => {
           return(
             <SupportUserCard
@@ -58,8 +58,6 @@ function SupportCardMessage({ message,customClass }) {
           />
           )
         })
-          
-
         :""}
         
     </div>

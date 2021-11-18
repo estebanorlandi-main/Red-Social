@@ -1,6 +1,10 @@
 import style from "./NewPost.module.css";
 import { useEffect, useState } from "react";
-import { commentPost, createPost, updatePage } from "../../Redux/actions/Post.js";
+import {
+  commentPost,
+  createPost,
+  updatePage,
+} from "../../Redux/actions/Post.js";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import validate from "../../utils/validate";
@@ -8,17 +12,16 @@ import ImageUpload from "../ImageUpload/ImageUpload";
 import Tags from "../Tags/Tags";
 import { infoAdmin } from "../../Redux/actions/Admin";
 
-
 export default function NewPost({ orden, tags }) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
+  const info = useSelector((state) => state.usersReducer.users);
   const profile = useSelector((state) => state.usersReducer.profile);
-  const info = useSelector(state => state.usersReducer.users)
   var day = new Date();
 
-  useEffect(()=>{
-    dispatch(infoAdmin(session.username))
-  },[dispatch])
+  useEffect(() => {
+    dispatch(infoAdmin(session.username));
+  }, [dispatch]);
 
   const [data, setData] = useState({
     title: "",
@@ -76,7 +79,7 @@ export default function NewPost({ orden, tags }) {
 
     if (!Object.values(errores).filter((error) => error).length) {
       const formData = new FormData();
-      if (day > info.dayBan === true) {
+      if (!info.dayBan) {
         formData.append("title", data.title);
         formData.append("content", data.content);
         formData.append("image", data.image);
@@ -91,7 +94,7 @@ export default function NewPost({ orden, tags }) {
         }
         let errores = await dispatch(createPost(formData, orden, tags, seguidos));
         if (errores.type === "ERROR") {
-          alert(errores.payload.response.data.error.errors[0].message);
+          alert("se ha producido un error");
         } else {
           setData({
             title: "",
@@ -152,21 +155,15 @@ export default function NewPost({ orden, tags }) {
           editTags={data.tag}
         />
 
-        {/*<Select
-          onChange={handleSelect}
-          options={options}
-          menuPlacement="top"
-          placeholder="Tags"
-          value={data.tag.map((t)=>({label:t, value:t}))}
-          isMulti
-        />*/}
+        <span className={style.error}></span>
+      </label>
+      <label className={style.wrapper}>
         <Select onChange={handleSelectType} options={type} />
-
         <span className={style.error}></span>
       </label>
 
       <button className={style.submit} type="submit">
-        Crear
+        Create
       </button>
     </form>
   );
