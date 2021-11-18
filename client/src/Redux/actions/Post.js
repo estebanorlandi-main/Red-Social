@@ -34,10 +34,10 @@ export const COMMENT_DELETE = "comment_delete"
 
 // comentario devuelve el comentario creado
 
-export function createPost(data, orden, tags) {
+export function createPost(data, orden, tags, seguidos) {
   return (dispatch) =>
     axios
-      .post(`http://localhost:3001/post/?orden=${orden}&tags=${tags}`, data, { withCredentials: true })
+      .post(`http://localhost:3001/post/?orden=${orden}&tags=${tags}&seguido=${seguidos}`, data, { withCredentials: true })
       .then((res) => dispatch({ type: POST_CREATE, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 
@@ -85,11 +85,11 @@ export function commentPost(postid, content, username, socket) {
   //return { type: POST_COMMENT, payload: { idPost, text, user } };
 }
 
-export function getPosts(page, tag, orden) {
+export function getPosts(page, tag, orden, seguidos) {
   return (dispatch) =>
     axios
-      .get(`http://localhost:3001/post?page=${page}&tag=${tag}&orden=${orden}`)
-      .then((res) => dispatch({ type: GET_POSTS, payload: res.data }))
+      .get(`http://localhost:3001/post?page=${page}&tag=${tag}&orden=${orden}&seguido=${seguidos}`)
+      .then((res) => {dispatch({ type: GET_POSTS, payload: res.data })})
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }
 
@@ -124,7 +124,7 @@ export function likePost(data, socket) {
         if(socket){
           socket.emit("reloadPostInfo", res.data);
         }
-        
+
 
         dispatch({
           type: POST_LIKE,
@@ -137,7 +137,7 @@ export function getTags(){
   return (dispatch) =>
     axios
       .get("http://localhost:3001/tags", { withCredentials: true })
-      .then((res) => {console.log(res.data);
+      .then((res) => {
         dispatch({
           type: SET_TAGS,
           payload: res.data,

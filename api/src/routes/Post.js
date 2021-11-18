@@ -56,12 +56,12 @@ const paginate = (page = 0, arr) => {
     totalPages,
   };
 };
-
-function ordenarTags(todos, tags, orden) {
+function ordenarTags(todos, tags, orden, seguidos) {
   let arr;
-  let conTags = [];
-
-  let sinTags = [];
+  let conTagsSeguidos = [];
+  let sinTagsSeguidos = [];
+  let conTagsNoSeguidos = [];
+  let sinTagsNoSeguidos = [];
   arr = todos.map((post, i, arr) => {
     let cant = tags?.filter((tag) => {
 
@@ -70,43 +70,53 @@ function ordenarTags(todos, tags, orden) {
       }
 
     });
+    let sigue;
+    if (seguidos.includes(post.user.username)) {
+      sigue = true
+    }else {
+      sigue = false
+    }
     let c = 0;
     if (cant?.length !== 0) {
       while (c < tags?.length) {
         if (cant?.length === tags?.length - c) {
-
-          while (!conTags[c]) {
-            conTags.push([]);
+          if (sigue) {
+            while (!conTagsSeguidos[c]) {
+              conTagsSeguidos.push([]);
+            }
+            conTagsSeguidos[c] = [...conTagsSeguidos[c], post];
+          }else{
+            while (!conTagsNoSeguidos[c]) {
+              conTagsNoSeguidos.push([]);
+            }
+            conTagsNoSeguidos[c] = [...conTagsNoSeguidos[c], post];
           }
-          conTags[c] = [...conTags[c], post];
         }
         c++;
       }
     } else {
-      sinTags.push(post);
+      if (sigue) {
+        sinTagsSeguidos.push(post);
+      }else {
+        sinTagsNoSeguidos.push(post);
+      }
     }
   });
   let ordenadosPorTags = [];
+
+  let conTags = [...conTagsSeguidos, ...conTagsNoSeguidos]
   for (let arr of conTags) {
-    if (orden === "cronologico") {
-      ordenadosPorTags = [...ordenadosPorTags, ...arr];
-    } else {
       ordenadosPorTags = [...ordenadosPorTags, ...ordenar(orden, arr)];
     }
-  }
-  let ordenadosSinTags;
-  if (orden === "cronologico") {
-    ordenadosSinTags = sinTags;
-  } else {
-    ordenadosSinTags = ordenar(orden, sinTags);
-  }
+
+
+  let ordenadosSinTags = [...ordenar(orden, sinTagsSeguidos), ...ordenar(orden, sinTagsNoSeguidos)];
+
   return [...ordenadosPorTags, ...ordenadosSinTags];
 }
 
 
 function ordenamiento(arr, orden) {
-  console.log(arr, orden);
-
   return arr.sort(function (a, b) {
     if (a[orden]?.length < b[orden]?.length) {
       return 1;
@@ -135,7 +145,8 @@ const ordenar = (how, arr) => {
       }
       return 0;
     });
-  } else {
+  } else if(how === "cronologico"){
+    return arr}else{
     return ordenamiento(arr, how);
   }
 };
@@ -143,13 +154,12 @@ const ordenar = (how, arr) => {
 router.get("/", async (req, res) => {
   // const posts = await Post.findAll({order: [['createdAt', 'DESC']]})
   // return res.send(posts)
-
-  const { tag, page, orden } = req.query;
-
+  const { tag, page, orden, seguido } = req.query;
+  // console.log(req.query)
   const tags = tag?.split(",")
-
+  const seguidos = seguido.split(",")
   const allPosts = await DB_Postsearch({});
-  let finalPosts = ordenarTags(allPosts, tags, orden);
+  let finalPosts = ordenarTags(allPosts, tags, orden, seguidos);
   // let postCategoria = allPosts.filter((e) =>
   //   e.tag
   //     .map((postTag) => postTag && postTag.toLowerCase())
@@ -201,6 +211,7 @@ router.post("/", upload.single("image"), AuthControllers.isAuthenticated, async 
 
   let orden = req.query.orden;
   let tags = req.query.tags?.split(",");
+  let seguidos = req.query.seguido.split(",")
 
 
   try {
@@ -227,7 +238,7 @@ router.post("/", upload.single("image"), AuthControllers.isAuthenticated, async 
     await userDB.addPost(createPost);
 
     const allPosts = await DB_Postsearch({});
-    let finalPosts = ordenarTags(allPosts, tags, orden);
+    let finalPosts = ordenarTags(allPosts, tags, orden, seguidos);
     res.status(200).send({ ...paginate(0, finalPosts), success: true });
   } catch (e) {
     console.log(e);

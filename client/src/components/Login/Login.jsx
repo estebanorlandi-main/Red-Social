@@ -20,11 +20,12 @@ export default function Login() {
   const [errors, setErrors] = useState({
     username: "",
     password: "",
+    general: "",
   });
 
   function handleChange({ target: { name, value } }) {
     setInput({ ...input, [name]: value.replaceAll(/^\s+/g, "") });
-    setErrors({ ...errors, [name]: validate(name, value) });
+    setErrors({ ...errors, [name]: validate(name, value), general:"" });
   }
 
   async function handleSubmit(e) {
@@ -32,8 +33,9 @@ export default function Login() {
 
     if (!Object.values(errors).filter((error) => error).length) {
       let errores = await dispatch(logIn(input));
+      console.log(errores)
       if (errores.type === "ERROR") {
-        alert("Usuario o Contrasena invalidos")
+        setErrors({ ...errors, general:"Invalid Username or Password" })
       }else{
         setInput({
           username: "",
@@ -42,6 +44,7 @@ export default function Login() {
         setErrors({
           username: "",
           password: "",
+          general: "",
         });
       }
     }
@@ -87,6 +90,7 @@ export default function Login() {
           </div>
         </label>
         <span>{errors.password}</span>
+        <span style={{marginTop:"0.5em"}}>{errors.general}</span>
         <Link className="btn simple" to="/accounts/password/reset/">
           forgot password?
         </Link>

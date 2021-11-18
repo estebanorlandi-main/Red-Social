@@ -6,9 +6,14 @@ import Select from "react-select";
 import validate from "../../utils/validate";
 import ImageUpload from "../ImageUpload/ImageUpload";
 import Tags from "../Tags/Tags";
+
+
 export default function NewPost({ orden, tags }) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
+  const profile = useSelector((state) => state.usersReducer.profile);
+
+  console.log(profile)
   const [data, setData] = useState({
     title: "",
     content: "",
@@ -72,8 +77,13 @@ export default function NewPost({ orden, tags }) {
         formData.append("tag", data.tag);
         formData.append("username", data.username);
         formData.append("type", data.type);
-
-        let errores = await dispatch(createPost(formData, orden, tags));
+        let seguidos;
+        if (profile.following) {
+          seguidos = profile.following.map((user)=>user.username)
+        }else {
+          seguidos = []
+        }
+        let errores = await dispatch(createPost(formData, orden, tags, seguidos));
         if (errores.type === "ERROR") {
           alert(errores.payload.response.data.error.errors[0].message);
         } else {
