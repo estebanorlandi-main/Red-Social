@@ -16,6 +16,7 @@ export default function NewPost({ orden, tags }) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
   const info = useSelector((state) => state.usersReducer.users);
+  const profile = useSelector((state) => state.usersReducer.profile);
   var day = new Date();
 
   useEffect(() => {
@@ -85,8 +86,13 @@ export default function NewPost({ orden, tags }) {
         formData.append("tag", data.tag);
         formData.append("username", data.username);
         formData.append("type", data.type);
-
-        let errores = await dispatch(createPost(formData, orden, tags));
+        let seguidos;
+        if (profile.following) {
+          seguidos = profile.following.map((user)=>user.username)
+        }else {
+          seguidos = []
+        }
+        let errores = await dispatch(createPost(formData, orden, tags, seguidos));
         if (errores.type === "ERROR") {
           alert("se ha producido un error");
         } else {

@@ -1,7 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { socketConnection } from "../../Redux/actions/Users";
-import { getPosts, updatePage, getTags, loadTags } from "../../Redux/actions/Post";
+import { getUser, socketConnection } from "../../Redux/actions/Users";
+import {
+  getPosts,
+  updatePage,
+  getTags,
+  loadTags,
+} from "../../Redux/actions/Post";
 import { Link } from "react-router-dom";
 
 import axios from "axios";
@@ -19,14 +24,14 @@ function Home(props) {
   const posts = useSelector((state) => state.postsReducer.posts);
   const allTags = useSelector((state) => state.postsReducer.tags);
   const session = useSelector((state) => state.sessionReducer);
+  const profile = useSelector((state) => state.usersReducer.profile);
 
   const socket = useSelector((state) => state.usersReducer.socket);
-
   const [page, totalPages] = useSelector(
     ({ postsReducer: { page, totalPages } }) => [page, totalPages]
   );
   const dispatch = useDispatch();
-  const [orden, setOrden] = useState("cronologico");
+  const [orden, setOrden] = useState("combinados");
   const [createPost, setCreatePost] = useState(false);
   const [newPosts, setNewPosts] = useState(true);
   const [conversations, setConversations] = useState([]);
@@ -55,19 +60,31 @@ function Home(props) {
       dispatch(updatePage(page + 1 < totalPages ? page + 1 : page));
   }, [dispatch, page, totalPages]);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (page === -1) {
       window.scroll(0, 0);
       dispatch(updatePage(0));
       return;
     }
-    dispatch(getPosts(page, tags, orden));
+    let seguidos
+    if (session.username) {
+
+      seguidos = await dispatch(getUser(session.username))
+      if(seguidos.type === "ERROR"){
+        seguidos = []
+      }else{
+        seguidos = seguidos.payload.data.following.map((user)=>user.username)
+      }
+    }else {
+      seguidos = []
+    }
+    dispatch(getPosts(page, tags, orden, seguidos));
   }, [dispatch, page, first, totalPages, orden]);
 
   useEffect(async () => {
     if (allTags.length === 0) {
       await dispatch(loadTags());
-      await dispatch(getTags())
+      await dispatch(getTags());
       setFirst(false);
     }
     setTagsOptions(
@@ -83,7 +100,6 @@ function Home(props) {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [handleScroll]);
-
   /*
   const handleSelect = (e) => {
     setOrden(e.value);
@@ -120,7 +136,8 @@ function Home(props) {
   const handleCharge = (e) => {
     window.scrollTo(0, 0);
     dispatch(updatePage(0));
-    dispatch(getPosts(page, tags, orden));
+    console.log(orden, tags, profile)
+    dispatch(getPosts(page, tags, orden, profile.following));
     setNewPosts(false);
   };
 
@@ -159,7 +176,7 @@ function Home(props) {
               e.target.id === "close" ? setCreatePost((old) => false) : ""
             }
           >
-            <NewPost orden={orden} tags={tags}/>
+            <NewPost orden={orden} tags={tags} />
           </div>
         ) : (
           ""
@@ -180,20 +197,22 @@ function Home(props) {
         </div>
 
         <ul>
-          {posts ? posts.map((post, i) => (
-            <li key={i}>
-              <Post post={post} socket={socket} />
-            </li>
-          )) : "No hay ningun post"}
+          {posts
+            ? posts.map((post, i) => (
+                <li key={i}>
+                  <Post post={post} socket={socket} />
+                </li>
+              ))
+            : "No hay ningun post"}
         </ul>
 
         {page < totalPages - 1 && <Loader />}
       </section>
 
       <section className={styles.right}>
-        {conversations?.length ? (
-          <div>
-            <h3>Friends</h3>
+        <div>
+          <h3>Friends</h3>
+          {conversations?.length ? (
             <ul>
               {conversations.map(({ members }, i) => (
                 <li key={i}>
@@ -203,10 +222,10 @@ function Home(props) {
                 </li>
               ))}
             </ul>
-          </div>
-        ) : (
-          ""
-        )}
+          ) : (
+            ""
+          )}
+        </div>
       </section>
     </div>
   );

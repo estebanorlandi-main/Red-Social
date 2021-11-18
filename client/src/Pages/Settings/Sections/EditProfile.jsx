@@ -22,6 +22,14 @@ function EditProfile(props) {
     image: session.image || null,
   });
   const [file, setFile] = useState(inputs.image);
+
+  const [errors, setErrors] = useState({
+    about: "",
+    gitaccount: "",
+    lastname: "",
+    name:","
+  });
+
   const [submit, setSubmit] = useState(false);
   useEffect(async () => {
     if (allTags.length === 0) {
@@ -45,11 +53,15 @@ function EditProfile(props) {
   };
 
   const handleTags = (options) => {
+    if (options.length === 0) {
+      setInputs((old) => ({ ...old, tags: [] }))
+    }
     setInputs((old) => ({ ...old, tags: options.map((tag) => tag.value) }));
   };
 
   const handleChange = ({ target: { name, value }}) => {
     setInputs((old) => ({ ...old, [name]: value }));
+    setErrors((old) => ({...old, [name]: ""}))
   };
 
   const handleSubmit = async (e) => {
@@ -64,11 +76,10 @@ function EditProfile(props) {
 
     let errores = await dispatch(updateUser(session.username, formData));
     if (errores.type === "ERROR") {
-      alert(
-        errores.payload.response.data[
-          Object.keys(errores.payload.response.data)[0]
-        ]
-      );
+      let err = Object.keys(errores.payload.response.data);
+      for (var i = 0; i < err.length; i++) {
+        setErrors((old)=>({...old, [err[i]]:errores.payload.response.data[err[i]]}))
+      }
     } else {
       setSubmit(true);
     }
@@ -93,6 +104,7 @@ function EditProfile(props) {
               value={inputs.name}
             />
           </div>
+          <span style={{fontSize:"0.8em"}}>{errors.name}</span>
         </label>
 
         <label>
@@ -105,7 +117,9 @@ function EditProfile(props) {
               value={inputs.lastname}
             />
           </div>
+          <span style={{fontSize:"0.8em"}}>{errors.lastname}</span>
         </label>
+
       </div>
 
       <label>
@@ -119,7 +133,7 @@ function EditProfile(props) {
           />
         </div>
       </label>
-
+      <span style={{fontSize:"0.8em"}}>{errors.gitaccount}</span>
       <label>
         About
         <div className="input-group">
@@ -131,7 +145,7 @@ function EditProfile(props) {
           />
         </div>
       </label>
-
+      <span style={{fontSize:"0.8em"}}>{errors.about}</span>
       <label>
         Tags
         <Tags
