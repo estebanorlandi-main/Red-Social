@@ -489,25 +489,13 @@ function Post({ post, customClass, user, socket, admin, type }) {
         </div>
       ) : (
         <div className={styles.newChallengeContainer}>
-          {/* <button className={styles.button} onClick={submitCode}>
-            Submit
-          </button>
-          <button
-            onClick={() =>
-              axios
-                .get("http://localhost:3001/challenge/post")
-                .then((res) => console.log(res))
-            }
-          >
-            AXIOS
-          </button> */}
           {/* Pop Up */}
           <a className={styles.toButton} href="#popup">
             <FaPlay style={{ color: "white" }} />
           </a>
           <div id="popup" class="overlay">
             <div id="popupBody">
-              <h2>Create a function that adds two numbers in JavaScript</h2>
+              <h2>{post.content}</h2>
               <CodeMirror
                 className={styles.CodeMirror}
                 options={{
@@ -547,33 +535,6 @@ function Post({ post, customClass, user, socket, admin, type }) {
               </div>
             </div>
           </div>
-          {/* <div className={styles.inline}>
-            <span className={styles.maxLength}>{newComment.length} / 1000</span>
-            <span>{commentError}</span>
-          </div>
-          <form className={styles.newComment} onSubmit={submitComment}>
-            <label className={commentError ? "error" : ""}>
-              <div className="input-group">
-                <input
-                  onChange={handleComment}
-                  name="comment"
-                  type="text"
-                  value={newComment}
-                  placeholder="New comment..."
-                />
-              </div>
-            </label>
-            {newComment.length && !commentError ? (
-              <button type="submit">
-                <MdSend
-                  className={styles.icons}
-                  style={{ margin: "0", color: "#fff" }}
-                />
-              </button>
-            ) : (
-              <></>
-            )}
-          </form> */}
         </div>
       )}
 
