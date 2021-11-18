@@ -1,6 +1,6 @@
 .home {
   display: grid;
-  grid-template-columns: auto 45vw auto;
+  grid-template-columns: auto auto auto;
   gap: 8rem;
   margin: 0 auto;
   width: 100vw;
@@ -13,12 +13,14 @@
 
 .right,
 .left {
+  min-width: 320px;
   padding: 1rem;
   background-color: var(--c-lightPost);
 }
 
 .center {
   margin: 0 auto 2rem auto;
+  width: 50rem;
   max-width: 30rem;
   min-width: 10rem;
 }
@@ -88,20 +90,21 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 0 1em;
+  padding: 0 1rem;
   text-align: left;
   gap: 0.5em;
   border-radius: 5em;
   background-color: transparent;
   border: none;
-  outline: 2px solid #aaa;
-  font-size: 1rem--c-lightPost;
+  outline: 2px solid #aaa !important;
+  font-size: 1rem;
   color: #888;
-  height: 2rem;
+  height: 2.5rem;
+  min-width: 320px;
 }
 
 .createPost:hover {
-  outline: 2px solid var(--c-blue);
+  outline: 2px solid var(--c-blue) !important;
   color: var(--c-blue);
 }
 
@@ -109,13 +112,13 @@
   position: sticky;
   top: 5rem;
   left: 50%;
-  width: 50%;
-  z-index: 7;
   transform: translateX(-50%);
+  width: max-content;
+  z-index: 7;
   display: flex;
   align-items: center;
   border: none;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   color: #fff;
   font-size: 0.9rem;
   font-weight: bold;
