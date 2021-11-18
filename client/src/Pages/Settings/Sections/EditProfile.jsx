@@ -91,7 +91,7 @@ function EditProfile(props) {
     <form onSubmit={handleSubmit} className={styles.form}>
       <h3>User</h3>
 
-      <ImageUpload onChange={handleImagechange} imagedata={file || session.image} />
+      <ImageUpload onChange={handleImagechange} imagedata={file || session.image} component='EditProfile'/>
 
       <div className={styles.inline}>
         <label>
