@@ -196,12 +196,13 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", upload.single("image"), AuthControllers.isAuthenticated, async (req, res) => {
+
+// post
+router.post("/", AuthControllers.isAuthenticated, async (req, res) => {
   let { title, content, tag, username, type } = req.body;
 
   let orden = req.query.orden;
   let tags = req.query.tags?.split(",");
-
 
   try {
     let userDB = await DB_UserID(username);
@@ -209,10 +210,10 @@ router.post("/", upload.single("image"), AuthControllers.isAuthenticated, async 
     if (typeof tag === "string" && tag.length) tag = tag.split(",");
 
     let image = {};
-    if (req.file) {
-      image["imageType"] = req.file.mimetype;
-      image["imageName"] = req.file.originalname;
-      image["imageData"] = req.file.buffer;
+    if (req.files) {
+      image["imageType"] = req.files.image.mimetype;
+      image["imageName"] = req.files.image.name;
+      image["imageData"] = req.files.image.data;
     }
 
     let createPost = await Post.create({
