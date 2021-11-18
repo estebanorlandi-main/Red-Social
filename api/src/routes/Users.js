@@ -9,17 +9,19 @@ const AuthControllers = require('../controllers/AuthControllers.js');
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-const fs = require('fs');
-const ruta = path.resolve('./public/images')
+
 
 const sanitizeUser = (data) => {
   if (Array.isArray(data)) {
     return data.map((user) => ({
+
       username: user.username,
       name: user.name,
       lastname: user.lastname,
       gitaccount: user.gitaccount,
-      image: user.image,
+      image: {"imageType":user.imageType,
+              "imageName":user.imageName,
+              "imageData":user.imageData ? user.imageData.toString("base64") : null},
       email: user.email,
       about: user.about,
       tags: user.tags,
@@ -31,13 +33,18 @@ const sanitizeUser = (data) => {
       friends:user.Friends
     }));
   }
-
+  let Laimagenen4 = ""
+  if(data.imageData){
+    Laimagenen4 = data.imageData.toString("base64")
+  }
   return {
     username: data.username,
     name: data.name,
     lastname: data.lastname,
     gitaccount: data.gitaccount,
-    image: data.image,
+    image: {"imageType":data.imageType,
+              "imageName":data.imageName,
+              "imageData":Laimagenen4},
     email: data.email,
     about: data.about,
     tags: data.tags,
@@ -152,15 +159,16 @@ router.post("/register", async (req, res, next) => {
 router.put("/:id", upload.single("image"), AuthControllers.isAuthenticated, async (req, res, next) => {
 
   try {
-    
     const {name, lastname, gitaccount, about, tags} = req.body
     const username = req.params.id
-    const file = req.files.image
-    file.name = `${username}.${file.name.substr(file.name.length - 3)}`
-    await file.mv(`${ruta}/${file.name}`).catch((e)=>{console.log(e)})
+    let image = {};
+    if (req.file) {
+      image["imageType"] = req.file.mimetype;
+      image["imageName"] = req.file.originalname;
+      image["imageData"] = req.file.buffer;
+    }
 
-    const imagepath = `${ruta}/${username}.${file.name.substr(file.name.length - 3)}`
-    req.body.image = imagepath
+
     if (req.body.password) {
       let errors = await fn.DB_validatePassword(req.body.password);
       if (errors.password) return res.send(errors).status(400);
@@ -174,16 +182,16 @@ router.put("/:id", upload.single("image"), AuthControllers.isAuthenticated, asyn
       include: [db.Post],
     });
 
-    let validate = await fn.DB_updateUser(req.body, UserID.id, imagepath );
-
+    let validate = await fn.DB_updateUser(req.body, UserID.id, image);
     if (Object.keys(validate).length) return res.status(400).send(validate);
 
     let userUpdated = await fn.DB_findUserParams(req.params.id);
 
     userUpdated = sanitizeUser(userUpdated);
-
+    res.sendFile
     return res.send({ user: userUpdated, success: true });
   } catch (e) {
+    console.log(e)
     res.status(403).send({ errors: e, success: false });
   }
 });

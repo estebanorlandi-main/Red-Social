@@ -12,9 +12,8 @@ const server = express();
 
 server.name = "API";
 
-server.use(express.json({ limit: "50mb" }));
+server.use(express.json({ limit: "500mb" }));
 server.use(cookieParser());
-server.use(fileupload());
 server.use(morgan("dev"));
 
 // nuevo y mejorado cors
