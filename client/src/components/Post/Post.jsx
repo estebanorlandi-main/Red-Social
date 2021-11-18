@@ -47,6 +47,9 @@ import "codemirror/keymap/sublime";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 
+// PopUp
+import "./Popup.css";
+
 const parseContent = (text) => {
   const mentions = text && text.match(/@\w+/gi);
 
@@ -490,8 +493,10 @@ function Post({ post, customClass, user, socket, admin, type }) {
       ) : (
         <div className={styles.newChallengeContainer}>
           {/* Pop Up */}
-          <a className={styles.toButton} href="#popup">
-            <FaPlay style={{ color: "white" }} />
+          <a href="#popup">
+            <button class="start" type="submit">
+              START
+            </button>
           </a>
           <div id="popup" class="overlay">
             <div id="popupBody">
@@ -519,19 +524,28 @@ function Post({ post, customClass, user, socket, admin, type }) {
                 {errorTest ? (
                   <img
                     className={styles.icon}
+                    style={{ float: "left" }}
                     src="https://img.icons8.com/color/48/000000/fail.png"
                   />
                 ) : (
                   <img
                     className={styles.icon}
+                    style={{ float: "left" }}
                     src="https://img.icons8.com/color/48/000000/pass.png"
                   />
                 )}
 
-                <h2>{result}</h2>
+                <button class="child" type="submit" onClick={submitComment}>
+                  <MdSend
+                    className={styles.icons}
+                    style={{ margin: "0", color: "#fff" }}
+                  />
+                </button>
+                <button class="test" type="submit" onClick={testing}>
+                  Test
+                </button>
 
-                <button onClick={submitComment}>Submitt</button>
-                <button onClick={testing}>Test</button>
+                <h2 class="result">Result: {result}</h2>
               </div>
             </div>
           </div>
