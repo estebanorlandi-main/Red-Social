@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { createSupport } from "../../Redux/actions/Support";
-import style from "./Support.css";
-
+import style from "./Support.module.css";
+import { BiSupport } from "react-icons/bi";
 
 export default function Support() {
   const dispatch = useDispatch();
@@ -34,27 +34,44 @@ export default function Support() {
   return (
     <div>
       <form className={style.container}>
-        Support
-        <label>Tile</label>
-        <input
-          onChange={(e) => handleChange(e)}
-          className={style.input}
-          value={inputs.title}
-          name="title"
-          type="text"
-        />
+
+        <h2><BiSupport/> Support</h2>
+        <section>
+          
+        </section>
+        <label className={style.wrapper}>
+          Title
+          <div className="input-group">
+            <input
+              onChange={(e) => handleChange(e)}
+              className={style.input}
+              value={inputs.title}
+              name="title"
+              type="text"
+              placeholder="Title..."
+            />                
+          </div>    
+        </label>
+
         {/* <div className={style.errores}>{err.username}</div> */}
-        <label>Content</label>
-        <textarea
-          onChange={(e) => handleChange(e)}
-          className={style.input}
-          value={inputs.content}
-          name="content"
-          type="text"
-          cols="20"
-          rows="5"
-        ></textarea>
-        <input type="submit" onClick={(e) => handleSubmit(e)} />
+        <label className={style.wrapper}>
+          Content
+          <div className="input-group">
+            <textarea
+              onChange={(e) => handleChange(e)}
+              className={style.input}
+              value={inputs.content}
+              name="content"
+              type="text"
+              cols="25"
+              rows="4"
+              placeholder="Content..."
+            ></textarea>               
+          </div>      
+        </label>
+        <button className={style.submit} type="submit">
+          Submit
+        </button>
       </form>
     </div>
   );
