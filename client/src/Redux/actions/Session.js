@@ -1,6 +1,8 @@
 import axios from "axios";
 import { ERROR } from "./Errors";
 
+const URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+
 export const LOG_IN = "LOG_IN";
 export const LOG_OUT = "LOG_OUT";
 export const SIGN_UP = "SIGN_UP";
@@ -34,7 +36,10 @@ export function singUp(user) {
       .then((res) => {
         return dispatch({ type: SIGN_UP, payload: res });
       })
-      .catch((err) => {console.log(err); return dispatch({ type: ERROR, payload: err })});
+      .catch((err) => {
+        console.log(err);
+        return dispatch({ type: ERROR, payload: err });
+      });
 }
 
 export function logIn(user) {
@@ -79,7 +84,6 @@ export function validateUsername(username) {
       .catch((e) => console.log(e));
 }
 
-
 /*export function updatePassword(password, query) {
   return (dispatch) =>
     axios
@@ -92,7 +96,6 @@ export function validateUsername(username) {
 
 export function validateAccount(data) {
   return (dispatch) =>
-
     axios
       .put(`http://localhost:3001/user/validate/account`, data)
       .then((res) => dispatch({ type: NEW_REGISTER, payload: res }));
