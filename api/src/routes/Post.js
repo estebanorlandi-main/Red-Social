@@ -230,7 +230,6 @@ router.post("/", upload.single("image"), AuthControllers.isAuthenticated, async 
     let finalPosts = ordenarTags(allPosts, tags, orden);
     res.status(200).send({ ...paginate(0, finalPosts), success: true });
   } catch (e) {
-    console.log(e);
     res.status(404).send({ success: false, error: e });
   }
 });
@@ -258,7 +257,6 @@ router.put("/:id", AuthControllers.isAuthenticated, async (req, res) => {
     const post = await modifiedPost(id);
     res.status(200).send({ post, success: true });
   } catch (e) {
-    console.log(e);
     res.status(404).send({ success: false, error: "Cant apply changes" });
   }
 });

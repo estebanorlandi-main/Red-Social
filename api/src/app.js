@@ -1,4 +1,5 @@
 const express = require("express");
+const fileupload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -13,6 +14,7 @@ server.name = "API";
 
 server.use(express.json({ limit: "50mb" }));
 server.use(cookieParser());
+server.use(fileupload());
 server.use(morgan("dev"));
 
 // nuevo y mejorado cors

@@ -4,8 +4,8 @@ import { AiFillCloseCircle } from "react-icons/ai";
 
 import styles from "./ImageUpload.module.css";
 
-export default function ImageUpload({ onChange }) {
-  const [data, setData] = useState(null);
+export default function ImageUpload({ onChange, imagedata }) {
+  const [data, setData] = useState(imagedata);
 
   const handleChange = (e) => {
     setData(e.target.files[0]);
