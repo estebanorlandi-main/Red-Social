@@ -26,7 +26,16 @@ io.on("connection", (socket) => {
   //take userId and socketId from user
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
+    
     io.emit("getUsers", users);
+  });
+
+  //get online users
+  socket.on("onlineUsers", (userId) => {
+    console.log(userId)
+    // console.log(users)
+
+    io.emit("getOnlineUsers", users);
   });
 
   //send and get message

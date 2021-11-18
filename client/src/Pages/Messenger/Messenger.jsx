@@ -3,8 +3,9 @@ import Message from "../../components/Message/Message.jsx";
 import ChatOnline from "../../components/ChatOnline/ChatOnline.jsx";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { socketConnection } from "../../Redux/actions/Users";
+import { socketConnection, getUser, removeProfile } from "../../Redux/actions/Users";
 import { setUntrackMessages } from "../../Redux/actions/Message.js";
+import avatar from "../../images/userCard.svg";
 
 import axios from "axios";
 
@@ -13,6 +14,8 @@ import styles from "./Messenger.module.css";
 export default function Messenger() {
   const user = useSelector((store) => store.sessionReducer);
   const socket = useSelector((state) => state.usersReducer.socket);
+  const profile = useSelector((state) => state.usersReducer.profile);
+  // console.log(profile)
 
   const dispatch = useDispatch();
 
@@ -23,17 +26,40 @@ export default function Messenger() {
   const [untrackMessages, setUntrackMessages] = useState({})
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [onlineUsers] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [receiver, setReceiver] = useState(null);
   const scrollRef = useRef();
 
   // console.log(currentChat)
   // console.log(untrackMessages)
+  // console.log(onlineUsers)
+
+  useEffect(() => {
+    dispatch(getUser(user?.username));
+    return () => dispatch(removeProfile());
+  }, [dispatch, user.username]);
 
   useEffect(() => {
     if (!Object.keys(socket).length) {
       dispatch(socketConnection(user.username));
     }
   }, [dispatch, socket, user.username]);
+
+  useEffect(() => {
+    const friendId = currentChat?.members.find(
+      (m) => m !== user.username
+    );
+
+    const getUser = async () => {
+      try {
+        const res = await axios(`http://localhost:3001/user/${friendId}`);
+        setReceiver(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUser();
+  }, [user, currentChat]);
 
   useEffect(() => {
     if (Object.keys(socket).length) {
@@ -50,37 +76,18 @@ export default function Messenger() {
     }
   }, [socket]);
 
-  useEffect(() => {
-    if(Object.keys(socket).length){
-      socket.on("getUntrackMessage", (data) => {
+  // useEffect(() => {
+  //   if(Object.keys(socket).length){
+  //     socket.on("getUntrackMessage", (data) => {
 
-        console.log(data.untrack)
-        console.log(data.conversationId)
+  //       console.log(data.untrack)
+  //       console.log(data.conversationId)
 
-        // dispatch(setUntrackMessages(data));
+  //       // dispatch(setUntrackMessages(data));
         
-        // const index =  untrackMessages?.findIndex((obj) =>
-        // obj.conversationId === data.conversationId
-        // )
-
-        // if(index && index !== -1){
-        //   let aux = untrackMessages
-        //   aux[index] = data
-
-        //   setUntrackMessages(aux);
-
-        // } else{
-        //   setUntrackMessages((prev) => [
-        //     ...prev,
-        //     {
-        //       conversationId: data.conversationId, 
-        //       untrack: data.untrack
-        //     }
-        //   ])
-        // }
-      });
-    } 
-  }, []);
+  //     });
+  //   } 
+  // }, []);
 
   useEffect(() => {
     arrivalMessage &&
@@ -90,15 +97,19 @@ export default function Messenger() {
 
   useEffect(() => {
     if (Object.keys(socket).length) {
-      socket.on("getUsers", (users) => {
-        // console.log(users);
+      socket.emit("onlineUsers", user.username);
 
-        // setOnlineUsers(
-        //   user.followings.filter((f) => users.some((u) => u.userId === f))
-        // );
+      socket.on("getOnlineUsers", (users) => {
+      
+        if(profile){
+          setOnlineUsers(
+            profile.following?.filter((foll) => users.some((u) => u.userId === foll.username))
+          );
+        }
+        
       });
     }
-  }, [socket, user]);
+  }, []);
 
   useEffect(() => {
     const getConversations = async () => {
@@ -235,10 +246,28 @@ export default function Messenger() {
           <div className={styles.chatBoxWrapper}>
             {currentChat ? (
               <>
+                <div className={styles.chatUserReceiver}>
+                  {
+                    receiver ? 
+                    <div>
+                      <div style={{display:"flex", alignItems:"center", paddingBottom:"0.5em"}}>
+                      <img
+                        className={styles.conversationImg}
+                        src={receiver.image ? receiver.image : avatar}
+                        alt=""
+                      />
+                      <span className={styles.conversationName}>{receiver.username}</span>
+                      </div>
+                      <hr style={{width:'40em'}}></hr>
+                    </div> 
+                    : 
+                    <></>
+                  }
+                </div>
                 <div className={styles.chatBoxTop}>
                   {messages.map((m) => (
                     <div ref={scrollRef}>
-                      <Message message={m} own={m.sender === user.username} />
+                      <Message message={m} sender={user} receiver={receiver} own={m.sender === user.username} />
                     </div>
                   ))}
                 </div>
