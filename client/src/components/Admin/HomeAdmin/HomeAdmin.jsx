@@ -6,7 +6,7 @@ import NewPost from "../../NewPost/NewPost";
 import UserCardAdmin from "../UserCardAdmin/UserCardAdmin";
 
 import styles from "./HomeAdmin.module.css";
-import { clearPosts, getPosts, updatePage,banPost } from "../../../Redux/actions/Post";
+import { clearPosts, getPosts, updatePage,banPost,deleteComment } from "../../../Redux/actions/Post";
 import { FaLeaf } from "react-icons/fa";
 import { BiChevronUp } from "react-icons/bi";
 import { Link } from "react-router-dom";
@@ -34,10 +34,11 @@ function HomeAdmin(props) {
   const [first, setFirst] = useState(true);
   const [orden, setOrden] = useState("cronologico");
   const [tags, setTags] = useState(session.tags);
+  const [flags, setFlags] = useState(true)
 
   useEffect(() => {
     dispatch(socketConnection(session.username));
-  }, [dispatch,posts]);
+  }, [dispatch,posts,flags]);
 
   const handleScroll = useCallback(() => {
     if (
@@ -45,7 +46,7 @@ function HomeAdmin(props) {
       document.documentElement.scrollHeight
     )
       dispatch(updatePage(page + 1 < totalPages ? page + 1 : page));
-  }, [dispatch, page, totalPages]);
+  }, [dispatch, page, totalPages,flags]);
 
   useEffect(() => {
     if (page === -1) {
@@ -54,26 +55,26 @@ function HomeAdmin(props) {
       return;
     }
     dispatch(getPosts(page));
-  }, [dispatch, page, first, totalPages]);
+  }, [dispatch, page, first, totalPages,flags]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [handleScroll]);
+  }, [handleScroll,flags]);
 
-  useEffect(() => {
-    const getConversations = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:3001/conversation/" + session.username
-        );
-        setConversations(res.data);
-      } catch (err) {}
-    };
-    getConversations();
-  }, [session.username]);
+  // useEffect(() => {
+  //   const getConversations = async () => {
+  //     try {
+  //       const res = await axios.get(
+  //         "http://localhost:3001/conversation/" + session.username
+  //       );
+  //       setConversations(res.data);
+  //     } catch (err) {}
+  //   };
+  //   getConversations();
+  // }, [session.username,flags]);
 
   const handleCharge = (e) => {
     window.scrollTo(0, 0);
@@ -81,38 +82,37 @@ function HomeAdmin(props) {
     dispatch(getPosts(page, tags, orden));
     setNewPosts(false);
   };
-  console.log(posts)
 
-  const hanbleBanPost = (e) =>{
-    e.preventDefault();
-    dispatch(banPost(e.target.value));
-    socket.emit("sendNotification", {
-      senderName: session.username,
-      userImage: session.image,
-      receiverName: posts.user.username,
-      type: 2,
-    });
-    alert('Ban, successfully applied');
+  // const handleBanComment = (e) => {
+  //   e.preventDefault();
+  //   console.log(e.target.value)
+  //   dispatch(deleteComment(e.target.value));
+  //   alert('Comment deleted successfully')
+  // }
   
-  }
-    return (
-    <div className={styles.home + ` ${createPost ? styles.noScroll : ""} `}>
 
+  return (
+    <div className={styles.home + ` ${createPost ? styles.noScroll : ""} `}>
       <section className={styles.center}>
         {newPosts && (
           <button className={styles.newPosts} onClick={handleCharge}>
             Check new posts <BiChevronUp className={styles.icon} />
           </button>
         )}
-
         <ul>
           {posts && Array.isArray(posts) ? posts.map((post, i) => (
             <li key={i}>
-              <PostAdmin post={post} socket={socket} hanbleBanPost={hanbleBanPost}  />
+              <PostAdmin post={post} socket={socket}  />
             </li>
-          )) : "No hay ningun post"}
+          )) : 
+          <li>
+          <button className={styles.newPosts} onClick={handleCharge}>
+            Check new posts <BiChevronUp className={styles.icon} />
+          </button>
+        </li>
+          
+          }
         </ul>
-
         {/* {totalPages > page && (
           <div className={styles.cargando}>Cargando...</div>
         )} */}
