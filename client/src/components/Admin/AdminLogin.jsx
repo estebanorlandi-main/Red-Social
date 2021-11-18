@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import style from "./styless.css";
+import style from "./AdminLogin.module.css";
 import { Link } from "react-router-dom";
 import { loginAdmin } from "../../Redux/actions/Admin";
 import validate from "../../utils/validate.js";
 import { Redirect } from "react-router";
+import { FaUserCircle, FaKey } from "react-icons/fa";
 
 export default function AdminLogin() {
   const dispatch = useDispatch();
@@ -33,35 +34,45 @@ export default function AdminLogin() {
     }
   };
 
-  return (
-    <div>
-      {admin.admin === true ? (
-        <Redirect to="/homeAdmin" />
-      ) : (
-        <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
-          <div className={style.label}>
-            <label>Username</label>
+  return admin.admin === true ? (
+    <Redirect to="/homeAdmin" />
+  )  : (
+    <div className={style.container}>
+      <form onSubmit={(e) => handleSubmit(e)}>
+        <h1>Log In Admin</h1>
+        <label>
+          Username
+          <div className="input-group">
+            <FaUserCircle />
             <input
-              type="text"
-              value={input.username}
-              name="username"
-              onChange={(e) => handleChange(e)}
-            />
+            type="text"
+            value={input.username}
+            name="username"
+            onChange={(e) => handleChange(e)}
+            placeholder="Enter username"
+            />            
           </div>
-          <div className={style.label}>
-            <label>Password</label>
+        </label>
+        <label>
+          Password
+          <div className="input-group">
+            <FaKey/>
             <input
-              type="password"
-              value={input.password}
-              name="password"
-              onChange={(e) => handleChange(e)}
-            />
+            type="password"
+            value={input.password}
+            name="password"
+            onChange={(e) => handleChange(e)}
+            placeholder="Enter password"
+            />            
           </div>
-          <button type="submit">Login</button>
-          <Link to="/signup">SignUpLogin</Link>
-        </form>
-      )}
+        </label>
+        <div className="buttonContainer">
+          <button className="btn" type="submit">Login</button>
+          <Link className="btn" to="/signup">SignUp Login</Link>          
+        </div>
+      </form>    
     </div>
-  );
+      )
+  ;
 }
 

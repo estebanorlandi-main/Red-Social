@@ -5,9 +5,10 @@ import PostAdmin from "../PostAdmin/PostAdmin";
 import NewPost from "../../NewPost/NewPost";
 import UserCardAdmin from "../UserCardAdmin/UserCardAdmin";
 
-import styles from "./stalesAdmin.css";
+import styles from "./HomeAdmin.module.css";
 import { clearPosts, getPosts, updatePage } from "../../../Redux/actions/Post";
 import { FaLeaf } from "react-icons/fa";
+import { BiChevronUp } from "react-icons/bi";
 import { Link } from "react-router-dom";
 
 import { socketConnection } from "../../../Redux/actions/Users";
@@ -27,19 +28,16 @@ function HomeAdmin(props) {
 
   const dispatch = useDispatch();
 
+  const [newPosts, setNewPosts] = useState(true);
   const [createPost, setCreatePost] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [first, setFirst] = useState(true);
+  const [orden, setOrden] = useState("cronologico");
+  const [tags, setTags] = useState(session.tags);
 
   useEffect(() => {
     dispatch(socketConnection(session.username));
-  }, []);
-
-  // useEffect(() => {
-  //   if(Object.keys(socket).length){
-  //     socket.emit("addUser", session.username);
-  //   }
-  // }, [socket, session.username]);
+  }, [dispatch]);
 
   const handleScroll = useCallback(() => {
     if (
@@ -65,8 +63,6 @@ function HomeAdmin(props) {
     };
   }, [handleScroll]);
 
-  console.log(posts.length);
-
   useEffect(() => {
     const getConversations = async () => {
       try {
@@ -79,28 +75,22 @@ function HomeAdmin(props) {
     getConversations();
   }, [session.username]);
 
+  const handleCharge = (e) => {
+    window.scrollTo(0, 0);
+    dispatch(updatePage(0));
+    dispatch(getPosts(page, tags, orden));
+    setNewPosts(false);
+  };
+
     return (
     <div className={styles.home + ` ${createPost ? styles.noScroll : ""} `}>
-      <section className={styles.left}>
-        <div className={styles.filters}>
-          <h3>My tags</h3>
-          <ul className={styles.tags}>
-            {session.tags && session.tags.length ? (
-              session.tags.map((tag, i) => (
-                <li key={i}>
-                  <Link className={styles.tag} to="/home">
-                    # {tag}
-                  </Link>
-                </li>
-              ))
-            ) : (
-              <></>
-            )}
-          </ul>
-        </div>
-      </section>
 
       <section className={styles.center}>
+        {newPosts && (
+          <button className={styles.newPosts} onClick={handleCharge}>
+            Check new posts <BiChevronUp className={styles.icon} />
+          </button>
+        )}
         {createPost ? (
           <div
             className={styles.newPost}
@@ -115,7 +105,7 @@ function HomeAdmin(props) {
           ""
         )}
 
-        <div className={styles.newPostOpen}>
+{/*        <div className={styles.newPostOpen}>
           <UserCardAdmin
             toRight
             showImage
@@ -127,32 +117,19 @@ function HomeAdmin(props) {
           >
             Create Post
           </button>
-        </div>
+        </div>*/}
 
         <ul>
-          {posts.length >0? posts.map((post, i) => (
+          {posts && Array.isArray(posts) ? posts.map((post, i) => (
             <li key={i}>
               <PostAdmin post={post} socket={socket} />
             </li>
-          )):""}
+          )) : "No hay ningun post"}
         </ul>
 
         {totalPages > page && (
           <div className={styles.cargando}>Cargando...</div>
         )}
-      </section>
-
-      <section className={styles.right}>
-        <div>
-          <h3>Friends.</h3>
-          <ul>
-            {conversations.map(({ members }) => (
-              <li>
-                <p>{members.filter((member) => member !== session.username)}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
       </section>
     </div>
   );
