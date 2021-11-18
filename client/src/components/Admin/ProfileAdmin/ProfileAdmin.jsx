@@ -12,12 +12,13 @@ import styles from "./ProfileAdmin.module.css";
 import Select from "react-select";
 import { BiCog } from "react-icons/bi";
 import { banUserAdmin } from "../../../Redux/actions/Users";
+import { useHistory } from "react-router";
 
 import { BsFillPencilFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
 import { MdMessage } from "react-icons/md";
-
+import { IoBan} from "react-icons/io5";
 const selectStyles = {
   control: (styles) => ({ ...styles, width: "100%" }),
 };
@@ -39,6 +40,7 @@ const options = [
 
 export default function ProfileAdmin(props) {
   const dispatch = useDispatch();
+  const history = useHistory()
   const [editar, setEditar] = useState(false);
 
   const session = useSelector((state) => state.sessionReducer);
@@ -74,9 +76,8 @@ export default function ProfileAdmin(props) {
   };
 
   const sendMessage = () => {
-    if (session.username && profile.username !== session.username) {
-      dispatch(conversation(session.username, profile.username));
-    }
+    // 
+    history.push("/messenger")
   };  
 
   const handleSubmit = () => {
@@ -148,7 +149,10 @@ export default function ProfileAdmin(props) {
               <div className={styles.profileActions} style={myProfile ? {display:'none'} : {}}>
               {
                 !myProfile?
-                <button onClick={sendMessage} className={styles.messageButton}><MdMessage style={{ color: "#fff", width:'1.2em', height:'1.2em', marginRight:'4px' }}/> Message Admin</button>
+                <div>
+                <button onClick={sendMessage} className={styles.messageButton}><MdMessage style={{ color: "#fff", width:'1.2em', height:'1.2em', marginRight:'4px' }}/> Message </button>
+                <button value={profile.username} onClick={(e)=>{handleBanUser(e)}} className={styles.banButton}><IoBan style={{ color: "#fff", width:'2.5em', height:'1.2em', marginRight:'4px' }}/> Baneo</button>
+                </div>
                 :
                 <></>
               }
