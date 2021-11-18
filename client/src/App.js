@@ -15,6 +15,7 @@ import Settings from "./Pages/Settings/Settings";
 
 //Admin
 import AdminLogin from "./components/Admin/AdminLogin";
+import EspecificPost from "./components/EspecificPost/EspecificPost";
 import AdminSupport from "./components/Admin/AdminSupport";
 import HomeAdmin from "./components/Admin/HomeAdmin/HomeAdmin";
 import ProfileAdmin from "./components/Admin/ProfileAdmin/ProfileAdmin";
@@ -62,14 +63,15 @@ function App() {
       )}
 
       {!isLanding && session && (
-        
+
         <DisplayConversations />
-      
+
       )}
 
       <NavBar />
 
       <Switch>
+        <Route path="/prueba/:id" component={EspecificPost}/>
         <Route exact path="/" component={LandingPage} />
         <Route path="/home" component={Home} />
         <Route path="/signup" component={Signup} />

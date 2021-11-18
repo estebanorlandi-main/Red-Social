@@ -111,6 +111,7 @@ export default function root(state = initialState, action) {
       };
 
     case GET_POST_FOR_ID:
+    console.log(action)
       return {
         ...state,
         post: action.payload,

@@ -97,9 +97,10 @@ export function getPosts(page, tag, orden, seguidos) {
 }
 
 export function getPostForId(id) {
+  console.log("action")
   return (dispatch) =>
     axios
-      .get(URL + `/${id}`)
+      .get(URL + `/post/${id}`)
       .then((res) => dispatch({ type: GET_POST_FOR_ID, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }
