@@ -69,6 +69,21 @@ align-items: center;
   cursor: pointer; 
 }
 
+.banButton {
+  background-color: #cc3025;
+  border-radius: 4px;
+  color: #fff;
+  margin: 0 1em 1em 1em;
+  border: none;
+  padding: 0.5em;
+  transition: all 0.25s;
+  max-width: max-content;
+}
+.banButton:hover {
+  background-color: #cc3025;
+  cursor: pointer; 
+}
+
 .profileActions{
   display: flex;
   padding: 2em 2em;

@@ -19,6 +19,8 @@ import {
 import CommentAdmin from "../CommentAdmin/CommentAdmin";
 
 import styles from "./PostAdmin.module.css";
+import { IoBan} from "react-icons/io5";
+
 
 //Icons
 import {
@@ -239,21 +241,18 @@ function PostAdmin({  post, customClass, socket, admin  }) {
           styles.optionsMenu
         }`}
       >
-        <button value={post.idPost}
-          name="Ban Post"
-          onClick={(e) => hanbleBanPost(e)}>
-          <BsFillPencilFill />
-          Ban
-        </button>
         <button
           className={styles.danger}
-          onClick={() => {
-            handleDelete();
-          }}
+          value={post.idPost}
+          name="Ban Post"
+          onClick={(e) => hanbleBanPost(e)}
         >
-          <GoTrashcan style={{ color: "#fff" }} />
+          <IoBan style={{ color: "#fff" }} />
           Ban 
         </button>
+
+        {/* <button value={profile.username} onClick={(e)=>{handleBanUser(e)}} className={styles.banButton}><IoBan style={{ color: "#fff", width:'2.5em', height:'1.2em', marginRight:'4px' }}/> Baneo</button> */}
+
         </div>
         </div>
       ) : (
