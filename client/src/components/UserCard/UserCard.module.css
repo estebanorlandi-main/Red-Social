@@ -56,7 +56,10 @@
   font-size: 0.8rem;
 }
 .dark * {
-  color: #ddd;
+  color: #ddd !important;
+}
+.dark:hover * {
+  color: #fff !important;
 }
 .dark .other {
   color: #aaa;
