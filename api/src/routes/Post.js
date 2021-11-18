@@ -57,6 +57,9 @@ const paginate = (page = 0, arr) => {
   };
 };
 function ordenarTags(todos, tags, orden, seguidos) {
+  if (tags.length === 0) {
+    return ordenar(orden, todos)
+  }
   let arr;
   let conTagsSeguidos = [];
   let sinTagsSeguidos = [];

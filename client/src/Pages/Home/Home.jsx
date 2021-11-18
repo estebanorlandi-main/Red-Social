@@ -63,8 +63,13 @@ function Home(props) {
     }
     let seguidos
     if (session.username) {
+
       seguidos = await dispatch(getUser(session.username))
-      seguidos = seguidos.payload.data.following.map((user)=>user.username)
+      if(seguidos.type === "ERROR"){
+        seguidos = []
+      }else{
+        seguidos = seguidos.payload.data.following.map((user)=>user.username)
+      }
     }else {
       seguidos = []
     }
@@ -126,7 +131,8 @@ function Home(props) {
   const handleCharge = (e) => {
     window.scrollTo(0, 0);
     dispatch(updatePage(0));
-    dispatch(getPosts({page, tags, orden, seguido:profile.following}));
+    console.log(orden, tags, profile)
+    dispatch(getPosts(page, tags, orden, profile.following));
     setNewPosts(false);
   };
 
