@@ -26,7 +26,6 @@ conn.sync({ force: false }).then(() => {
 
     // DB_postCreates(dataPosts);
 
-    
     //Descomentar y comentar una sola vez!! Para crear el admin
 
     // DB_AdminSignUp()
