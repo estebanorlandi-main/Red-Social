@@ -59,7 +59,7 @@ const parseContent = (text) => {
 
   return parsed;
 };
-function PostAdmin({  post, customClass, socket, admin,hanbleBanPost  }) {
+function PostAdmin({  post, customClass, socket, admin}) {
   const dispatch = useDispatch();
 
   const isDark = useSelector((state) => state.themeReducer.theme);
@@ -193,14 +193,26 @@ function PostAdmin({  post, customClass, socket, admin,hanbleBanPost  }) {
   let test;
   if (post.content) test = parseContent(post.content);
 
-
-
+  const hanbleBanPost = (e) =>{
+    e.preventDefault();
+    console.log(e.target)
+    dispatch(banPost(e.target.value));
+    socket.emit("sendNotification", {
+      senderName: session.username,
+      userImage: session.image,
+      receiverName: post.user.username,
+      type: 2,
+    });
+    alert('Ban, successfully applied');
+  }
 
   const handleBanComment = (e) => {
     e.preventDefault();
+    console.log(e.target.value)
     dispatch(deleteComment(e.target.value));
     alert('Comment deleted successfully')
   }
+  
 
   return (
     <div className={styles.container + ` ${customClass} ${isDark ? styles.dark : ""}`}>

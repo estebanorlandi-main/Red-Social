@@ -55,7 +55,7 @@ export default function SupportUserCard({
           <NavLink
               activeClassName={styles.active}
               className={styles.userContainer}
-              to={`/profileAdmin/${message.username}`}
+              to={`/profile/${message.username}`}
             >
             {showName && <span className={styles.username}>{message.username}</span>}
             </NavLink>   

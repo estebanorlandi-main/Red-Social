@@ -7,7 +7,7 @@ import { IoBan} from "react-icons/io5";
 function CommentAdmin({ comment,handleBanComment }) {
   return (
     <li className={styles.comment}>
-      <Link className={styles.user} to={`/profile/${comment.user.username}`}>
+      <Link className={styles.user} to={`/profileAdmin/${comment.user.username}`}>
         <img
           className={styles.userImage}
           src={comment.user.image || image}

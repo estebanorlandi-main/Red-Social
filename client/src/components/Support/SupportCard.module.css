@@ -3,8 +3,6 @@
     align-items: center;
     gap: 1.5em;
     cursor: pointer;
-    min-width: 300px;
-    min-height: 400px;
   }
   
   .column {

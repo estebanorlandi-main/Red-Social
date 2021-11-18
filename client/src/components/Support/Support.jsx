@@ -69,7 +69,7 @@ export default function Support() {
             ></textarea>               
           </div>      
         </label>
-        <button className={style.submit} type="submit">
+        <button className={style.submit} type="submit" onClick={(e) => handleSubmit(e)}>
           Submit
         </button>
       </form>
