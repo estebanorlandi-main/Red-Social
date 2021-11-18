@@ -6,7 +6,7 @@ const { User } = require("../db.js");
 exports.isAuthenticated = async (req, res, next) => {
   try {
     const { codenet } = req.cookies;
-    if (!req.cookies.codenet) throw "You must be login";
+    if (!req.cookies.codenet) throw "You must be logged in";
 
     const decodification = await promisify(jwt.verify)(codenet, JWT_SECRET);
     const user = await User.findOne({ where: { id: decodification.id } });
@@ -16,7 +16,7 @@ exports.isAuthenticated = async (req, res, next) => {
     req.user = user.username;
     next();
   } catch (e) {
-    res.status(500).send({ success: false, error: e });
+    res.status(402).send({ success: false, error: e });
   }
 };
 

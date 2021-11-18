@@ -1,11 +1,10 @@
 const express = require("express");
+const fileupload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 
 require("dotenv").config();
-const { JWT_SECRET } = process.env;
-console.log(JWT_SECRET);
 
 require("./db.js");
 
@@ -14,7 +13,8 @@ const server = express();
 server.name = "API";
 
 server.use(express.json({ limit: "50mb" }));
-server.use(cookieParser(JWT_SECRET));
+server.use(cookieParser());
+server.use(fileupload());
 server.use(morgan("dev"));
 
 // nuevo y mejorado cors
