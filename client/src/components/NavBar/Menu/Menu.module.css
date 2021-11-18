@@ -2,6 +2,7 @@
   display: flex;
   flex-flow: row wrap;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .menu__link {
@@ -71,7 +72,6 @@
   font-size: 0.95rem;
   cursor: pointer;
   width: 100%;
-  margin: 0.25em 0 0 0;
 }
 .column .menu__link::after {
   display: block;
@@ -82,9 +82,12 @@
   top: 0;
   height: 100%;
   transform: translate(0, 0);
-  width: 2px;
+  width: 4px;
   border-radius: 0;
   background-color: var(--c-blue);
+}
+.menu__link.logout::after {
+  background-color: #f33;
 }
 .column .menu__link:hover::after {
   width: 1rem;
@@ -101,7 +104,9 @@
 .active:hover::after {
   transform: translateY(0);
 }
-
+.column .active::after {
+  display: block !important;
+}
 .column .icon {
   width: 1rem;
   height: 1rem;
@@ -114,15 +119,61 @@
   color: #ddd;
 }
 
-.dark .icon * {
-  color: #888;
-}
+.dark .icon *,
 .dark .active * {
   color: #888;
 }
-.dark .menu__link:hover * {
+
+.dark .menu__link *,
+.dark .menu__link {
+  color: #aaa;
+}
+
+.dark .menu__link:hover *,
+.dark .menu__link:hover {
   color: #fff;
 }
 .active {
   border-bottom: 2px solid var(--c-blue);
+}
+
+.counter {
+  width: 16px;
+  height: 16px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px;
+  font-size: 10px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.notifications {
+  position: absolute;
+  width: max-content;
+  top: 60px;
+  right: 0;
+  background-color: white;
+  color: black;
+  font-weight: 300;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+.markRead {
+  background-color: #89b2ff;
+  color: #fff;
+  margin: 0 0 1em 0;
+  border: none;
+  padding: 0.5em;
+  transition: all 0.25s;
+}
+.markRead:hover {
+  background-color: var(--c-blue);
 }
