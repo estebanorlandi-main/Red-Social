@@ -35,10 +35,10 @@ export const COMMENT_DELETE = "comment_delete";
 
 // comentario devuelve el comentario creado
 
-export function createPost(data, orden, tags) {
+export function createPost(data, orden, tags, seguidos) {
   return (dispatch) =>
     axios
-      .post(URL + `/post/?orden=${orden}&tags=${tags}`, data, {
+      .post(URL + `/post/?orden=${orden}&tags=${tags}&seguido=${seguidos}`, data, {
         withCredentials: true,
       })
       .then((res) => dispatch({ type: POST_CREATE, payload: res.data }))
@@ -88,10 +88,10 @@ export function commentPost(postid, content, username, socket) {
   //return { type: POST_COMMENT, payload: { idPost, text, user } };
 }
 
-export function getPosts(page, tag, orden) {
+export function getPosts(page, tag, orden, seguidos) {
   return (dispatch) =>
     axios
-      .get(URL + `/post?page=${page}&tag=${tag}&orden=${orden}`)
+      .get(URL + `/post?page=${page}&tag=${tag}&orden=${orden}&seguido=${seguidos}`)
       .then((res) => dispatch({ type: GET_POSTS, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }
