@@ -6,7 +6,7 @@ import NewPost from "../../NewPost/NewPost";
 import UserCardAdmin from "../UserCardAdmin/UserCardAdmin";
 
 import styles from "./HomeAdmin.module.css";
-import { clearPosts, getPosts, updatePage } from "../../../Redux/actions/Post";
+import { clearPosts, getPosts, updatePage,banPost } from "../../../Redux/actions/Post";
 import { FaLeaf } from "react-icons/fa";
 import { BiChevronUp } from "react-icons/bi";
 import { Link } from "react-router-dom";
@@ -37,7 +37,7 @@ function HomeAdmin(props) {
 
   useEffect(() => {
     dispatch(socketConnection(session.username));
-  }, [dispatch]);
+  }, [dispatch,posts]);
 
   const handleScroll = useCallback(() => {
     if (
@@ -82,16 +82,33 @@ function HomeAdmin(props) {
     setNewPosts(false);
   };
   console.log(posts)
+
+  const hanbleBanPost = (e) =>{
+    e.preventDefault();
+    dispatch(banPost(e.target.value));
+    socket.emit("sendNotification", {
+      senderName: session.username,
+      userImage: session.image,
+      receiverName: posts.user.username,
+      type: 2,
+    });
+    alert('Ban, successfully applied');
+  
+  }
     return (
     <div className={styles.home + ` ${createPost ? styles.noScroll : ""} `}>
 
       <section className={styles.center}>
-      
+        {newPosts && (
+          <button className={styles.newPosts} onClick={handleCharge}>
+            Check new posts <BiChevronUp className={styles.icon} />
+          </button>
+        )}
 
         <ul>
-          {posts !== {}? posts.map((post, i) => (
+          {posts && Array.isArray(posts) ? posts.map((post, i) => (
             <li key={i}>
-              <PostAdmin post={post} socket={socket} />
+              <PostAdmin post={post} socket={socket} hanbleBanPost={hanbleBanPost}  />
             </li>
           )) : "No hay ningun post"}
         </ul>

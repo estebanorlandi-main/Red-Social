@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { deleteMessageSupport } from "../../Redux/actions/Support";
 
-import styles from "../Admin/UserCardAdmin/UserCardAdmin.module.css";
+import styles from "./SupportCard.module.css";
 
 import image from "../../images/userCard.svg";
 import { useDispatch } from "react-redux";
 
-import style from "./Support.module.css";
+import style from "./SupportCard2.module.css";
 import { BiSupport } from "react-icons/bi";
 
 
@@ -40,8 +40,6 @@ export default function SupportUserCard({
     />
   );
   const handleDelete = ()=> {
-    
-    console.log(message.idSupport)
     dispatch(deleteMessageSupport(message.idSupport))
   }
 
@@ -50,7 +48,6 @@ export default function SupportUserCard({
     {message.title === "Report Post"? 
     <div>
       <form className={style.container}>
-
           <h2><BiSupport/> Support</h2>
           <section>
             {toRight && showImage && ImgElement}

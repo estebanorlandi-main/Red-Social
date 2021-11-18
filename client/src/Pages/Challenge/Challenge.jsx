@@ -11,7 +11,6 @@ import styles from "./Challenge.module.css";
 import Select from "react-select";
 import "./Challenge.css";
 import Post from "../../components/Post/Post";
-import "./Popup.css";
 import { socketConnection } from "../../Redux/actions/Users";
 import { clearPosts, getPosts, updatePage } from "../../Redux/actions/Post";
 
