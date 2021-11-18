@@ -205,7 +205,7 @@ function Menu({
         <NavLink
           className={`${styles.menu__link}`}
           activeClassName={styles.active}
-          to="settings"
+          to="/settings"
         >
           Settings
           <BiCog />
