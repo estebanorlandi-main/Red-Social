@@ -78,7 +78,7 @@ export default function NewPost({ orden, tags }) {
 
     if (!Object.values(errores).filter((error) => error).length) {
       const formData = new FormData();
-      if (day > info.dayBan === true) {
+      if (!info.dayBan) {
         formData.append("title", data.title);
         formData.append("content", data.content);
         formData.append("image", data.image);
@@ -88,7 +88,7 @@ export default function NewPost({ orden, tags }) {
 
         let errores = await dispatch(createPost(formData, orden, tags));
         if (errores.type === "ERROR") {
-          alert(errores.payload.response.data.error.errors[0].message);
+          alert("se ha producido un error");
         } else {
           setData({
             title: "",
