@@ -1,7 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { socketConnection } from "../../Redux/actions/Users";
-import { getPosts, updatePage, getTags, loadTags } from "../../Redux/actions/Post";
+import {
+  getPosts,
+  updatePage,
+  getTags,
+  loadTags,
+} from "../../Redux/actions/Post";
 import { Link } from "react-router-dom";
 
 import axios from "axios";
@@ -67,7 +72,7 @@ function Home(props) {
   useEffect(async () => {
     if (allTags.length === 0) {
       await dispatch(loadTags());
-      await dispatch(getTags())
+      await dispatch(getTags());
       setFirst(false);
     }
     setTagsOptions(
@@ -159,7 +164,7 @@ function Home(props) {
               e.target.id === "close" ? setCreatePost((old) => false) : ""
             }
           >
-            <NewPost orden={orden} tags={tags}/>
+            <NewPost orden={orden} tags={tags} />
           </div>
         ) : (
           ""
@@ -180,20 +185,22 @@ function Home(props) {
         </div>
 
         <ul>
-          {posts ? posts.map((post, i) => (
-            <li key={i}>
-              <Post post={post} socket={socket} />
-            </li>
-          )) : "No hay ningun post"}
+          {posts
+            ? posts.map((post, i) => (
+                <li key={i}>
+                  <Post post={post} socket={socket} />
+                </li>
+              ))
+            : "No hay ningun post"}
         </ul>
 
         {page < totalPages - 1 && <Loader />}
       </section>
 
       <section className={styles.right}>
-        {conversations?.length ? (
-          <div>
-            <h3>Friends</h3>
+        <div>
+          <h3>Friends</h3>
+          {conversations?.length ? (
             <ul>
               {conversations.map(({ members }, i) => (
                 <li key={i}>
@@ -203,10 +210,10 @@ function Home(props) {
                 </li>
               ))}
             </ul>
-          </div>
-        ) : (
-          ""
-        )}
+          ) : (
+            ""
+          )}
+        </div>
       </section>
     </div>
   );

@@ -205,7 +205,7 @@ svg {
 
 .dark {
   --c-soft-blue: hsl(226deg, 100%, 95%);
-  --c-blue: hsl(226deg, 90%, 60%);
+  --c-blue: hsl(226deg, 50%, 50%);
   --c-hard-blue: hsl(226deg, 100%, 50%);
   --bs-blue: none;
   --c-lightPost: #333;
