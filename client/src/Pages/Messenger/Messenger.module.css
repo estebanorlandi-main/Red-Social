@@ -26,6 +26,12 @@
   position: relative;
 }
 
+.chatUserReceiver{
+  display: flex;
+  align-items: center;
+  height: 3em;
+}
+
 .chatBoxTop {
   height: 100%;
   overflow-y: scroll;
@@ -83,6 +89,18 @@
   color: rgb(224, 220, 220);
   user-select: none;
   cursor: default;
+}
+
+.conversationImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.conversationName {
+  font-weight: 500;
 }
 
 @media screen and (max-width: 768px) {

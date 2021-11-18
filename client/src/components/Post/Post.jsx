@@ -446,7 +446,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
           ) : (
             <MdFavoriteBorder className={styles.icons} />
           )}
-          {post.userLikes.length}
+          {currentPost ? currentPost.userLikes.length : post.userLikes.length}
         </button>
 
         <button>
