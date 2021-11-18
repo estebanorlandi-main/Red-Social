@@ -81,55 +81,24 @@ function HomeAdmin(props) {
     dispatch(getPosts(page, tags, orden));
     setNewPosts(false);
   };
-
+  console.log(posts)
     return (
     <div className={styles.home + ` ${createPost ? styles.noScroll : ""} `}>
 
       <section className={styles.center}>
-        {newPosts && (
-          <button className={styles.newPosts} onClick={handleCharge}>
-            Check new posts <BiChevronUp className={styles.icon} />
-          </button>
-        )}
-        {createPost ? (
-          <div
-            className={styles.newPost}
-            id="close"
-            onClick={(e) =>
-              e.target.id === "close" ? setCreatePost((old) => false) : ""
-            }
-          >
-            <NewPost />
-          </div>
-        ) : (
-          ""
-        )}
-
-{/*        <div className={styles.newPostOpen}>
-          <UserCardAdmin
-            toRight
-            showImage
-            user={{ user: session.username, image: session.image }}
-          />
-          <button
-            className={styles.createPost}
-            onClick={() => setCreatePost(true)}
-          >
-            Create Post
-          </button>
-        </div>*/}
+      
 
         <ul>
-          {posts && Array.isArray(posts) ? posts.map((post, i) => (
+          {posts !== {}? posts.map((post, i) => (
             <li key={i}>
               <PostAdmin post={post} socket={socket} />
             </li>
           )) : "No hay ningun post"}
         </ul>
 
-        {totalPages > page && (
+        {/* {totalPages > page && (
           <div className={styles.cargando}>Cargando...</div>
-        )}
+        )} */}
       </section>
     </div>
   );
