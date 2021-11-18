@@ -3,8 +3,14 @@ const { Sequelize, Model } = require("sequelize");
 const db = require("../db.js");
 const fn = require("./utils.js");
 const bcrypt = require("bcrypt");
+const path = require("path");
 const saltRounds = 10;
-const AuthControllers = require('../controllers/AuthControllers.js')
+const AuthControllers = require('../controllers/AuthControllers.js');
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+const fs = require('fs');
+const ruta = path.resolve('./public/images')
 
 const sanitizeUser = (data) => {
   if (Array.isArray(data)) {
@@ -143,8 +149,18 @@ router.post("/register", async (req, res, next) => {
   }
 });
 //UPDATE
-router.put("/:id", AuthControllers.isAuthenticated, async (req, res, next) => {
+router.put("/:id", upload.single("image"), AuthControllers.isAuthenticated, async (req, res, next) => {
+
   try {
+    
+    const {name, lastname, gitaccount, about, tags} = req.body
+    const username = req.params.id
+    const file = req.files.image
+    file.name = `${username}.${file.name.substr(file.name.length - 3)}`
+    await file.mv(`${ruta}/${file.name}`).catch((e)=>{console.log(e)})
+
+    const imagepath = `${ruta}/${username}.${file.name.substr(file.name.length - 3)}`
+    req.body.image = imagepath
     if (req.body.password) {
       let errors = await fn.DB_validatePassword(req.body.password);
       if (errors.password) return res.send(errors).status(400);
@@ -158,7 +174,7 @@ router.put("/:id", AuthControllers.isAuthenticated, async (req, res, next) => {
       include: [db.Post],
     });
 
-    let validate = await fn.DB_updateUser(req.body, UserID.id);
+    let validate = await fn.DB_updateUser(req.body, UserID.id, imagepath );
 
     if (Object.keys(validate).length) return res.status(400).send(validate);
 
@@ -168,10 +184,13 @@ router.put("/:id", AuthControllers.isAuthenticated, async (req, res, next) => {
 
     return res.send({ user: userUpdated, success: true });
   } catch (e) {
-    console.log(e);
-    res.sendStatus(500).send({ errors: e, success: false });
+    res.status(403).send({ errors: e, success: false });
   }
 });
+
+
+
+
 //VALIDATE EMAIL
 router.get("/validate/email/:email", async (req, res, next) => {
   const email = await fn.DB_findUsersEmail(req.params.email);
