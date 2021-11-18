@@ -7,6 +7,7 @@ import Profile from "./Pages/Profile/Profile.jsx";
 import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import NavBar from "./components/NavBar/NavBar.js";
+import DisplayConversations from "./components/DisplayConversations/DisplayConversations";
 
 import Messenger from "./Pages/Messenger/Messenger";
 import Support from "./components/Support/Support";
@@ -61,12 +62,9 @@ function App() {
       )}
 
       {!isLanding && session && (
-        <Link className="message" to="/messenger">
-          <BiMessageAltDetail
-            style={{ margin: "0", width: "1.5em", height: "1.5em" }}
-          />
-          <span>Messages</span>
-        </Link>
+        
+        <DisplayConversations />
+      
       )}
 
       <NavBar />

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import userimg from "../../images/userCard.svg";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from 'react-router-dom'
 import { removeProfile } from "../../Redux/actions/Users";
 import { getTags, loadTags } from "../../Redux/actions/Post";
 import Post from "../../components/Post/Post";
@@ -28,6 +30,7 @@ const selectStyles = {
 
 export default function Profile(props) {
   const dispatch = useDispatch();
+  const history = useHistory()
   const [editar, setEditar] = useState(false);
 
   const session = useSelector((state) => state.sessionReducer);
@@ -104,9 +107,31 @@ export default function Profile(props) {
     setEditar(false);
   };
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (session.username && profile.username !== session.username) {
-      dispatch(conversation(session.username, profile.username));
+      const getConversations = async () => {
+        try {
+          const res = await axios.get(
+            "http://localhost:3001/conversation/" + session.username
+          );
+
+          return(res.data)
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      const conversations = await getConversations()
+
+      if(!!conversations.find((conver) =>
+        conver.members.includes(session.username)
+        )){
+          history.push("/messenger")
+      } else{
+        // console.log('se creo una conversacion')
+        dispatch(conversation(session.username, profile.username));
+        history.push("/messenger")
+      }
+      
     }
   };
   console.log(profile.strike)
