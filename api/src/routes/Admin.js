@@ -3,12 +3,14 @@ const {Privileges} = require("../db.js");
 const fn = require("./utils.js");
 const router = Router();
 const jwt = require("jsonwebtoken");
+const AuthControllers = require('../controllers/AuthControllers.js')
+
 // const { infoAdmin } = require("../../../client/src/Redux/actions/Admin.js");
 const { JWT_SECRET, JWT_EXPIRE_TIME, JWT_COOKIE_EXPIRE } = process.env;
 
 router.post('/login', async (req, res) => {
     const {email, username, password} = req.body;
-
+    console.log(email, username, password)
     try{
       if ((!username && !email) || (username === null && email === null)) {
         res.status(400).send(`Error, you must provide an email or username`);
@@ -93,7 +95,7 @@ router.post('/login', async (req, res) => {
     }
   })
 
-  router.post('/banUser', async (req, res) => {
+  router.post('/banUser',AuthControllers.isAuthenticated, async (req, res) => {
     try{
       const {username} = req.body;
       const user = await fn.BD_banUser(username);
@@ -106,7 +108,7 @@ router.post('/login', async (req, res) => {
     }
   })
 
-  router.post('/banComment', async (req, res) =>{
+  router.post('/banComment',AuthControllers.isAuthenticated, async (req, res) =>{
     try{
       const {idComment} = req.body;
       const comment = await fn.BD_banComment(idComment);
