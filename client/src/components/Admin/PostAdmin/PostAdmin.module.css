@@ -10,9 +10,6 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 100%;
-  max-width: 40em;
-  min-width: 320px;
   margin: 2em auto 0 auto;
   padding: 1em 0;
   border-radius: 10px;
@@ -39,7 +36,7 @@
   top: 2rem;
   background-color: #fff;
   border: 1px solid #f0f0f0;
-  padding: 1em;
+  padding: 0.5rem;
   border-radius: 0;
 }
 .optionsMenu button {
@@ -49,7 +46,7 @@
   gap: 1rem;
   background-color: transparent;
   padding: 0.5em 1em;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   border: none;
   margin: 0.5em 0 0 0;
   width: 100%;
@@ -97,7 +94,7 @@
 
 .mainContent {
   position: relative;
-  max-height: 6rem;
+  max-height: 3.5rem;
   overflow-y: hidden;
   transition: all 0.25s;
   margin: 0 auto;
@@ -108,29 +105,24 @@
 }
 
 .text {
-  word-break: break-all;
-  font-size: 1rem;
+  word-break: break-word;
+  font-size: 0.9rem;
   line-height: 1rem;
-  padding: 0.5em 0 0 0;
+  margin: 0.5rem 0 0 0;
 }
 
 .seeMore {
   position: absolute;
-  bottom: -0.15em !important;
+  bottom: 0;
   right: 0;
   z-index: 3;
-  padding: 0.5em 0.5em 0 0.5em;
+  padding: 0 0 0 1rem;
   border: none;
   background-color: var(--c-lightPost);
   color: var(--c-blue);
   font-size: 0.9rem;
   cursor: pointer;
   width: max-content;
-  transition: all 0.25s;
-}
-
-.seeMore > span {
-  margin-right: 0.25rem;
 }
 
 .seeMore:hover {
@@ -139,23 +131,16 @@
 
 .postImage {
   width: 100%;
-  max-height: 20rem;
+  max-height: 15rem;
   object-fit: cover;
   background-color: #aaa;
   margin: 2em 0 0 0;
 }
 
-.info {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  margin: 0 0 1em 0;
-  font-size: 0.8rem;
-}
-
 .actions {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: space-evenly;
   width: 100%;
 }
 
@@ -172,13 +157,15 @@
   cursor: pointer;
 }
 
-.icons {
-  width: 1.25em;
-  height: 1.25em;
+.icons,
+.iconPaint {
+  width: 1.5rem;
+  height: 1.5rem;
   margin-right: 0.5em;
+  transition: all 0.15s ease;
 }
-.actions > button:hover .icons {
-  color: #f55 !important;
+.favorite:hover .icons {
+  color: #e00 !important;
 }
 
 .newCommentContainer {
@@ -251,4 +238,45 @@
 .submitEdit:hover {
   background-color: var(--c-blue);
   color: #fff;
+}
+.newChallengeContainer {
+  width: 100%;
+  background-color: var(--c-blue);
+  padding: 10px 10px;
+  border: var(--c-blue) 10px solid;
+  border-radius: 20px;
+}
+
+.toButton {
+  text-decoration: none;
+  color: #fff;
+  border-radius: 12px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 40px;
+}
+
+.dark {
+  color: #fff;
+}
+
+.dark .text {
+  color: #aaa;
+}
+.dark .icons *,
+.dark .actions * {
+  color: #888;
+}
+.dark .favorite:hover .icons * {
+  color: #f33;
+}
+.dark .iconPaint *,
+.iconPaint * {
+  color: #f33;
 }

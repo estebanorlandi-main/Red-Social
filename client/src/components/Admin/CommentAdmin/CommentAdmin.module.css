@@ -49,3 +49,21 @@
   width: max-content;
   max-width: max-content;
 }
+
+.btnBan {
+  background-color: var(--c-red);
+  border-radius: 4px;
+  color: #fff;
+  margin: 0 0.5em 0.5em 0.5em;
+  border: none;
+  padding: 0.4em;
+  transition: all 0.25s;
+  max-width: max-content;
+  position: absolute;
+  right: 0;
+  top: 1.5em;
+}
+.btnBan:hover {
+  background-color: var(--c-mix);
+  cursor: pointer; 
+}

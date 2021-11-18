@@ -31,7 +31,7 @@ const sanitizeUser = (data) => {
       friends:user.Friends
     }));
   }
-  console.log(data.posts, "posts")
+
   return {
     username: data.username,
     name: data.name,
@@ -56,10 +56,10 @@ router.get("/", async (req, res, next) => {
     if (Object.keys(req.query).length != 0) return next();
     let findUsers = await fn.DB_findUserAll();
 
-    return res.send(findUsers);
-
+    
     findUsers = sanitizeUser(findUsers);
     res.send(findUsers);
+    // return res.send(findUsers);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);

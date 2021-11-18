@@ -3,6 +3,7 @@ const {Privileges} = require("../db.js");
 const fn = require("./utils.js");
 const router = Router();
 const jwt = require("jsonwebtoken");
+// const { infoAdmin } = require("../../../client/src/Redux/actions/Admin.js");
 const { JWT_SECRET, JWT_EXPIRE_TIME, JWT_COOKIE_EXPIRE } = process.env;
 
 router.post('/login', async (req, res) => {
@@ -115,6 +116,17 @@ router.post('/login', async (req, res) => {
     }catch(e){
       console.log('Error in ban comment', e)
       res.status(404).send({error:'Error, BAN could not be applied'})
+    }
+  })
+
+  router.post('/info', async (req, res) =>{
+    try{
+      const {username} = req.body;
+      const infoUser = await fn.DB_findUsersUsername(username)
+      res.status(200).send(infoUser)
+    }catch(e){
+      console.log(e)
+      res.status(404).send('NOt found')
     }
   })
 
