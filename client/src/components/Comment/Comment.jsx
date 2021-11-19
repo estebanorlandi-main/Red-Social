@@ -28,7 +28,9 @@ function Comment({ comment, type }) {
         <p>{comment.content}</p>
       ) : (
         <Link to={{ pathname: "/challenge/comment", value: comment.content }}>
-          Show Results...
+          <button type="submit" className={styles.commentChallenge}>
+            Show Results...
+          </button>
         </Link>
       )}
     </li>

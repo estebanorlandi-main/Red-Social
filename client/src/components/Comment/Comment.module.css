@@ -53,3 +53,10 @@
 .dark *:not(:first-child) {
   color: #aaa !important;
 }
+
+.commentChallenge {
+  text-align: center;
+  width: max-content;
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+}
