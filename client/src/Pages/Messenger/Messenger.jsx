@@ -8,7 +8,7 @@ import {
   getUser,
   removeProfile,
 } from "../../Redux/actions/Users";
-import { setUntrackMessages } from "../../Redux/actions/Message.js";
+// import { setUntrackMessages } from "../../Redux/actions/Message.js";
 import avatar from "../../images/userCard.svg";
 import UserCard from "../../components/UserCard/UserCard.jsx";
 
@@ -30,7 +30,7 @@ export default function Messenger() {
   const [currentChat, setCurrentChat] = useState(null);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
-  const [untrackMessages, setUntrackMessages] = useState({});
+  // const [untrackMessages, setUntrackMessages] = useState({});
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -132,36 +132,36 @@ export default function Messenger() {
     getMessages();
   }, [currentChat]);
 
-  useEffect(() => {
-    const readMessages = async () => {
-      try {
-        //console.log(currentChat.id);
+  // useEffect(() => {
+  //   const readMessages = async () => {
+  //     try {
+  //       //console.log(currentChat.id);
 
-        const read = await axios.get(
-          URL + `/message/read/${currentChat?.id}/${user.username}`
-        );
+  //       const read = await axios.get(
+  //         URL + `/message/read/${currentChat?.id}/${user.username}`
+  //       );
 
-        const untrack = await axios.get(
-          URL + `/message/untrack/${currentChat?.id}/${user.username}`
-        );
+  //       const untrack = await axios.get(
+  //         URL + `/message/untrack/${currentChat?.id}/${user.username}`
+  //       );
 
-        if (untrack.data) {
-          const receiver = currentChat?.members.find(
-            (m) => m !== user.username
-          );
+  //       if (untrack.data) {
+  //         const receiver = currentChat?.members.find(
+  //           (m) => m !== user.username
+  //         );
 
-          socket.emit("untrackMessage", {
-            receiverId: receiver,
-            data: untrack.data,
-            conversationId: currentChat?.id,
-          });
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    readMessages();
-  }, [messages]);
+  //         socket.emit("untrackMessage", {
+  //           receiverId: receiver,
+  //           data: untrack.data,
+  //           conversationId: currentChat?.id,
+  //         });
+  //       }
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   readMessages();
+  // }, [messages]);
 
   const handleChange = async (e) => {
     setInput(e.target.value.replace(/\s+/g, ""));

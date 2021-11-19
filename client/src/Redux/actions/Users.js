@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 import { ERROR } from "./Errors";
 
 const URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+const URLS = process.env.REACT_APP_SOCKET_URL || "ws://localhost:8900";
 
 export const SEARCH_USER = "SEARCH_USER";
 export const GET_USER = "GET_USER";
@@ -63,7 +64,7 @@ export function banUserAdmin(username) {
 }
 
 export function socketConnection(username) {
-  const socket = io("ws://localhost:8900");
+  const socket = io(URLS);
   socket.emit("addUser", username);
 
   return (dispatch) => {

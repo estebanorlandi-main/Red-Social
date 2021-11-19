@@ -114,15 +114,17 @@ export default function Profile(props) {
       };
       const conversations = await getConversations();
 
-      if (
-        !!conversations.find((conver) =>
-          conver.members.includes(session.username)
-        )
-      ) {
-        history.push("/messenger");
-      } else {
-        dispatch(conversation(session.username, profile.username));
-        history.push("/messenger");
+      if(conversations){
+        if ( 
+          !!conversations.find((conver) =>
+            conver.members.includes(session.username)
+          )
+        ) {
+          history.push("/messenger");
+        } else {
+          dispatch(conversation(session.username, profile.username));
+          history.push("/messenger");
+        }
       }
     }
   };

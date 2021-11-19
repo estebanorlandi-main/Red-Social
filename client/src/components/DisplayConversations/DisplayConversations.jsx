@@ -67,8 +67,8 @@ export default function DisplayConversations() {
               value={input}
               onChange={handleChange}
             />
-            {conversations
-              .filter((conver) => {
+            {conversations?.length ?
+              conversations.filter((conver) => {
                 if (input) {
                   if (
                     conver.members.filter((member) => member.includes(input))
@@ -89,7 +89,10 @@ export default function DisplayConversations() {
                 >
                   <Conversation conversation={c} currentUser={user} />
                 </div>
-              ))}
+              ))
+              :
+              <div className={styles.noConversations}>Ups, you have no conversation yet {':('} <br></br> Send a message to a user!</div>
+              }
           </div>
         </div>
       )}

@@ -52,6 +52,13 @@
   animation-name: slideUp;
 }
 
+.noConversations{
+    word-wrap: break-word;
+    padding: 2em;
+    font-weight: 500;
+    color: rgb(49, 49, 49);
+}
+
 @keyframes slideUp {
   from {
     opacity: 0;
