@@ -60,7 +60,7 @@ export function banUserAdmin(username) {
 }
 
 export function socketConnection(username) {
-  const socket = io(URLS);
+  const socket = io("ws://localhost:8900");
   socket.emit("addUser", username);
 
   return (dispatch) => {
