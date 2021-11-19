@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 
@@ -31,6 +31,7 @@ function Signup(props) {
   });
 
   const [registered, setRegistered] = useState(false);
+  const isDark = useSelector((state) => state.themeReducer.theme);
 
   const handleChange = ({ target: { name, value } }) => {
     setInputs((old) => ({ ...old, [name]: value }));
@@ -64,10 +65,14 @@ function Signup(props) {
         obj.image = "https://cdn-icons-png.flaticon.com/512/147/147144.png";
 
       let errores = await dispatch(singUp(obj));
-      console.log(errores)
+      console.log(errores);
       if (errores.payload.data.username || errores.payload.data.email) {
-        alert(`${Object.keys(errores.payload.data)[0]} ${errores.payload.data.username}`)
-      }else{
+        alert(
+          `${Object.keys(errores.payload.data)[0]} ${
+            errores.payload.data.username
+          }`
+        );
+      } else {
         setInputs({
           username: "",
           password: "",
@@ -82,14 +87,13 @@ function Signup(props) {
 
         setRegistered(true);
       }
-
     } else {
       setErr((old) => errors);
     }
   };
 
   return (
-    <div className={style.container}>
+    <div className={`${style.container} ${isDark ? style.dark : ""}`}>
       {!registered ? (
         <>
           <form onSubmit={(e) => handleSubmit(e)}>

@@ -45,3 +45,6 @@
   }
 }
 
+.dark.conversation:hover {
+  background-color: #fff1 !important;
+}

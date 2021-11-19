@@ -11,19 +11,12 @@ import { getUser, socketConnection } from "../../Redux/actions/Users";
 import { conversation, updateUser } from "../../Redux/actions/Session";
 import validate from "../../utils/validate";
 import styles from "./Profile.module.css";
-import Select from "react-select";
-import { BsFillPencilFill } from "react-icons/bs";
 import { IoMdMail } from "react-icons/io";
 import { BsGithub } from "react-icons/bs";
 
 import { MdMessage } from "react-icons/md";
 
 import Tags from "../../components/Tags/Tags";
-import { Link } from "react-router-dom";
-
-const selectStyles = {
-  control: (styles) => ({ ...styles, width: "100%" }),
-};
 
 // cambiar a estado traido de la DB
 
@@ -34,11 +27,9 @@ export default function Profile(props) {
 
   const session = useSelector((state) => state.sessionReducer);
   const profile = useSelector((state) => state.usersReducer.profile);
+  console.log(profile);
+  const isDark = useSelector((state) => state.themeReducer.theme);
   const [followersOnline, setFollowersOnline] = useState(null);
-  console.log(followersOnline);
-
-  // console.log(session);
-  console.log(profile, "Hola soy profile");
 
   const allTags = useSelector((state) => state.postsReducer.tags);
   const socket = useSelector((state) => state.usersReducer.socket);
@@ -126,15 +117,16 @@ export default function Profile(props) {
       ) {
         history.push("/messenger");
       } else {
-        // console.log('se creo una conversacion')
         dispatch(conversation(session.username, profile.username));
         history.push("/messenger");
       }
     }
   };
-  console.log(profile.strike);
+
   let git = profile.gitaccount && profile.gitaccount.split("/");
   git = git && git[git.length - 1];
+
+  console.log(profile);
   return profile ? (
     <div>
       {profile.strike?.length === 3 ? (
@@ -145,28 +137,8 @@ export default function Profile(props) {
           />
         </div>
       ) : (
-        <div className={styles.profile}>
+        <div className={`${styles.profile} ${isDark ? styles.dark : ""}`}>
           <section className={styles.head}>
-            {myProfile && editar ? (
-              <button onClick={handleSubmit}>Change</button>
-            ) : (
-              ""
-            )}
-            {myProfile ? (
-              <Link
-                to="/settings"
-                className={styles.edit}
-                style={myProfile ? {} : { display: "none" }}
-              >
-                <BsFillPencilFill
-                  style={{ color: "#C94F4F", marginRight: "4px" }}
-                />
-                Edit
-              </Link>
-            ) : (
-              ""
-            )}
-
             <div className={styles.importantInfo}>
               <img
                 className={styles.image}
@@ -179,9 +151,9 @@ export default function Profile(props) {
               <div className={styles.profileInfoDisplay}>
                 <div>
                   {profile.name && profile.lastname ? (
-                    <p className={styles.name}>
+                    <h1 className={styles.name}>
                       {profile.name} {profile.lastname}
-                    </p>
+                    </h1>
                   ) : (
                     <p></p>
                   )}
@@ -239,110 +211,53 @@ export default function Profile(props) {
                 <></>
               )}
             </div>
-
-            {myProfile && editar ? (
-              <form>
-                <label>
-                  <div className="input-group">
-                    <input
-                      name="name"
-                      onChange={handleChange}
-                      value={inputs.name}
-                      placeholder={session.name}
-                    />
-                  </div>
-                </label>
-                <span>{errors.name}</span>
-
-                <label>
-                  <div className="input-group">
-                    <input
-                      name="lastname"
-                      onChange={handleChange}
-                      value={inputs.lastname}
-                      placeholder={session.lasnName}
-                    />
-                  </div>
-                </label>
-                <span>{errors.lastname}</span>
-              </form>
-            ) : (
-              <p>{/* {profile.name} {profile.lastname} */}</p>
-            )}
-
-            {/* {myProfile && editar ? (
-                <Select
-                  onChange={handleSelect}
-                  className={styles.select_container}
-                  options={options}
-                  styles={selectStyles}
-                  isMulti
-                />
-              ) : (
-                ""
-              )} */}
           </section>
           <main className={styles.container}>
             <div className={styles.left}>
               <section>
                 <h3>About</h3>
-                {myProfile && editar ? (
-                  <label>
-                    <div className="input-group">
-                      <textarea
-                        name="about"
-                        onChange={handleChange}
-                        value={inputs.about}
-                        placeholder={session.about}
-                      ></textarea>
-                    </div>
-                  </label>
-                ) : (
-                  <div>
-                    <p className={styles.about}>{profile.about}</p>
-                    <hr></hr>
 
-                    <p className={styles.email}>
-                      <IoMdMail
+                <div>
+                  <p className={styles.about}>{profile.about}</p>
+                  <hr></hr>
+
+                  <a href={`mailto:${profile.email}`} className={styles.email}>
+                    <IoMdMail
+                      style={{
+                        marginRight: "4px",
+                        width: "1.2em",
+                        height: "1.2em",
+                      }}
+                    />
+                    {profile.email}{" "}
+                  </a>
+                  {profile.gitaccount ? (
+                    <a className={styles.github} href={profile.gitaccount}>
+                      <BsGithub
                         style={{
                           marginRight: "4px",
                           width: "1.2em",
                           height: "1.2em",
                         }}
                       />
-                      {profile.email}{" "}
-                    </p>
-                    {profile.gitaccount ? (
-                      <a className={styles.github} href={profile.gitaccount}>
-                        <BsGithub
-                          style={{
-                            marginRight: "4px",
-                            width: "1.2em",
-                            height: "1.2em",
-                          }}
-                        />
-                        {git}
-                      </a>
-                    ) : (
-                      <></>
-                    )}
-                    <h4 style={{ marginTop: "2em", marginBottom: "1em" }}>
-                      Tags
-                    </h4>
-                    <div className={styles.tags}>
-                      {profile.tags ? (
-                        <Tags
-                          tags={profile.tags}
-                          mode={editar}
-                          handleSelect={handleSelect}
-                          editTags={inputs.tags}
-                        />
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </div>
-                )}
+                      {git}
+                    </a>
+                  ) : (
+                    <></>
+                  )}
+                  {profile.tags ? (
+                    <>
+                      <h4 style={{ marginTop: "2em", marginBottom: "1em" }}>
+                        Tags
+                      </h4>
+                      <div className={styles.tags}>
+                        <Tags tags={profile.tags} />
+                      </div>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </div>
               </section>
               <section>
                 <h3>Recomendaciones?</h3>
@@ -352,10 +267,7 @@ export default function Profile(props) {
               <section className={styles.posts}>
                 {profile.posts
                   ? profile.posts.map((post) => (
-                      <Post
-                        customClass={styles.post}
-                        post={{ ...post, user: profile }}
-                      />
+                      <Post customClass={styles.post} post={post} />
                     ))
                   : ""}
               </section>

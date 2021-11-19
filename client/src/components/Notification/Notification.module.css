@@ -4,3 +4,7 @@
   height: max-content;
   max-width: 100%;
 }
+
+.dark {
+  color: #fff;
+}

@@ -46,3 +46,6 @@
   word-wrap: break-word;
 }
 
+.dark .messageBottom {
+  color: #aaa;
+}

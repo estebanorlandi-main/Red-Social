@@ -256,7 +256,6 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
     axios
       .post("http://localhost:3001/challenge/testing/", { code: newComment })
       .then((res) => {
-        console.log(res);
         setLoading(false);
         if (res?.data.data?.error) {
           setErrorTest(true);
@@ -265,8 +264,7 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
           setErrorTest(false);
           setResult(res.data.data);
         }
-      })
-      .catch((e) => console.log(e));
+      });
   };
 
   const tags = new Set();
@@ -292,7 +290,6 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
     // history.push('/home')
   };
 
-  console.log(post);
   return (
     <div
       className={
@@ -346,22 +343,28 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
           </div>
         </div>
       ) : session.username ? (
-        <div className={`${styles.show} ${styles.optionsMenu}`}>
+        <div className={styles.options}>
           <button onClick={handleOptions} className={styles.optionsHandler}>
             <BiDotsVerticalRounded
-              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
+              style={{
+                color: isDark ? "#fff" : "#1e1e1e",
+                width: "2em",
+                height: "2em",
+              }}
             />
           </button>
 
-          <button
-            className={styles.danger}
-            onClick={() => {
-              handleReport();
-            }}
-          >
-            <GoTrashcan style={{ color: "#fff" }} />
-            Report
-          </button>
+          <div className={`${styles.show} ${styles.optionsMenu}`}>
+            <button
+              className={styles.danger}
+              onClick={() => {
+                handleReport();
+              }}
+            >
+              <GoTrashcan style={{ color: "#fff" }} />
+              Report
+            </button>
+          </div>
         </div>
       ) : (
         <></>
@@ -574,7 +577,11 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
           <ul className={styles.comments}>
             <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
             {currentPost.comments.map((comment, i) =>
-              i < 3 || maxComments ? <Comment key={i} comment={comment} /> : <></>
+              i < 3 || maxComments ? (
+                <Comment key={i} comment={comment} />
+              ) : (
+                <></>
+              )
             )}
           </ul>
         ) : (

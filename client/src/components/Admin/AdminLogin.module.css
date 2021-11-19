@@ -29,3 +29,13 @@
 .container > form > h1 {
   align-self: center;
 }
+
+.dark.container {
+  background-color: #333;
+}
+
+.dark h1,
+.dark a {
+  color: #fff;
+}
+

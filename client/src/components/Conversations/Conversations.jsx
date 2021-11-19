@@ -1,15 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import styles from "./Conversations.module.css";
 import avatar from "../../images/userCard.svg";
 import UserCard from "../UserCard/UserCard";
 
 export default function Conversation({ conversation, currentUser }) {
-  const socket = useSelector((state) => state.usersReducer.socket)
+  const socket = useSelector((state) => state.usersReducer.socket);
 
+  const isDark = useSelector((state) => state.themeReducer.theme);
   const [user, setUser] = useState(null);
-  const [untrackMessages, setUntrackMessages] = useState([])
+  const [untrackMessages, setUntrackMessages] = useState([]);
   // console.log(untrackMessages)
 
   useEffect(() => {
@@ -28,26 +29,24 @@ export default function Conversation({ conversation, currentUser }) {
     getUser();
   }, [currentUser, conversation]);
 
-  console.log(user)
+  console.log(user);
 
   useEffect(() => {
-    if(Object.keys(socket).length){
+    if (Object.keys(socket).length) {
       socket.on("getUntrackMessage", (data) => {
+        console.log(data.untrack);
+        console.log(data.conversationId);
 
-        console.log(data.untrack)
-        console.log(data.conversationId)
-
-        if(conversation.id === data.conversationId){
-          setUntrackMessages(data.untrack)
+        if (conversation.id === data.conversationId) {
+          setUntrackMessages(data.untrack);
         }
       });
-    } 
+    }
   }, []);
 
   return (
-    <div className={styles.conversation}>
-      {
-        user ?
+    <div className={`${styles.conversation} ${isDark ? styles.dark : ""}`}>
+      {user ? (
         <UserCard
           toRight
           showImage
@@ -60,10 +59,10 @@ export default function Conversation({ conversation, currentUser }) {
             },
           }}
         />
-        :
+      ) : (
         <></>
-      }
-      
+      )}
+
       {untrackMessages.length > 0 && (
         <div className={styles.counter}>{untrackMessages.length}</div>
       )}

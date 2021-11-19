@@ -17,54 +17,6 @@ export default function Navbar(props) {
   const admin = useSelector((store) => store.adminReducer);
   const isDark = useSelector((state) => state.themeReducer.theme);
 
-  /*
-  const socket = useSelector((state) => state.usersReducer.socket);
-  useEffect(() => {
-    if (Object.keys(socket).length) {
-      socket.on("getNotification", (data) => {
-        // like
-        if (data.type === 1) {
-          setNotifications((prev) => {
-            if (
-              !prev.find(
-                (notif) =>
-                  notif.senderName === data.senderName && notif.id === data.id
-              )
-            ) {
-              return [data, ...prev];
-            } else {
-              return [...prev];
-            }
-          });
-          // follow
-        } else if (data.type === 3) {
-          setNotifications((prev) => {
-            if (
-              !prev.find(
-                (notif) =>
-                  notif.senderName === data.senderName && notif.id === data.id
-              )
-            ) {
-              return [data, ...prev];
-            } else {
-              return [...prev];
-            }
-          });
-        } else {
-          setNotifications((prev) => [data, ...prev]);
-        }
-      });
-    }
-  }, [socket]);
-
-  const handleRead = () => {
-    setNotifications([]);
-    setOpen(false);
-  };
-
-  const handleClick = () => setOpen(!open);
-  */
-
   const [showMenu, setShowMenu] = useState(false);
   const handleMenu = () => setShowMenu(!showMenu);
 
