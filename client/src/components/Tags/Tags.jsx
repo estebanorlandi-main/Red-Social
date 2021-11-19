@@ -46,7 +46,6 @@ function Tags({ tags, mode, handleSelect, editTags }) {
     <>
       {mode ? (
         <Select
-          key={Math.random()}
           onChange={(e) => handleSelect(e)}
           options={optionsTags}
           placeholder="Tags"
