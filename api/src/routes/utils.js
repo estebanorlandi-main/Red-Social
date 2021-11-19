@@ -92,15 +92,7 @@ const DB_findUserQuery = async (query) => {
         },
       ],
     },
-    //attributes:["id","name","username","lastname","image","gitaccount"],
-    include: [
-      { model: Post, include: likePostUser },
-      Comment,
-      "postLikes",
-      followersInfo,
-      followedInfo,
-      { model: User, as: "Friends", attributes: ["username", "image"] },
-    ],
+    attributes: ["username", "imageData", "imageType"],
   });
   return findUser;
 };

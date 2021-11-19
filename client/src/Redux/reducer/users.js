@@ -1,11 +1,19 @@
-
-import { SEARCH_USER, GET_USER, REMOVE_PROFILE, GET_USERS,NEW_MSG, SOCKET_CONN,BAN_USER_ADMIN, FOLLOW_UNFOLLOW } from "../actions/Users";
-import {INFO_USER} from "../actions/Admin"
+import {
+  SEARCH_USER,
+  GET_USER,
+  REMOVE_PROFILE,
+  GET_USERS,
+  NEW_MSG,
+  SOCKET_CONN,
+  BAN_USER_ADMIN,
+  FOLLOW_UNFOLLOW,
+} from "../actions/Users";
+import { INFO_USER } from "../actions/Admin";
 
 const initialState = {
   users: [],
   profile: {},
-  convers:{},
+  convers: {},
   socket: {},
 };
 
@@ -13,6 +21,7 @@ export default function root(state = initialState, action) {
   switch (action.type) {
     // SearchBar
     case SEARCH_USER:
+      console.log(action.payload);
       return {
         ...state,
         users: action.payload.data,
@@ -33,14 +42,14 @@ export default function root(state = initialState, action) {
 
     case NEW_MSG:
       return {
-        ...state
+        ...state,
       };
 
     case SOCKET_CONN:
       return {
         ...state,
-        socket: action.payload
-      };  
+        socket: action.payload,
+      };
 
     case REMOVE_PROFILE:
       return {
@@ -49,22 +58,22 @@ export default function root(state = initialState, action) {
       };
 
     case BAN_USER_ADMIN:
-      return{
-        ...state
-      }
+      return {
+        ...state,
+      };
 
     case FOLLOW_UNFOLLOW:
-      return{
-        ...state
-      }
-    
+      return {
+        ...state,
+      };
+
     case INFO_USER:
       return {
         ...state,
-        users: action.payload.data
-
-      }
+        users: action.payload.data,
+      };
     default:
       return state;
   }
 }
+
