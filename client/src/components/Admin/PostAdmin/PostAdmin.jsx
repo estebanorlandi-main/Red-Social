@@ -141,12 +141,12 @@ function PostAdmin({  post, customClass, socket, admin}) {
     e.preventDefault();
     if (commentError) return;
     dispatch(commentPost(post.idPost, newComment, session.username, socket));
-    socket.emit("sendNotification", {
-      senderName: session.username,
-      userImage: session.image,
-      receiverName: post.user.username,
-      type: 2,
-    });
+    // socket.emit("sendNotification", {
+    //   senderName: session.username,
+    //   userImage: session.image,
+    //   receiverName: post.user.username,
+    //   type: 2,
+    // });
   };
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
@@ -197,12 +197,12 @@ function PostAdmin({  post, customClass, socket, admin}) {
     e.preventDefault();
     console.log(e.target)
     dispatch(banPost(e.target.value));
-    socket.emit("sendNotification", {
-      senderName: session.username,
-      userImage: session.image,
-      receiverName: post.user.username,
-      type: 2,
-    });
+    // socket.emit("sendNotification", {
+    //   senderName: session.username,
+    //   userImage: session.image,
+    //   receiverName: post.user.username,
+    //   type: 2,
+    // });
     alert('Ban, successfully applied');
   }
 

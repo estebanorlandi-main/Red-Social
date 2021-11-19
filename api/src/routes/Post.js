@@ -45,7 +45,7 @@ const paginate = (page = 0, arr) => {
     .slice(page * postsPerPage, to < arr.length ? to : arr.length)
     .map((post) => {
       if (post.user) {
-        const image = post.user.imageData.toString("base64");
+        const image = post.user.imageData?.toString("base64");
         post.user["imageData"] = image;
       }
       if (post.comments) {
@@ -75,7 +75,7 @@ const paginate = (page = 0, arr) => {
   };
 };
 function ordenarTags(todos, tags, orden, seguidos) {
-  if (tags.length === 0) {
+  if (tags?.length === 0) {
     return ordenar(orden, todos);
   }
   let arr;
@@ -85,12 +85,12 @@ function ordenarTags(todos, tags, orden, seguidos) {
   let sinTagsNoSeguidos = [];
   arr = todos.map((post, i, arr) => {
     let cant = tags?.filter((tag) => {
-      if (post.tag.includes(tag)) {
+      if (post.tag?.includes(tag)) {
         return post.idPost;
       }
     });
     let sigue;
-    if (seguidos.includes(post.user.username)) {
+    if (seguidos?.includes(post.user.username)) {
       sigue = true;
     } else {
       sigue = false;
@@ -230,19 +230,17 @@ router.get("/:id", async (req, res, next) => {
 router.post(
   "/",
   upload.single("image"),
-  AuthControllers.isAuthenticated,
   async (req, res) => {
-    console.log(req.file);
     let { title, content, tag, username, type } = req.body;
 
     let orden = req.query.orden;
     let tags = req.query.tags?.split(",");
-    let seguidos = req.query.seguido.split(",");
+    let seguidos = req.query.seguido?.split(",");
 
     try {
       let userDB = await DB_UserID(username);
 
-      if (typeof tag === "string" && tag.length) tag = tag.split(",");
+      if (typeof tag === "string" && tag?.length) tag = tag?.split(",");
 
       let image = {};
       if (req.file) {
