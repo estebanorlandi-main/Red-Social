@@ -10,6 +10,7 @@ import { BrowserRouter } from "react-router-dom";
 import { store } from "./Redux/store";
 
 import "./index.css";
+process.env.CI = "";
 
 ReactDOM.render(
   <Provider store={store}>
