@@ -11,6 +11,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 const sanitizeUser = (data) => {
+  if (!data) return;
   if (Array.isArray(data)) {
     return data.map((user) => ({
       username: user.username,
@@ -18,9 +19,9 @@ const sanitizeUser = (data) => {
       lastname: user.lastname,
       gitaccount: user.gitaccount,
       image: {
-        imageType: user.imageType,
-        imageName: user.imageName,
-        imageData: user.imageData ? user.imageData.toString("base64") : null,
+        imageType: user?.imageType,
+        imageName: user?.imageName,
+        imageData: user?.imageData ? user.imageData.toString("base64") : null,
       },
       email: user.email,
       about: user.about,
@@ -33,13 +34,13 @@ const sanitizeUser = (data) => {
       })),
       strike: user.strike,
       dayBan: user.dayBan,
-      followers: user.followers.map((user) => ({
+      followers: user?.followers?.map((user) => ({
         ...user.dataValues,
         imageData: user.dataValues.imageData
           ? user.dataValues.imageData.toString("base64")
           : null,
       })),
-      following: user.following.map((user) => ({
+      following: user?.following?.map((user) => ({
         ...user.dataValues,
         imageData: user.dataValues.imageData
           ? user.dataValues.imageData.toString("base64")
@@ -49,7 +50,7 @@ const sanitizeUser = (data) => {
     }));
   }
   let Laimagenen4 = "";
-  if (data.imageData) {
+  if (data?.imageData) {
     Laimagenen4 = data.imageData.toString("base64");
   }
   return {
@@ -138,12 +139,13 @@ router.get("/", async (req, res, next) => {
       let findUser = await fn.DB_findUserQuery(req.query);
 
       findUser = sanitizeUser(findUser);
+      console.log(findUser);
 
-      if (findUser != null) return res.send(findUser);
-      res.send({ errors: "User not found" }).status(200);
+      return res.status(200).send(findUser);
     }
     res.send({});
   } catch (e) {
+    console.log(e);
     res.sendStatus(500);
   }
 });

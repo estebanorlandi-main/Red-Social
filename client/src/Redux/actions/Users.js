@@ -54,11 +54,7 @@ export function newMsg(payload) {
 export function banUserAdmin(username) {
   return (dispatch) =>
     axios
-      .post(
-        URL + `/admin/banUser`,
-        { username },
-        { withCredentials: true }
-      )
+      .post(URL + `/admin/banUser`, { username }, { withCredentials: true })
       .then((res) => dispatch({ type: BAN_USER_ADMIN, payload: res }))
       .catch((e) => (err) => dispatch({ type: ERROR, payload: err }));
 }
