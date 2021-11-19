@@ -106,8 +106,8 @@ export function getPosts(page, tag, orden, seguidos) {
 export function getPostForId(id) {
   return (dispatch) =>
     axios
-      .get(URL + `/${id}`)
-      .then((res) => dispatch({ type: GET_POST_FOR_ID, payload: res.data }))
+      .get(URL + `/post/${id}`)
+      .then((res) => {console.log(res.data);dispatch({ type: GET_POST_FOR_ID, payload: res.data })})
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }
 
@@ -141,7 +141,7 @@ export function likePost(data, socket) {
 
 export function getTags() {
   return (dispatch) =>
-    axios.get(URL + "/tags", { withCredentials: true }).then((res) => {
+    axios.get(URL + "/tags", { withCredentials: true }).then((res) => {console.log(res.data)
       dispatch({
         type: SET_TAGS,
         payload: res.data,

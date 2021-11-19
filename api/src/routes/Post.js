@@ -43,7 +43,7 @@ const paginate = (page = 0, arr) => {
     .slice(page * postsPerPage, to < arr.length ? to : arr.length)
     .map((post) => {
       if (post.user) {
-        const image = post.user.imageData.toString("base64");
+        const image = post.user.imageData?.toString("base64");
         post.user["imageData"] = image;
       }
       if (post.imageData) {
@@ -203,11 +203,14 @@ router.get("/:id", async (req, res, next) => {
     // if(Number(id).toString() === 'NaN'){
     //     return next()
     // }
+    console.log(id)
     const postId = await DB_Postsearch({ id: id });
+    console.log(postId)
     postId
       ? res.status(200).send(postId.dataValues)
       : res.send("No post with that id");
   } catch (e) {
+    console.log(e)
     res.status(404).send("Error with the id");
   }
 });
