@@ -15,11 +15,9 @@ router.post("/", async (req, res) => {
     let userLogin = await DB_userSearch(username, email, password);
     if (userLogin.error) throw new Error(userLogin.error);
 
-    let userStrike = await BD_loginBan(username)
-    console.log(userStrike, "strikes")
-    if(userStrike.error) res.status(400).send(userStrike.error)
-
-
+    let userStrike = await BD_loginBan(username);
+    console.log(userStrike, "strikes");
+    if (userStrike.error) res.status(400).send(userStrike.error);
 
     let sanitized = {
       username: userLogin.username,
@@ -27,7 +25,13 @@ router.post("/", async (req, res) => {
       lastname: userLogin.lastname,
       email: userLogin.email,
       gitaccount: userLogin.gitaccount,
-      image: userLogin.image,
+      image: {
+        imageType: userLogin.imageType,
+        imageName: userLogin.imageName,
+        imageData: userLogin.imageData
+          ? userLogin.imageData.toString("base64")
+          : null,
+      },
       about: userLogin.about,
       tags: userLogin.tags,
     };
@@ -45,7 +49,7 @@ router.post("/", async (req, res) => {
     res.cookie("codenet", token, cookiesOptions);
     res.status(200).send({ user: sanitized, success: true });
   } catch (e) {
-    console.log(e, "error")
+    console.log(e, "error");
     res.status(500).send({ errors: e, success: false });
   }
 });
