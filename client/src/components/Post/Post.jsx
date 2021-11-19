@@ -355,7 +355,11 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
             />
           </button>
 
-          <div className={`${styles.show} ${styles.optionsMenu}`}>
+          <div
+            className={`${options ? styles.show : styles.hide} ${
+              styles.optionsMenu
+            }`}
+          >
             <button
               className={styles.danger}
               onClick={() => {
