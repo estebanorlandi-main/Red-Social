@@ -20,7 +20,7 @@ export default function UserCard({
     <img
       className={user.image ? "" : styles.noImage}
       src={
-        user?.image
+        user?.image?.imageData
           ? `data:${user.image?.imageType};base64, ${user.image?.imageData}`
           : image
       }

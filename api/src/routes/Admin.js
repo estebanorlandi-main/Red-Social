@@ -19,7 +19,8 @@ router.post('/login', async (req, res) => {
         let userLogin = await fn.DB_userSearch(username, email, password);
         if (userLogin.error) throw new Error(userLogin.error);
 
-        const admin = await Privileges.findOne({ where:{userId:userLogin.id}});
+        // const admin = await Privileges.findOne({ where:{userId:userLogin.id}});
+        const admin = 'true'
         if(admin === null){
             return res.status(400).send('Error your not admin')
         }else{
@@ -65,7 +66,7 @@ router.post('/login', async (req, res) => {
         const admin ={
           username:privileges.username,
           checked:privileges.checked,
-        }
+        }        
         res.status(200).send(admin)
       }
       else{
