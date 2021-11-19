@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { getTags, loadTags } from "../../Redux/actions/Post";
 
 function Tags({ tags, mode, handleSelect, editTags }) {
-  console.log(tags);
   const dispatch = useDispatch();
   const allTags = useSelector((state) => state.postsReducer.tags);
   const [optionsTags, setOptionsTags] = useState(
