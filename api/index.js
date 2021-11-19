@@ -13,7 +13,7 @@ const {
 } = require("./src/routes/utils.js");
 
 // Syncing all the models at once.
-conn.sync({ force: false }).then(() => {
+conn.sync({ force: true }).then(() => {
   server.listen(3001, () => {
     //CARGA DE DATOS
     //PASOS A SEGUIR :
@@ -22,9 +22,9 @@ conn.sync({ force: false }).then(() => {
     //3---> DESCOMENTE SEGUNDO:  DB_postCreates(dataPosts)
     //4---> COMENTE: DB_postCreates(dataPosts)
 
-    //DB_userCreates(DataUsers);
+    // DB_userCreates(DataUsers);
 
-    //DB_postCreates(dataPosts);
+    // DB_postCreates(dataPosts);
 
     //Descomentar y comentar una sola vez!! Para crear el admin
 
