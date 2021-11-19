@@ -246,7 +246,7 @@ export default function Messenger() {
                         <img
                           className={styles.conversationImg}
                           src={
-                            receiver?.image
+                            receiver?.image && receiver.image?.imageData
                               ? `data:${receiver.image?.imageType};base64, ${receiver.image?.imageData}`
                               : avatar
                           }

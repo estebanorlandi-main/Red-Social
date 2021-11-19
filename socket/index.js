@@ -71,14 +71,14 @@ io.on("connection", (socket) => {
   socket.on("sendNotification", ({ senderName, receiverName, id, userImage, type }) => {
     const receiver = getUser(receiverName);
 
-    // if(senderName !== receiverName){
+    if(senderName !== receiverName){
       io.to(receiver?.socketId).emit("getNotification", {
         senderName,
         id,
         userImage,
         type
       });
-    // }
+    }
   });
 
   // follow/unfollow
@@ -87,7 +87,6 @@ io.on("connection", (socket) => {
 
     console.log(receiver)
 
-    // if(senderName !== receiverName){
       io.emit("getFollow", {
         info,
         receiverName

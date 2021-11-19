@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import UserCard from "../UserCard/UserCard";
 
 import styles from "./Notification.module.css";
@@ -14,25 +15,28 @@ export default function Notification({ notification }) {
   } else {
     action = "shared";
   }
+  console.log(notification)
 
   return (
     <div className={styles.notification}>
-      <UserCard
-        user={{
-          username: notification.senderName,
-          image: {
-            imageData: notification?.userImage?.imageData,
-            imageType: notification?.userImage?.imageType,
-          },
-        }}
-        showName
-        showImage
-        toRight
-        other={
-          action === "follow" ? "started following you" : `${action} your post`
-        }
-        small
-      />
+      <Link to={ action === "follow" ? `/profile/${notification.senderName}` : `/post/${notification.id}`}>
+        <UserCard
+          user={{
+            username: notification.senderName,
+            image: {
+              imageData: notification?.userImage?.imageData,
+              imageType: notification?.userImage?.imageType,
+            },
+          }}
+          showName
+          showImage
+          toRight
+          other={
+            action === "follow" ? "started following you" : `${action} your post`
+          }
+          small
+        />
+      </Link>
     </div>
   );
 }
