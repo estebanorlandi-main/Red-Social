@@ -13,7 +13,7 @@ import styles from "./DisplayConversations.module.css";
 
 export default function DisplayConversations() {
   const URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
-  
+
   const [conversations, setConversations] = useState([]);
   const [input, setInput] = useState("");
   const [popup, setPopup] = useState(false);
@@ -21,6 +21,7 @@ export default function DisplayConversations() {
   const isMessenger = useLocation().pathname === "/messenger";
 
   const user = useSelector((store) => store.sessionReducer);
+  const isDark = useSelector((state) => state.themeReducer.theme);
 
   const handleClick = (e) => {
     if (!isMessenger) {
@@ -31,9 +32,7 @@ export default function DisplayConversations() {
   useEffect(() => {
     const getConversations = async () => {
       try {
-        const res = await axios.get(
-          URL + "/conversation/" + user.username
-        );
+        const res = await axios.get(URL + "/conversation/" + user.username);
         // console.log(res.data);
         setConversations(res.data);
       } catch (err) {
@@ -48,7 +47,7 @@ export default function DisplayConversations() {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${isDark ? styles.dark : ""}`}>
       <div onClick={handleClick} className={styles.display}>
         <BiMessageAltDetail
           style={{ margin: "0", width: "1.5em", height: "1.5em" }}
@@ -97,4 +96,3 @@ export default function DisplayConversations() {
     </div>
   );
 }
-
