@@ -54,7 +54,7 @@ export function banUserAdmin(username) {
   return (dispatch) =>
     axios
       .post(
-        `http://localhost:3001/admin/banUser`,
+        URL + `/admin/banUser`,
         { username },
         { withCredentials: true }
       )

@@ -6,6 +6,8 @@ import avatar from "../../images/userCard.svg";
 import UserCard from "../UserCard/UserCard";
 
 export default function Conversation({ conversation, currentUser }) {
+  const URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+
   const socket = useSelector((state) => state.usersReducer.socket);
 
   const isDark = useSelector((state) => state.themeReducer.theme);
@@ -20,7 +22,7 @@ export default function Conversation({ conversation, currentUser }) {
 
     const getUser = async () => {
       try {
-        const res = await axios(`http://localhost:3001/user/${friendId}`);
+        const res = await axios(URL + `/user/${friendId}`);
         setUser(res.data);
       } catch (err) {
         console.log(err);

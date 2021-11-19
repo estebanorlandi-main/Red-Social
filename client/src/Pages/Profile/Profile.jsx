@@ -21,6 +21,8 @@ import Tags from "../../components/Tags/Tags";
 // cambiar a estado traido de la DB
 
 export default function Profile(props) {
+  const URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+
   const dispatch = useDispatch();
   const history = useHistory();
   const [editar, setEditar] = useState(false);
@@ -102,7 +104,7 @@ export default function Profile(props) {
       const getConversations = async () => {
         try {
           const res = await axios.get(
-            "http://localhost:3001/conversation/" + session.username
+            URL + "/conversation/" + session.username
           );
 
           return res.data;
