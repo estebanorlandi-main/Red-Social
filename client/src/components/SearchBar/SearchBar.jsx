@@ -11,7 +11,6 @@ export default function SearchBar(props) {
   const users = useSelector((state) => state.usersReducer.users);
   const admin = useSelector((state) => state.adminReducer.admin);
   
-  console.log(admin)
   const [input, setInput] = useState("");
   const [show, setShow] = useState(false);
 
