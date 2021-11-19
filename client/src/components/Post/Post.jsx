@@ -72,7 +72,7 @@ const parseContent = (text) => {
   return parsed;
 };
 
-function Post({ post, customClass, user, socket, admin, type }) {
+function Post({ maxComments, post, customClass, user, socket, admin, type }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const session = useSelector((state) => state.sessionReducer || {});
@@ -188,6 +188,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
           receiverName: post.user.username,
           type: 2,
         });
+        setNewComment("");
       } else {
         alert("You are banned, therefore you cannot post anything");
         setNewComment("");
@@ -462,12 +463,12 @@ function Post({ post, customClass, user, socket, admin, type }) {
           {currentPost ? currentPost.userLikes.length : post.userLikes.length}
         </button>
 
-        <button>
+        <NavLink to={`/post/${post.idPost}`}>
           <MdOutlineModeComment className={styles.icons} />
           {currentPost
             ? currentPost.comments && currentPost.comments.length
             : post.comments && post.comments.length}
-        </button>
+        </NavLink>
       </div>
 
       {session.username && post.type !== "challenge" ? (
@@ -573,7 +574,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
           <ul className={styles.comments}>
             <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
             {currentPost.comments.map((comment, i) =>
-              i < 3 ? <Comment key={i} comment={comment} /> : <></>
+              i < 3 || maxComments ? <Comment key={i} comment={comment} /> : <></>
             )}
           </ul>
         ) : (
@@ -583,7 +584,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
         <ul className={styles.comments}>
           <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
           {post.comments.map((comment, i) =>
-            i < 3 ? (
+            i < 3 || maxComments ? (
               <Comment key={i} comment={comment} type={post.type} />
             ) : (
               <></>

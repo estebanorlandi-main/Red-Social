@@ -208,11 +208,12 @@ const DB_Postsearch = async ({ username, id }) => {
           ban: false,
         },
         include: [
-          { model: User, attributes: ["image", "username"] },
+          { model: User, attributes: ["imageData","imageType", "username"] },
           { model: Comment, where: { ban: false } },
         ],
         order: [["createdAt", "DESC"]],
       }).catch((e) => console.log(e));
+      console.log(post_search)
       return post_search;
     } else if (id === undefined && username) {
       let userDB = await DB_UserID(username);
@@ -222,7 +223,7 @@ const DB_Postsearch = async ({ username, id }) => {
           ban: false,
         },
         include: [
-          { model: User, attributes: ["image", "username"] },
+          { model: User, attributes: ["imageData","imageType", "username"] },
           { model: Comment, where: { ban: false } },
         ],
         order: [["createdAt", "DESC"]],
