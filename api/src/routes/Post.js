@@ -234,10 +234,34 @@ router.get("/:id", async (req, res, next) => {
         },
       ],
     });
+
+    // La concha de tu hermana
+    if (postId?.user) {
+      const image = postId.user.imageData?.toString("base64");
+      postId.user["imageData"] = image;
+    }
+    if (postId?.comments) {
+      postId.comments = postId.comments.map((comment) => {
+        if (comment.user) {
+          const image = comment.user.imageData?.toString("base64");
+          comment.user["imageData"] = image;
+        }
+        return comment;
+      });
+
+      const image = postId.user.imageData?.toString("base64");
+      postId.user["imageData"] = image;
+    }
+    if (postId?.imageData) {
+      const image = postId.imageData?.toString("base64");
+      postId["imageData"] = image;
+    }
+
     postId
       ? res.status(200).send(postId.dataValues)
       : res.send("No post with that id");
   } catch (e) {
+    console.log(e);
     res.status(404).send("Error with the id");
   }
 });

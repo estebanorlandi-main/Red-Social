@@ -29,10 +29,12 @@ export default function Profile(props) {
   const profile = useSelector((state) => state.usersReducer.profile);
   console.log(profile);
   const isDark = useSelector((state) => state.themeReducer.theme);
+
+  const socket = useSelector((state) => state.usersReducer.socket);
+
   const [followersOnline, setFollowersOnline] = useState(null);
 
   const allTags = useSelector((state) => state.postsReducer.tags);
-  const socket = useSelector((state) => state.usersReducer.socket);
   const myProfile = session.username === profile.username;
 
   useEffect(() => {
@@ -143,8 +145,9 @@ export default function Profile(props) {
               <img
                 className={styles.image}
                 src={
-                  `data:${profile?.image?.imageType};base64, ${profile?.image?.imageData}` ||
-                  userimg
+                  profile?.image?.imageType
+                    ? `data:${profile?.image?.imageType};base64, ${profile?.image?.imageData}`
+                    : userimg
                 }
                 alt=""
               />
@@ -267,7 +270,11 @@ export default function Profile(props) {
               <section className={styles.posts}>
                 {profile.posts
                   ? profile.posts.map((post) => (
-                      <Post customClass={styles.post} post={post} />
+                      <Post
+                        customClass={styles.post}
+                        post={post}
+                        socket={socket}
+                      />
                     ))
                   : ""}
               </section>
