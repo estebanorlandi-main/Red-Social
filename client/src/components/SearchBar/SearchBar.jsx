@@ -9,7 +9,8 @@ export default function SearchBar(props) {
   const dispatch = useDispatch();
 
   const users = useSelector((state) => state.usersReducer.users);
-
+  const admin = useSelector((state) => state.adminReducer.admin);
+  
   const [input, setInput] = useState("");
   const [show, setShow] = useState(false);
 
@@ -32,7 +33,7 @@ export default function SearchBar(props) {
         onChange={handleChange}
         placeholder="Search Users"
       />
-      <UserList show={show} users={users} input={input} />
+      <UserList show={show} users={users} input={input} admin={admin} />
     </label>
   );
 }
