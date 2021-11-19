@@ -83,6 +83,6 @@
 }
 
 .dark h1,
-.dark a {
+.dark a, .dark p {
   color: #fff;
 }
