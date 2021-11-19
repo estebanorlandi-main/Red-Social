@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 // import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 
@@ -13,6 +13,7 @@ import style from "./NewRegister.module.css";
 
 function NewRegister(props) {
   const dispatch = useDispatch();
+  const isDark = useSelector((state) => state.themeReducer.theme);
 
   const [newUser, setNewUser] = useState(false)
 
@@ -68,7 +69,7 @@ function NewRegister(props) {
   };
 
   return (
-    <div className={style.container}>
+    <div className={`${style.container} ${isDark ? style.dark : ""}`}>
       {
         !newUser?
         <>
