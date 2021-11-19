@@ -32,47 +32,47 @@ router.get("/:conversationId", async (req, res) => {
   }
 });
 
-router.get("/read/:conversationId/:reader", async (req, res) => {
+// router.get("/read/:conversationId/:reader", async (req, res) => {
 
-  try {
-    const messagesUpdated = await Message.update(
-      { unread: false },
-      {
-        where: { 
-          conversationId: req.params.conversationId,
-          sender: {
-            [ Op.not ]: req.params.reader}
-        }
-      }
-    );
+//   try {
+//     const messagesUpdated = await Message.update(
+//       { unread: false },
+//       {
+//         where: { 
+//           conversationId: req.params.conversationId,
+//           sender: {
+//             [ Op.not ]: req.params.reader}
+//         }
+//       }
+//     );
 
-    console.log(messagesUpdated)
+//     console.log(messagesUpdated)
 
-    res.status(200).json(messagesUpdated);
-  } catch (err) {
-    console.log(err)
-    res.status(500).json(err);
-  }
-});
+//     res.status(200).json(messagesUpdated);
+//   } catch (err) {
+//     console.log(err)
+//     res.status(500).json(err);
+//   }
+// });
 
-router.get("/untrack/:conversationId/:user", async (req, res) => {
-  try {
+// router.get("/untrack/:conversationId/:user", async (req, res) => {
+//   try {
     
-    const messages = await Message.findAll({
-      where: { 
-        unread: true,
-        conversationId: req.params.conversationId, 
-        sender: req.params.user
-      }
-    });
+//     const messages = await Message.findAll({
+//       where: { 
+//         unread: true,
+//         conversationId: req.params.conversationId, 
+//         sender: req.params.user
+//       }
+//     });
 
-    console.log(messages)
+//     console.log(messages)
 
-    res.status(200).json(messages);
-  } catch (err) {
-    console.log(err)
-    res.status(500).json(err);
-  }
-});
+//     res.status(200).json(messages);
+//   } catch (err) {
+//     console.log(err)
+//     res.status(500).json(err);
+//   }
+// });
 
 module.exports = router;
