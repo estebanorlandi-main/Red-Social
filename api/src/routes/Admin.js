@@ -67,6 +67,8 @@ router.post('/login', async (req, res) => {
           username:privileges.username,
           checked:privileges.checked,
         }
+
+        
         res.status(200).send(admin)
       }
       else{
