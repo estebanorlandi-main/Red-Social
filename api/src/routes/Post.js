@@ -21,10 +21,12 @@ const modifiedPost = async (idPost) => {
   return await Post.findOne({
     where: { idPost },
     include: [
-      { model: User, attributes: ["image", "username"] },
+      { model: User, attributes: ["imageData", "imageType", "username"] },
       {
         model: Comment,
-        include: [{ model: User, attributes: ["image", "username"] }],
+        include: [
+          { model: User, attributes: ["imageData", "imageType", "username"] },
+        ],
       },
       {
         model: Likes,
@@ -43,11 +45,23 @@ const paginate = (page = 0, arr) => {
     .slice(page * postsPerPage, to < arr.length ? to : arr.length)
     .map((post) => {
       if (post.user) {
-        const image = post.user.imageData.toString("base64");
+        const image = post.user.imageData?.toString("base64");
+        post.user["imageData"] = image;
+      }
+      if (post.comments) {
+        post.comments = post.comments.map((comment) => {
+          if (comment.user) {
+            const image = comment.user.imageData?.toString("base64");
+            comment.user["imageData"] = image;
+          }
+          return comment;
+        });
+
+        const image = post.user.imageData?.toString("base64");
         post.user["imageData"] = image;
       }
       if (post.imageData) {
-        const image = post.imageData.toString("base64");
+        const image = post.imageData?.toString("base64");
         post["imageData"] = image;
       }
       return post;
@@ -61,7 +75,7 @@ const paginate = (page = 0, arr) => {
   };
 };
 function ordenarTags(todos, tags, orden, seguidos) {
-  if (tags.length === 0) {
+  if (tags?.length === 0) {
     return ordenar(orden, todos);
   }
   let arr;
@@ -71,12 +85,12 @@ function ordenarTags(todos, tags, orden, seguidos) {
   let sinTagsNoSeguidos = [];
   arr = todos.map((post, i, arr) => {
     let cant = tags?.filter((tag) => {
-      if (post.tag.includes(tag)) {
+      if (post.tag?.includes(tag)) {
         return post.idPost;
       }
     });
     let sigue;
-    if (seguidos.includes(post.user.username)) {
+    if (seguidos?.includes(post.user.username)) {
       sigue = true;
     } else {
       sigue = false;
@@ -203,11 +217,34 @@ router.get("/:id", async (req, res, next) => {
     // if(Number(id).toString() === 'NaN'){
     //     return next()
     // }
-    const postId = await DB_Postsearch({ id: id });
+    console.log(id)
+    //const postId = await DB_Postsearch({ id: id });
+    const postId = await Post.findOne({
+      where:{idPost:id, ban:false},
+      include: [
+        { model: User, attributes: ["imageData", "imageType", "username"] },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["imageData", "imageType", "username"],
+            },
+          ],
+        },
+        {
+          model: Likes,
+          as: "userLikes",
+          include: [{ model: User, attributes: ["username"] }],
+        },
+      ],
+    })
+    console.log(postId)
     postId
       ? res.status(200).send(postId.dataValues)
       : res.send("No post with that id");
   } catch (e) {
+    console.log(e)
     res.status(404).send("Error with the id");
   }
 });
@@ -216,19 +253,17 @@ router.get("/:id", async (req, res, next) => {
 router.post(
   "/",
   upload.single("image"),
-  AuthControllers.isAuthenticated,
   async (req, res) => {
-    console.log(req.file);
     let { title, content, tag, username, type } = req.body;
 
     let orden = req.query.orden;
     let tags = req.query.tags?.split(",");
-    let seguidos = req.query.seguido.split(",");
+    let seguidos = req.query.seguido?.split(",");
 
     try {
       let userDB = await DB_UserID(username);
 
-      if (typeof tag === "string" && tag.length) tag = tag.split(",");
+      if (typeof tag === "string" && tag?.length) tag = tag?.split(",");
 
       let image = {};
       if (req.file) {

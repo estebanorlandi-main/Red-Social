@@ -81,7 +81,9 @@ router.post('/login', async (req, res) => {
   router.post('/banPost', async (req, res) => {
     try{
       const {idPost} = req.body;
+      console.log(idPost)
       const post = await fn.BD_searchPost(idPost)
+      console.log(post)
       if(post === null){
         res.send({Error: "Post not exits"}).status(404);
       }else{

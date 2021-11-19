@@ -72,7 +72,7 @@ const parseContent = (text) => {
   return parsed;
 };
 
-function Post({ post, customClass, user, socket, admin, type }) {
+function Post({ maxComments, post, customClass, user, socket, admin, type }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const session = useSelector((state) => state.sessionReducer || {});
@@ -188,6 +188,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
           receiverName: post.user.username,
           type: 2,
         });
+        setNewComment("");
       } else {
         alert("You are banned, therefore you cannot post anything");
         setNewComment("");
@@ -251,16 +252,18 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const [result, setResult] = useState(null);
 
   const testing = () => {
+    setLoading(true);
     axios
       .post("http://localhost:3001/challenge/testing/", { code: newComment })
       .then((res) => {
-        console.log(res.data);
-        if (res?.data.error) {
+        console.log(res);
+        setLoading(false);
+        if (res?.data.data?.error) {
           setErrorTest(true);
           setResult(null);
         } else {
           setErrorTest(false);
-          setResult(res.data.tested);
+          setResult(res.data.data);
         }
       })
       .catch((e) => console.log(e));
@@ -274,6 +277,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
   if (post.content) test = parseContent(post.content);
 
   const [errorTest, setErrorTest] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleReport = () => {
     const report = {
@@ -459,12 +463,12 @@ function Post({ post, customClass, user, socket, admin, type }) {
           {currentPost ? currentPost.userLikes.length : post.userLikes.length}
         </button>
 
-        <button>
+        <NavLink to={`/post/${post.idPost}`}>
           <MdOutlineModeComment className={styles.icons} />
           {currentPost
             ? currentPost.comments && currentPost.comments.length
             : post.comments && post.comments.length}
-        </button>
+        </NavLink>
       </div>
 
       {session.username && post.type !== "challenge" ? (
@@ -528,7 +532,13 @@ function Post({ post, customClass, user, socket, admin, type }) {
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/macos-close.png" />
               </a>
               <div class="popupContent">
-                {errorTest ? (
+                {loading ? (
+                  <img
+                    className={styles.icon}
+                    style={{ float: "left" }}
+                    src="http://pa1.narvii.com/6892/4d02d3678a8cf722f7a76555d77c45fe32bd5b61r1-200-200_00.gif"
+                  />
+                ) : errorTest ? (
                   <img
                     className={styles.icon}
                     style={{ float: "left" }}
@@ -564,7 +574,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
           <ul className={styles.comments}>
             <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
             {currentPost.comments.map((comment, i) =>
-              i < 3 ? <Comment key={i} comment={comment} /> : <></>
+              i < 3 || maxComments ? <Comment key={i} comment={comment} /> : <></>
             )}
           </ul>
         ) : (
@@ -574,7 +584,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
         <ul className={styles.comments}>
           <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
           {post.comments.map((comment, i) =>
-            i < 3 ? (
+            i < 3 || maxComments ? (
               <Comment key={i} comment={comment} type={post.type} />
             ) : (
               <></>

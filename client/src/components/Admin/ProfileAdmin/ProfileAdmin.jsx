@@ -95,15 +95,64 @@ export default function ProfileAdmin(props) {
     dispatch(banUserAdmin(e.target.value));
     alert("They have applied successfully");
   };
-
+  
   return profile ? (
     <div>
-      {profile.strike?.length === 3 ? (
-        <div>
+      {profile.dayBan? (
+        <div className={styles.profile}>
+        <section className={styles.head}>
+        {myProfile && editar ? (
+                <button onClick={handleSubmit}>Change</button>
+              ) : (
+                ""
+              )}
+              {myProfile ? (
+                <Link to="/settings" className={styles.edit} style={ myProfile ? {} : {display:'none'}}>
+                  <BsFillPencilFill style={{ color: "#C94F4F", marginRight:'4px' }} />
+                  Edit
+                </Link>
+              ) : (
+                ""
+              )}
+
+              <div className={styles.importantInfo}> 
+                <img
+                  className={styles.image}
+                  src={profile.image || userimg}
+                  alt=""
+                  style={{marginRight:"24px"}}
+                />
+                <div className={styles.profileInfoDisplay}>
+                  <div> 
+                  {
+                    profile.name && profile.lastname ? 
+                    <p className={styles.name}>
+                      {profile.name} {profile.lastname}
+                    </p>
+                    :
+                    <p>
+                    </p>
+                  }
+                  <p>@{profile.username}</p>
+                  </div>
+
+                </div>
+              </div>
+              <div className={styles.profileActions} style={myProfile ? {display:'none'} : {}}>
+              {
+                !myProfile?
+                <div>
+                
+                </div>
+                :
+                <></>
+              }
+              </div>
           <img
-            src="https://instagramers.com/wp-content/uploads/2020/11/Portada-Cuenta-inhabilitada-Instagram.png"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMDQ5lpVGhTFXgBsVr2DrqEOVJR8dh7imulA&usqp=CAU"
             alt="Not found"
           />
+        </section>
         </div>
       ) : (
           <div className={styles.profile}>

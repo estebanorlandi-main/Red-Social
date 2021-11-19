@@ -200,7 +200,7 @@ function Home(props) {
           {posts
             ? posts.map((post, i) => (
                 <li key={i}>
-                  <Post post={post} socket={socket} />
+                  <Post post={post} socket={socket} maxComments={false}/>
                 </li>
               ))
             : "No hay ningun post"}
