@@ -195,7 +195,7 @@ function PostAdmin({  post, customClass, socket, admin}) {
 
   const hanbleBanPost = (e) =>{
     e.preventDefault();
-    console.log(e.target)
+    console.log(e.target.value)
     dispatch(banPost(e.target.value));
     // socket.emit("sendNotification", {
     //   senderName: session.username,
@@ -208,7 +208,6 @@ function PostAdmin({  post, customClass, socket, admin}) {
 
   const handleBanComment = (e) => {
     e.preventDefault();
-    console.log(e.target.value)
     dispatch(deleteComment(e.target.value));
     alert('Comment deleted successfully')
   }
