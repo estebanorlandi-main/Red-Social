@@ -25,10 +25,10 @@ export default function ChatOnline({ onlineUsers, currentId, setCurrentChat }) {
             <img
               className={styles.chatOnlineImg}
               src={
-                online?.image
-                  ? online.image
+                online.imageData
+                  ? `data:${online.imageType};base64, ${online.imageData}`
                   : avatar
-              }
+              } 
               alt=""
             />
             <div className={styles.chatOnlineBadge}></div>

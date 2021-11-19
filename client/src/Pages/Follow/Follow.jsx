@@ -15,6 +15,9 @@ export default function Follow({props}) {
   const [style, setStyle] = useState("none")
   const {user,followers,following, followersOnline, profile,follow} = props
 
+  console.log(followers)
+  console.log(following)
+
   const handleClick = (e)=>{
 
     if(followersOnline ? (e.target.id == "Followers" && followersOnline.length) : (e.target.id == "Followers" && followers.length)){
@@ -46,7 +49,14 @@ export default function Follow({props}) {
               <br/>
               { followersOnline ?
                 followersOnline?.map(e=><div className={styles.followers}>
-                  <img src={e.image? e.image:userimg} alt="Usuario"/>
+                  <img 
+                    src={
+                      e.imageData
+                        ? `data:${e.imageType};base64, ${e.imageData}`
+                        : userimg
+                    }
+                    alt="Usuario"
+                  />
                   <div>
                     <Link onClick={()=>setPopup(false)} to={e.username}>{e.username}</Link>
                     <p>{e.name}</p>                  
@@ -54,7 +64,14 @@ export default function Follow({props}) {
                 </div>)
               :
                 followers?.map(e=><div className={styles.followers}>
-                  <img src={e.image? e.image:userimg} alt="Usuario"/>
+                  <img 
+                    src={
+                      e.imageData
+                        ? `data:${e.imageType};base64, ${e.imageData}`
+                        : userimg
+                    }
+                    alt="Usuario"
+                  />
                   <div>
                     <Link onClick={()=>setPopup(false)} to={e.username}>{e.username}</Link>
                     <p>{e.name}</p>                  
@@ -72,7 +89,13 @@ export default function Follow({props}) {
               <hr></hr>
               <br/>
               {following?.map(e=><div className={styles.followers}>
-                <img src={e.image? e.image:userimg} alt="Usuario"/>
+                <img 
+                  src={
+                    e.imageData
+                      ? `data:${e.imageType};base64, ${e.imageData}`
+                      : userimg
+                  } 
+                  alt="Usuario"/>
                 <div>
                   <Link onClick={()=>setPopup(false)} to={e.username}>{e.username}</Link>
                   <p>{e.name}</p>                  
@@ -92,7 +115,9 @@ export function FollowBtn({props}){
   const socket = useSelector((state) => state.usersReducer.socket);
   const $follows = info.some(e => e.username === user)
   const [Follow, SetFollow] = useState($follows)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
+  console.log(user)
 
   const handleClick = (e) => {
     if(!user || !follow) return
@@ -108,8 +133,6 @@ export function FollowBtn({props}){
       });
     }
 
-  
-    
     SetFollow(!Follow)
   };
 

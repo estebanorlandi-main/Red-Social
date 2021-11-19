@@ -77,18 +77,6 @@ export default function Messenger() {
     }
   }, [socket]);
 
-  // useEffect(() => {
-  //   if(Object.keys(socket).length){
-  //     socket.on("getUntrackMessage", (data) => {
-
-  //       console.log(data.untrack)
-  //       console.log(data.conversationId)
-
-  //       // dispatch(setUntrackMessages(data));
-        
-  //     });
-  //   } 
-  // }, []);
 
   useEffect(() => {
     arrivalMessage &&
