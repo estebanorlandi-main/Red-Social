@@ -28,8 +28,14 @@ const sanitizeUser = (data) => {
       posts: user.posts,
       strike: user.strike,
       dayBan:user.dayBan,
-      followers:user.followers,
-      following:user.following,
+      followers: user.followers.map((user) => ({
+        ...user.dataValues,
+        imageData: user.dataValues.imageData ? user.dataValues.imageData.toString("base64") : null
+      })),
+      following: user.following.map((user) => ({
+        ...user.dataValues,
+        imageData: user.dataValues.imageData ? user.dataValues.imageData.toString("base64") : null
+      })),
       friends:user.Friends
     }));
   }
@@ -51,8 +57,14 @@ const sanitizeUser = (data) => {
     posts: data.posts,
     strike: data.strike,
     dayBan:data.dayBan,
-    followers:data.followers,
-    following:data.following,
+    followers: data.followers.map((user) => ({
+      ...user.dataValues,
+      imageData: user.dataValues.imageData ? user.dataValues.imageData.toString("base64") : null
+    })),
+    following: data.following.map((user) => ({
+      ...user.dataValues,
+      imageData: user.dataValues.imageData ? user.dataValues.imageData.toString("base64") : null
+    })),
     friends:data.Friends
   };
 };
@@ -80,6 +92,7 @@ router.get("/", async (req, res, next) => {
       let findUser = await fn.DB_findUserQuery(req.query);
 
       findUser = sanitizeUser(findUser);
+
       if (findUser != null) return res.send(findUser);
       res.send({ errors: "User not found" }).status(200);
     }
@@ -99,6 +112,7 @@ router.get("/:username", async (req, res, next) => {
       ? res.send(findUser)
       : res.send({ errors: "USER not found" }).status(200);
   } catch (e) {
+    console.log(e)
     res.sendStatus(500);
   }
 });

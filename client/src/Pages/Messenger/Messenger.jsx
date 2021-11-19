@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { socketConnection, getUser, removeProfile } from "../../Redux/actions/Users";
 import { setUntrackMessages } from "../../Redux/actions/Message.js";
 import avatar from "../../images/userCard.svg";
+import UserCard from "../../components/UserCard/UserCard.jsx";
 
 import axios from "axios";
 
@@ -76,18 +77,6 @@ export default function Messenger() {
     }
   }, [socket]);
 
-  // useEffect(() => {
-  //   if(Object.keys(socket).length){
-  //     socket.on("getUntrackMessage", (data) => {
-
-  //       console.log(data.untrack)
-  //       console.log(data.conversationId)
-
-  //       // dispatch(setUntrackMessages(data));
-        
-  //     });
-  //   } 
-  // }, []);
 
   useEffect(() => {
     arrivalMessage &&
@@ -253,7 +242,11 @@ export default function Messenger() {
                       <div style={{display:"flex", alignItems:"center", paddingBottom:"0.5em"}}>
                       <img
                         className={styles.conversationImg}
-                        src={receiver.image ? receiver.image : avatar}
+                        src={
+                          receiver?.image
+                            ? `data:${receiver.image?.imageType};base64, ${receiver.image?.imageData}`
+                            : avatar
+                        }
                         alt=""
                       />
                       <span className={styles.conversationName}>{receiver.username}</span>
