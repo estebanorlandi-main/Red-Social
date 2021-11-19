@@ -254,13 +254,13 @@ function Post({ post, customClass, user, socket, admin, type }) {
     axios
       .post("http://localhost:3001/challenge/testing/", { code: newComment })
       .then((res) => {
-        console.log(res.data);
-        if (res?.data.error) {
+        console.log(res);
+        if (res?.data.data?.error) {
           setErrorTest(true);
           setResult(null);
         } else {
           setErrorTest(false);
-          setResult(res.data.tested);
+          setResult(res.data.data);
         }
       })
       .catch((e) => console.log(e));
