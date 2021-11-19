@@ -188,6 +188,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
           receiverName: post.user.username,
           type: 2,
         });
+        setNewComment("");
       } else {
         alert("You are banned, therefore you cannot post anything");
         setNewComment("");
