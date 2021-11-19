@@ -1,0 +1,234 @@
+[
+	{
+		"label": "apl"
+	},
+	{"label": "asciiarmor"},
+	{"label": "asn.1"},
+	{"label": "asterisk"},
+	{"label": "brainfuck"},
+	{"label": "clike"},
+	{"label": "clojure"},
+	{"label": "cmake"},
+	{"label": "cobol"},
+	{"label": "coffeescript"},
+	{"label": "commonlisp"},
+	{"label": "crystal"},
+	{"label": "css"},
+
+{"label": "cypher"
+},
+{"label": "d"
+},
+{"label": "dart"
+},
+{"label": "diff"
+},
+{"label": "django"
+},
+{"label": "dockerfile"
+},
+{"label": "dtd"
+},
+{"label": "dylan"
+},
+{"label": "ebnf"
+},
+{"label": "ecl"
+},
+{"label": "eiffel"
+},
+{"label": "elm"
+},
+{"label": "erlang"
+},
+{"label": "factor"
+},
+{"label": "fcl"
+},
+{"label": "forth"
+},
+{"label": "fortran"
+},
+{"label": "gas"
+},
+{"label": "gfm"
+},
+{"label": "gherkin"
+},
+{"label": "go"
+},
+{"label": "groovy"
+},
+{"label": "haml"
+},
+{"label": "handlebars"
+},
+{"label": "haskell"
+},
+{"label": "haskell-literate"
+},
+{"label": "haxe"
+},
+{"label": "htmlembedded"
+},
+{"label": "htmlmixed"
+},
+{"label": "http"
+},
+{"label": "idl"
+},
+{"label": "javascript"
+},
+{"label": "jinja2"
+},
+{"label": "jsx"
+},
+{"label": "julia"
+},
+{"label": "livescript"
+},
+{"label": "lua"
+},
+{"label": "markdown"
+},
+{"label": "mathematica"
+},
+{"label": "mbox"
+},
+{"label": "mirc"
+},
+{"label": "mllike"
+},
+{"label": "modelica"
+},
+{"label": "mscgen"
+},
+{"label": "mumps"
+},
+{"label": "nginx"
+},
+{"label": "nsis"
+},
+{"label": "ntriples"
+},
+{"label": "octave"
+},
+{"label": "oz"
+},
+{"label": "pascal"
+},
+{"label": "pegjs"
+},
+{"label": "perl"
+},
+{"label": "php"
+},
+{"label": "pig"
+},
+{"label": "powershell"
+},
+{"label": "properties"
+},
+{"label": "protobuf"
+},
+{"label": "pug"
+},
+{"label": "puppet"
+},
+{"label": "python"
+},
+{"label": "q"
+},
+{"label": "r"
+},
+{"label": "rpm"
+},
+{"label": "rst"
+},
+{"label": "ruby"
+},
+{"label": "rust"
+},
+{"label": "sas"
+},
+{"label": "sass"
+},
+{"label": "scheme"
+},
+{"label": "shell"
+},
+{"label": "sieve"
+},
+{"label": "slim"
+},
+{"label": "smalltalk"
+},
+{"label": "smarty"
+},
+{"label": "solr"
+},
+{"label": "soy"
+},
+{"label": "sparql"
+},
+{"label": "spreadsheet"
+},
+{"label": "sql"
+},
+{"label": "stex"
+},
+{"label": "stylus"
+},
+{"label": "swift"
+},
+{"label": "tcl"
+},
+{"label": "textile"
+},
+{"label": "tiki"
+},
+{"label": "tiddlywiki"
+},
+{"label": "toml"
+},
+{"label": "tornado"
+},
+{"label": "troff"
+},
+{"label": "ttcn"
+},
+{"label": "ttcn-cfg"
+},
+{"label": "turtle"
+},
+{"label": "twig"
+},
+{"label": "vb"
+},
+{"label": "vbscript"
+},
+{"label": "velocity"
+},
+{"label": "verilog"
+},
+{"label": "vhdl"
+},
+{"label": "vue"
+},
+{"label": "wast"
+},
+{"label": "webidl"
+},
+{"label": "xml"
+},
+{"label": "xquery"
+},
+{"label": "yacas"
+},
+{"label": "yaml"
+},
+{"label": "yaml-frontmatter"
+},
+{"label": "z80"
+}
+]

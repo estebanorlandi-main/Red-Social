@@ -1,0 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Shippori+Antique+B1&display=swap");
+
+#popupBody {
+  width: 88%;
+  height: 80%;
+  padding: 2%;
+  border-radius: 15px;
+  box-shadow: 0 0 5px #ccc;
+  background: #fff;
+  position: relative;
+  margin: 7% auto;
+  transition: all 5s ease-in-out;
+  font-family: "Shippori Antique B1", sans-serif;
+}
+
+#cerrar {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 200ms;
+}

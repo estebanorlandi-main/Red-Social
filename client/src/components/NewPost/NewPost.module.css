@@ -1,0 +1,60 @@
+.container * {
+  box-sizing: border-box;
+}
+
+.container {
+  --pX: 1.5em;
+  display: flex;
+  flex-direction: column;
+  width: 25em;
+  max-width: 25em;
+  margin: 0 auto;
+  padding: 1em var(--pX);
+
+  background-color: #fff;
+  border-radius: 1em;
+  box-shadow: 0 0.25em 0.5em #0005;
+}
+.wrapper > div {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.error {
+  color: #f33;
+}
+
+.submit {
+  border: none;
+  border: 2px solid #aaa;
+  margin: 1em 0 0 0;
+  padding: 1em;
+}
+
+.container {
+  resize: none;
+  border: none;
+}
+
+.uploadImage {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  max-height: 10rem;
+}
+
+.flex {
+  width: 100%;
+  display: flex;
+  gap: 1em;
+  align-items: center;
+}
+
+.dark {
+  background-color: #333;
+}
+
+.dark textarea {
+  background-color: #444;
+}

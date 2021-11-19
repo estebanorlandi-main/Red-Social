@@ -1,38 +1,230 @@
 .App {
-  text-align: center;
+  --c-light: #f0f0f0;
+  --c-dark: #1e1e1e;
+
+  --c-lightPost: #ffffff;
+
+  --hue-blue: 198;
+
+  --c-soft-blue: hsl(226deg, 100%, 95%);
+  --c-blue: hsl(226deg, 100%, 70%);
+  --c-hard-blue: hsl(226deg, 100%, 50%);
+  --bs-blue: 0 0.25rem 0.25rem hsla(226deg, 100%, 50%, 25%);
+
+  --c-red: #c94f4f;
+  --c-mix: #7f69a3;
+  --c-enfasis: #a04972;
+
+  background-color: #f5f5f5;
+  min-height: 100vh;
 }
 
-.App-logo {
-  height: 40vmin;
+.container {
+  width: 95vw;
+  margin: 0 auto;
+}
+
+* {
+  outline: none;
+  box-sizing: border-box;
+}
+
+.buttonContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+form .buttonContainer {
+  margin: 2em 0 0 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+form > h1 {
+  margin: 0 0 0.5em 0;
+  color: #1e1e1e;
+}
+
+label {
+  margin: 1em 0 0 0;
+  font-size: 0.9rem;
+  width: 100%;
+  background-color: #fff;
+}
+
+label input,
+label textarea {
+  font-family: "Roboto";
+  padding: 0.75em;
+  border: none;
+  width: 100%;
+  font-size: 0.9rem;
+  border: none;
+  resize: none;
+}
+
+form span {
+  color: #f55;
+  font-size: 0.9rem;
+  margin: 0.25em 0 0 0;
+}
+
+.btn {
+  padding: 1em;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.btn:disabled {
+  background-color: #ccc;
+  cursor: no-drop;
+}
+
+button[type="submit"] {
+  border-radius: 5em;
+  border: none;
+  color: #fff;
+  background-color: var(--c-blue);
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  width: 100%;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  padding: 0 0 0 1em;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.input-group:focus-within {
+  outline: 2px solid var(--c-blue);
+}
+.input-group:focus-within.error {
+  outline: 2px solid red;
+}
+
+.btn.simple {
+  text-decoration: none;
+  align-self: flex-end;
+  padding: 0;
+  color: #1e1e1e;
+  font-size: 0.8rem;
+}
+
+button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  cursor: pointer;
+  justify-content: center;
+}
+
+a {
+  color: #1e1e1e;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+a,
+button {
+  outline: 2px none var(--c-blue) !important;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--c-blue) !important;
+  outline-offset: 0.25rem;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  justify-items: flex-start;
+  width: max-content;
+  height: 2.5rem;
+  border-radius: 0.25rem 0.25rem 0 0;
+  position: fixed;
+  bottom: 0;
+  right: 1rem;
+  z-index: 5;
+  background-color: #fff;
+  padding: 1rem 6rem 1rem 1.5rem;
+  transition: all 0.5s ease;
+  border: 2px solid var(--c-blue);
+  border-bottom: none;
+}
+
+.message > span {
+  margin: 0 0 0 1rem;
+}
+
+.errors {
+  position: absolute;
+}
+
+svg {
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@media screen and (max-width: 800px) {
+  .message {
+    bottom: 1rem;
+    padding: 0;
+    height: 4rem;
+    width: 4rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    border: none;
+    box-shadow: 0 0.25rem 0.5rem #0002;
+  }
+  .message:hover {
+    box-shadow: 0 0.5rem 0.75rem #0005;
+  }
+  .message > span {
+    display: none;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.top {
+  position: absolute !important;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  width: max-content;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  top: 50% !important;
+  left: 50% !important;
 }
 
-.App-link {
-  color: #61dafb;
+.dark {
+  --c-soft-blue: hsl(226deg, 100%, 95%);
+  --c-blue: hsl(226deg, 50%, 50%);
+  --c-hard-blue: hsl(226deg, 100%, 50%);
+  --bs-blue: none;
+  --c-lightPost: #333;
+
+  background-color: #1e1e1e;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.dark label {
+  color: #aaa;
+  background-color: var(--c-lightPost);
+  border: none;
+}
+.dark input,
+.dark textarea {
+  background-color: transparent;
+  color: #fff;
+}
+.dark .input-group,
+.dark .message {
+  background-color: #444;
+  border: none;
 }

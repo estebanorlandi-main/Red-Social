@@ -1,0 +1,26 @@
+[
+  {
+    "Title": "¿Conoces el origen de python?",
+    "Content": "A pesar de que pueda parecer algo muy nuevo, Python remonta su origen a principios de los años 90, cuando Guido Van Rossum, un trabajador del Centrum Wiskunde & Informatica (CWI), un centro de investigación holandés, tuvo la idea de desarrollar un nuevo lenguaje basándose en un proyecto anterior, el lenguaje de programación “ABC”, que él mismo había desarrollado junto a sus compañeros. Su filosofía fue la misma desde el primer momento: crear un lenguaje de programación que fuera muy fácil de aprender, escribir y entender, sin que esto frenara su potencial para crear cualquier tipo de aplicación. En aquellos años, el hardware que había no permitía tal cosa, y es por eso por lo que Python ha resurgido durante los últimos años, porque el avance de la tecnología ha permitido alcanzar el objetivo inicial de este lenguaje de programación adelantado a su tiempo."
+  },
+
+  {
+    "Title": "Scoping And Hoisting in JavaScript",
+    "Content": "Scoping: In JavaScript, functions are our de facto scope delimiters for declaring vars, which means that usual blocks from loops and conditionals (such as if, for, while, switch and try) DON'T delimit scope, unlike most other languages. Therefore, those blocks will share the same scope as the function which contains them. This way, it might be dangerous to declare vars inside blocks as it would seem the var belongs to that block only. \nHoisting: On runtime, all var and function declarations are moved to the beginning of each function (its scope) - this is known as Hoisting. Having said so, it is a good practice to declare all the vars altogether on the first line, in order to avoid false expectations with a var that got declared late but happened to hold a value before - this is a common problem for programmers coming from languages with block scope."
+  },
+
+  {
+    "Title": "Los foros más utilizados por programadores",
+    "Content": "Reddit » Learn Programming \nStack Overflow\nBytes\nDigital Point » Programming Forums\nCodeGuru Forums\nBentley Communities » Developers and Programming Forum\n¿Vos cuales nos recomendarías?"
+  },
+
+  {
+    "Title": "¿Cual es la modalidad que más te gusta?",
+    "Content": "Todos los programadores siempre estamos bajo la misma dimisa, que es mejor, que nos gusta más?\nTe invito a que comentes a través de tus experiencias que preferis. ¿El sector de testing y back-end development? o ¿Diseño de estilos y Front-end development?"
+  },
+
+  {
+    "Title": "Conocen paginas de contenido UI/UX?",
+    "Content": "Hola les queria preguntar a ustedes quienes me conocen si conocen buenas fuentes para poder incorporar una buena estructura de UI/UX con iconos y que quede bonito"
+  }
+]

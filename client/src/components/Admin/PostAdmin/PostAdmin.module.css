@@ -1,0 +1,282 @@
+.container {
+  --pX: 1.5em;
+  --c-bg: var(--c-lightPost);
+  --c-avatar-bg: var(--c-blue);
+  --c-font: var(--c-dark);
+
+  position: relative;
+
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 2em auto 0 auto;
+  padding: 1em 0;
+  border-radius: 10px;
+  gap: 1em;
+  overflow: hidden;
+  background-color: var(--c-bg);
+  box-shadow: 0 1px 2px #0001;
+}
+
+.options {
+  position: absolute;
+  top: 1em;
+  right: var(--pX);
+  align-self: flex-end;
+}
+.optionsHandler {
+  background-color: transparent;
+  border: none;
+}
+
+.optionsMenu {
+  position: absolute;
+  right: 0;
+  top: 2rem;
+  background-color: #fff;
+  border: 1px solid #f0f0f0;
+  padding: 0.5rem;
+  border-radius: 0;
+}
+.optionsMenu button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  background-color: transparent;
+  padding: 0.5em 1em;
+  font-size: 0.8rem;
+  border: none;
+  margin: 0.5em 0 0 0;
+  width: 100%;
+}
+
+.optionsMenu svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.danger {
+  background-color: #f55 !important;
+  color: #fff;
+}
+
+.hide {
+  display: none;
+}
+.show {
+  display: block;
+}
+
+.avatar {
+  object-fit: cover;
+  object-position: center;
+  width: 3em;
+  height: 3em;
+  border-radius: 100%;
+}
+
+.userContainer {
+  margin: 0.5em 0 var(--pX) var(--pX);
+}
+
+.postBody {
+  padding: 0 var(--pX) 0 var(--pX);
+  width: 100%;
+}
+
+.postBody label,
+.postBody button {
+  display: block;
+  margin: 1rem 0 0 0 !important;
+}
+
+.mainContent {
+  position: relative;
+  max-height: 3.5rem;
+  overflow-y: hidden;
+  transition: all 0.25s;
+  margin: 0 auto;
+}
+
+.expand {
+  max-height: max-content;
+}
+
+.text {
+  word-break: break-word;
+  font-size: 0.9rem;
+  line-height: 1rem;
+  margin: 0.5rem 0 0 0;
+}
+
+.seeMore {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 3;
+  padding: 0 0 0 1rem;
+  border: none;
+  background-color: var(--c-lightPost);
+  color: var(--c-blue);
+  font-size: 0.9rem;
+  cursor: pointer;
+  width: max-content;
+}
+
+.seeMore:hover {
+  color: var(--c-hard-blue);
+}
+
+.postImage {
+  width: 100%;
+  max-height: 15rem;
+  object-fit: cover;
+  background-color: #aaa;
+  margin: 2em 0 0 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.actions > button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 300;
+  width: max-content;
+  padding: var(--pX) var(--pX);
+  cursor: pointer;
+}
+
+.icons,
+.iconPaint {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.5em;
+  transition: all 0.15s ease;
+}
+.favorite:hover .icons {
+  color: #e00 !important;
+}
+
+.newCommentContainer {
+  width: 100%;
+  padding: 0 var(--pX);
+}
+
+.newComment > label {
+  display: flex !important;
+  flex-direction: row;
+}
+
+.newComment input {
+  resize: none;
+  padding: 1em;
+  height: calc(1rem + 2em);
+}
+
+.inline {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.newComment button[type="submit"] {
+  max-width: 7em;
+  border-radius: 5em;
+  margin: 0.5em 0 0.5em auto;
+  padding: 1em;
+  box-shadow: var(--bs-blue);
+}
+
+.maxLength {
+  font-size: 0.8rem;
+  color: #888;
+  text-align: right;
+}
+
+.disabled {
+  color: #aaa;
+  cursor: default;
+}
+
+.mention {
+  color: #59d;
+}
+
+.comments {
+  width: 100%;
+  padding: 0 var(--pX);
+}
+.users {
+  color: #888;
+}
+
+.submitEdit {
+  border: none;
+  padding: 0.75em;
+  border-radius: 5em;
+  text-align: center;
+  color: var(--c-blue);
+  font-weight: 500;
+  font-size: 1rem;
+  background-color: transparent;
+  border: 2px solid var(--c-blue);
+  transition: all 0.25s;
+}
+
+.submitEdit:hover {
+  background-color: var(--c-blue);
+  color: #fff;
+}
+.newChallengeContainer {
+  width: 100%;
+  background-color: var(--c-blue);
+  padding: 10px 10px;
+  border: var(--c-blue) 10px solid;
+  border-radius: 20px;
+}
+
+.toButton {
+  text-decoration: none;
+  color: #fff;
+  border-radius: 12px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 40px;
+}
+
+.dark {
+  color: #fff;
+}
+
+.dark .text {
+  color: #aaa;
+}
+.dark .icons *,
+.dark .actions * {
+  color: #888;
+}
+.dark .favorite:hover .icons * {
+  color: #f33;
+}
+.dark .iconPaint *,
+.iconPaint * {
+  color: #f33;
+}

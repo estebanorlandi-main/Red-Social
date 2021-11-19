@@ -1,0 +1,40 @@
+.list {
+  position: absolute;
+  top: 3em;
+  left: 0;
+  overflow-y: auto;
+  height: 25vh;
+  width: 100%;
+  padding: 1em;
+  background-color: #fff;
+  box-shadow: 0 2px 2px #0001;
+  border-radius: 0 0 1em 1em;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  padding: 0.5em;
+}
+
+.user > img {
+  object-fit: cover;
+  object-position: center;
+  width: 2em;
+  height: 2em;
+  max-width: 3em;
+  border-radius: 100%;
+  margin: 0 1em 0 0;
+}
+
+.user:hover {
+  background-color: var(--c-soft-blue);
+}
+::-webkit-scrollbar {
+  width: 5px;
+  background-color: rgb(201, 201, 201);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(56, 56, 56);
+}

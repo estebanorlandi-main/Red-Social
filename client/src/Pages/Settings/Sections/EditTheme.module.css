@@ -1,0 +1,37 @@
+.container {
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.container > button {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: max-content;
+  padding: 0.5rem 1rem;
+  margin: 0.75rem 0 0 0;
+  border: none;
+  background-color: #1e1e1e;
+  color: #fff;
+  transition: all 0.25s;
+}
+
+.dark > button {
+  background-color: #fff;
+}
+.dark button,
+.dark button * {
+  color: #1e1e1e;
+}
+
+.icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.icon.moon * {
+  color: #fff !important;
+}
+.icon.moon * {
+  color: #fff !important;
+}
