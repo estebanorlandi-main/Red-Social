@@ -31,20 +31,20 @@ export default function Conversation({ conversation, currentUser }) {
     getUser();
   }, [currentUser, conversation]);
 
-  console.log(user);
+  // console.log(user);
 
-  useEffect(() => {
-    if (Object.keys(socket).length) {
-      socket.on("getUntrackMessage", (data) => {
-        console.log(data.untrack);
-        console.log(data.conversationId);
+  // useEffect(() => {
+  //   if (Object.keys(socket).length) {
+  //     socket.on("getUntrackMessage", (data) => {
+  //       console.log(data.untrack);
+  //       console.log(data.conversationId);
 
-        if (conversation.id === data.conversationId) {
-          setUntrackMessages(data.untrack);
-        }
-      });
-    }
-  }, []);
+  //       if (conversation.id === data.conversationId) {
+  //         setUntrackMessages(data.untrack);
+  //       }
+  //     });
+  //   }
+  // }, []);
 
   return (
     <div className={`${styles.conversation} ${isDark ? styles.dark : ""}`}>

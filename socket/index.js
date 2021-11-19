@@ -50,15 +50,15 @@ io.on("connection", (socket) => {
   });
 
   //send and get untrackmessages
-  socket.on("untrackMessage", ({ receiverId, data, conversationId }) => {
-    const user = getUser(receiverId);
-    // console.log(data)
+  // socket.on("untrackMessage", ({ receiverId, data, conversationId }) => {
+  //   const user = getUser(receiverId);
+  //   // console.log(data)
     
-    io.to(user?.socketId).emit("getUntrackMessage", {
-      untrack: data,
-      conversationId
-    });
-  });
+  //   io.to(user?.socketId).emit("getUntrackMessage", {
+  //     untrack: data,
+  //     conversationId
+  //   });
+  // });
 
    //send and get post
    socket.on("reloadPostInfo", (post) => {
