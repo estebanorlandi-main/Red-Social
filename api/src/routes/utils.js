@@ -213,6 +213,7 @@ const DB_Postsearch = async ({ username, id }) => {
         ],
         order: [["createdAt", "DESC"]],
       }).catch((e) => console.log(e));
+      console.log(post_search)
       return post_search;
     } else if (id === undefined && username) {
       let userDB = await DB_UserID(username);

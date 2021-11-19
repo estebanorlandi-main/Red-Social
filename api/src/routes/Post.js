@@ -51,17 +51,17 @@ const paginate = (page = 0, arr) => {
       if (post.comments) {
         post.comments = post.comments.map((comment) => {
           if (comment.user) {
-            const image = comment.user.imageData.toString("base64");
+            const image = comment.user.imageData?.toString("base64");
             comment.user["imageData"] = image;
           }
           return comment;
         });
 
-        const image = post.user.imageData.toString("base64");
+        const image = post.user.imageData?.toString("base64");
         post.user["imageData"] = image;
       }
       if (post.imageData) {
-        const image = post.imageData.toString("base64");
+        const image = post.imageData?.toString("base64");
         post["imageData"] = image;
       }
       return post;
@@ -218,7 +218,27 @@ router.get("/:id", async (req, res, next) => {
     //     return next()
     // }
     console.log(id)
-    const postId = await DB_Postsearch({ id: id });
+    //const postId = await DB_Postsearch({ id: id });
+    const postId = await Post.findOne({
+      where:{idPost:id, ban:false},
+      include: [
+        { model: User, attributes: ["imageData", "imageType", "username"] },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["imageData", "imageType", "username"],
+            },
+          ],
+        },
+        {
+          model: Likes,
+          as: "userLikes",
+          include: [{ model: User, attributes: ["username"] }],
+        },
+      ],
+    })
     console.log(postId)
     postId
       ? res.status(200).send(postId.dataValues)
