@@ -208,7 +208,7 @@ const DB_Postsearch = async ({ username, id }) => {
           ban: false,
         },
         include: [
-          { model: User, attributes: ["image", "username"] },
+          { model: User, attributes: ["imageData","imageType", "username"] },
           { model: Comment, where: { ban: false } },
         ],
         order: [["createdAt", "DESC"]],
@@ -222,7 +222,7 @@ const DB_Postsearch = async ({ username, id }) => {
           ban: false,
         },
         include: [
-          { model: User, attributes: ["image", "username"] },
+          { model: User, attributes: ["imageData","imageType", "username"] },
           { model: Comment, where: { ban: false } },
         ],
         order: [["createdAt", "DESC"]],

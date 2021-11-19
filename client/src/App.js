@@ -8,7 +8,7 @@ import Signup from "./components/Signup/Signup";
 import Login from "./components/Login/Login";
 import NavBar from "./components/NavBar/NavBar.js";
 import DisplayConversations from "./components/DisplayConversations/DisplayConversations";
-
+import EspecificPost from "./components/EspecificPost/EspecificPost";
 import Messenger from "./Pages/Messenger/Messenger";
 import Support from "./components/Support/Support";
 import Settings from "./Pages/Settings/Settings";
@@ -62,9 +62,9 @@ function App() {
       )}
 
       {!isLanding && session && (
-        
+
         <DisplayConversations />
-      
+
       )}
 
       <NavBar />
@@ -75,6 +75,7 @@ function App() {
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
         <Route path="/loginAdmin" component={AdminLogin} />
+        <Route path="/post/:id" component={EspecificPost}/>
         <Route path="/supportAdmin" component={AdminSupport} />
         <Route exact path="/challenge" component={Challenge} />
         <Route path="/homeAdmin" component={HomeAdmin} />

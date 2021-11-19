@@ -217,11 +217,14 @@ router.get("/:id", async (req, res, next) => {
     // if(Number(id).toString() === 'NaN'){
     //     return next()
     // }
+    console.log(id)
     const postId = await DB_Postsearch({ id: id });
+    console.log(postId)
     postId
       ? res.status(200).send(postId.dataValues)
       : res.send("No post with that id");
   } catch (e) {
+    console.log(e)
     res.status(404).send("Error with the id");
   }
 });
