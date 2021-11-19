@@ -288,6 +288,7 @@ function Post({ post, customClass, user, socket, admin, type }) {
     // history.push('/home')
   };
 
+  console.log(post);
   return (
     <div
       className={
@@ -378,7 +379,13 @@ function Post({ post, customClass, user, socket, admin, type }) {
           toRight
           showImage
           showName
-          user={{ username: post.user.username }}
+          user={{
+            username: post.user.username,
+            image: {
+              imageData: post.user.imageData,
+              imageType: post.user.imageType,
+            },
+          }}
           other={`Posted ${TimeSpan}hr ago`}
         />
       </NavLink>

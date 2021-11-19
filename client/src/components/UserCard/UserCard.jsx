@@ -15,12 +15,15 @@ export default function UserCard({
   other,
 }) {
   const isDark = useSelector((state) => state.themeReducer.theme);
-  const session = useSelector((state) => state.sessionReducer);
 
   const ImgElement = (
     <img
       className={user.image ? "" : styles.noImage}
-      src={`data:${session.image?.imageType};base64, ${session.image?.imageData}` || image}
+      src={
+        user?.image
+          ? `data:${user.image?.imageType};base64, ${user.image?.imageData}`
+          : image
+      }
       alt=""
     />
   );

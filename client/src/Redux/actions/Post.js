@@ -38,9 +38,14 @@ export const COMMENT_DELETE = "comment_delete";
 export function createPost(data, orden, tags, seguidos) {
   return (dispatch) =>
     axios
-      .post(URL + `/post/?orden=${orden}&tags=${tags}&seguido=${seguidos}`, data, {
-        withCredentials: true,
-      })
+      .post(
+        URL + `/post/?orden=${orden}&tags=${tags}&seguido=${seguidos}`,
+        data,
+        {
+          withCredentials: true,
+          "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
+        }
+      )
       .then((res) => dispatch({ type: POST_CREATE, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 
@@ -91,7 +96,9 @@ export function commentPost(postid, content, username, socket) {
 export function getPosts(page, tag, orden, seguidos) {
   return (dispatch) =>
     axios
-      .get(URL + `/post?page=${page}&tag=${tag}&orden=${orden}&seguido=${seguidos}`)
+      .get(
+        URL + `/post?page=${page}&tag=${tag}&orden=${orden}&seguido=${seguidos}`
+      )
       .then((res) => dispatch({ type: GET_POSTS, payload: res.data }))
       .catch((error) => dispatch({ type: ERROR, payload: error }));
 }

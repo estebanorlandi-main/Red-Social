@@ -78,8 +78,9 @@ export default function NewPost({ orden, tags }) {
     e.preventDefault();
 
     if (!Object.values(errores).filter((error) => error).length) {
-      const formData = new FormData();
-      if (!info.dayBan) {
+      const day = new Date();
+      if (day > info.dayBan || !info.dayBan) {
+        const formData = new FormData();
         formData.append("title", data.title);
         formData.append("content", data.content);
         formData.append("image", data.image);
@@ -88,11 +89,13 @@ export default function NewPost({ orden, tags }) {
         formData.append("type", data.type);
         let seguidos;
         if (profile.following) {
-          seguidos = profile.following.map((user)=>user.username)
-        }else {
-          seguidos = []
+          seguidos = profile.following.map((user) => user.username);
+        } else {
+          seguidos = [];
         }
-        let errores = await dispatch(createPost(formData, orden, tags, seguidos));
+        let errores = await dispatch(
+          createPost(formData, orden, tags, seguidos)
+        );
         if (errores.type === "ERROR") {
           alert("se ha producido un error");
         } else {
@@ -109,9 +112,6 @@ export default function NewPost({ orden, tags }) {
       } else {
         alert("You are banned, therefore you cannot post anything");
       }
-
-      //console.log(obj);
-      //dispatch(updatePage(true, obj.payload.posts));
     }
   }
 

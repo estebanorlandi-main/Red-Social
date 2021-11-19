@@ -10,7 +10,7 @@ const {
 } = require("./utils.js");
 const Op = Sequelize.Op;
 const router = Router();
-const AuthControllers = require('../controllers/AuthControllers.js')
+const AuthControllers = require("../controllers/AuthControllers.js");
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -42,6 +42,10 @@ const paginate = (page = 0, arr) => {
   let posts = arr
     .slice(page * postsPerPage, to < arr.length ? to : arr.length)
     .map((post) => {
+      if (post.user) {
+        const image = post.user.imageData.toString("base64");
+        post.user["imageData"] = image;
+      }
       if (post.imageData) {
         const image = post.imageData.toString("base64");
         post["imageData"] = image;
@@ -58,7 +62,7 @@ const paginate = (page = 0, arr) => {
 };
 function ordenarTags(todos, tags, orden, seguidos) {
   if (tags.length === 0) {
-    return ordenar(orden, todos)
+    return ordenar(orden, todos);
   }
   let arr;
   let conTagsSeguidos = [];
@@ -67,17 +71,15 @@ function ordenarTags(todos, tags, orden, seguidos) {
   let sinTagsNoSeguidos = [];
   arr = todos.map((post, i, arr) => {
     let cant = tags?.filter((tag) => {
-
       if (post.tag.includes(tag)) {
         return post.idPost;
       }
-
     });
     let sigue;
     if (seguidos.includes(post.user.username)) {
-      sigue = true
-    }else {
-      sigue = false
+      sigue = true;
+    } else {
+      sigue = false;
     }
     let c = 0;
     if (cant?.length !== 0) {
@@ -88,7 +90,7 @@ function ordenarTags(todos, tags, orden, seguidos) {
               conTagsSeguidos.push([]);
             }
             conTagsSeguidos[c] = [...conTagsSeguidos[c], post];
-          }else{
+          } else {
             while (!conTagsNoSeguidos[c]) {
               conTagsNoSeguidos.push([]);
             }
@@ -100,24 +102,25 @@ function ordenarTags(todos, tags, orden, seguidos) {
     } else {
       if (sigue) {
         sinTagsSeguidos.push(post);
-      }else {
+      } else {
         sinTagsNoSeguidos.push(post);
       }
     }
   });
   let ordenadosPorTags = [];
 
-  let conTags = [...conTagsSeguidos, ...conTagsNoSeguidos]
+  let conTags = [...conTagsSeguidos, ...conTagsNoSeguidos];
   for (let arr of conTags) {
-      ordenadosPorTags = [...ordenadosPorTags, ...ordenar(orden, arr)];
-    }
+    ordenadosPorTags = [...ordenadosPorTags, ...ordenar(orden, arr)];
+  }
 
-
-  let ordenadosSinTags = [...ordenar(orden, sinTagsSeguidos), ...ordenar(orden, sinTagsNoSeguidos)];
+  let ordenadosSinTags = [
+    ...ordenar(orden, sinTagsSeguidos),
+    ...ordenar(orden, sinTagsNoSeguidos),
+  ];
 
   return [...ordenadosPorTags, ...ordenadosSinTags];
 }
-
 
 function ordenamiento(arr, orden) {
   return arr.sort(function (a, b) {
@@ -148,8 +151,9 @@ const ordenar = (how, arr) => {
       }
       return 0;
     });
-  } else if(how === "cronologico"){
-    return arr}else{
+  } else if (how === "cronologico") {
+    return arr;
+  } else {
     return ordenamiento(arr, how);
   }
 };
@@ -159,8 +163,8 @@ router.get("/", async (req, res) => {
   // return res.send(posts)
   const { tag, page, orden, seguido } = req.query;
   // console.log(req.query)
-  const tags = tag?.split(",")
-  const seguidos = seguido.split(",")
+  const tags = tag?.split(",");
+  const seguidos = seguido.split(",");
   const allPosts = await DB_Postsearch({});
   let finalPosts = ordenarTags(allPosts, tags, orden, seguidos);
   // let postCategoria = allPosts.filter((e) =>
@@ -177,7 +181,6 @@ router.get("/", async (req, res) => {
 
 //Trae todos los posteos que hizo un usuario
 router.get("/", async (req, res, next) => {
-
   console.log("holaaaaaa");
 
   try {
@@ -209,45 +212,51 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-
 // post
-router.post("/", AuthControllers.isAuthenticated, async (req, res) => {
-  let { title, content, tag, username, type } = req.body;
+router.post(
+  "/",
+  upload.single("image"),
+  AuthControllers.isAuthenticated,
+  async (req, res) => {
+    console.log(req.file);
+    let { title, content, tag, username, type } = req.body;
 
-  let orden = req.query.orden;
-  let tags = req.query.tags?.split(",");
-  let seguidos = req.query.seguido.split(",")
+    let orden = req.query.orden;
+    let tags = req.query.tags?.split(",");
+    let seguidos = req.query.seguido.split(",");
 
-  try {
-    let userDB = await DB_UserID(username);
+    try {
+      let userDB = await DB_UserID(username);
 
-    if (typeof tag === "string" && tag.length) tag = tag.split(",");
+      if (typeof tag === "string" && tag.length) tag = tag.split(",");
 
-    let image = {};
-    if (req.files) {
-      image["imageType"] = req.files.image.mimetype;
-      image["imageName"] = req.files.image.name;
-      image["imageData"] = req.files.image.data;
+      let image = {};
+      if (req.file) {
+        image["imageType"] = req.file.mimetype;
+        image["imageName"] = req.file.originalname;
+        image["imageData"] = req.file.buffer;
+      }
+
+      let createPost = await Post.create({
+        ...image,
+        content,
+        tag: tag || [],
+        type,
+        title,
+        userId: userDB.id,
+      });
+
+      await userDB.addPost(createPost);
+
+      const allPosts = await DB_Postsearch({});
+      let finalPosts = ordenarTags(allPosts, tags, orden, seguidos);
+      res.status(200).send({ ...paginate(0, finalPosts), success: true });
+    } catch (e) {
+      console.log(e);
+      res.status(404).send({ success: false, error: e });
     }
-
-    let createPost = await Post.create({
-      ...image,
-      content,
-      tag: tag || [],
-      type,
-      title,
-      userId: userDB.id,
-    });
-
-    await userDB.addPost(createPost);
-
-    const allPosts = await DB_Postsearch({});
-    let finalPosts = ordenarTags(allPosts, tags, orden, seguidos);
-    res.status(200).send({ ...paginate(0, finalPosts), success: true });
-  } catch (e) {
-    res.status(404).send({ success: false, error: e });
   }
-});
+);
 
 //Eliminacion de un Post
 router.delete("/:id", AuthControllers.isAuthenticated, async (req, res) => {
