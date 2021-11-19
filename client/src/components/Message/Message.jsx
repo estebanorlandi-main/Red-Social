@@ -5,17 +5,29 @@ import { useEffect, useState } from "react";
 
 export default function Message({ message, own, sender, receiver }) {
   const [image, setImage] = useState(null);
-  
+
   useEffect(() => {
-    if(sender && receiver){
-      own ? setImage(sender.image) : setImage(receiver.image)
-    }
-  },[message])
+    
+      if(own && sender){ setImage({data: sender.image.imageData, type: sender.image.imageType})}
+      else if(receiver){
+        console.log('hola')
+        setImage({data: receiver.image.imageData, type: receiver.image.imageType})
+      } 
+    
+  },[message, receiver])
 
   return (
     <div className={own ? styles.messageOwn : styles.message}>
       <div className={styles.messageTop}>
-        <img className={styles.messageImg} src={image ? image : avatar} alt="" />
+        <img 
+          className={styles.messageImg} 
+          src={
+            image ?
+              `data:${image.type};base64, ${image.data}`
+              : avatar
+          }
+          alt="" 
+        />
         <p className={styles.messageText}>{message.text}</p>
       </div>
       <div className={styles.messageBottom}>{format(message.createdAt)}</div>

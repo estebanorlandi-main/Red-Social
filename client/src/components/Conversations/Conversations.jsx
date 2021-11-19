@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import styles from "./Conversations.module.css";
 import avatar from "../../images/userCard.svg";
+import UserCard from "../UserCard/UserCard";
 
 export default function Conversation({ conversation, currentUser }) {
   const socket = useSelector((state) => state.usersReducer.socket)
@@ -27,6 +28,8 @@ export default function Conversation({ conversation, currentUser }) {
     getUser();
   }, [currentUser, conversation]);
 
+  console.log(user)
+
   useEffect(() => {
     if(Object.keys(socket).length){
       socket.on("getUntrackMessage", (data) => {
@@ -43,12 +46,24 @@ export default function Conversation({ conversation, currentUser }) {
 
   return (
     <div className={styles.conversation}>
-      <img
-        className={styles.conversationImg}
-        src={user?.image ? user.image : avatar}
-        alt=""
-      />
-      <span className={styles.conversationName}>{user?.username}</span>
+      {
+        user ?
+        <UserCard
+          toRight
+          showImage
+          showName
+          user={{
+            username: user.username,
+            image: {
+              imageData: user.image.imageData,
+              imageType: user.image.imageType,
+            },
+          }}
+        />
+        :
+        <></>
+      }
+      
       {untrackMessages.length > 0 && (
         <div className={styles.counter}>{untrackMessages.length}</div>
       )}

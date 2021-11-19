@@ -55,7 +55,7 @@ export default function SupportUserCard({
           <NavLink
               activeClassName={styles.active}
               className={styles.userContainer}
-              to={`/profile/${message.username}`}
+              to={`/profileAdmin/${message.username}`}
             >
             {showName && <span className={styles.username}>{message.username}</span>}
             </NavLink>   
@@ -81,7 +81,7 @@ export default function SupportUserCard({
             <div>User reported: {message.userReported}</div>
             </NavLink>   
           </label>
-          <button className={style.submit} type="submit" onClick={ ()=> handleDelete()}>
+          <button className={style.banButton} type="submit" onClick={ ()=> handleDelete()}>
             Delete
           </button>
           </form>
@@ -122,7 +122,7 @@ export default function SupportUserCard({
 
             </div>   
           </label>
-          <button className={style.submit} type="submit" onClick={ ()=> handleDelete()}>
+          <button className={style.banButton} type="submit" onClick={ ()=> handleDelete()}>
             Delete
           </button>
           </form>
@@ -131,22 +131,3 @@ export default function SupportUserCard({
     </div>
   )
 }
-
-
-
-      {/* {toRight && showImage && ImgElement}
-      <div className={styles.column}>
-        {showName && <span className={styles.username}>{message.username}</span>}
-        {other && <span className={styles.other}>{other}</span>}
-      </div>
-      {toLeft && showImage && ImgElement}
-      <div>{message.title}</div>
-      <div>{message.content}</div>
-      <NavLink
-        activeClassName={styles.active}
-        className={styles.userContainer}
-        to={`/profileAdmin/${message.userReported}`}
-      >
-      <div>User reported: {message.userReported}</div>
-      </NavLink>
-    <button onClick={ ()=> handleDelete()}>Delete</button> */}

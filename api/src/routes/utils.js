@@ -34,12 +34,12 @@ const likePostUser = {
 const followersInfo = {
   model: User,
   as: "followers",
-  attributes: ["id", "username", "image", "name", "lastname"],
+  attributes: ["id", "username", "imageData", "imageType", "name", "lastname"],
 };
 const followedInfo = {
   model: User,
   as: "following",
-  attributes: ["id", "username", "image", "name", "lastname"],
+  attributes: ["id", "username", "imageData", "imageType", "name", "lastname"],
 };
 
 //fn
