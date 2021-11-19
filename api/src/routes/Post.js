@@ -21,10 +21,12 @@ const modifiedPost = async (idPost) => {
   return await Post.findOne({
     where: { idPost },
     include: [
-      { model: User, attributes: ["image", "username"] },
+      { model: User, attributes: ["imageData", "imageType", "username"] },
       {
         model: Comment,
-        include: [{ model: User, attributes: ["image", "username"] }],
+        include: [
+          { model: User, attributes: ["imageData", "imageType", "username"] },
+        ],
       },
       {
         model: Likes,
@@ -43,6 +45,18 @@ const paginate = (page = 0, arr) => {
     .slice(page * postsPerPage, to < arr.length ? to : arr.length)
     .map((post) => {
       if (post.user) {
+        const image = post.user.imageData.toString("base64");
+        post.user["imageData"] = image;
+      }
+      if (post.comments) {
+        post.comments = post.comments.map((comment) => {
+          if (comment.user) {
+            const image = comment.user.imageData.toString("base64");
+            comment.user["imageData"] = image;
+          }
+          return comment;
+        });
+
         const image = post.user.imageData.toString("base64");
         post.user["imageData"] = image;
       }

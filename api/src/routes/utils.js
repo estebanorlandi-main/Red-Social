@@ -182,7 +182,12 @@ const DB_Postsearch = async ({ username, id }) => {
           { model: User, attributes: ["imageData", "imageType", "username"] },
           {
             model: Comment,
-            include: [{ model: User, attributes: ["image", "username"] }],
+            include: [
+              {
+                model: User,
+                attributes: ["imageData", "imageType", "username"],
+              },
+            ],
           },
           {
             model: Likes,

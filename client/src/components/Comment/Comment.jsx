@@ -5,7 +5,6 @@ import UserCard from "../UserCard/UserCard";
 import styles from "./Comment.module.css";
 
 function Comment({ comment, type }) {
-  const user = useSelector((store) => store.sessionReducer);
   const isDark = useSelector((store) => store.themeReducer.theme);
 
   return (
@@ -15,7 +14,13 @@ function Comment({ comment, type }) {
           toRight
           showName
           showImage
-          user={{ username: user.username, image: user.image }}
+          user={{
+            username: comment?.user?.username,
+            image: {
+              imageData: comment?.user?.imageData,
+              imageType: comment?.user?.imageType,
+            },
+          }}
         />
       </Link>
 
