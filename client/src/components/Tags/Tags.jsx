@@ -46,6 +46,7 @@ function Tags({ tags, mode, handleSelect, editTags }) {
     <>
       {mode ? (
         <Select
+          key={Math.random()}
           onChange={(e) => handleSelect(e)}
           options={optionsTags}
           placeholder="Tags"
@@ -56,7 +57,11 @@ function Tags({ tags, mode, handleSelect, editTags }) {
       ) : (
         <ul className={styles.tags}>
           {tags && tags.length ? (
-            tags.map((tag) => <li className={styles.tag}>{tag}</li>)
+            tags.map((tag) => (
+              <li key={tag.label} className={styles.tag}>
+                {tag}
+              </li>
+            ))
           ) : (
             <></>
           )}

@@ -262,7 +262,7 @@ export default function Profile(props) {
                 </div>
               </section>
               <section>
-                <h3>Recomendaciones?</h3>
+                <h3>Recomendations</h3>
               </section>
             </div>
             <div className={styles.right}>

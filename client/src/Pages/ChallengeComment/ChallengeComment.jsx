@@ -8,6 +8,7 @@ import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 
 import styles from "../../components/Post/Post.module.css";
+import popup from "../../components/Post/Popup.module.css";
 
 export default function ChallengeComment(props) {
   const [loading, setLoading] = useState(false);
@@ -61,10 +62,10 @@ export default function ChallengeComment(props) {
           src="https://img.icons8.com/color/48/000000/pass.png"
         />
       )}
-      <button class="test" type="submit" onClick={testing}>
+      <button className={popup.test} type="submit" onClick={testing}>
         Test
       </button>
-      <h2 class="result">Result: {result}</h2>
+      <h2 className={popup.result}>Result: {result}</h2>
     </div>
   );
 }

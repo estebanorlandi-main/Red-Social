@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import image from "../../../images/userCard.svg";
 import Tags from "../../Tags/Tags";
 
-
 import {
   commentPost,
   deletePost,
@@ -13,14 +12,13 @@ import {
   likePost,
   banPost,
   banComment,
-  deleteComment
+  deleteComment,
 } from "../../../Redux/actions/Post";
 
 import CommentAdmin from "../CommentAdmin/CommentAdmin";
 
 import styles from "./PostAdmin.module.css";
-import { IoBan} from "react-icons/io5";
-
+import { IoBan } from "react-icons/io5";
 
 //Icons
 import {
@@ -59,7 +57,7 @@ const parseContent = (text) => {
 
   return parsed;
 };
-function PostAdmin({  post, customClass, socket, admin}) {
+function PostAdmin({ post, customClass, socket, admin }) {
   const dispatch = useDispatch();
 
   const isDark = useSelector((state) => state.themeReducer.theme);
@@ -96,7 +94,7 @@ function PostAdmin({  post, customClass, socket, admin}) {
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
 
   useEffect(() => {
-    if(!socket) return;
+    if (!socket) return;
     if (Object.keys(socket).length) {
       socket.on("getPost", (data) => {
         if (post.idPost === data.idPost) {
@@ -193,9 +191,9 @@ function PostAdmin({  post, customClass, socket, admin}) {
   let test;
   if (post.content) test = parseContent(post.content);
 
-  const hanbleBanPost = (e) =>{
+  const hanbleBanPost = (e) => {
     e.preventDefault();
-    console.log(e.target.value)
+    console.log(e.target.value);
     dispatch(banPost(e.target.value));
     // socket.emit("sendNotification", {
     //   senderName: session.username,
@@ -203,65 +201,67 @@ function PostAdmin({  post, customClass, socket, admin}) {
     //   receiverName: post.user.username,
     //   type: 2,
     // });
-    alert('Ban, successfully applied');
-  }
+    alert("Ban, successfully applied");
+  };
 
   const handleBanComment = (e) => {
     e.preventDefault();
     dispatch(deleteComment(e.target.value));
-    alert('Comment deleted successfully')
-  }
-  
+    alert("Comment deleted successfully");
+  };
 
   return (
-    <div className={styles.container + ` ${customClass} ${isDark ? styles.dark : ""}`}>
-     {session.username !== post.user.username ? (
-      <div className={styles.options}>
-      <button onClick={handleOptions} className={styles.optionsHandler}>
-        <BiDotsVerticalRounded
-          style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
-        />
-      </button>
-
-      {editMode ? (
-        <li>
-          <button
-            onClick={() => {
-              handleEditMode(false);
-            }}
-          >
-            cancel
+    <div
+      className={
+        styles.container + ` ${customClass} ${isDark ? styles.dark : ""}`
+      }
+    >
+      {session.username !== post.user.username ? (
+        <div className={styles.options}>
+          <button onClick={handleOptions} className={styles.optionsHandler}>
+            <BiDotsVerticalRounded
+              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
+            />
           </button>
-        </li>
+
+          {editMode ? (
+            <li key={Math.random()}>
+              <button
+                onClick={() => {
+                  handleEditMode(false);
+                }}
+              >
+                cancel
+              </button>
+            </li>
+          ) : (
+            ""
+          )}
+
+          <div
+            className={`${options ? styles.show : styles.hide} ${
+              styles.optionsMenu
+            }`}
+          >
+            <button
+              className={styles.danger}
+              value={post.idPost}
+              name="Ban Post"
+              onClick={(e) => hanbleBanPost(e)}
+            >
+              <IoBan style={{ color: "#fff" }} />
+              Ban
+            </button>
+
+            {/* <button value={profile.username} onClick={(e)=>{handleBanUser(e)}} className={styles.banButton}><IoBan style={{ color: "#fff", width:'2.5em', height:'1.2em', marginRight:'4px' }}/> Baneo</button> */}
+          </div>
+        </div>
       ) : (
         ""
       )}
 
-      <div
-        className={`${options ? styles.show : styles.hide} ${
-          styles.optionsMenu
-        }`}
-      >
-        <button
-          className={styles.danger}
-          value={post.idPost}
-          name="Ban Post"
-          onClick={(e) => hanbleBanPost(e)}
-        >
-          <IoBan style={{ color: "#fff" }} />
-          Ban 
-        </button>
-
-        {/* <button value={profile.username} onClick={(e)=>{handleBanUser(e)}} className={styles.banButton}><IoBan style={{ color: "#fff", width:'2.5em', height:'1.2em', marginRight:'4px' }}/> Baneo</button> */}
-
-        </div>
-        </div>
-      ) : (
-            ""
-      )}
-      
       <Tags tags={post.tag} />
-     
+
       {/* <button value={post.idPost}
         name="Ban Post"
         onClick={(e) => hanbleBanPost(e)}>Ban POST</button> */}
@@ -269,7 +269,6 @@ function PostAdmin({  post, customClass, socket, admin}) {
         className={styles.userContainer}
         to={`/profileAdmin/${post.user.username}`}
       >
-        
         <UserCardAdmin
           toRight
           showImage
@@ -330,8 +329,6 @@ function PostAdmin({  post, customClass, socket, admin}) {
           </div>
         )}
       </div>
-      
-
 
       {post.imageData ? (
         <img
@@ -345,7 +342,7 @@ function PostAdmin({  post, customClass, socket, admin}) {
       <div className={styles.actions}>
         <button className={!session.username ? "" : ""} onClick={handleLike}>
           {liked ? (
-            <MdFavorite className={styles.iconPaint}/>
+            <MdFavorite className={styles.iconPaint} />
           ) : (
             <MdFavoriteBorder className={styles.icons} />
           )}
@@ -353,7 +350,7 @@ function PostAdmin({  post, customClass, socket, admin}) {
         </button>
 
         <button>
-          <MdOutlineModeComment className={styles.icons}/>
+          <MdOutlineModeComment className={styles.icons} />
           {currentPost
             ? currentPost.comments && currentPost.comments.length
             : post.comments && post.comments.length}
@@ -399,7 +396,15 @@ function PostAdmin({  post, customClass, socket, admin}) {
           <ul className={styles.comments}>
             <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
             {currentPost.comments.map((comment, i) =>
-              i < 3 ? <CommentAdmin key={i} comment={comment} handleBanComment={handleBanComment}/> : <></>
+              i < 3 ? (
+                <CommentAdmin
+                  key={i}
+                  comment={comment}
+                  handleBanComment={handleBanComment}
+                />
+              ) : (
+                <></>
+              )
             )}
           </ul>
         ) : (
@@ -409,15 +414,22 @@ function PostAdmin({  post, customClass, socket, admin}) {
         <ul className={styles.comments}>
           <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
           {post.comments.map((comment, i) =>
-            i < 3 ? <CommentAdmin key={i} comment={comment} handleBanComment={handleBanComment}/> : <></>
+            i < 3 ? (
+              <CommentAdmin
+                key={i}
+                comment={comment}
+                handleBanComment={handleBanComment}
+              />
+            ) : (
+              <></>
+            )
           )}
         </ul>
       ) : (
         ""
       )}
-      </div>
+    </div>
   );
 }
 
 export default PostAdmin;
-
