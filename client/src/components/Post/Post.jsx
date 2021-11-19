@@ -49,6 +49,7 @@ import "codemirror/addon/edit/closebrackets";
 
 // PopUp
 import "./Popup.css";
+import popup from "./Popup.module.css";
 
 const parseContent = (text) => {
   const mentions = text && text.match(/@\w+/gi);
@@ -508,11 +509,11 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
         <div className={styles.newChallengeContainer}>
           {/* Pop Up */}
           <a href="#popup">
-            <button class="start" type="submit">
+            <button className={popup.start} type="submit">
               START
             </button>
           </a>
-          <div id="popup" class="overlay">
+          <div id="popup" className={popup.overlay}>
             <div id="popupBody">
               <h2>{post.content}</h2>
               <CodeMirror
@@ -534,7 +535,7 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
               <a id="cerrar" href="#">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/macos-close.png" />
               </a>
-              <div class="popupContent">
+              <div className={popup.popupContent}>
                 {loading ? (
                   <img
                     className={styles.icon}
@@ -555,17 +556,21 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
                   />
                 )}
 
-                <button class="child" type="submit" onClick={submitComment}>
+                <button
+                  className={popup.child}
+                  type="submit"
+                  onClick={submitComment}
+                >
                   <MdSend
                     className={styles.icons}
                     style={{ margin: "0", color: "#fff" }}
                   />
                 </button>
-                <button class="test" type="submit" onClick={testing}>
+                <button className={popup.test} type="submit" onClick={testing}>
                   Test
                 </button>
 
-                <h2 class="result">Result: {result}</h2>
+                <h2 className={popup.result}>Result: {result}</h2>
               </div>
             </div>
           </div>
