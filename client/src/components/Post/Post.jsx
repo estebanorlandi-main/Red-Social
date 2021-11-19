@@ -252,10 +252,12 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
   const [result, setResult] = useState(null);
 
   const testing = () => {
+    setLoading(true);
     axios
       .post("http://localhost:3001/challenge/testing/", { code: newComment })
       .then((res) => {
         console.log(res);
+        setLoading(false);
         if (res?.data.data?.error) {
           setErrorTest(true);
           setResult(null);
@@ -275,6 +277,7 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
   if (post.content) test = parseContent(post.content);
 
   const [errorTest, setErrorTest] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleReport = () => {
     const report = {
@@ -529,7 +532,13 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/macos-close.png" />
               </a>
               <div class="popupContent">
-                {errorTest ? (
+                {loading ? (
+                  <img
+                    className={styles.icon}
+                    style={{ float: "left" }}
+                    src="http://pa1.narvii.com/6892/4d02d3678a8cf722f7a76555d77c45fe32bd5b61r1-200-200_00.gif"
+                  />
+                ) : errorTest ? (
                   <img
                     className={styles.icon}
                     style={{ float: "left" }}

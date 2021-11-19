@@ -95,8 +95,7 @@ export default function ProfileAdmin(props) {
     dispatch(banUserAdmin(e.target.value));
     alert("They have applied successfully");
   };
-  const day = new Date()
-  console.log(profile.dayBan)
+  
   return profile ? (
     <div>
       {profile.dayBan? (
