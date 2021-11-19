@@ -17,6 +17,7 @@ export default function NewPost({ orden, tags }) {
   const session = useSelector((state) => state.sessionReducer || {});
   const info = useSelector((state) => state.usersReducer.users);
   const profile = useSelector((state) => state.usersReducer.profile);
+  const isDark = useSelector((state) => state.themeReducer.theme);
   var day = new Date();
 
   useEffect(() => {
@@ -116,7 +117,10 @@ export default function NewPost({ orden, tags }) {
   }
 
   return (
-    <form className={style.container} onSubmit={(e) => handleSubmit(e)}>
+    <form
+      className={`${style.container} ${isDark ? style.dark : ""}`}
+      onSubmit={(e) => handleSubmit(e)}
+    >
       <label className={style.wrapper}>
         Title
         <div className="input-group">

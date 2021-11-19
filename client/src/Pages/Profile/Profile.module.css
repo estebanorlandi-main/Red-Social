@@ -188,3 +188,25 @@
   }
 }
 
+.dark section {
+  background-color: #333;
+  color: #fff;
+}
+
+.dark .profileInfoDisplay p {
+  color: #aaa;
+}
+.dark .about {
+  color: #888;
+  font-size: 1rem;
+}
+.dark .profileInfoDisplay .name {
+  color: #fff;
+}
+
+.dark .email,
+.dark .email *,
+.dark .github,
+.dark .github * {
+  color: #aaa;
+}

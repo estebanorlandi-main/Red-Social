@@ -2,9 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import styles from "./ChatOnline.module.css";
 import avatar from "../../images/userCard.svg";
+import UserCard from "../UserCard/UserCard";
 
 export default function ChatOnline({ onlineUsers, currentId, setCurrentChat }) {
-
   const handleClick = async (user) => {
     try {
       const res = await axios.get(
@@ -20,7 +20,10 @@ export default function ChatOnline({ onlineUsers, currentId, setCurrentChat }) {
     <div className={styles.chatOnline}>
       <h4>Online Users</h4>
       {onlineUsers?.map((online) => (
-        <div className={styles.chatOnlineFriend} onClick={() => handleClick(online)}>
+        <div
+          className={styles.chatOnlineFriend}
+          onClick={() => handleClick(online)}
+        >
           <div className={styles.chatOnlineImgContainer}>
             <img
               className={styles.chatOnlineImg}
@@ -28,7 +31,7 @@ export default function ChatOnline({ onlineUsers, currentId, setCurrentChat }) {
                 online.imageData
                   ? `data:${online.imageType};base64, ${online.imageData}`
                   : avatar
-              } 
+              }
               alt=""
             />
             <div className={styles.chatOnlineBadge}></div>

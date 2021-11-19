@@ -176,7 +176,6 @@ router.get("/", async (req, res) => {
   // const posts = await Post.findAll({order: [['createdAt', 'DESC']]})
   // return res.send(posts)
   const { tag, page, orden, seguido } = req.query;
-  // console.log(req.query)
   const tags = tag?.split(",");
   const seguidos = seguido.split(",");
   const allPosts = await DB_Postsearch({});
@@ -195,15 +194,12 @@ router.get("/", async (req, res) => {
 
 //Trae todos los posteos que hizo un usuario
 router.get("/", async (req, res, next) => {
-  console.log("holaaaaaa");
-
   try {
     const { username } = req.body;
     if (!!Number(username)) {
       return next();
     }
     const postName = await DB_Postsearch({ username: username });
-    console.log(postName);
     postName ? res.send(postName) : res.send("This user has no Post");
   } catch (e) {
     res.status(404).send("Error with the username");
@@ -217,10 +213,9 @@ router.get("/:id", async (req, res, next) => {
     // if(Number(id).toString() === 'NaN'){
     //     return next()
     // }
-    console.log(id)
     //const postId = await DB_Postsearch({ id: id });
     const postId = await Post.findOne({
-      where:{idPost:id, ban:false},
+      where: { idPost: id, ban: false },
       include: [
         { model: User, attributes: ["imageData", "imageType", "username"] },
         {
@@ -238,60 +233,53 @@ router.get("/:id", async (req, res, next) => {
           include: [{ model: User, attributes: ["username"] }],
         },
       ],
-    })
-    console.log(postId)
+    });
     postId
       ? res.status(200).send(postId.dataValues)
       : res.send("No post with that id");
   } catch (e) {
-    console.log(e)
     res.status(404).send("Error with the id");
   }
 });
 
 // post
-router.post(
-  "/",
-  upload.single("image"),
-  async (req, res) => {
-    let { title, content, tag, username, type } = req.body;
+router.post("/", upload.single("image"), async (req, res) => {
+  let { title, content, tag, username, type } = req.body;
 
-    let orden = req.query.orden;
-    let tags = req.query.tags?.split(",");
-    let seguidos = req.query.seguido?.split(",");
+  let orden = req.query.orden;
+  let tags = req.query.tags?.split(",");
+  let seguidos = req.query.seguido?.split(",");
 
-    try {
-      let userDB = await DB_UserID(username);
+  try {
+    let userDB = await DB_UserID(username);
 
-      if (typeof tag === "string" && tag?.length) tag = tag?.split(",");
+    if (typeof tag === "string" && tag?.length) tag = tag?.split(",");
 
-      let image = {};
-      if (req.file) {
-        image["imageType"] = req.file.mimetype;
-        image["imageName"] = req.file.originalname;
-        image["imageData"] = req.file.buffer;
-      }
-
-      let createPost = await Post.create({
-        ...image,
-        content,
-        tag: tag || [],
-        type,
-        title,
-        userId: userDB.id,
-      });
-
-      await userDB.addPost(createPost);
-
-      const allPosts = await DB_Postsearch({});
-      let finalPosts = ordenarTags(allPosts, tags, orden, seguidos);
-      res.status(200).send({ ...paginate(0, finalPosts), success: true });
-    } catch (e) {
-      console.log(e);
-      res.status(404).send({ success: false, error: e });
+    let image = {};
+    if (req.file) {
+      image["imageType"] = req.file.mimetype;
+      image["imageName"] = req.file.originalname;
+      image["imageData"] = req.file.buffer;
     }
+
+    let createPost = await Post.create({
+      ...image,
+      content,
+      tag: tag || [],
+      type,
+      title,
+      userId: userDB.id,
+    });
+
+    await userDB.addPost(createPost);
+
+    const allPosts = await DB_Postsearch({});
+    let finalPosts = ordenarTags(allPosts, tags, orden, seguidos);
+    res.status(200).send({ ...paginate(0, finalPosts), success: true });
+  } catch (e) {
+    res.status(404).send({ success: false, error: e });
   }
-);
+});
 
 //Eliminacion de un Post
 router.delete("/:id", AuthControllers.isAuthenticated, async (req, res) => {
@@ -310,7 +298,6 @@ router.delete("/:id", AuthControllers.isAuthenticated, async (req, res) => {
 router.put("/:id", AuthControllers.isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(req.body);
     await DB_Postedit(id, req.body);
 
     const post = await modifiedPost(id);

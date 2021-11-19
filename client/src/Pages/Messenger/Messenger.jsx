@@ -3,7 +3,11 @@ import Message from "../../components/Message/Message.jsx";
 import ChatOnline from "../../components/ChatOnline/ChatOnline.jsx";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { socketConnection, getUser, removeProfile } from "../../Redux/actions/Users";
+import {
+  socketConnection,
+  getUser,
+  removeProfile,
+} from "../../Redux/actions/Users";
 import { setUntrackMessages } from "../../Redux/actions/Message.js";
 import avatar from "../../images/userCard.svg";
 import UserCard from "../../components/UserCard/UserCard.jsx";
@@ -16,15 +20,15 @@ export default function Messenger() {
   const user = useSelector((store) => store.sessionReducer);
   const socket = useSelector((state) => state.usersReducer.socket);
   const profile = useSelector((state) => state.usersReducer.profile);
-  // console.log(profile)
+  const isDark = useSelector((state) => state.themeReducer.theme);
 
   const dispatch = useDispatch();
 
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
-  const [input, setInput] = useState('')
+  const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
-  const [untrackMessages, setUntrackMessages] = useState({})
+  const [untrackMessages, setUntrackMessages] = useState({});
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -47,9 +51,7 @@ export default function Messenger() {
   }, [dispatch, socket, user.username]);
 
   useEffect(() => {
-    const friendId = currentChat?.members.find(
-      (m) => m !== user.username
-    );
+    const friendId = currentChat?.members.find((m) => m !== user.username);
 
     const getUser = async () => {
       try {
@@ -65,7 +67,6 @@ export default function Messenger() {
   useEffect(() => {
     if (Object.keys(socket).length) {
       socket.on("getMessage", (data) => {
-
         // console.log(data)
 
         setArrivalMessage({
@@ -76,7 +77,6 @@ export default function Messenger() {
       });
     }
   }, [socket]);
-
 
   useEffect(() => {
     arrivalMessage &&
@@ -89,13 +89,13 @@ export default function Messenger() {
       socket.emit("onlineUsers", user.username);
 
       socket.on("getOnlineUsers", (users) => {
-      
-        if(profile){
+        if (profile) {
           setOnlineUsers(
-            profile.following?.filter((foll) => users.some((u) => u.userId === foll.username))
+            profile.following?.filter((foll) =>
+              users.some((u) => u.userId === foll.username)
+            )
           );
         }
-        
       });
     }
   }, []);
@@ -123,7 +123,6 @@ export default function Messenger() {
           "http://localhost:3001/message/" + currentChat?.id
         );
         setMessages(res.data);
-
       } catch (err) {
         console.log(err);
       }
@@ -131,11 +130,10 @@ export default function Messenger() {
     getMessages();
   }, [currentChat]);
 
-
   useEffect(() => {
     const readMessages = async () => {
       try {
-        //console.log(currentChat.id);  
+        //console.log(currentChat.id);
 
         const read = await axios.get(
           `http://localhost:3001/message/read/${currentChat?.id}/${user.username}`
@@ -144,21 +142,18 @@ export default function Messenger() {
         const untrack = await axios.get(
           `http://localhost:3001/message/untrack/${currentChat?.id}/${user.username}`
         );
-         
-          if(untrack.data){
-            const receiver = currentChat?.members.find(
-              (m) => m !== user.username
-            );
-            
-            socket.emit("untrackMessage", {
-              receiverId: receiver,
-              data: untrack.data,
-              conversationId: currentChat?.id
-            });
 
-          }
-        
+        if (untrack.data) {
+          const receiver = currentChat?.members.find(
+            (m) => m !== user.username
+          );
 
+          socket.emit("untrackMessage", {
+            receiverId: receiver,
+            data: untrack.data,
+            conversationId: currentChat?.id,
+          });
+        }
       } catch (err) {
         console.log(err);
       }
@@ -166,10 +161,9 @@ export default function Messenger() {
     readMessages();
   }, [messages]);
 
-
   const handleChange = async (e) => {
-    setInput(e.target.value.replace(/\s+/g, ''))
-  }
+    setInput(e.target.value.replace(/\s+/g, ""));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -204,7 +198,7 @@ export default function Messenger() {
 
   return (
     <>
-      <div className={styles.messenger}>
+      <div className={`${styles.messenger} ${isDark ? styles.dark : ""}`}>
         <div className={styles.chatMenu}>
           <div className={styles.chatMenuWrapper}>
             <input
@@ -213,22 +207,24 @@ export default function Messenger() {
               value={input}
               onChange={handleChange}
             />
-            {conversations.filter(
-              conver => {
-                if(input){
-                  if(conver.members.filter( member =>
-                    member.includes(input)).length){
-                   return conver
+            {conversations
+              .filter((conver) => {
+                if (input) {
+                  if (
+                    conver.members.filter((member) => member.includes(input))
+                      .length
+                  ) {
+                    return conver;
                   }
-                } else{
-                  return conver
+                } else {
+                  return conver;
                 }
-              }
-            ).map((c) => (
-              <div onClick={() => setCurrentChat(c)}>
-                <Conversation conversation={c} currentUser={user} />
-              </div>
-            ))}
+              })
+              .map((c) => (
+                <div onClick={() => setCurrentChat(c)}>
+                  <Conversation conversation={c} currentUser={user} />
+                </div>
+              ))}
           </div>
         </div>
         <div className={styles.chatBox}>
@@ -236,31 +232,43 @@ export default function Messenger() {
             {currentChat ? (
               <>
                 <div className={styles.chatUserReceiver}>
-                  {
-                    receiver ? 
+                  {receiver ? (
                     <div>
-                      <div style={{display:"flex", alignItems:"center", paddingBottom:"0.5em"}}>
-                      <img
-                        className={styles.conversationImg}
-                        src={
-                          receiver?.image
-                            ? `data:${receiver.image?.imageType};base64, ${receiver.image?.imageData}`
-                            : avatar
-                        }
-                        alt=""
-                      />
-                      <span className={styles.conversationName}>{receiver.username}</span>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          paddingBottom: "0.5em",
+                        }}
+                      >
+                        <img
+                          className={styles.conversationImg}
+                          src={
+                            receiver?.image
+                              ? `data:${receiver.image?.imageType};base64, ${receiver.image?.imageData}`
+                              : avatar
+                          }
+                          alt=""
+                        />
+                        <span className={styles.conversationName}>
+                          {receiver.username}
+                        </span>
                       </div>
-                      <hr style={{width:'40em'}}></hr>
-                    </div> 
-                    : 
+                      <hr style={{ width: "40em" }}></hr>
+                    </div>
+                  ) : (
                     <></>
-                  }
+                  )}
                 </div>
                 <div className={styles.chatBoxTop}>
                   {messages.map((m) => (
                     <div ref={scrollRef}>
-                      <Message message={m} sender={user} receiver={receiver} own={m.sender === user.username} />
+                      <Message
+                        message={m}
+                        sender={user}
+                        receiver={receiver}
+                        own={m.sender === user.username}
+                      />
                     </div>
                   ))}
                 </div>

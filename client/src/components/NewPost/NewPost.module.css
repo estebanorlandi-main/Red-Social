@@ -50,3 +50,11 @@
   gap: 1em;
   align-items: center;
 }
+
+.dark {
+  background-color: #333;
+}
+
+.dark textarea {
+  background-color: #444;
+}
