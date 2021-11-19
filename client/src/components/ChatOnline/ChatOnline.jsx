@@ -5,10 +5,12 @@ import avatar from "../../images/userCard.svg";
 import UserCard from "../UserCard/UserCard";
 
 export default function ChatOnline({ onlineUsers, currentId, setCurrentChat }) {
+  const URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+
   const handleClick = async (user) => {
     try {
       const res = await axios.get(
-        `http://localhost:3001/conversation/find/${currentId}/${user.username}`
+        URL + `/conversation/find/${currentId}/${user.username}`
       );
       setCurrentChat(res.data);
     } catch (err) {

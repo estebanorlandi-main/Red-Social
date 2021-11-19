@@ -12,6 +12,8 @@ import axios from "axios";
 import styles from "./DisplayConversations.module.css";
 
 export default function DisplayConversations() {
+  const URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+  
   const [conversations, setConversations] = useState([]);
   const [input, setInput] = useState("");
   const [popup, setPopup] = useState(false);
@@ -30,7 +32,7 @@ export default function DisplayConversations() {
     const getConversations = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:3001/conversation/" + user.username
+          URL + "/conversation/" + user.username
         );
         // console.log(res.data);
         setConversations(res.data);

@@ -17,6 +17,8 @@ import axios from "axios";
 import styles from "./Messenger.module.css";
 
 export default function Messenger() {
+  const URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+
   const user = useSelector((store) => store.sessionReducer);
   const socket = useSelector((state) => state.usersReducer.socket);
   const profile = useSelector((state) => state.usersReducer.profile);
@@ -55,7 +57,7 @@ export default function Messenger() {
 
     const getUser = async () => {
       try {
-        const res = await axios(`http://localhost:3001/user/${friendId}`);
+        const res = await axios(URL + `/user/${friendId}`);
         setReceiver(res.data);
       } catch (err) {
         console.log(err);
@@ -104,7 +106,7 @@ export default function Messenger() {
     const getConversations = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:3001/conversation/" + user.username
+          URL + "/conversation/" + user.username
         );
         // console.log(res.data);
         setConversations(res.data);
@@ -120,7 +122,7 @@ export default function Messenger() {
       try {
         //console.log(currentChat.id);
         const res = await axios.get(
-          "http://localhost:3001/message/" + currentChat?.id
+          URL +"/message/" + currentChat?.id
         );
         setMessages(res.data);
       } catch (err) {
@@ -136,11 +138,11 @@ export default function Messenger() {
         //console.log(currentChat.id);
 
         const read = await axios.get(
-          `http://localhost:3001/message/read/${currentChat?.id}/${user.username}`
+          URL + `/message/read/${currentChat?.id}/${user.username}`
         );
 
         const untrack = await axios.get(
-          `http://localhost:3001/message/untrack/${currentChat?.id}/${user.username}`
+          URL + `/message/untrack/${currentChat?.id}/${user.username}`
         );
 
         if (untrack.data) {
@@ -184,7 +186,7 @@ export default function Messenger() {
     });
 
     try {
-      const res = await axios.post("http://localhost:3001/message/", message);
+      const res = await axios.post(URL + "/message/", message);
       setMessages([...messages, res.data]);
       setNewMessage("");
     } catch (err) {
