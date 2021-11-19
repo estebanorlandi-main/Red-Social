@@ -26,19 +26,41 @@ io.on("connection", (socket) => {
   //take userId and socketId from user
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
+    
     io.emit("getUsers", users);
+  });
+
+  //get online users
+  socket.on("onlineUsers", (userId) => {
+    console.log(userId)
+    // console.log(users)
+
+    io.emit("getOnlineUsers", users);
   });
 
   //send and get message
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
     const user = getUser(receiverId);
-    io.to(user.socketId).emit("getMessage", {
+    console.log(text)
+    
+    io.to(user?.socketId).emit("getMessage", {
       senderId,
       text,
     });
   });
 
-   //send and get message
+  //send and get untrackmessages
+  socket.on("untrackMessage", ({ receiverId, data, conversationId }) => {
+    const user = getUser(receiverId);
+    // console.log(data)
+    
+    io.to(user?.socketId).emit("getUntrackMessage", {
+      untrack: data,
+      conversationId
+    });
+  });
+
+   //send and get post
    socket.on("reloadPostInfo", (post) => {
     console.log(post);
 
@@ -60,8 +82,16 @@ io.on("connection", (socket) => {
   });
 
   // follow/unfollow
-  socket.on("setFollows", (info)=>{
-    io.emit("getFollows", !info)
+  socket.on("setFollow", ({info, receiverName})=>{
+    const receiver = getUser(receiverName);
+
+    console.log(receiver)
+
+    // if(senderName !== receiverName){
+      io.emit("getFollow", {
+        info,
+        receiverName
+      });
   })
 
   //when disconnect

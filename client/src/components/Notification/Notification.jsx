@@ -9,6 +9,8 @@ export default function Notification({ notification }) {
     action = "liked";
   } else if (notification.type === 2) {
     action = "commented";
+  } else if (notification.type === 3) {
+    action = "follow";
   } else {
     action = "shared";
   }
@@ -25,7 +27,7 @@ export default function Notification({ notification }) {
         showName
         showImage
         toRight
-        other={`${action} your post`}
+        other={ action === 'follow' ? "started following you" : `${action} your post`}
         small
       />
     </div>

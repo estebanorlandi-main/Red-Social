@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+.profile{
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.container * {
+  box-sizing: border-box;
+}
+
+.container {
+  --br: 10px;
+  margin: 1em auto;
+  max-width: 70em;
+  display: grid;
+  grid-template-columns: auto minmax(20em, 40em);
+}
+
+.head{
+  --br: 10px;
+  width: 64em;
+  box-sizing: border-box;
+  position: relative;
+  background-color: #fff;
+  padding: 2em;
+  margin: 1em 1em;
+  border-radius: var(--br);
+  box-shadow: 0 0.5em 1em #0001;
+}
+
+.container .image {
+  max-width: 10em;
+  border-radius: var(--br);
+}
+
+.container section {
+  position: relative;
+  background-color: #fff;
+  padding: 2em;
+  margin: 1em 1em;
+  border-radius: var(--br);
+  box-shadow: 0 0.5em 1em #0001;
+}
+
+.importantInfo{
+  display: flex;
+}
+
+.profileInfoDisplay{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.messageButton {
+  background-color: #2589cc;
+  border-radius: 4px;
+  color: #fff;
+  margin: 0 1em 1em 1em;
+  border: none;
+  padding: 0.5em;
+  transition: all 0.25s;
+  max-width: max-content;
+}
+.messageButton:hover {
+  background-color: #167abd;
+  cursor: pointer; 
+}
+
+.banButton {
+  background-color: #cc3025;
+  border-radius: 4px;
+  color: #fff;
+  margin: 0 1em 1em 1em;
+  border: none;
+  padding: 0.5em;
+  transition: all 0.25s;
+  max-width: max-content;
+}
+.banButton:hover {
+  background-color: #cc3025;
+  cursor: pointer; 
+}
+
+.profileActions{
+  display: flex;
+  padding: 2em 2em;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  width: 26em;
+}
+
+.about{
+  color: #555;
+  font-size: 14px;
+  margin: 0.5em 0 1em 0;
+  word-wrap: break-word;
+}
+
+.edit {
+  background-color: transparent;
+  border: none;
+  padding: 1em 2em;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.name {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.email,
+.github {
+  display: block;
+  color: #555;
+  font-weight: 300;
+  text-decoration: none;
+  margin: 0.5em 0 0 0;
+}
+.github{
+  font-size: 16px;
+}
+.tags {
+  margin: 0 0 1em 0;
+  display: flex;
+  gap: 0.25em;
+}
+.tag {
+  font-size: 0.85rem;
+  border-radius: 4px;
+  width: max-content;
+  background-color: var(--c-blue);
+  box-shadow: var(--bs-blue);
+  color: #fff;
+  padding: 0.5em 1em;
+}
+
+.right {
+  column-width: 85%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.right > section {
+  height: 100%;
+}
+
+.posts {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  width: 400px;
+}
+
+@media screen and (max-width: 700px) {
+  .head{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .profileActions{
+    display: flex;
+    position: relative;
+  }
+  .container {
+    grid-template-columns: auto;
+  }
+  .left{
+    min-width: 80vw;
+  }
+  .right{
+    min-width: 80vw;
+  }
+}
+
+@media screen and (max-width: 1030px) {
+  .head{
+    display: flex;
+    flex-direction: column;
+    max-width: 94vw;
+  }
+  .left{
+    width: 42vw;
+  }
+  .right{
+    width: 56vw;
+  }
+}

@@ -179,10 +179,15 @@ const DB_Postsearch = async ({ username, id }) => {
           ban: false,
         },
         include: [
-          { model: User, attributes: ["image", "username"] },
+          { model: User, attributes: ["imageData", "imageType", "username"] },
           {
             model: Comment,
-            include: [{ model: User, attributes: ["image", "username"] }],
+            include: [
+              {
+                model: User,
+                attributes: ["imageData", "imageType", "username"],
+              },
+            ],
           },
           {
             model: Likes,
@@ -196,6 +201,7 @@ const DB_Postsearch = async ({ username, id }) => {
       return post_search;
     }
     if (username === undefined && id) {
+      console.log(id);
       var post_search = await Post.findOne({
         where: {
           idPost: id,
@@ -206,7 +212,7 @@ const DB_Postsearch = async ({ username, id }) => {
           { model: Comment, where: { ban: false } },
         ],
         order: [["createdAt", "DESC"]],
-      });
+      }).catch((e) => console.log(e));
       return post_search;
     } else if (id === undefined && username) {
       let userDB = await DB_UserID(username);
@@ -305,16 +311,25 @@ const DB_createUser = async (date) => {
   else return errors;
 };
 
-const DB_updateUser = async (date, id) => {
+const DB_updateUser = async (date, id, images) => {
   let errors = {};
-  let validateDate = await User.update(date, { where: { id: id } }).catch(
-    (e) => {
-      console.log(e);
-      e.errors.forEach((e) => {
-        errors = { ...errors, [e.path]: e.message };
-      });
-    }
-  );
+  let validateDate = await User.update(
+    {
+      about: date.about || "",
+      name: date.name,
+      lastname: date.lastname,
+      gitaccount: date.gitaccount,
+      imageType: images.imageType,
+      imageName: images.imageName,
+      imageData: images.imageData,
+    },
+    { where: { id: id } }
+  ).catch((e) => {
+    console.log(e);
+    e.errors.forEach((e) => {
+      errors = { ...errors, [e.path]: e.message };
+    });
+  });
   if (Array.isArray(validateDate)) return [];
   else return errors;
 };
@@ -368,11 +383,11 @@ const DB_userSearch = async (username, email, password) => {
           username: username,
         },
       });
-      
+
       if (!user) return { error: "username" };
-      
-      console.log(password)
-      console.log(user.password)
+
+      console.log(password);
+      console.log(user.password);
       var isValid = await bcrypt.compare(password, user.password);
 
       if (!isValid) return { error: "password" };
@@ -492,28 +507,48 @@ const BD_banComment = async (idComment) => {
   return { Succes: "The BAN was applied successfully" };
 };
 
-const DB_AdminSignUp = async () =>{
+const DB_AdminSignUp = async () => {
   const user = {
-    "username": "admin",
-    "name":"admin",
-    "lastname":"admin",
-    "password":"Contr1234",
-    "email":"admin@gmail.com",
-    "image":"http://pm1.narvii.com/6750/8ac0676013474827a00f3dde5dd83009ec20f6ebv2_00.jpg",
-  }
+    username: "admin",
+    name: "admin",
+    lastname: "admin",
+    password: "Contr1234",
+    email: "admin@gmail.com",
+    image:
+      "http://pm1.narvii.com/6750/8ac0676013474827a00f3dde5dd83009ec20f6ebv2_00.jpg",
+  };
 
-  const userRegister =await axios
-        .post("http://localhost:3001/user/register", user)
-        .catch((e) => e);
+  const userRegister = await axios
+    .post("http://localhost:3001/user/register", user)
+    .catch((e) => e);
 
   const admin = await axios
-      .post("http://localhost:3001/admin/register", user)
-      .catch((e) => e);
+    .post("http://localhost:3001/admin/register", user)
+    .catch((e) => e);
 
   return admin;
+};
 
-}
+const validatesupport = async (postReported, username) => {
+  const report = await Support.findOne({
+    where: {
+      postReported,
+      username,
+    },
+  });
 
+  return report;
+};
+
+const DB_DestroyMessage = async (id) => {
+  try {
+    const erasePost = await Support.findOne({ where: { idSupport: id } });
+    await erasePost.destroy();
+    return { Succes: "Deleted Succesfully" };
+  } catch (e) {
+    throw new Error("We had a problem with your Delete");
+  }
+};
 
 module.exports = {
   DB_findUserEmailOrUsername,
@@ -545,5 +580,7 @@ module.exports = {
   BD_banUser,
   BD_loginBan,
   BD_banComment,
-  DB_AdminSignUp
+  DB_AdminSignUp,
+  validatesupport,
+  DB_DestroyMessage,
 };

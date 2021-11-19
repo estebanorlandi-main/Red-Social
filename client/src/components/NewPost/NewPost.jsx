@@ -1,18 +1,33 @@
 import style from "./NewPost.module.css";
-import { useState } from "react";
-import { createPost, updatePage } from "../../Redux/actions/Post.js";
+import { useEffect, useState } from "react";
+import {
+  commentPost,
+  createPost,
+  updatePage,
+} from "../../Redux/actions/Post.js";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import validate from "../../utils/validate";
 import ImageUpload from "../ImageUpload/ImageUpload";
 import Tags from "../Tags/Tags";
-export default function NewPost({orden, tags}) {
+import { infoAdmin } from "../../Redux/actions/Admin";
+
+export default function NewPost({ orden, tags }) {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer || {});
+  const info = useSelector((state) => state.usersReducer.users);
+  const profile = useSelector((state) => state.usersReducer.profile);
+  var day = new Date();
+
+  useEffect(() => {
+    dispatch(infoAdmin(session.username));
+  }, [dispatch]);
+
   const [data, setData] = useState({
     title: "",
     content: "",
     image: null,
+    type: "normal",
     tag: [],
     likes: 0,
     username: session.username,
@@ -45,6 +60,10 @@ export default function NewPost({orden, tags}) {
     setData((old) => ({ ...old, tag: e.map((option) => option.value) }));
   };
 
+  const handleSelectType = (e) => {
+    setData((old) => ({ ...old, type: e.value }));
+  };
+
   const handleImage = (e) => {
     if (!e) return setData((old) => ({ ...old, image: null }));
 
@@ -59,19 +78,27 @@ export default function NewPost({orden, tags}) {
     e.preventDefault();
 
     if (!Object.values(errores).filter((error) => error).length) {
-      const formData = new FormData();
-      if (!session.dayBan) {
+      const day = new Date();
+      if (day > info.dayBan || !info.dayBan) {
+        const formData = new FormData();
         formData.append("title", data.title);
         formData.append("content", data.content);
         formData.append("image", data.image);
         formData.append("tag", data.tag);
         formData.append("username", data.username);
-        formData.append("type",data.type)
-
-        let errores = await dispatch(createPost(formData, orden, tags));
+        formData.append("type", data.type);
+        let seguidos;
+        if (profile.following) {
+          seguidos = profile.following.map((user) => user.username);
+        } else {
+          seguidos = [];
+        }
+        let errores = await dispatch(
+          createPost(formData, orden, tags, seguidos)
+        );
         if (errores.type === "ERROR") {
-          alert(errores.payload.response.data.error.errors[0].message)
-        }else {
+          alert("se ha producido un error");
+        } else {
           setData({
             title: "",
             content: "",
@@ -85,9 +112,6 @@ export default function NewPost({orden, tags}) {
       } else {
         alert("You are banned, therefore you cannot post anything");
       }
-
-      //console.log(obj);
-      //dispatch(updatePage(true, obj.payload.posts));
     }
   }
 
@@ -124,21 +148,22 @@ export default function NewPost({orden, tags}) {
       <ImageUpload onChange={handleImage} />
 
       <label className={style.wrapper}>
-      <Tags tags={[]} mode={true} handleSelect={handleSelect} editTags={data.tag}/>
+        <Tags
+          tags={[]}
+          mode={true}
+          handleSelect={handleSelect}
+          editTags={data.tag}
+        />
 
-        {/*<Select
-          onChange={handleSelect}
-          options={options}
-          menuPlacement="top"
-          placeholder="Tags"
-          value={data.tag.map((t)=>({label:t, value:t}))}
-          isMulti
-        />*/}
+        <span className={style.error}></span>
+      </label>
+      <label className={style.wrapper}>
+        <Select onChange={handleSelectType} options={type} />
         <span className={style.error}></span>
       </label>
 
       <button className={style.submit} type="submit">
-        Crear
+        Create
       </button>
     </form>
   );

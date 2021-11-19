@@ -19,6 +19,8 @@ import {
 import CommentAdmin from "../CommentAdmin/CommentAdmin";
 
 import styles from "./PostAdmin.module.css";
+import { IoBan} from "react-icons/io5";
+
 
 //Icons
 import {
@@ -57,9 +59,10 @@ const parseContent = (text) => {
 
   return parsed;
 };
-function PostAdmin({  post, customClass, socket, admin  }) {
+function PostAdmin({  post, customClass, socket, admin}) {
   const dispatch = useDispatch();
 
+  const isDark = useSelector((state) => state.themeReducer.theme);
   const page = useSelector(({ postsReducer: { page } }) => page);
   const session = useSelector((state) => state.sessionReducer || {});
 
@@ -91,16 +94,6 @@ function PostAdmin({  post, customClass, socket, admin  }) {
   const createdAt = new Date(post.updatedAt).getTime();
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
-
-  // useEffect(() => {
-  //   if(currentPost){
-  //     post = currentPost
-
-  //     // console.log(post)
-  //     setReload((prev) => !prev)
-  //   }
-  // }, [currentPost])
-
 
   useEffect(() => {
     if(!socket) return;
@@ -202,6 +195,7 @@ function PostAdmin({  post, customClass, socket, admin  }) {
 
   const hanbleBanPost = (e) =>{
     e.preventDefault();
+    console.log(e.target)
     dispatch(banPost(e.target.value));
     socket.emit("sendNotification", {
       senderName: session.username,
@@ -212,15 +206,16 @@ function PostAdmin({  post, customClass, socket, admin  }) {
     alert('Ban, successfully applied');
   }
 
-
   const handleBanComment = (e) => {
     e.preventDefault();
+    console.log(e.target.value)
     dispatch(deleteComment(e.target.value));
     alert('Comment deleted successfully')
   }
+  
 
   return (
-    <div className={styles.container + ` ${customClass}`}>
+    <div className={styles.container + ` ${customClass} ${isDark ? styles.dark : ""}`}>
      {session.username !== post.user.username ? (
       <div className={styles.options}>
       <button onClick={handleOptions} className={styles.optionsHandler}>
@@ -248,21 +243,18 @@ function PostAdmin({  post, customClass, socket, admin  }) {
           styles.optionsMenu
         }`}
       >
-        <button value={post.idPost}
-          name="Ban Post"
-          onClick={(e) => hanbleBanPost(e)}>
-          <BsFillPencilFill />
-          Ban
-        </button>
         <button
           className={styles.danger}
-          onClick={() => {
-            handleDelete();
-          }}
+          value={post.idPost}
+          name="Ban Post"
+          onClick={(e) => hanbleBanPost(e)}
         >
-          <GoTrashcan style={{ color: "#fff" }} />
+          <IoBan style={{ color: "#fff" }} />
           Ban 
         </button>
+
+        {/* <button value={profile.username} onClick={(e)=>{handleBanUser(e)}} className={styles.banButton}><IoBan style={{ color: "#fff", width:'2.5em', height:'1.2em', marginRight:'4px' }}/> Baneo</button> */}
+
         </div>
         </div>
       ) : (
@@ -354,7 +346,7 @@ function PostAdmin({  post, customClass, socket, admin  }) {
       <div className={styles.actions}>
         <button className={!session.username ? "" : ""} onClick={handleLike}>
           {liked ? (
-            <MdFavorite className={styles.icons} color="#f55" />
+            <MdFavorite className={styles.iconPaint}/>
           ) : (
             <MdFavoriteBorder className={styles.icons} />
           )}
@@ -362,7 +354,7 @@ function PostAdmin({  post, customClass, socket, admin  }) {
         </button>
 
         <button>
-          <MdOutlineModeComment />{" "}
+          <MdOutlineModeComment className={styles.icons}/>
           {currentPost
             ? currentPost.comments && currentPost.comments.length
             : post.comments && post.comments.length}

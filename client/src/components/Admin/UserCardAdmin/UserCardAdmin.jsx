@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import image from "../../../images/userCard.svg";
 
 
-import styles from "./UserAdminStyles.css";
+import styles from "./UserCardAdmin.module.css";
 
 
 export default function UserCardAdmin({ user,

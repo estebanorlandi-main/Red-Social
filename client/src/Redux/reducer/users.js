@@ -1,12 +1,12 @@
 
 import { SEARCH_USER, GET_USER, REMOVE_PROFILE, GET_USERS,NEW_MSG, SOCKET_CONN,BAN_USER_ADMIN, FOLLOW_UNFOLLOW } from "../actions/Users";
-
+import {INFO_USER} from "../actions/Admin"
 
 const initialState = {
   users: [],
   profile: {},
   convers:{},
-  socket: {}
+  socket: {},
 };
 
 export default function root(state = initialState, action) {
@@ -57,7 +57,13 @@ export default function root(state = initialState, action) {
       return{
         ...state
       }
+    
+    case INFO_USER:
+      return {
+        ...state,
+        users: action.payload.data
 
+      }
     default:
       return state;
   }

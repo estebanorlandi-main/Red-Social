@@ -2,16 +2,23 @@ import { useEffect, useState } from "react";
 import userimg from "../../../images/userCard.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { removeProfile, getUser } from "../../../Redux/actions/Users";
+import { conversation } from "../../../Redux/actions/Session";
 
 import PostAdmin from "../../../components/Admin/PostAdmin/PostAdmin";
 
 import { updateUser } from "../../../Redux/actions/Session";
 import validate from "../../../utils/validate";
-import styles from "./stylesProfile.css";
+import styles from "./ProfileAdmin.module.css";
 import Select from "react-select";
 import { BiCog } from "react-icons/bi";
 import { banUserAdmin } from "../../../Redux/actions/Users";
+import { useHistory } from "react-router";
 
+import { BsFillPencilFill } from "react-icons/bs";
+import { Link } from "react-router-dom";
+
+import { MdMessage } from "react-icons/md";
+import { IoBan} from "react-icons/io5";
 const selectStyles = {
   control: (styles) => ({ ...styles, width: "100%" }),
 };
@@ -33,6 +40,7 @@ const options = [
 
 export default function ProfileAdmin(props) {
   const dispatch = useDispatch();
+  const history = useHistory()
   const [editar, setEditar] = useState(false);
 
   const session = useSelector((state) => state.sessionReducer);
@@ -67,6 +75,11 @@ export default function ProfileAdmin(props) {
     setInputs((old) => ({ ...old, tags: e.map((option) => option.value) }));
   };
 
+  const sendMessage = () => {
+    // 
+    history.push("/messenger")
+  };  
+
   const handleSubmit = () => {
     const errs = validate(inputs);
     if (Object.values(errs).filter((e) => e).length) return setErrors(errs);
@@ -93,48 +106,60 @@ export default function ProfileAdmin(props) {
           />
         </div>
       ) : (
-        <main className={styles.container}>
-          <div className={styles.left}>
-            <section>
-              <div className={styles.tags}>
-                {profile.tags &&
-                  profile.tags
-                    .filter((tag) => tag)
-                    .map((tag, i) => (
-                      <span key={i} className={styles.tag}>
-                        {tag}
-                      </span>
-                    ))}
-              </div>
+          <div className={styles.profile}>
+          <section className={styles.head}>
+              
               {myProfile && editar ? (
                 <button onClick={handleSubmit}>Change</button>
               ) : (
                 ""
               )}
               {myProfile ? (
-                <button
-                  className={styles.edit}
-                  onClick={() => setEditar((old) => !old)}
-                >
-                  <BiCog />
+                <Link to="/settings" className={styles.edit} style={ myProfile ? {} : {display:'none'}}>
+                  <BsFillPencilFill style={{ color: "#C94F4F", marginRight:'4px' }} />
                   Edit
-                </button>
+                </Link>
               ) : (
                 ""
               )}
 
-              <img
-                className={styles.image}
-                src={profile.image || userimg}
-                alt=""
-              />
-              <button
-                value={profile.username}
-                name="banUser"
-                onClick={(e) => handleBanUser(e)}
-              >
-                Ban User
-              </button>
+              <div className={styles.importantInfo}> 
+                <img
+                  className={styles.image}
+                  src={profile.image || userimg}
+                  alt=""
+                  style={{marginRight:"24px"}}
+                />
+                <div className={styles.profileInfoDisplay}>
+                  <div> 
+                  {
+                    profile.name && profile.lastname ? 
+                    <p className={styles.name}>
+                      {profile.name} {profile.lastname}
+                    </p>
+                    :
+                    <p>
+                    </p>
+                  }
+                  <p>@{profile.username}</p>
+                  </div>
+
+                </div>
+              </div>
+              <div className={styles.profileActions} style={myProfile ? {display:'none'} : {}}>
+              {
+                !myProfile?
+                <div>
+                <button onClick={sendMessage} className={styles.messageButton}><MdMessage style={{ color: "#fff", width:'1.2em', height:'1.2em', marginRight:'4px' }}/> Message </button>
+                <button value={profile.username} onClick={(e)=>{handleBanUser(e)}} className={styles.banButton}><IoBan style={{ color: "#fff", width:'2.5em', height:'1.2em', marginRight:'4px' }}/> Baneo</button>
+                </div>
+                :
+                <></>
+              }
+              </div>
+              
+              
+
               {myProfile && editar ? (
                 <form>
                   <label>
@@ -162,46 +187,11 @@ export default function ProfileAdmin(props) {
                   <span>{errors.lastname}</span>
                 </form>
               ) : (
-                <p className={styles.name}>
-                  {profile.name} {profile.lastname}
+                <p>
+                  {/* {profile.name} {profile.lastname} */}
                 </p>
-              )}
+              )}  
 
-              <p className={styles.email}>{profile.email}</p>
-
-              <a className={styles.github} href={profile.gitaccount}>
-                {git}
-              </a>
-
-              {myProfile && editar ? (
-                <Select
-                  onChange={handleSelect}
-                  className={styles.select_container}
-                  options={options}
-                  styles={selectStyles}
-                  isMulti
-                />
-              ) : (
-                ""
-              )}
-            </section>
-
-            <section>
-              <h3>About</h3>
-              {myProfile && editar ? (
-                <label>
-                  <div className="input-group">
-                    <textarea
-                      name="about"
-                      onChange={handleChange}
-                      value={inputs.about}
-                      placeholder={session.about}
-                    ></textarea>
-                  </div>
-                </label>
-              ) : (
-                <p>{profile.about}</p>
-              )}
             </section>
             <section className={styles.posts}>
               {profile.posts
@@ -214,12 +204,6 @@ export default function ProfileAdmin(props) {
                 : ""}
             </section>
           </div>
-          <div className={styles.right}>
-            <section>
-              <h3>Recomendaciones?</h3>
-            </section>
-          </div>
-        </main>
       )}
     </div>
   ) : (

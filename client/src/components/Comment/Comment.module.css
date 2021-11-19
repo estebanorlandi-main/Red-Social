@@ -49,3 +49,7 @@
   width: max-content;
   max-width: max-content;
 }
+
+.dark *:not(:first-child) {
+  color: #aaa !important;
+}

@@ -4,13 +4,17 @@ import { Link } from "react-router-dom";
 import image from "../../images/userCard.png";
 import UserCard from "../UserCard/UserCard";
 import Tags from "../Tags/Tags";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import {
   commentPost,
   deletePost,
   updatePost,
   likePost,
 } from "../../Redux/actions/Post";
+
+import { infoAdmin } from "../../Redux/actions/Admin";
+
+import { creatReport } from "../../Redux/actions/Support";
 
 import Comment from "../Comment/Comment";
 
@@ -43,6 +47,9 @@ import "codemirror/keymap/sublime";
 import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 
+// PopUp
+import "./Popup.css";
+
 const parseContent = (text) => {
   const mentions = text && text.match(/@\w+/gi);
 
@@ -67,8 +74,12 @@ const parseContent = (text) => {
 
 function Post({ post, customClass, user, socket, admin, type }) {
   const dispatch = useDispatch();
-
+  const history = useHistory();
   const session = useSelector((state) => state.sessionReducer || {});
+  const isDark = useSelector((state) => state.themeReducer.theme);
+  const info = useSelector((state) => state.usersReducer.users);
+  var day = new Date();
+
   const [firstLoad, setFirstLoad] = useState(true);
   const [seeMore, setSeeMore] = useState(false);
   const [liked, setLiked] = useState(
@@ -94,12 +105,15 @@ function Post({ post, customClass, user, socket, admin, type }) {
     tag: post.tag,
   });
 
-
   const createdAt = new Date(post.updatedAt).getTime();
   const now = new Date().getTime();
   const TimeSpan = Math.round(Math.abs(now - createdAt) / 36e5);
 
-  const [code, setCode] = useState("a = 0");
+  const [code, setCode] = useState("");
+
+  useEffect(() => {
+    dispatch(infoAdmin(session.username));
+  }, [1]);
 
   useEffect(() => {
     if (socket && Object.keys(socket).length) {
@@ -113,13 +127,15 @@ function Post({ post, customClass, user, socket, admin, type }) {
 
   useEffect(() => {
     if (liked) {
-      socket.emit("sendNotification", {
-        senderName: session.username,
-        userImage: session.image,
-        receiverName: post.user.username,
-        id: post.idPost,
-        type: 1,
-      });
+      if (socket) {
+        socket.emit("sendNotification", {
+          senderName: session.username,
+          userImage: session.image,
+          receiverName: post.user.username,
+          id: post.idPost,
+          type: 1,
+        });
+      }
     }
   }, [
     liked,
@@ -144,11 +160,13 @@ function Post({ post, customClass, user, socket, admin, type }) {
       image: post.image,
       tag: post.tag,
     });
-    setLiked(post.userLikes.filter((like) => like.user.username === session.username)
-      .length
-      ? true
-      : false)
-      setEditMode(false)
+    setLiked(
+      post.userLikes.filter((like) => like.user.username === session.username)
+        .length
+        ? true
+        : false
+    );
+    setEditMode(false);
   }, [post]);
 
   const handleComment = ({ target: { name, value } }) => {
@@ -159,13 +177,22 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const submitComment = (e) => {
     e.preventDefault();
     if (commentError) return;
-    dispatch(commentPost(post.idPost, newComment, session.username, socket));
-    socket.emit("sendNotification", {
-      senderName: session.username,
-      userImage: session.image,
-      receiverName: post.user.username,
-      type: 2,
-    });
+    if (socket) {
+      if (day > info.dayBan === true) {
+        dispatch(
+          commentPost(post.idPost, newComment, session.username, socket)
+        );
+        socket.emit("sendNotification", {
+          senderName: session.username,
+          userImage: session.image,
+          receiverName: post.user.username,
+          type: 2,
+        });
+      } else {
+        alert("You are banned, therefore you cannot post anything");
+        setNewComment("");
+      }
+    }
   };
 
   const handleDelete = () => dispatch(deletePost(post.idPost));
@@ -224,16 +251,18 @@ function Post({ post, customClass, user, socket, admin, type }) {
   const [result, setResult] = useState(null);
 
   const testing = () => {
+    setLoading(true);
     axios
       .post("http://localhost:3001/challenge/testing/", { code: newComment })
       .then((res) => {
-        console.log(res.data);
-        if (res?.data.error) {
+        console.log(res);
+        setLoading(false);
+        if (res?.data.data?.error) {
           setErrorTest(true);
-          setResult(null)
-        }else {
+          setResult(null);
+        } else {
           setErrorTest(false);
-          setResult(res.data.tested);
+          setResult(res.data.data);
         }
       })
       .catch((e) => console.log(e));
@@ -246,17 +275,38 @@ function Post({ post, customClass, user, socket, admin, type }) {
   let test;
   if (post.content) test = parseContent(post.content);
 
-
   const [errorTest, setErrorTest] = useState(null);
+  const [loading, setLoading] = useState(false);
 
+  const handleReport = () => {
+    const report = {
+      username: session.username,
+      content: "Report the user",
+      title: "Report Post",
+      postReported: post.idPost,
+      userReported: post.user.username,
+    };
+    dispatch(creatReport(report));
+    alert("Report send");
+    // history.push('/home')
+  };
 
+  console.log(post);
   return (
-    <div className={styles.container + ` ${customClass}`}>
+    <div
+      className={
+        styles.container + ` ${customClass} ${isDark ? styles.dark : ""}`
+      }
+    >
       {session.username === post.user.username ? (
         <div className={styles.options}>
           <button onClick={handleOptions} className={styles.optionsHandler}>
             <BiDotsVerticalRounded
-              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
+              style={{
+                color: isDark ? "#fff" : "#1e1e1e",
+                width: "2em",
+                height: "2em",
+              }}
             />
           </button>
 
@@ -294,11 +344,34 @@ function Post({ post, customClass, user, socket, admin, type }) {
             </button>
           </div>
         </div>
-      ) :
-        ""
-      }
+      ) : session.username ? (
+        <div className={`${styles.show} ${styles.optionsMenu}`}>
+          <button onClick={handleOptions} className={styles.optionsHandler}>
+            <BiDotsVerticalRounded
+              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
+            />
+          </button>
 
-      <Tags tags={post.tag} mode={editMode} handleSelect={handleSelect} editTags={edit.tag}/>
+          <button
+            className={styles.danger}
+            onClick={() => {
+              handleReport();
+            }}
+          >
+            <GoTrashcan style={{ color: "#fff" }} />
+            Report
+          </button>
+        </div>
+      ) : (
+        <></>
+      )}
+
+      <Tags
+        tags={post.tag}
+        mode={editMode}
+        handleSelect={handleSelect}
+        editTags={edit.tag}
+      />
 
       <NavLink
         activeClassName={styles.active}
@@ -309,7 +382,13 @@ function Post({ post, customClass, user, socket, admin, type }) {
           toRight
           showImage
           showName
-          user={{ username: post.user.username }}
+          user={{
+            username: post.user.username,
+            image: {
+              imageData: post.user.imageData,
+              imageType: post.user.imageType,
+            },
+          }}
           other={`Posted ${TimeSpan}hr ago`}
         />
       </NavLink>
@@ -376,11 +455,11 @@ function Post({ post, customClass, user, socket, admin, type }) {
       <div className={styles.actions}>
         <button className={styles.favorite} onClick={handleLike}>
           {liked ? (
-            <MdFavorite className={styles.icons} color="#f55" />
+            <MdFavorite className={styles.iconPaint} />
           ) : (
             <MdFavoriteBorder className={styles.icons} />
           )}
-          {post.userLikes.length}
+          {currentPost ? currentPost.userLikes.length : post.userLikes.length}
         </button>
 
         <button>
@@ -423,25 +502,15 @@ function Post({ post, customClass, user, socket, admin, type }) {
         </div>
       ) : (
         <div className={styles.newChallengeContainer}>
-          {/* <button className={styles.button} onClick={submitCode}>
-            Submit
-          </button>
-          <button
-            onClick={() =>
-              axios
-                .get("http://localhost:3001/challenge/post")
-                .then((res) => console.log(res))
-            }
-          >
-            AXIOS
-          </button> */}
           {/* Pop Up */}
-          <a className={styles.toButton} href="#popup">
-            <FaPlay style={{ color: "white" }} />
+          <a href="#popup">
+            <button class="start" type="submit">
+              START
+            </button>
           </a>
           <div id="popup" class="overlay">
             <div id="popupBody">
-              <h2>Create a function that adds two numbers in JavaScript</h2>
+              <h2>{post.content}</h2>
               <CodeMirror
                 className={styles.CodeMirror}
                 options={{
@@ -462,52 +531,40 @@ function Post({ post, customClass, user, socket, admin, type }) {
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/macos-close.png" />
               </a>
               <div class="popupContent">
-                {errorTest ? (
+                {loading ? (
                   <img
                     className={styles.icon}
+                    style={{ float: "left" }}
+                    src="http://pa1.narvii.com/6892/4d02d3678a8cf722f7a76555d77c45fe32bd5b61r1-200-200_00.gif"
+                  />
+                ) : errorTest ? (
+                  <img
+                    className={styles.icon}
+                    style={{ float: "left" }}
                     src="https://img.icons8.com/color/48/000000/fail.png"
                   />
                 ) : (
                   <img
                     className={styles.icon}
+                    style={{ float: "left" }}
                     src="https://img.icons8.com/color/48/000000/pass.png"
                   />
                 )}
 
-                <h2>{result}</h2>
+                <button class="child" type="submit" onClick={submitComment}>
+                  <MdSend
+                    className={styles.icons}
+                    style={{ margin: "0", color: "#fff" }}
+                  />
+                </button>
+                <button class="test" type="submit" onClick={testing}>
+                  Test
+                </button>
 
-                <button onClick={submitComment}>Submitt</button>
-                <button onClick={testing}>Test</button>
+                <h2 class="result">Result: {result}</h2>
               </div>
             </div>
           </div>
-          {/* <div className={styles.inline}>
-            <span className={styles.maxLength}>{newComment.length} / 1000</span>
-            <span>{commentError}</span>
-          </div>
-          <form className={styles.newComment} onSubmit={submitComment}>
-            <label className={commentError ? "error" : ""}>
-              <div className="input-group">
-                <input
-                  onChange={handleComment}
-                  name="comment"
-                  type="text"
-                  value={newComment}
-                  placeholder="New comment..."
-                />
-              </div>
-            </label>
-            {newComment.length && !commentError ? (
-              <button type="submit">
-                <MdSend
-                  className={styles.icons}
-                  style={{ margin: "0", color: "#fff" }}
-                />
-              </button>
-            ) : (
-              <></>
-            )}
-          </form> */}
         </div>
       )}
 

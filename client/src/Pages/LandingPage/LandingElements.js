@@ -42,9 +42,7 @@ export const Headline = styled.h1`
   z-index: 2;
   font-size: 3em;
   font-weight: 600;
-  color: ${(props) => {
-    return props.isDark ? "#fff" : "#1e1e1e";
-  }}
+  color: ${({ theme: { mode } }) => (mode ? "#fff" : "#1e1e1e")};
 
   animation: 1s ${toDown};
 
@@ -62,7 +60,7 @@ export const JoinNow = styled(Link)`
   border-radius: 5em;
   padding: 0.75em 1.5em;
   background-color: var(--c-blue);
-  box-shadow: 0 0.25em 0.75em #6588ff;
+  box-shadow: var(--bs-blue);
   width: max-content;
   color: #fff;
   text-decoration: none;

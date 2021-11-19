@@ -5,9 +5,10 @@ import PostAdmin from "../PostAdmin/PostAdmin";
 import NewPost from "../../NewPost/NewPost";
 import UserCardAdmin from "../UserCardAdmin/UserCardAdmin";
 
-import styles from "./stalesAdmin.css";
-import { clearPosts, getPosts, updatePage } from "../../../Redux/actions/Post";
+import styles from "./HomeAdmin.module.css";
+import { clearPosts, getPosts, updatePage,banPost,deleteComment } from "../../../Redux/actions/Post";
 import { FaLeaf } from "react-icons/fa";
+import { BiChevronUp } from "react-icons/bi";
 import { Link } from "react-router-dom";
 
 import { socketConnection } from "../../../Redux/actions/Users";
@@ -27,19 +28,17 @@ function HomeAdmin(props) {
 
   const dispatch = useDispatch();
 
+  const [newPosts, setNewPosts] = useState(true);
   const [createPost, setCreatePost] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [first, setFirst] = useState(true);
+  const [orden, setOrden] = useState("cronologico");
+  const [tags, setTags] = useState(session.tags);
+  const [flags, setFlags] = useState(true)
 
   useEffect(() => {
     dispatch(socketConnection(session.username));
-  }, []);
-
-  // useEffect(() => {
-  //   if(Object.keys(socket).length){
-  //     socket.emit("addUser", session.username);
-  //   }
-  // }, [socket, session.username]);
+  }, [dispatch,posts,flags]);
 
   const handleScroll = useCallback(() => {
     if (
@@ -47,7 +46,7 @@ function HomeAdmin(props) {
       document.documentElement.scrollHeight
     )
       dispatch(updatePage(page + 1 < totalPages ? page + 1 : page));
-  }, [dispatch, page, totalPages]);
+  }, [dispatch, page, totalPages,flags]);
 
   useEffect(() => {
     if (page === -1) {
@@ -56,103 +55,67 @@ function HomeAdmin(props) {
       return;
     }
     dispatch(getPosts(page));
-  }, [dispatch, page, first, totalPages]);
+  }, [dispatch, page, first, totalPages,flags]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [handleScroll]);
+  }, [handleScroll,flags]);
 
-  console.log(posts.length);
+  // useEffect(() => {
+  //   const getConversations = async () => {
+  //     try {
+  //       const res = await axios.get(
+  //         "http://localhost:3001/conversation/" + session.username
+  //       );
+  //       setConversations(res.data);
+  //     } catch (err) {}
+  //   };
+  //   getConversations();
+  // }, [session.username,flags]);
 
-  useEffect(() => {
-    const getConversations = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:3001/conversation/" + session.username
-        );
-        setConversations(res.data);
-      } catch (err) {}
-    };
-    getConversations();
-  }, [session.username]);
+  const handleCharge = (e) => {
+    window.scrollTo(0, 0);
+    dispatch(updatePage(0));
+    dispatch(getPosts(page, tags, orden));
+    setNewPosts(false);
+  };
 
-    return (
+  // const handleBanComment = (e) => {
+  //   e.preventDefault();
+  //   console.log(e.target.value)
+  //   dispatch(deleteComment(e.target.value));
+  //   alert('Comment deleted successfully')
+  // }
+  
+
+  return (
     <div className={styles.home + ` ${createPost ? styles.noScroll : ""} `}>
-      <section className={styles.left}>
-        <div className={styles.filters}>
-          <h3>My tags</h3>
-          <ul className={styles.tags}>
-            {session.tags && session.tags.length ? (
-              session.tags.map((tag, i) => (
-                <li key={i}>
-                  <Link className={styles.tag} to="/home">
-                    # {tag}
-                  </Link>
-                </li>
-              ))
-            ) : (
-              <></>
-            )}
-          </ul>
-        </div>
-      </section>
-
       <section className={styles.center}>
-        {createPost ? (
-          <div
-            className={styles.newPost}
-            id="close"
-            onClick={(e) =>
-              e.target.id === "close" ? setCreatePost((old) => false) : ""
-            }
-          >
-            <NewPost />
-          </div>
-        ) : (
-          ""
-        )}
-
-        <div className={styles.newPostOpen}>
-          <UserCardAdmin
-            toRight
-            showImage
-            user={{ user: session.username, image: session.image }}
-          />
-          <button
-            className={styles.createPost}
-            onClick={() => setCreatePost(true)}
-          >
-            Create Post
+        {newPosts && (
+          <button className={styles.newPosts} onClick={handleCharge}>
+            Check new posts <BiChevronUp className={styles.icon} />
           </button>
-        </div>
-
-        <ul>
-          {posts.length >0? posts.map((post, i) => (
-            <li key={i}>
-              <PostAdmin post={post} socket={socket} />
-            </li>
-          )):""}
-        </ul>
-
-        {totalPages > page && (
-          <div className={styles.cargando}>Cargando...</div>
         )}
-      </section>
-
-      <section className={styles.right}>
-        <div>
-          <h3>Friends.</h3>
-          <ul>
-            {conversations.map(({ members }) => (
-              <li>
-                <p>{members.filter((member) => member !== session.username)}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul>
+          {posts && Array.isArray(posts) ? posts.map((post, i) => (
+            <li key={i}>
+              <PostAdmin post={post} socket={socket}  />
+            </li>
+          )) : 
+          <li>
+          <button className={styles.newPosts} onClick={handleCharge}>
+            Check new posts <BiChevronUp className={styles.icon} />
+          </button>
+        </li>
+          
+          }
+        </ul>
+        {/* {totalPages > page && (
+          <div className={styles.cargando}>Cargando...</div>
+        )} */}
       </section>
     </div>
   );

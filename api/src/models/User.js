@@ -96,6 +96,13 @@ module.exports = (sequelize) => {
           },
         },
       },
+
+      imageType: { type: DataTypes.STRING, allowNull: true },
+
+      imageName: { type: DataTypes.STRING, allowNull: true },
+
+      imageData: { type: DataTypes.BLOB, allowNull: true },
+      
       about: {
         type: DataTypes.STRING,
         validate: {

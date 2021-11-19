@@ -3,16 +3,25 @@ const { Sequelize, Model } = require("sequelize");
 const db = require("../db.js");
 const fn = require("./utils.js");
 const bcrypt = require("bcrypt");
+const path = require("path");
 const saltRounds = 10;
+const AuthControllers = require('../controllers/AuthControllers.js');
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
 
 const sanitizeUser = (data) => {
   if (Array.isArray(data)) {
     return data.map((user) => ({
+
       username: user.username,
       name: user.name,
       lastname: user.lastname,
       gitaccount: user.gitaccount,
-      image: user.image,
+      image: {"imageType":user.imageType,
+              "imageName":user.imageName,
+              "imageData":user.imageData ? user.imageData.toString("base64") : null},
       email: user.email,
       about: user.about,
       tags: user.tags,
@@ -24,13 +33,18 @@ const sanitizeUser = (data) => {
       friends:user.Friends
     }));
   }
-  console.log(data.posts, "posts")
+  let Laimagenen4 = ""
+  if(data.imageData){
+    Laimagenen4 = data.imageData.toString("base64")
+  }
   return {
     username: data.username,
     name: data.name,
     lastname: data.lastname,
     gitaccount: data.gitaccount,
-    image: data.image,
+    image: {"imageType":data.imageType,
+              "imageName":data.imageName,
+              "imageData":Laimagenen4},
     email: data.email,
     about: data.about,
     tags: data.tags,
@@ -49,10 +63,10 @@ router.get("/", async (req, res, next) => {
     if (Object.keys(req.query).length != 0) return next();
     let findUsers = await fn.DB_findUserAll();
 
-    return res.send(findUsers);
-
+    
     findUsers = sanitizeUser(findUsers);
     res.send(findUsers);
+    // return res.send(findUsers);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -142,8 +156,19 @@ router.post("/register", async (req, res, next) => {
   }
 });
 //UPDATE
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", upload.single("image"), AuthControllers.isAuthenticated, async (req, res, next) => {
+
   try {
+    const {name, lastname, gitaccount, about, tags} = req.body
+    const username = req.params.id
+    let image = {};
+    if (req.file) {
+      image["imageType"] = req.file.mimetype;
+      image["imageName"] = req.file.originalname;
+      image["imageData"] = req.file.buffer;
+    }
+
+
     if (req.body.password) {
       let errors = await fn.DB_validatePassword(req.body.password);
       if (errors.password) return res.send(errors).status(400);
@@ -157,20 +182,23 @@ router.put("/:id", async (req, res, next) => {
       include: [db.Post],
     });
 
-    let validate = await fn.DB_updateUser(req.body, UserID.id);
-
+    let validate = await fn.DB_updateUser(req.body, UserID.id, image);
     if (Object.keys(validate).length) return res.status(400).send(validate);
 
     let userUpdated = await fn.DB_findUserParams(req.params.id);
 
     userUpdated = sanitizeUser(userUpdated);
-
+    res.sendFile
     return res.send({ user: userUpdated, success: true });
   } catch (e) {
-    console.log(e);
-    res.sendStatus(500).send({ errors: e, success: false });
+    console.log(e)
+    res.status(403).send({ errors: e, success: false });
   }
 });
+
+
+
+
 //VALIDATE EMAIL
 router.get("/validate/email/:email", async (req, res, next) => {
   const email = await fn.DB_findUsersEmail(req.params.email);
