@@ -11,6 +11,7 @@ import { FaUserCircle, FaKey } from "react-icons/fa";
 export default function Login() {
   const dispatch = useDispatch();
   const session = useSelector((state) => state.sessionReducer);
+  const isDark = useSelector((state) => state.themeReducer.theme);
 
   const [input, setInput] = useState({
     username: process.env.REACT_APP_LOGIN_USERNAME || "",
@@ -25,7 +26,7 @@ export default function Login() {
 
   function handleChange({ target: { name, value } }) {
     setInput({ ...input, [name]: value.replaceAll(/^\s+/g, "") });
-    setErrors({ ...errors, [name]: validate(name, value), general:"" });
+    setErrors({ ...errors, [name]: validate(name, value), general: "" });
   }
 
   async function handleSubmit(e) {
@@ -33,10 +34,10 @@ export default function Login() {
 
     if (!Object.values(errors).filter((error) => error).length) {
       let errores = await dispatch(logIn(input));
-      console.log(errores)
+      console.log(errores);
       if (errores.type === "ERROR") {
-        setErrors({ ...errors, general:"Invalid Username or Password" })
-      }else{
+        setErrors({ ...errors, general: "Invalid Username or Password" });
+      } else {
         setInput({
           username: "",
           password: "",
@@ -53,7 +54,7 @@ export default function Login() {
   return session.username ? (
     <Redirect to="/home" />
   ) : (
-    <div className={style.container}>
+    <div className={`${style.container} ${isDark ? style.dark : ""}`}>
       {/*<img
         src="https://images.pexels.com/photos/1851415/pexels-photo-1851415.jpeg"
         alt=""
@@ -90,7 +91,7 @@ export default function Login() {
           </div>
         </label>
         <span>{errors.password}</span>
-        <span style={{marginTop:"0.5em"}}>{errors.general}</span>
+        <span style={{ marginTop: "0.5em" }}>{errors.general}</span>
         <Link className="btn simple" to="/accounts/password/reset/">
           forgot password?
         </Link>

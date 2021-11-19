@@ -53,9 +53,6 @@ function EditProfile(props) {
   };
 
   const handleTags = (options) => {
-    if (options.length === 0) {
-      setInputs((old) => ({ ...old, tags: [] }));
-    }
     setInputs((old) => ({ ...old, tags: options.map((tag) => tag.value) }));
   };
 
@@ -73,6 +70,7 @@ function EditProfile(props) {
     formData.append("lastname", inputs.lastname);
     formData.append("gitaccount", inputs.gitaccount);
     formData.append("about", inputs.about);
+    formData.append("tags", inputs.tags);
 
     let errores = await dispatch(updateUser(session.username, formData));
     if (errores.type === "ERROR") {

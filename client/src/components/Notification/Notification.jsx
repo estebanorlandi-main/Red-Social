@@ -15,19 +15,22 @@ export default function Notification({ notification }) {
     action = "shared";
   }
 
-  console.log(notification);
-
   return (
     <div className={styles.notification}>
       <UserCard
         user={{
           username: notification.senderName,
-          image: notification.userImage,
+          image: {
+            imageData: notification?.userImage?.imageData,
+            imageType: notification?.userImage?.imageType,
+          },
         }}
         showName
         showImage
         toRight
-        other={ action === 'follow' ? "started following you" : `${action} your post`}
+        other={
+          action === "follow" ? "started following you" : `${action} your post`
+        }
         small
       />
     </div>

@@ -22,7 +22,8 @@ router.post("/", async (req, res) => {
 router.get("/:conversationId", async (req, res) => {
   try {
     const messages = await Message.findAll({
-        where: { conversationId: req.params.conversationId }
+        where: { conversationId: req.params.conversationId },
+        order: [["createdAt", "ASC"]]
     });
 
     res.status(200).json(messages);

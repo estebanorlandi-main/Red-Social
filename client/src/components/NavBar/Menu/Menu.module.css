@@ -157,7 +157,7 @@
 .notifications {
   position: absolute;
   width: max-content;
-  top: 60px;
+  top: 2.5rem;
   right: 0;
   background-color: white;
   color: black;
@@ -167,7 +167,7 @@
   padding: 10px;
 }
 .markRead {
-  background-color: #89b2ff;
+  background-color: var(--c-blue);
   color: #fff;
   margin: 0 0 1em 0;
   border: none;
@@ -175,5 +175,13 @@
   transition: all 0.25s;
 }
 .markRead:hover {
-  background-color: var(--c-blue);
+  background-color: var(--c-hard-blue);
+}
+
+.dark .notifications {
+  background-color: #222;
+  color: #fff;
+}
+.dark .markRead {
+  color: #fff;
 }

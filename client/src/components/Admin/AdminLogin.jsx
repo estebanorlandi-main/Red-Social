@@ -16,6 +16,7 @@ export default function AdminLogin() {
   });
 
   var admin = useSelector((state) => state.adminReducer);
+  const isDark = useSelector((state) => state.themeReducer.theme);
 
   const handleChange = (e) => {
     setInput({
@@ -36,8 +37,8 @@ export default function AdminLogin() {
 
   return admin.admin === true ? (
     <Redirect to="/homeAdmin" />
-  )  : (
-    <div className={style.container}>
+  ) : (
+    <div className={`${style.container} ${isDark ? style.dark : ""}`}>
       <form onSubmit={(e) => handleSubmit(e)}>
         <h1>Log In Admin</h1>
         <label>
@@ -45,34 +46,36 @@ export default function AdminLogin() {
           <div className="input-group">
             <FaUserCircle />
             <input
-            type="text"
-            value={input.username}
-            name="username"
-            onChange={(e) => handleChange(e)}
-            placeholder="Enter username"
-            />            
+              type="text"
+              value={input.username}
+              name="username"
+              onChange={(e) => handleChange(e)}
+              placeholder="Enter username"
+            />
           </div>
         </label>
         <label>
           Password
           <div className="input-group">
-            <FaKey/>
+            <FaKey />
             <input
-            type="password"
-            value={input.password}
-            name="password"
-            onChange={(e) => handleChange(e)}
-            placeholder="Enter password"
-            />            
+              type="password"
+              value={input.password}
+              name="password"
+              onChange={(e) => handleChange(e)}
+              placeholder="Enter password"
+            />
           </div>
         </label>
         <div className="buttonContainer">
-          <button className="btn" type="submit">Login</button>
-          <Link className="btn" to="/signup">SignUp Login</Link>          
+          <button className="btn" type="submit">
+            Login
+          </button>
+          <Link className="btn" to="/signup">
+            SignUp Login
+          </Link>
         </div>
-      </form>    
+      </form>
     </div>
-      )
-  ;
+  );
 }
-

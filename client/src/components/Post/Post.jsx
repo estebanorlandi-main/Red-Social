@@ -252,10 +252,11 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
   const [result, setResult] = useState(null);
 
   const testing = () => {
+    setLoading(true);
     axios
       .post("http://localhost:3001/challenge/testing/", { code: newComment })
       .then((res) => {
-        console.log(res);
+        setLoading(false);
         if (res?.data.data?.error) {
           setErrorTest(true);
           setResult(null);
@@ -263,8 +264,7 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
           setErrorTest(false);
           setResult(res.data.data);
         }
-      })
-      .catch((e) => console.log(e));
+      });
   };
 
   const tags = new Set();
@@ -275,6 +275,7 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
   if (post.content) test = parseContent(post.content);
 
   const [errorTest, setErrorTest] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleReport = () => {
     const report = {
@@ -289,7 +290,6 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
     // history.push('/home')
   };
 
-  console.log(post);
   return (
     <div
       className={
@@ -343,22 +343,28 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
           </div>
         </div>
       ) : session.username ? (
-        <div className={`${styles.show} ${styles.optionsMenu}`}>
+        <div className={styles.options}>
           <button onClick={handleOptions} className={styles.optionsHandler}>
             <BiDotsVerticalRounded
-              style={{ color: "#1e1e1e", width: "2em", height: "2em" }}
+              style={{
+                color: isDark ? "#fff" : "#1e1e1e",
+                width: "2em",
+                height: "2em",
+              }}
             />
           </button>
 
-          <button
-            className={styles.danger}
-            onClick={() => {
-              handleReport();
-            }}
-          >
-            <GoTrashcan style={{ color: "#fff" }} />
-            Report
-          </button>
+          <div className={`${styles.show} ${styles.optionsMenu}`}>
+            <button
+              className={styles.danger}
+              onClick={() => {
+                handleReport();
+              }}
+            >
+              <GoTrashcan style={{ color: "#fff" }} />
+              Report
+            </button>
+          </div>
         </div>
       ) : (
         <></>
@@ -529,7 +535,13 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/macos-close.png" />
               </a>
               <div class="popupContent">
-                {errorTest ? (
+                {loading ? (
+                  <img
+                    className={styles.icon}
+                    style={{ float: "left" }}
+                    src="http://pa1.narvii.com/6892/4d02d3678a8cf722f7a76555d77c45fe32bd5b61r1-200-200_00.gif"
+                  />
+                ) : errorTest ? (
                   <img
                     className={styles.icon}
                     style={{ float: "left" }}
@@ -565,7 +577,11 @@ function Post({ maxComments, post, customClass, user, socket, admin, type }) {
           <ul className={styles.comments}>
             <h5 style={{ margin: "1em 0 0 0" }}>Comments</h5>
             {currentPost.comments.map((comment, i) =>
-              i < 3 || maxComments ? <Comment key={i} comment={comment} /> : <></>
+              i < 3 || maxComments ? (
+                <Comment key={i} comment={comment} />
+              ) : (
+                <></>
+              )
             )}
           </ul>
         ) : (

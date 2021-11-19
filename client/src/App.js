@@ -61,11 +61,7 @@ function App() {
         ""
       )}
 
-      {!isLanding && session && (
-
-        <DisplayConversations />
-
-      )}
+      {!isLanding && session && <DisplayConversations />}
 
       <NavBar />
 
@@ -75,7 +71,7 @@ function App() {
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
         <Route path="/loginAdmin" component={AdminLogin} />
-        <Route path="/post/:id" component={EspecificPost}/>
+        <Route path="/post/:id" component={EspecificPost} />
         <Route path="/supportAdmin" component={AdminSupport} />
         <Route exact path="/challenge" component={Challenge} />
         <Route path="/homeAdmin" component={HomeAdmin} />

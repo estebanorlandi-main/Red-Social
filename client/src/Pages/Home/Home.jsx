@@ -33,7 +33,7 @@ function Home(props) {
   const dispatch = useDispatch();
   const [orden, setOrden] = useState("combinados");
   const [createPost, setCreatePost] = useState(false);
-  const [newPosts, setNewPosts] = useState(true);
+  const [newPosts, setNewPosts] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [first, setFirst] = useState(true);
   const [tags, setTags] = useState(session.tags);
@@ -66,17 +66,16 @@ function Home(props) {
       dispatch(updatePage(0));
       return;
     }
-    let seguidos
+    let seguidos;
     if (session.username) {
-
-      seguidos = await dispatch(getUser(session.username))
-      if(seguidos.type === "ERROR"){
-        seguidos = []
-      }else{
-        seguidos = seguidos.payload.data.following.map((user)=>user.username)
+      seguidos = await dispatch(getUser(session.username));
+      if (seguidos.type === "ERROR") {
+        seguidos = [];
+      } else {
+        seguidos = seguidos.payload.data.following.map((user) => user.username);
       }
-    }else {
-      seguidos = []
+    } else {
+      seguidos = [];
     }
     dispatch(getPosts(page, tags, orden, seguidos));
   }, [dispatch, page, first, totalPages, orden]);
@@ -136,7 +135,6 @@ function Home(props) {
   const handleCharge = (e) => {
     window.scrollTo(0, 0);
     dispatch(updatePage(0));
-    console.log(orden, tags, profile)
     dispatch(getPosts(page, tags, orden, profile.following));
     setNewPosts(false);
   };
@@ -182,25 +180,29 @@ function Home(props) {
           ""
         )}
 
-        <div className={styles.newPostOpen}>
-          <UserCard
-            toRight
-            showImage
-            user={{ user: session.username, image: session.image }}
-          />
-          <button
-            className={styles.createPost}
-            onClick={() => setCreatePost(true)}
-          >
-            Create Post
-          </button>
-        </div>
+        {session?.username ? (
+          <div className={styles.newPostOpen}>
+            <UserCard
+              toRight
+              showImage
+              user={{ user: session.username, image: session.image }}
+            />
+            <button
+              className={styles.createPost}
+              onClick={() => setCreatePost(true)}
+            >
+              Create Post
+            </button>
+          </div>
+        ) : (
+          <></>
+        )}
 
         <ul>
           {posts
             ? posts.map((post, i) => (
                 <li key={i}>
-                  <Post post={post} socket={socket} maxComments={false}/>
+                  <Post post={post} socket={socket} maxComments={false} />
                 </li>
               ))
             : "No hay ningun post"}
