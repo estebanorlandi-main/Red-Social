@@ -57,6 +57,7 @@ function EspecificPost({customClass, user, admin, type, match }) {
 
   useEffect(() => {
      dispatch(getPostForId(match.params.id));
+     dispatch(socketConnection(session.username));
      return
    }, [dispatch, match.params.id]);
 
