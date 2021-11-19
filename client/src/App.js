@@ -68,7 +68,6 @@ function App() {
       <Switch>
         <Route exact path="/" component={LandingPage} />
         <Route path="/home" component={Home} />
-        <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
         <Route path="/loginAdmin" component={AdminLogin} />
         <Route path="/post/:id" component={EspecificPost} />
@@ -84,7 +83,7 @@ function App() {
             },
           }) => <ProfileAdmin username={username} />}
         />
-        <Route path="/n/signup" component={NewRegister} />
+        <Route path="/signup" component={NewRegister} />
 
         <Route
           exact
