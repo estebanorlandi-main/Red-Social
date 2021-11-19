@@ -66,9 +66,7 @@ router.post('/login', async (req, res) => {
         const admin ={
           username:privileges.username,
           checked:privileges.checked,
-        }
-
-        
+        }        
         res.status(200).send(admin)
       }
       else{
