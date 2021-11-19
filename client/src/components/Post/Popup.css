@@ -70,4 +70,6 @@
 .start {
   height: 2.5rem;
   font-size: 0.98rem;
+  width: 80%;
+  margin: 0 auto;
 }
