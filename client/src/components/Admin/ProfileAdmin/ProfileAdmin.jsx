@@ -199,7 +199,7 @@ export default function ProfileAdmin(props) {
               {
                 !myProfile?
                 <div>
-                <button onClick={sendMessage} className={styles.messageButton}><MdMessage style={{ color: "#fff", width:'1.2em', height:'1.2em', marginRight:'4px' }}/> Message </button>
+                {/* <button onClick={sendMessage} className={styles.messageButton}><MdMessage style={{ color: "#fff", width:'1.2em', height:'1.2em', marginRight:'4px' }}/> Message </button> */}
                 <button value={profile.username} onClick={(e)=>{handleBanUser(e)}} className={styles.banButton}><IoBan style={{ color: "#fff", width:'2.5em', height:'1.2em', marginRight:'4px' }}/> Baneo</button>
                 </div>
                 :

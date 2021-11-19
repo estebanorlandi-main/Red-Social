@@ -12,7 +12,7 @@ function UserList(props) {
   return filteredUsers.length && props.show ? (
     <div name={props.name} className={styles.list}>
       {filteredUsers.map((user, i) => (
-        props.admin ===true?
+        props.admin ===true?(
           <Link
           onMouseDown={() => goTo(`/profileAdmin/${user.username}`)}
           key={i}
@@ -22,7 +22,7 @@ function UserList(props) {
           <img src={user.image || image} alt="" />
           <p key={user.idUser}>{user.username}</p>
         </Link>
-        :
+        ):(
         <Link
           onMouseDown={() => goTo(`/profile/${user.username}`)}
           key={i}
@@ -32,6 +32,7 @@ function UserList(props) {
           <img src={user.image || image} alt="" />
           <p key={user.idUser}>{user.username}</p>
         </Link>
+        )
         
       ))}
     </div>
