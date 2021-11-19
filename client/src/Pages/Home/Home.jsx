@@ -69,6 +69,7 @@ function Home(props) {
     let seguidos;
     if (session.username) {
       seguidos = await dispatch(getUser(session.username));
+
       if (seguidos.type === "ERROR") {
         seguidos = [];
       } else {

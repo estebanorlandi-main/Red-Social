@@ -37,7 +37,7 @@ export default function NewPost({ orden, tags }) {
   const [errores, setErrores] = useState({
     title: "",
     content: "",
-    general:"",
+    general: "",
   });
 
   const type = [
@@ -55,7 +55,11 @@ export default function NewPost({ orden, tags }) {
 
   function handleChange({ target: { name, value } }) {
     setData((old) => ({ ...old, [name]: value }));
-    setErrores((old) => ({ ...old, [name]: validate(name, value), general:"" }));
+    setErrores((old) => ({
+      ...old,
+      [name]: validate(name, value),
+      general: "",
+    }));
   }
 
   const handleSelect = (e) => {
@@ -99,7 +103,10 @@ export default function NewPost({ orden, tags }) {
           createPost(formData, orden, tags, seguidos)
         );
         if (errores.type === "ERROR") {
-          setErrores((old)=>({...old, general:"se ha producido un error"}));
+          setErrores((old) => ({
+            ...old,
+            general: "se ha producido un error",
+          }));
         } else {
           setData({
             title: "",
