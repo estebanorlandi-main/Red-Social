@@ -79,7 +79,7 @@ function Home(props) {
       seguidos = [];
     }
     dispatch(getPosts(page, tags, orden, seguidos));
-  }, [dispatch, page, first, totalPages, orden]);
+  }, [dispatch, page, first, totalPages, orden, tags]);
 
   useEffect(async () => {
     if (allTags.length === 0) {
@@ -115,7 +115,14 @@ function Home(props) {
     <Select onChange={handleSelect2} options={tagsOptions} isMulti />
   </li>
   */
-
+  function definirTags(e){
+    if (tags.includes(e.target.value)) {
+      setTags((old)=>old.filter((tag)=>tag!==e.target.value))
+    }else {
+      setTags((old)=>[...old, e.target.value])
+    }
+  }
+  console.log(tags)
   useEffect(() => {
     const getConversations = async () => {
       try {
@@ -149,9 +156,7 @@ function Home(props) {
             {session.tags && session.tags.length ? (
               session.tags.map((tag, i) => (
                 <li key={i}>
-                  <Link className={styles.tag} to="/home">
-                    # {tag}
-                  </Link>
+                    # {tag} <input type="checkbox" checked={tags.includes(tag)} id="vehicle1" onClick={(e)=>{definirTags(e)}} name={`${tag}`} value={`${tag}`}/>
                 </li>
               ))
             ) : (
@@ -160,7 +165,6 @@ function Home(props) {
           </ul>
         </div>
       </section>
-
       <section className={styles.center}>
         {newPosts && (
           <button className={styles.newPosts} onClick={handleCharge}>
